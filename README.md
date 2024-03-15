@@ -1,2 +1,10 @@
-# easygui-python
-Easy &amp; Simple GUI Library for Python
+# tkeasygui-python
+
+Easy and Simple GUI Library for Python
+
+## Install
+
+```sh
+python -m pip install git+https://github.com/kujirahand/tkeasygui
+```
+
