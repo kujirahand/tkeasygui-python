@@ -114,8 +114,10 @@ class TextInput(Element):
         super().__init__("TextInput", **kw)
         self.props["text"] = text
     def create(self, win: Window) -> tk.Widget:
-        print("@@entry=", self.key)
-        return tk.Entry(win.frame, name=self.key, **self.props)
+        self.string_var = tk.StringVar()
+        self.props["textvariable"] = self.string_var
+        e = tk.Entry(win.frame, name=self.key, **self.props)
+        return e
 
 
 class Button(Element):
