@@ -12,27 +12,27 @@ VERSION = tkeasygui.__version__
 PYTHON_REQUIRES = ">=3.8"
 INSTALL_REQUIRES = []
 EXTRAS_REQUIRE = {}
-PACKAGES = ['tkeasygui']
+PACKAGES = ["tkeasygui"]
 CLASSIFIERS = [
-    'Intended Audience :: Developers',
-    'License :: OSI Approved :: MIT License',
-    'Programming Language :: Python :: 3',
-    'Programming Language :: Python :: 3.8',
-    'Programming Language :: Python :: 3.9',
-    'Programming Language :: Python :: 3.10',
-    'Programming Language :: Python :: 3.11',
-    'Programming Language :: Python :: 3.12',
-    'Programming Language :: Python :: 3 :: Only',
-    'Topic :: Software Development :: User Interfaces',
+    "Intended Audience :: Developers",
+    "License :: OSI Approved :: MIT License",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.8",
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3 :: Only",
+    "Topic :: Software Development :: User Interfaces",
 ]
 
-with open('README.md', 'r') as fp:
+with open("README.md", "r", encoding="utf-8") as fp:
     readme = fp.read()
 long_description = readme
 
 setup(
     name=NAME,
-    version=tkeasygui.__version__,
+    version=VERSION,
     author=AUTHOR,
     author_email=AUTHOR_EMAIL,
     maintainer=AUTHOR,
@@ -41,7 +41,6 @@ setup(
     long_description=long_description,
     license=LICENSE,
     url=URL,
-    version=VERSION,
     download_url=DOWNLOAD_URL,
     python_requires=PYTHON_REQUIRES,
     install_requires=INSTALL_REQUIRES,
