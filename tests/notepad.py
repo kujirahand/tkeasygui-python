@@ -1,5 +1,6 @@
 import os
 import tkeasygui as eg
+
 # set path
 SCRIPT_DIR = os.path.dirname(__file__)
 SAVE_FILE = os.path.join(SCRIPT_DIR, "notepad-save-data.txt")

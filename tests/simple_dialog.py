@@ -6,7 +6,7 @@ layout = [
              "All other desirable things cannot compare to it.")],
     [sg.Button("OK")]
 ]
-window = sg.Window("Proverb", layout)
+window = sg.Window("Proverb", layout=layout)
 # Event loop
 while True:
     # get window event
