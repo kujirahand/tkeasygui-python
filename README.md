@@ -1,6 +1,7 @@
 # tkeasygui-python
 
-Easy and Simple GUI Library for Python
+Easy and Simple GUI Library for Python.
+Take it Easy to develop GUI apps.
 
 ## Install
 
