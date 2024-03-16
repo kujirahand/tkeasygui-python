@@ -12,7 +12,7 @@ font = ("Helvetica", 20)
 
 # create window
 layout = [
-    [sg.TextInput("0",
+    [sg.Input("0",
              key="-output-", 
              background_color="white", text_color="black",
              font=font,

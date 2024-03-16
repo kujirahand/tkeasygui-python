@@ -102,6 +102,9 @@ class Window:
         except:
             pass
     
+    def write_event_value(self, key: str, values: dict[str, Any]) -> None:
+        self.events.put((key, values))
+    
     def __getitem__(self, key: str) -> Any:
         """Get an element by its key."""
         return self.key_elements[key]
@@ -216,14 +219,14 @@ class Button(Element):
         """Get the value of the widget."""
         return self.props["text"]
 
-class TextInput(Element):
+class Input(Element):
     """Text input element."""
     def __init__(self, text: str, key: str="", **kw) -> None:
-        super().__init__("TextInput", **kw)
+        super().__init__("Input", **kw)
         self.props["text"] = text
         self.has_value = True
         if key == "":
-            key = f"-TextInput-{get_element_id()}-"
+            key = f"-Input-{get_element_id()}-"
         self.key = key
     def create(self, win: Window, parent: tk.Widget) -> tk.Widget:
         self.string_var = tk.StringVar()
@@ -245,11 +248,11 @@ class TextInput(Element):
         self.widget.insert(0, text)
         self.widget.config(**kw)
 
-class Input(TextInput):
-    """Input element. (alias of TextInput)"""
+class InputText(Input):
+    """InputText element. (alias of Input)"""
     def __init__(self, text: str, key: str="", **kw) -> None:
         super().__init__(text, key, **kw)
-        self.element_type = "Input"
+        self.element_type = "InputText"
 
 class Multiline(Element):
     """Multiline text input element."""

@@ -16,7 +16,7 @@ layout = [
         key="-files-", 
         enable_events=True,
     )],
-    [sg.TextInput("", key="-input-", expand_x=True)],
+    [sg.Input("", key="-input-", expand_x=True)],
 ]
 window = sg.Window("Font List", layout)
 # event loop
