@@ -23,8 +23,9 @@ def popup_get_text(message: str, title: str = "", default: str = "") -> (str|Non
     return simpledialog.askstring(title, message, initialvalue=default)
 
 # Widget wrapper
+
 class Window:
-    def __init__(self, title: str, layout: list[list[tk.Widget]], size: (tuple[int, int]|None)=None) -> None:
+    def __init__(self, title: str, layout: list[list[Element]], size: (tuple[int, int]|None)=None) -> None:
         """Create a window with a layout of widgets."""
         self.window: tk.Tk = tk.Tk()
         self.timeout: int|None = None
@@ -33,7 +34,7 @@ class Window:
         self.events: Queue = Queue()
         self.frame: ttk.Frame = ttk.Frame(self.window, padding=10)
         self.frame.pack()
-        self.key_elements: dict[str, tk.Widget] = {}
+        self.key_elements: dict[str, Element] = {}
         # set prop
         self.window.title(title)
         self.window.protocol("WM_DELETE_WINDOW", lambda : window_close_handler(self))
@@ -64,7 +65,7 @@ class Window:
 
     def get_values(self) -> dict[str, Any]:
         """Get values from the window."""
-        values: dict[str, any] = {}
+        values: dict[str, Any] = {}
         for key,val in self.key_elements.items():
             if not val.has_value:
                 print("@@@skip", key, val.get())
@@ -98,14 +99,14 @@ class Element:
         self.key = key
         self.has_value: bool = False
         self.props: dict[str, Any] = kw
+        self.widdget: Any|None = None
         print("@@@", self.props)
 
-    def create(self, win: Window) -> tk.Widget:
+    def create(self, win: Window) -> Any:
         """Create a widget."""
-        self.widget = tk.Label(win.frame, text="-")
-        return self.widget
+        return None
     
-    def get(self) -> any:
+    def get(self) -> Any:
         """Get the value of the widget."""
         return "-"
 
@@ -114,7 +115,7 @@ class Text(Element):
         super().__init__("Text", **kw)
         self.props["text"] = text
     def create(self, win: Window) -> tk.Widget:
-        self.widget = tk.Label(win.frame, **self.props)
+        self.widget: tk.Widget = tk.Label(win.frame, **self.props)
         return self.widget
     def get(self) -> Any:
         """Get the value of the widget."""
@@ -155,7 +156,8 @@ class Button(Element):
         return self.props["text"]
 
 def timeout_handler(self: Window):
-    self.window.after_cancel(self.timeout_id)
+    if self.timeout_id is not None:
+        self.window.after_cancel(self.timeout_id)
     if self.timeout is not None:
         self.event_handler("-TIMEOUT-", None)
     self.window.quit()

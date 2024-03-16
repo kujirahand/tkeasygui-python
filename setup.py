@@ -1,19 +1,19 @@
-from setuptools import setup, find_packages
+from setuptools import setup # skip
 import tkeasygui
 
-DESCRIPTION = "A simple wrapper around tkinter for easy GUI creation."
-NAME = "tkeasygui"
-AUTHOR = "kujirahand"
-AUTHOR_EMAIL = "web@kujirahand.com"
-URL = "https://github.com/kujirahand/tkeasygui-python"
-LICENSE = "MIT"
-DOWNLOAD_URL = "https://github.com/kujirahand/tkeasygui-python"
-VERSION = tkeasygui.__version__
-PYTHON_REQUIRES = ">=3.8"
-INSTALL_REQUIRES = []
-EXTRAS_REQUIRE = {}
-PACKAGES = ["tkeasygui"]
-CLASSIFIERS = [
+DESCRIPTION: str = "A simple wrapper around tkinter for easy GUI creation."
+NAME: str = "tkeasygui"
+AUTHOR: str = "kujirahand"
+AUTHOR_EMAIL: str = "web@kujirahand.com"
+URL: str = "https://github.com/kujirahand/tkeasygui-python"
+LICENSE: str = "MIT"
+DOWNLOAD_URL: str = "https://github.com/kujirahand/tkeasygui-python"
+VERSION: str = tkeasygui.__version__
+PYTHON_REQUIRES: str = ">=3.8"
+INSTALL_REQUIRES: list[str] = []
+EXTRAS_REQUIRE:dict[str, str] = {}
+PACKAGES: list[str] = ["tkeasygui"]
+CLASSIFIERS: list[str] = [
     "Intended Audience :: Developers",
     "License :: OSI Approved :: MIT License",
     "Programming Language :: Python :: 3",
