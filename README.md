@@ -9,3 +9,8 @@ Take it Easy to develop GUI apps.
 python -m pip install git+https://github.com/kujirahand/tkeasygui-python
 ```
 
+## Test
+
+```sh
+mypy .
+```
