@@ -9,16 +9,20 @@ from pprint import pprint
 # Const
 #------------------------------------------------------------------------------
 WINDOW_CLOSED: str = "WINDOW_CLOSED"
+WIN_CLOSED: str = "WINDOW_CLOSED"
 LISTBOX_SELECT_MODE_MULTIPLE: str = 'multiple'
 LISTBOX_SELECT_MODE_BROWSE: str = 'browse'
 LISTBOX_SELECT_MODE_EXTENDED: str = 'extended'
 LISTBOX_SELECT_MODE_SINGLE: str = 'single'
+TABLE_SELECT_MODE_NONE: str = tk.NONE
+TABLE_SELECT_MODE_BROWSE: str = tk.BROWSE
+TABLE_SELECT_MODE_EXTENDED: str = tk.EXTENDED
 
 #------------------------------------------------------------------------------
 # Widget wrapper
 #------------------------------------------------------------------------------
 class Window:
-    def __init__(self, title: str, layout: list[list[Any]], size: (tuple[int, int]|None)=None) -> None:
+    def __init__(self, title: str, layout: list[list[Any]], size: (tuple[int, int]|None)=None, resizable:bool=True, **kw) -> None:
         """Create a window with a layout of widgets."""
         self.window: tk.Tk = tk.Tk()
         self.timeout: int|None = None
@@ -26,7 +30,7 @@ class Window:
         self.timeout_id: str|None = None
         self.events: Queue = Queue()
         self.frame: ttk.Frame = ttk.Frame(self.window, padding=10)
-        self.frame.pack()
+        self.frame.pack(expand=True, fill="both")
         self.key_elements: dict[str, Element] = {}
         self.last_values: dict[str, Any] = {}
         # set prop
@@ -34,10 +38,14 @@ class Window:
         self.window.protocol("WM_DELETE_WINDOW", lambda : window_close_handler(self))
         if size is not None:
             self.window.geometry(f"{size[0]}x{size[1]}")
+        self.window.resizable(resizable, resizable)
         # create widgets
-        for row, widgets in enumerate(layout):
+        for widgets in layout:
             frame_row = ttk.Frame(self.frame)
-            frame_row.pack(expand=True, fill="x")
+            if len(widgets) == 1 and widgets[0].expand_y:
+                frame_row.pack(expand=True, fill="both")
+            else:
+                frame_row.pack(expand=True, fill="x")
             for col, elemment in enumerate(widgets):
                 # create widget
                 try:
@@ -46,7 +54,7 @@ class Window:
                     widget: tk.Widget = elem.create(self, frame_row)
                 except Exception as e:
                     raise Exception(f"Failed to create widget: {elem.element_type} {elem.key} {elem.props} --- {e}") from e
-                # check expand_x
+                # check expand_x or expand_y
                 if elem.expand_x or elem.expand_y:
                     widget.pack(expand=True, fill=elem._get_fill_prop())
                 else:
@@ -159,8 +167,8 @@ class Element:
             self.props["state"] = "readonly" if b else "normal"
         # convert "select_mode" to "selectmode"
         for key in self.props.keys():
-            if "-" in key:
-                new_key = key.replace("-", "")
+            if "_" in key:
+                new_key = key.replace("_", "")
                 self.props[new_key] = self.props.pop(key)
 
     def create(self, win: Window, parent: tk.Widget) -> Any:
@@ -325,7 +333,90 @@ class Listbox(Element):
         del kw["values"]
         self.widget.config(**kw)
 
+class Table(Element):
+    """Table element."""
+    def __init__(self, values: list[list[str]]=[], headings: list[str]=[], key: str="", justification: Literal["right","left","center",""]="",
+                 auto_size_columns: bool = True, max_col_width: int = 0, font: tuple[str, int]|None=None,
+                 enable_events: bool=False, select_mode: str="browse", **kw) -> None:
+        """Create a table."""
+        super().__init__("Table", **kw)
+        self.values = values
+        self.headings = headings
+        self.has_value = True
+        self.enable_events = enable_events
+        self.select_mode = select_mode
+        self.justification: str = {"":"", "right":"w", "center":"center", "left":"e"}[justification]
+        self.auto_size_columns = auto_size_columns
+        self.max_col_width = max_col_width # todo
+        self.font = font # todo
+        if key == "":
+            key = f"-Table-{get_element_id()}-"
+        self.key = key
+    def create(self, win: Window, parent: tk.Widget) -> tk.Widget:
+        """Create a Table widget."""
+        self.window: Window = win
+        # create treeview
+        columns = tuple(i+1 for i, _ in enumerate(self.headings))
+        self.widget = ttk.Treeview(
+            parent,
+            columns=columns,
+            show="headings",
+            **self.props)
+        # setting for column
+        streatch = tk.YES if self.auto_size_columns else tk.NO
+        for i, h in enumerate(self.headings):
+            self.widget.heading(i+1, text=h, anchor="center")
+            kw = {"stretch": streatch}
+            if self.justification != "":
+                kw["anchor"] = self.justification
+            self.widget.column(i+1, **kw)
+        # add data
+        self.set_values(self.values, self.headings)
+        # bar
+        verscrlbar = ttk.Scrollbar(parent, 
+                           orient ="vertical", 
+                           command = self.widget.yview)
+        verscrlbar.pack(side ='right', fill ='y')
+        self.widget.configure(yscrollcommand = verscrlbar.set)
 
+        if self.enable_events:
+            self.widget.bind("<<ListboxSelect>>", lambda e: self._listbox_events(e))
+        return self.widget
+    def set_values(self, values: list[list[str]], headings: list[str]) -> None:
+        """Set values to the table."""
+        self.values = values
+        self.headings = headings
+        # clear
+        self.widget.delete(*self.widget.get_children())
+        # update heading
+        for i, h in enumerate(self.headings):
+            self.widget.heading(i+1, text=h, anchor="center")
+        # add data
+        for row in self.values:
+            self.widget.insert(parent="", index="end", values=row)
+    def get(self) -> Any:
+        """Get the value of the widget."""
+        selected: list[str] = []
+        for i in self.widget.curselection():
+            selected.append(self.values[int(i)])
+        return selected
+
+    def _listbox_events(self, _event: Any) -> list[str]:
+        """Handle listbox events."""
+        self.window._event_handler(self.key, {})
+
+    def update(self, *args, **kw) -> None:
+        """Update the widget."""
+        if len(args) >= 1:
+            values = args[0]
+            kw["values"] = values
+        self.values = kw["values"]
+        # update list
+        self.widget.delete(0, "end")
+        for v in self.values:
+            self.widget.insert("end", v)
+        del kw["values"]
+        self.widget.config(**kw)
 
 #------------------------------------------------------------------------------
 # Utility functions
