@@ -10,6 +10,7 @@ from pprint import pprint
 #------------------------------------------------------------------------------
 WINDOW_CLOSED: str = "WINDOW_CLOSED"
 WIN_CLOSED: str = "WINDOW_CLOSED"
+WINDOW_TIMEOUT: str = "-TIMEOUT-"
 LISTBOX_SELECT_MODE_MULTIPLE: str = 'multiple'
 LISTBOX_SELECT_MODE_BROWSE: str = 'browse'
 LISTBOX_SELECT_MODE_EXTENDED: str = 'extended'
@@ -24,29 +25,12 @@ TABLE_SELECT_MODE_EXTENDED: str = tk.EXTENDED
 class Window:
     """
     Main window object in TkEasyGUI
-
-    Examples:
-        >>> # Create window
-        >>> layout = [
-        >>>     [eg.Text("Hello, World!")],
-        >>>     [eg.Button("OK")]
-        >>> ]
-        >>> window = eg.Window("Hello", layout=layout)
-        >>> # Event loop
-        >>> while window.is_alive():
-        >>>     # get event
-        >>>     event, values = window.read()
-        >>>     # check event
-        >>>     if event == "OK":
-        >>>         eg.popup("Pushed OK Button")
-        >>>         break
-        >>> window.close()
     """
-    def __init__(self, title: str, layout: list[list[Any]], size: (tuple[int, int]|None)=None, resizable:bool=True, **kw) -> None:
+    def __init__(self, title: str, layout: list[list[Any]], size: (tuple[int, int]|None)=None, resizable:bool=False, **kw) -> None:
         """Create a window with a layout of widgets."""
         self.window: tk.Tk = tk.Tk()
         self.timeout: int|None = None
-        self.timeout_key: str = "-TIMEOUT-"
+        self.timeout_key: str = WINDOW_TIMEOUT
         self.timeout_id: str|None = None
         self.events: Queue = Queue()
         self.key_elements: dict[str, Element] = {}
@@ -88,6 +72,10 @@ class Window:
                     row_prop["fill"] = "both"
             # add row
             frame_row.pack(**row_prop)
+
+    def move_to_center(self) -> None:
+        """Move the window to the center of the screen."""
+        self.window.eval('tk::PlaceWindow . center')
 
     def read(self, timeout: int|None=None, timeout_key: str="-TIMEOUT-") -> tuple[str, dict[str, Any]]:
         """Read events from the window."""
