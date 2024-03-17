@@ -2,7 +2,7 @@
 
 ## Classes
 
-### Button {: #Button }
+### Button
 
 ```python
 class Button(self, text: str="", key: str="", **kw)
@@ -14,15 +14,15 @@ Create an element.
 
 ------
 
-#### Base classes {: #Button-bases }
+#### Base classes
 
 * [`Element `](#Element)
 
 ------
 
-#### Methods {: #Button-methods }
+#### Methods
 
-[**create**](#Button.create){: #Button.create }
+##### Button.create
 
 ```python
 def create(self, win: Window, parent: tk.Widget) -> tk.Widget
@@ -32,7 +32,7 @@ Create a widget.
 
 ------
 
-[**get**](#Button.get){: #Button.get }
+##### Button.get
 
 ```python
 def get(self) -> Any
@@ -42,7 +42,7 @@ Get the value of the widget.
 
 ------
 
-### Element {: #Element }
+### Element
 
 ```python
 class Element(self, element_type, key: str="", **kw)
@@ -54,9 +54,9 @@ Create an element.
 
 ------
 
-#### Methods {: #Element-methods }
+#### Methods
 
-[**GetText**](#Element.GetText){: #Element.GetText }
+##### Element.GetText
 
 ```python
 def GetText(self) -> Any
@@ -66,7 +66,7 @@ Get the text of the widget. (for Button)
 
 ------
 
-[**create**](#Element.create){: #Element.create }
+##### Element.create
 
 ```python
 def create(self, win: Window, parent: tk.Widget) -> Any
@@ -76,7 +76,7 @@ Create a widget.
 
 ------
 
-[**get**](#Element.get){: #Element.get }
+##### Element.get
 
 ```python
 def get(self) -> Any
@@ -86,7 +86,7 @@ Get the value of the widget.
 
 ------
 
-[**prepare_create**](#Element.prepare_create){: #Element.prepare_create }
+##### Element.prepare_create
 
 ```python
 def prepare_create(self, win: Window) -> None
@@ -94,7 +94,7 @@ def prepare_create(self, win: Window) -> None
 
 ------
 
-[**update**](#Element.update){: #Element.update }
+##### Element.update
 
 ```python
 def update(self, *args, **kw) -> None
@@ -104,7 +104,7 @@ Update the widget.
 
 ------
 
-### Input {: #Input }
+### Input
 
 ```python
 class Input(self, text: str, key: str="", **kw)
@@ -116,15 +116,15 @@ Create an element.
 
 ------
 
-#### Base classes {: #Input-bases }
+#### Base classes
 
 * [`Element `](#Element)
 
 ------
 
-#### Methods {: #Input-methods }
+#### Methods
 
-[**create**](#Input.create){: #Input.create }
+##### Input.create
 
 ```python
 def create(self, win: Window, parent: tk.Widget) -> tk.Widget
@@ -134,7 +134,7 @@ Create a widget.
 
 ------
 
-[**get**](#Input.get){: #Input.get }
+##### Input.get
 
 ```python
 def get(self) -> Any
@@ -144,7 +144,7 @@ Get the value of the widget.
 
 ------
 
-[**update**](#Input.update){: #Input.update }
+##### Input.update
 
 ```python
 def update(self, *args, **kw) -> None
@@ -154,7 +154,7 @@ Update the widget.
 
 ------
 
-### InputText {: #InputText }
+### InputText
 
 ```python
 class InputText(self, text: str, key: str="", **kw)
@@ -166,13 +166,13 @@ Create an element.
 
 ------
 
-#### Base classes {: #InputText-bases }
+#### Base classes
 
 * [`Input `](#Input)
 
 ------
 
-### Listbox {: #Listbox }
+### Listbox
 
 ```python
 class Listbox(self, values: list[str]=[], key: str="", enable_events: bool=False, select_mode: str="browse", **kw)
@@ -184,15 +184,15 @@ Create an element.
 
 ------
 
-#### Base classes {: #Listbox-bases }
+#### Base classes
 
 * [`Element `](#Element)
 
 ------
 
-#### Methods {: #Listbox-methods }
+#### Methods
 
-[**create**](#Listbox.create){: #Listbox.create }
+##### Listbox.create
 
 ```python
 def create(self, win: Window, parent: tk.Widget) -> tk.Widget
@@ -202,7 +202,7 @@ Create a widget.
 
 ------
 
-[**get**](#Listbox.get){: #Listbox.get }
+##### Listbox.get
 
 ```python
 def get(self) -> Any
@@ -212,7 +212,7 @@ Get the value of the widget.
 
 ------
 
-[**update**](#Listbox.update){: #Listbox.update }
+##### Listbox.update
 
 ```python
 def update(self, *args, **kw) -> None
@@ -222,7 +222,7 @@ Update the widget.
 
 ------
 
-### Multiline {: #Multiline }
+### Multiline
 
 ```python
 class Multiline(self, default_text: str="", key: str="", **kw)
@@ -234,15 +234,15 @@ Create an element.
 
 ------
 
-#### Base classes {: #Multiline-bases }
+#### Base classes
 
 * [`Element `](#Element)
 
 ------
 
-#### Methods {: #Multiline-methods }
+#### Methods
 
-[**create**](#Multiline.create){: #Multiline.create }
+##### Multiline.create
 
 ```python
 def create(self, win: Window, parent: tk.Widget) -> tk.Widget
@@ -252,7 +252,7 @@ Create a widget.
 
 ------
 
-[**get**](#Multiline.get){: #Multiline.get }
+##### Multiline.get
 
 ```python
 def get(self) -> Any
@@ -262,7 +262,7 @@ Get the value of the widget.
 
 ------
 
-[**update**](#Multiline.update){: #Multiline.update }
+##### Multiline.update
 
 ```python
 def update(self, *args, **kw) -> None
@@ -272,7 +272,7 @@ Update the widget.
 
 ------
 
-### Table {: #Table }
+### Table
 
 ```python
 class Table(
@@ -287,15 +287,15 @@ Create a table.
 
 ------
 
-#### Base classes {: #Table-bases }
+#### Base classes
 
 * [`Element `](#Element)
 
 ------
 
-#### Methods {: #Table-methods }
+#### Methods
 
-[**create**](#Table.create){: #Table.create }
+##### Table.create
 
 ```python
 def create(self, win: Window, parent: tk.Widget) -> tk.Widget
@@ -305,7 +305,7 @@ Create a Table widget.
 
 ------
 
-[**get**](#Table.get){: #Table.get }
+##### Table.get
 
 ```python
 def get(self) -> Any
@@ -315,7 +315,7 @@ Get the value of the widget.
 
 ------
 
-[**set_values**](#Table.set_values){: #Table.set_values }
+##### Table.set_values
 
 ```python
 def set_values(self, values: list[list[str]], headings: list[str]) -> None
@@ -325,7 +325,7 @@ Set values to the table.
 
 ------
 
-[**update**](#Table.update){: #Table.update }
+##### Table.update
 
 ```python
 def update(self, *args, **kw) -> None
@@ -335,7 +335,7 @@ Update the widget.
 
 ------
 
-### Text {: #Text }
+### Text
 
 ```python
 class Text(self, text: str, justify: Literal["left","right","center"]="left", **kw)
@@ -347,15 +347,15 @@ Create an element.
 
 ------
 
-#### Base classes {: #Text-bases }
+#### Base classes
 
 * [`Element `](#Element)
 
 ------
 
-#### Methods {: #Text-methods }
+#### Methods
 
-[**create**](#Text.create){: #Text.create }
+##### Text.create
 
 ```python
 def create(self, win: Window, parent: tk.Widget) -> tk.Widget
@@ -365,7 +365,7 @@ Create a Text widget.
 
 ------
 
-[**get**](#Text.get){: #Text.get }
+##### Text.get
 
 ```python
 def get(self) -> Any
@@ -375,7 +375,7 @@ Get the value of the widget.
 
 ------
 
-[**update**](#Text.update){: #Text.update }
+##### Text.update
 
 ```python
 def update(self, *args, **kw) -> None
@@ -385,7 +385,7 @@ Update the widget.
 
 ------
 
-### Window {: #Window }
+### Window
 
 ```python
 class Window(self, title: str, layout: list[list[Any]], size: (tuple[int, int]|None)=None, resizable:bool=False, modal: bool=False, **kw)
@@ -397,9 +397,9 @@ Create a window with a layout of widgets.
 
 ------
 
-#### Methods {: #Window-methods }
+#### Methods
 
-[**cancel_close**](#Window.cancel_close){: #Window.cancel_close }
+##### Window.cancel_close
 
 ```python
 def cancel_close(self) -> None
@@ -409,7 +409,7 @@ Cancel the close event.
 
 ------
 
-[**close**](#Window.close){: #Window.close }
+##### Window.close
 
 ```python
 def close(self) -> None
@@ -419,7 +419,7 @@ Close the window.
 
 ------
 
-[**get_values**](#Window.get_values){: #Window.get_values }
+##### Window.get_values
 
 ```python
 def get_values(self) -> dict[str, Any]
@@ -429,7 +429,7 @@ Get values from the window.
 
 ------
 
-[**is_alive**](#Window.is_alive){: #Window.is_alive }
+##### Window.is_alive
 
 ```python
 def is_alive(self) -> bool
@@ -439,7 +439,7 @@ Check if the window is alive.
 
 ------
 
-[**move_to_center**](#Window.move_to_center){: #Window.move_to_center }
+##### Window.move_to_center
 
 ```python
 def move_to_center(self) -> None
@@ -449,7 +449,7 @@ Move the window to the center of the screen.
 
 ------
 
-[**read**](#Window.read){: #Window.read }
+##### Window.read
 
 ```python
 def read(self, timeout: int|None=None, timeout_key: str="-TIMEOUT-") -> tuple[str, dict[str, Any]]
@@ -459,7 +459,7 @@ Read events from the window.
 
 ------
 
-[**write_event_value**](#Window.write_event_value){: #Window.write_event_value }
+##### Window.write_event_value
 
 ```python
 def write_event_value(self, key: str, values: dict[str, Any]) -> None
@@ -467,7 +467,7 @@ def write_event_value(self, key: str, values: dict[str, Any]) -> None
 
 ## Functions
 
-### get_element_id {: #get_element_id }
+### get_element_id
 
 ```python
 def get_element_id() -> int
