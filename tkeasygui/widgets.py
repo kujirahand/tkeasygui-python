@@ -31,13 +31,14 @@ class Window:
         self.events: Queue = Queue()
         self.key_elements: dict[str, Element] = {}
         self.last_values: dict[str, Any] = {}
+        self.flag_alive: bool = True # Pressing the close button will turn this flag to False.
         # Frame
         self.frame: ttk.Frame = ttk.Frame(self.window, padding=10)
         self.frame.pack(expand=True, fill="both")
         self.frame.rowconfigure(0, weight=1)
         # set window properties
         self.window.title(title)
-        self.window.protocol("WM_DELETE_WINDOW", lambda : window_close_handler(self))
+        self.window.protocol("WM_DELETE_WINDOW", lambda : self._close_handler())
         if size is not None:
             self.window.geometry(f"{size[0]}x{size[1]}")
         self.window.resizable(resizable, resizable)
@@ -77,6 +78,7 @@ class Window:
             self.timeout_id = self.window.after(timeout, _timeout_handler, self)
             self.window.mainloop()
             if not self.events.empty():
+                # return event
                 key, values = self.events.get()
                 return (key, values)
             if self.timeout is not None:
@@ -106,15 +108,30 @@ class Window:
         for k, v in self.get_values().items():
             values[k] = v
         self.events.put((key, values))
-        
-    def close(self) -> None:
-        """Close the window."""
-        self.events.put((WINDOW_CLOSED, self.get_values()))
+
+    def _close_handler(self):
+        """Handle a window close event."""
+        if self.timeout_id is not None:
+            self.window.after_cancel(self.timeout_id)
+        self._event_handler(WINDOW_CLOSED, None)
+        self.flag_alive = False
         try:
-            self.window.quit()
-            self.window.destroy()
+            self.window.quit() # exit from mainloop
         except:
             pass
+
+    def close(self) -> None:
+        """Close the window."""
+        try:
+            self.flag_alive = False
+            self.window.quit()
+            self.window.destroy()
+        except Exception as _:
+            pass
+
+    def is_alive(self) -> bool:
+        """Check if the window is alive."""
+        return self.flag_alive
     
     def write_event_value(self, key: str, values: dict[str, Any]) -> None:
         self.events.put((key, values))
@@ -450,17 +467,6 @@ def _timeout_handler(self: Window):
     if self.timeout is not None:
         self._event_handler("-TIMEOUT-", None)
     self.window.quit()
-
-def window_close_handler(self: Window):
-    """Handle a window close event."""
-    if self.timeout_id is not None:
-        self.window.after_cancel(self.timeout_id)
-    self._event_handler(WINDOW_CLOSED, None)
-    try:
-        self.window.quit()
-        self.window.destroy()
-    except:
-        pass
 
 element_id: int = 0
 def get_element_id() -> int:

@@ -1,6 +1,6 @@
 # TkEasyGUI
 
-TkEasyGUI is a Python library that allows for the easy and simple creation of GUI applications.
+`TkEasyGUI` is a Python library that allows for the easy and simple creation of GUI applications.
 In the event model, it is compatible with the well-known GUI library `PySimpleGUI`.
 
 Python's standard UI library `Tkinter`, is often considered to have a high barrier to entry and to be difficult to use. By using this library, you can create GUI applications easily and intuitively.
@@ -36,13 +36,10 @@ layout = [
 window = eg.Window("Hello", layout=layout)
 
 # Event loop
-while True:
-    # get window event
+while window.is_alive():
+    # get event
     event, values = window.read()
-    # close button
-    if event == eg.WINDOW_CLOSED:
-        break
-    # check OK Button
+    # check event
     if event == "OK":
         eg.popup("Pushed OK Button")
         break
