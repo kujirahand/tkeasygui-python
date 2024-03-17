@@ -205,15 +205,20 @@ class Element:
 
 class Text(Element):
     """Text element."""
-    def __init__(self, text: str, **kw) -> None:
+    def __init__(self, text: str, justify: Literal["left","right","center"]="left", **kw) -> None:
         super().__init__("Text", **kw)
         self.props["text"] = text
+        self.props["justify"] = justify
+    
     def create(self, win: Window, parent: tk.Widget) -> tk.Widget:
+        """Create a Text widget."""
         self.widget: tk.Label = tk.Label(parent, **self.props)
         return self.widget
+    
     def get(self) -> Any:
         """Get the value of the widget."""
         return self.props["text"]
+    
     def update(self, *args, **kw) -> None:
         """Update the widget."""
         super().update(*args, **kw)
