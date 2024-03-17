@@ -48,11 +48,11 @@ window.close()
 
 ## Samples
 
-Please see [tests](tests/).
+- [tests](https://github.com/kujirahand/tkeasygui-python/tree/main/tests).
 
 ## Documents
 
-- [docs](docs/README.md)
+- [docs](https://github.com/kujirahand/tkeasygui-python/tree/main/docs)
 
 ## Regarding the relationship with PySimpleGUI
 
