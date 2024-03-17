@@ -1,6 +1,6 @@
 [project]
-name = "kujirahand"
-version = "0.1.0"
+name = "tkeasygui"
+version = "0.1.1"
 authors = [
   { name="kujirahand", email="web@kujirahand.com" },
 ]
@@ -8,9 +8,21 @@ description = "Easy and Simple GUI Library"
 readme = "README.md"
 requires-python = ">=3.8"
 classifiers = [
-    "Programming Language :: Python :: 3",
+    "Intended Audience :: Developers",
     "License :: OSI Approved :: MIT License",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.8",
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3 :: Only",
+    "Topic :: Software Development :: User Interfaces",
 ]
+
+[build-system]
+requires = ["setuptools"]
+build-backend = "setuptools.build_meta"
 
 [project.urls]
 Homepage = "https://github.com/kujirahand/tkeasygui-pythont"

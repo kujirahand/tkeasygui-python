@@ -44,13 +44,12 @@ class Window:
         # prepare create
         for widgets in layout:
             for elemment in widgets:
-                elem: Element = elemment
-                elem.prepare_create(self)
+                elemment.prepare_create(self)
         # create widgets
         for widgets in layout:
             frame_row = ttk.Frame(self.frame, padding=5)
             # columns
-            row_prop = {"expand": True, "fill": "x", "side": "top"}
+            row_prop: dict[str, Any] = {"expand": True, "fill": "x", "side": "top"}
             for _col, elemment in enumerate(widgets):
                 # create widget
                 try:
@@ -139,7 +138,7 @@ class Element:
         self.expand_x: bool = False
         self.expand_y: bool = False
     
-    def _get_fill_prop(self) -> dict[str, str]:
+    def _get_fill_prop(self) -> dict[str, Any]:
         """Get the fill property."""
         prop = {"expand": False, "fill": "none"}
         if self.expand_x and self.expand_y:
@@ -334,7 +333,7 @@ class Listbox(Element):
             selected.append(self.values[int(i)])
         return selected
 
-    def _listbox_events(self, _event: Any) -> list[str]:
+    def _listbox_events(self, _event: Any) -> None:
         """Handle listbox events."""
         self.window._event_handler(self.key, {})
 
@@ -391,7 +390,7 @@ class Table(Element):
         streatch = tk.YES if self.auto_size_columns else tk.NO
         for i, h in enumerate(self.headings):
             self.widget.heading(i+1, text=h, anchor="center")
-            kw = {"stretch": streatch}
+            kw: dict[str, Any] = {"stretch": streatch}
             if self.justification != "":
                 kw["anchor"] = self.justification
             self.widget.column(i+1, **kw)
@@ -420,7 +419,7 @@ class Table(Element):
         record_values = self.widget.item(record_id, "values")
         return record_values
 
-    def _table_events(self, _event: Any) -> list[str]:
+    def _table_events(self, _event: Any) -> None:
         """Handle events."""
         self.window._event_handler(self.key, {})
 

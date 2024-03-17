@@ -7,6 +7,16 @@ The usability of the GUI library PySimpleGUI allows for the easy creation of app
 
 ## Install
 
+Install from https://pypi.org/
+
+
+```sh
+python -m pip install tkeasygui
+```
+
+Install from GitHub Repository
+
+
 ```sh
 python -m pip install git+https://github.com/kujirahand/tkeasygui-python
 ```
@@ -38,6 +48,10 @@ while True:
         break
 window.close()
 ```
+
+## Samples
+
+Please see [tests](tests/).
 
 ## For Developper
 
