@@ -22,6 +22,26 @@ TABLE_SELECT_MODE_EXTENDED: str = tk.EXTENDED
 # Widget wrapper
 #------------------------------------------------------------------------------
 class Window:
+    """
+    Main window object in TkEasyGUI
+
+    Examples:
+        >>> # Create window
+        >>> layout = [
+        >>>     [eg.Text("Hello, World!")],
+        >>>     [eg.Button("OK")]
+        >>> ]
+        >>> window = eg.Window("Hello", layout=layout)
+        >>> # Event loop
+        >>> while window.is_alive():
+        >>>     # get event
+        >>>     event, values = window.read()
+        >>>     # check event
+        >>>     if event == "OK":
+        >>>         eg.popup("Pushed OK Button")
+        >>>         break
+        >>> window.close()
+    """
     def __init__(self, title: str, layout: list[list[Any]], size: (tuple[int, int]|None)=None, resizable:bool=True, **kw) -> None:
         """Create a window with a layout of widgets."""
         self.window: tk.Tk = tk.Tk()
@@ -132,6 +152,10 @@ class Window:
     def is_alive(self) -> bool:
         """Check if the window is alive."""
         return self.flag_alive
+    
+    def cancel_close(self) -> None:
+        """Cancel the close event."""
+        self.flag_alive = True
     
     def write_event_value(self, key: str, values: dict[str, Any]) -> None:
         self.events.put((key, values))
