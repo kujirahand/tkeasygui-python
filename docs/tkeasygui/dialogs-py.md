@@ -1,5 +1,7 @@
 # Module tkeasygui.dialogs
 
+TkEasyGUI dialogs
+
 ## Functions
 
 ### ask_ok_cancel
@@ -8,7 +10,7 @@
 def ask_ok_cancel(message: str, title: str="Question") -> bool
 ```
 
-Display a message in a popup window with OK and Cancel buttons. Return True or False.
+Display a message in a popup window with OK and Cancel buttons. Return True or False. (use Tkinter)
 
 ------
 
@@ -18,7 +20,7 @@ Display a message in a popup window with OK and Cancel buttons. Return True or F
 def ask_retry_cancel(message: str, title: str="Question") -> bool
 ```
 
-Display a message in a popup window with Retry and Cancel buttons. Return True or False.
+Display a message in a popup window with Retry and Cancel buttons. Return True or False. (use Tkinter)
 
 ------
 
@@ -28,7 +30,7 @@ Display a message in a popup window with Retry and Cancel buttons. Return True o
 def ask_yes_no(message: str, title: str="Question") -> bool
 ```
 
-Display a message in a popup window with Yes and No buttons. Return True or False.
+Display a message in a popup window with Yes and No buttons. Return True or False. (use Tkinter)
 
 ------
 
@@ -43,6 +45,25 @@ Display a message in a popup window.
 #### Example:
 ```py
 eg.popup("I like an apple.", "Information")
+```
+
+------
+
+### popup_buttons
+
+```python
+def popup_buttons(message: str, title: str = "Question", buttons: list[str] = ["OK", "Cancel"]) -> str
+```
+
+Popup window with user defined buttons. Return button's label.
+
+#### Example:
+```py
+color = eg.popup_buttons(
+    "Which color do you like?", 
+    "Question",
+    buttons=["red","yellow","green"])
+print(color)
 ```
 
 ------

@@ -1,3 +1,6 @@
+"""
+TkEasyGUI dialogs
+"""
 import tkinter.messagebox as msg
 import tkinter.simpledialog as simpledialog
 import tkinter.filedialog as filedialog
@@ -28,6 +31,36 @@ def popup_ok(message: str, title: str="") -> None:
     """Display a message in a popup window.(Alias popup)"""
     popup(title, message)
 
+def popup_buttons(message: str, title: str = "Question", buttons: list[str] = ["OK", "Cancel"]) -> str:
+    """
+    Popup window with user defined buttons. Return button's label.
+
+    #### Example:
+    ```py
+    color = eg.popup_buttons(
+        "Which color do you like?", 
+        "Question",
+        buttons=["red","yellow","green"])
+    print(color)
+    ```
+    """
+    # make buttons
+    eg_buttons = [eg.Button(s, width=9) for s in buttons]
+    result = buttons[-1]
+    # create window
+    win = eg.Window(title, layout=[
+        [eg.Text(message)],
+        eg_buttons,
+    ], modal=True)
+    # event loop
+    while win.is_alive():
+        event, _ = win.read()
+        if event in buttons:
+            result = event
+            break
+    win.close()
+    return result
+
 def popup_yes_no(message: str, title: str = "Question", yes_label: str="Yes", no_label: str="No") -> str:
     """
     Display a message in a popup window with Yes and No buttons. Return "Yes" or "No".
@@ -45,25 +78,11 @@ def popup_yes_no(message: str, title: str = "Question", yes_label: str="Yes", no
     ```
     """
     # return "Yes" if msg.askyesno(title, message) else "No"
-    result = no_label
-    win = eg.Window(title, layout=[
-        [eg.Text(message)],
-        [eg.Button(yes_label, width=9), eg.Button(no_label, width=9)]
-    ])
-    while win.is_alive():
-        event, _ = win.read()
-        if event in [yes_label, no_label]:
-            result = event
-            break
-    win.close()
-    return result
+    return popup_buttons(message, title, buttons=[yes_label, no_label])
 
 def popup_yes_no_cancel(message: str, title: str = "Question") -> str:
     """Display a message in a popup window with Yes and No buttons. Return "Yes" or "No" or "Cancel"."""
-    a = msg.askyesnocancel(title, message)
-    if a is None:
-        return "Cancel"
-    return "Yes" if a else "No"
+    return popup_buttons(message, title, buttons=["Yes", "No", "Cancel"])
 
 def popup_get_text(message: str, title: str = "", default: str = "") -> (str|None):
     """Display a message in a popup window with a text entry. Return the text entered."""
@@ -95,16 +114,16 @@ def popup_get_folder(title: str="", default_path: str="", **kw) -> (str|None):
     return filedialog.askdirectory(title=title, initialdir=default_path, **kw)
 
 #------------------------------------------------------------------------------
-# like TKinter
+# TKinter
 def ask_yes_no(message: str, title: str="Question") -> bool:
-    """Display a message in a popup window with Yes and No buttons. Return True or False."""
+    """Display a message in a popup window with Yes and No buttons. Return True or False. (use Tkinter)"""
     return msg.askyesno(title, message)
 
 def ask_ok_cancel(message: str, title: str="Question") -> bool:
-    """Display a message in a popup window with OK and Cancel buttons. Return True or False."""
+    """Display a message in a popup window with OK and Cancel buttons. Return True or False. (use Tkinter)"""
     return msg.askokcancel(title, message)
 
 def ask_retry_cancel(message: str, title: str="Question") -> bool:
-    """Display a message in a popup window with Retry and Cancel buttons. Return True or False."""
+    """Display a message in a popup window with Retry and Cancel buttons. Return True or False. (use Tkinter)"""
     return msg.askretrycancel(title, message)
 
