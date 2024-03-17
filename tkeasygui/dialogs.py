@@ -1,6 +1,7 @@
 import tkinter.messagebox as msg
 import tkinter.simpledialog as simpledialog
 import tkinter.filedialog as filedialog
+import tkeasygui as eg
 
 #------------------------------------------------------------------------------
 # Dialogs
@@ -8,7 +9,13 @@ import tkinter.filedialog as filedialog
 # like PySimpleGUI
 def popup(message: str, title: str = "") -> None:
     """Display a message in a popup window."""
-    msg.showinfo(title, message)
+    # msg.showinfo(title, message)
+    win = eg.Window(title, layout=[[eg.Text(message)], [eg.Button("OK")]], modal=True)
+    while win.is_alive():
+        event, _ = win.read()
+        if event in (None, "OK"):
+            break
+    win.close()
 
 def popup_ok(message: str, title: str="") -> None:
     """Display a message in a popup window."""

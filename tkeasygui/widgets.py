@@ -26,9 +26,10 @@ class Window:
     """
     Main window object in TkEasyGUI
     """
-    def __init__(self, title: str, layout: list[list[Any]], size: (tuple[int, int]|None)=None, resizable:bool=False, **kw) -> None:
+    def __init__(self, title: str, layout: list[list[Any]], size: (tuple[int, int]|None)=None, resizable:bool=False, modal: bool=False, **kw) -> None:
         """Create a window with a layout of widgets."""
-        self.window: tk.Tk = tk.Tk()
+        self.modal: bool = modal
+        self.window: tk.Tk = tk.Tk() if not modal else tk.Toplevel(_get_active_window())
         self.timeout: int|None = None
         self.timeout_key: str = WINDOW_TIMEOUT
         self.timeout_id: str|None = None
@@ -72,6 +73,20 @@ class Window:
                     row_prop["fill"] = "both"
             # add row
             frame_row.pack(**row_prop)
+        # modal
+        if modal:
+            # check position
+            parent = _get_active_window()
+            if parent is not None:
+                self.window.geometry(f"+{parent.winfo_x()+20}+{parent.winfo_y()+20}")
+            # set modal action
+            self.window.grab_set()
+            self.window.focus_set()
+            self.window.transient(parent)
+        else:
+            self.window.eval('tk::PlaceWindow . center')
+        # push window
+        _window_push(self)
 
     def move_to_center(self) -> None:
         """Move the window to the center of the screen."""
@@ -130,7 +145,9 @@ class Window:
 
     def close(self) -> None:
         """Close the window."""
+        global active_window
         try:
+            _window_pop()
             self.flag_alive = False
             self.window.quit()
             self.window.destroy()
@@ -151,6 +168,22 @@ class Window:
     def __getitem__(self, key: str) -> Any:
         """Get an element by its key."""
         return self.key_elements[key]
+
+# active window
+_window_list: list[Window] = []
+def _get_active_window() -> tk.BaseWidget|None:
+    """Get the active window."""
+    if len(_window_list) == 0:
+        return None
+    return _window_list[-1].window
+
+def _window_push(win: Window) -> None:
+    """Push a window to the list."""
+    _window_list.append(win)
+
+def _window_pop() -> None:
+    """Pop a window from the list."""
+    _window_list.pop()
 
 #------------------------------------------------------------------------------
 # Element
