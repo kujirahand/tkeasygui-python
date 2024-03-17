@@ -11,9 +11,9 @@ def popup(message: str, title: str = "") -> None:
     """
     Display a message in a popup window.
     
-    #### Example
-    ```
-    popup("I like an apple.", "Information")
+    #### Example:
+    ```py
+    eg.popup("I like an apple.", "Information")
     ```
     """
     # msg.showinfo(title, message)
@@ -28,9 +28,35 @@ def popup_ok(message: str, title: str="") -> None:
     """Display a message in a popup window.(Alias popup)"""
     popup(title, message)
 
-def popup_yes_no(message: str, title: str = "Question") -> str:
-    """Display a message in a popup window with Yes and No buttons. Return "Yes" or "No"."""
-    return "Yes" if msg.askyesno(title, message) else "No"
+def popup_yes_no(message: str, title: str = "Question", yes_label: str="Yes", no_label: str="No") -> str:
+    """
+    Display a message in a popup window with Yes and No buttons. Return "Yes" or "No".
+
+    #### Example:
+    Ask user question, [Yes] or [No]
+    ```py
+    a = eg.popup_yes_no("Do you like Sushi?", "Question")
+    print(a) # "Yes" or "No"
+    ```
+    Ask user question in Japanes [はい] or [いいえ]
+    ```py
+    ja_a = eg.popup_yes_no("寿司は好き?", "質問", yes_label="はい", no_label="いいえ")
+    print(ja_a) # "はい" or "いいえ"
+    ```
+    """
+    # return "Yes" if msg.askyesno(title, message) else "No"
+    result = no_label
+    win = eg.Window(title, layout=[
+        [eg.Text(message)],
+        [eg.Button(yes_label, width=9), eg.Button(no_label, width=9)]
+    ])
+    while win.is_alive():
+        event, _ = win.read()
+        if event in [yes_label, no_label]:
+            result = event
+            break
+    win.close()
+    return result
 
 def popup_yes_no_cancel(message: str, title: str = "Question") -> str:
     """Display a message in a popup window with Yes and No buttons. Return "Yes" or "No" or "Cancel"."""

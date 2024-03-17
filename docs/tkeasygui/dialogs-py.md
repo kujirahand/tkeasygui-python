@@ -40,7 +40,7 @@ def popup(message: str, title: str = "") -> None
 
 Display a message in a popup window.
 
-#### Example
+#### Example:
 ```
 popup("I like an apple.", "Information")
 ```
