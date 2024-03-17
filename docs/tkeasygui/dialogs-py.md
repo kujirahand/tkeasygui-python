@@ -40,6 +40,11 @@ def popup(message: str, title: str = "") -> None
 
 Display a message in a popup window.
 
+#### Example
+```
+popup("I like an apple.", "Information")
+```
+
 ------
 
 ### popup_error {: #popup_error }
@@ -88,7 +93,7 @@ Display a message in a popup window with a text entry. Return the text entered.
 def popup_ok(message: str, title: str="") -> None
 ```
 
-Display a message in a popup window.
+Display a message in a popup window.(Alias popup)
 
 ------
 

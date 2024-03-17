@@ -388,27 +388,10 @@ Update the widget.
 ### Window {: #Window }
 
 ```python
-class Window(self, title: str, layout: list[list[Any]], size: (tuple[int, int]|None)=None, resizable:bool=True, **kw)
+class Window(self, title: str, layout: list[list[Any]], size: (tuple[int, int]|None)=None, resizable:bool=False, modal: bool=False, **kw)
 ```
 
 Main window object in TkEasyGUI
-
-Examples:
-    >>> # Create window
-    >>> layout = [
-    >>>     [eg.Text("Hello, World!")],
-    >>>     [eg.Button("OK")]
-    >>> ]
-    >>> window = eg.Window("Hello", layout=layout)
-    >>> # Event loop
-    >>> while window.is_alive():
-    >>>     # get event
-    >>>     event, values = window.read()
-    >>>     # check event
-    >>>     if event == "OK":
-    >>>         eg.popup("Pushed OK Button")
-    >>>         break
-    >>> window.close()
 
 Create a window with a layout of widgets.
 
@@ -453,6 +436,16 @@ def is_alive(self) -> bool
 ```
 
 Check if the window is alive.
+
+------
+
+[**move_to_center**](#Window.move_to_center){: #Window.move_to_center }
+
+```python
+def move_to_center(self) -> None
+```
+
+Move the window to the center of the screen.
 
 ------
 

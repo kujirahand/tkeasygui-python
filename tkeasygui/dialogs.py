@@ -8,7 +8,14 @@ import tkeasygui as eg
 #------------------------------------------------------------------------------
 # like PySimpleGUI
 def popup(message: str, title: str = "") -> None:
-    """Display a message in a popup window."""
+    """
+    Display a message in a popup window.
+    
+    #### Example
+    ```
+    popup("I like an apple.", "Information")
+    ```
+    """
     # msg.showinfo(title, message)
     win = eg.Window(title, layout=[[eg.Text(message)], [eg.Button("OK")]], modal=True)
     while win.is_alive():
@@ -18,8 +25,8 @@ def popup(message: str, title: str = "") -> None:
     win.close()
 
 def popup_ok(message: str, title: str="") -> None:
-    """Display a message in a popup window."""
-    msg.showinfo(title, message)
+    """Display a message in a popup window.(Alias popup)"""
+    popup(title, message)
 
 def popup_yes_no(message: str, title: str = "Question") -> str:
     """Display a message in a popup window with Yes and No buttons. Return "Yes" or "No"."""
