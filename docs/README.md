@@ -1,3 +1,4 @@
 # TkEasyGUI > docs
 
-- [TkEasyGUI](./tkeasygui/)
+- [TkEasyGUI > tkeasygui](./tkeasygui/index.md)
+

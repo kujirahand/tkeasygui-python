@@ -7,7 +7,7 @@ Python's standard UI library `Tkinter`, is often considered to have a high barri
 
 ## Install
 
-Install from https://pypi.org/
+Install from pypi
 
 
 ```sh
@@ -49,6 +49,10 @@ window.close()
 ## Samples
 
 Please see [tests](tests/).
+
+## Documents
+
+- [docs](docs/README.md)
 
 ## Regarding the relationship with PySimpleGUI
 
