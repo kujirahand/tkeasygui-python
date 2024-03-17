@@ -41,8 +41,8 @@ def popup(message: str, title: str = "") -> None
 Display a message in a popup window.
 
 #### Example:
-```
-popup("I like an apple.", "Information")
+```py
+eg.popup("I like an apple.", "Information")
 ```
 
 ------
@@ -100,10 +100,22 @@ Display a message in a popup window.(Alias popup)
 ### popup_yes_no {: #popup_yes_no }
 
 ```python
-def popup_yes_no(message: str, title: str = "Question") -> str
+def popup_yes_no(message: str, title: str = "Question", yes_label: str="Yes", no_label: str="No") -> str
 ```
 
 Display a message in a popup window with Yes and No buttons. Return "Yes" or "No".
+
+#### Example:
+Ask user question, [Yes] or [No]
+```py
+a = eg.popup_yes_no("Do you like Sushi?", "Question")
+print(a) # "Yes" or "No"
+```
+Ask user question in Japanes [はい] or [いいえ]
+```py
+ja_a = eg.popup_yes_no("寿司は好き?", "質問", yes_label="はい", no_label="いいえ")
+print(ja_a) # "はい" or "いいえ"
+```
 
 ------
 
