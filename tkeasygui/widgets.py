@@ -29,38 +29,45 @@ class Window:
         self.timeout_key: str = "-TIMEOUT-"
         self.timeout_id: str|None = None
         self.events: Queue = Queue()
-        self.frame: ttk.Frame = ttk.Frame(self.window, padding=10)
-        self.frame.pack(expand=True, fill="both")
         self.key_elements: dict[str, Element] = {}
         self.last_values: dict[str, Any] = {}
-        # set prop
+        # Frame
+        self.frame: ttk.Frame = ttk.Frame(self.window, padding=10)
+        self.frame.pack(expand=True, fill="both")
+        self.frame.rowconfigure(0, weight=1)
+        # set window properties
         self.window.title(title)
         self.window.protocol("WM_DELETE_WINDOW", lambda : window_close_handler(self))
         if size is not None:
             self.window.geometry(f"{size[0]}x{size[1]}")
         self.window.resizable(resizable, resizable)
+        # prepare create
+        for widgets in layout:
+            for elemment in widgets:
+                elem: Element = elemment
+                elem.prepare_create(self)
         # create widgets
         for widgets in layout:
-            frame_row = ttk.Frame(self.frame)
-            if len(widgets) == 1 and widgets[0].expand_y:
-                frame_row.pack(expand=True, fill="both")
-            else:
-                frame_row.pack(expand=True, fill="x")
-            for col, elemment in enumerate(widgets):
+            frame_row = ttk.Frame(self.frame, padding=5)
+            # columns
+            row_prop = {"expand": True, "fill": "x", "side": "top"}
+            for _col, elemment in enumerate(widgets):
                 # create widget
                 try:
                     elem: Element = elemment
-                    elem.prepare_create(self)
                     widget: tk.Widget = elem.create(self, frame_row)
+                    # check key
+                    if elem.key != "":
+                        self.key_elements[elem.key] = elem
                 except Exception as e:
                     raise Exception(f"Failed to create widget: {elem.element_type} {elem.key} {elem.props} --- {e}") from e
-                # check expand_x or expand_y
-                if elem.expand_x or elem.expand_y:
-                    widget.pack(expand=True, fill=elem._get_fill_prop())
-                else:
-                    widget.grid(row=0, column=col)
-                if elem.key != "":
-                    self.key_elements[elem.key] = elem
+                fill_prop = elem._get_fill_prop()
+                fill_prop["side"] = "left"
+                widget.pack(**fill_prop)
+                if elem.expand_y:
+                    row_prop["fill"] = "both"
+            # add row
+            frame_row.pack(**row_prop)
 
     def read(self, timeout: int|None=None, timeout_key: str="-TIMEOUT-") -> tuple[str, dict[str, Any]]:
         """Read events from the window."""
@@ -132,15 +139,19 @@ class Element:
         self.expand_x: bool = False
         self.expand_y: bool = False
     
-    def _get_fill_prop(self) -> Literal["none", "x", "y", "both"]:
+    def _get_fill_prop(self) -> dict[str, str]:
         """Get the fill property."""
+        prop = {"expand": False, "fill": "none"}
         if self.expand_x and self.expand_y:
-            return "both"
+            prop["expand"] = True
+            prop["fill"] = "both"
         if self.expand_x:
-            return "x"
+            prop["expand"] = True
+            prop["fill"] = "x"
         elif self.expand_y:
-            return "y"
-        return "none"
+            prop["expand"] = True
+            prop["fill"] = "y"
+        return prop
 
     def prepare_create(self, win: Window) -> None:
         # convert properties
@@ -157,19 +168,21 @@ class Element:
             self.props["fg"] = self.props.pop("text_color")
         # expand_x
         if "expand_x" in self.props:
-            self.props.pop("expand_x")
-            self.expand_x = True
+            self.expand_x = self.props.pop("expand_x")
         if "expand_y" in self.props:
-            self.props.pop("expand_y")
-            self.expand_y = True
+            self.expand_y = self.props.pop("expand_y")
         if "readonly" in self.props:
             b = self.props.pop("readonly")
             self.props["state"] = "readonly" if b else "normal"
         # convert "select_mode" to "selectmode"
+        new_props: dict[str, Any] = {}
         for key in self.props.keys():
             if "_" in key:
                 new_key = key.replace("_", "")
-                self.props[new_key] = self.props.pop(key)
+                new_props[new_key] = self.props[key]
+            else:
+                new_props[key] = self.props[key]
+        self.props = new_props
 
     def create(self, win: Window, parent: tk.Widget) -> Any:
         """Create a widget."""
@@ -345,23 +358,30 @@ class Table(Element):
         self.has_value = True
         self.enable_events = enable_events
         self.select_mode = select_mode
-        self.justification: str = {"":"", "right":"w", "center":"center", "left":"e"}[justification]
+        self.justification: str = {"": "", "right": "e", "center": "center", "left": "w"}[justification]
         self.auto_size_columns = auto_size_columns
         self.max_col_width = max_col_width # todo
         self.font = font # todo
         if key == "":
             key = f"-Table-{get_element_id()}-"
         self.key = key
+    
     def create(self, win: Window, parent: tk.Widget) -> tk.Widget:
         """Create a Table widget."""
         self.window: Window = win
         # create treeview
+        self.frame = ttk.Frame(parent, padding=1, relief="ridge", borderwidth=1)
         columns = tuple(i+1 for i, _ in enumerate(self.headings))
-        self.widget = ttk.Treeview(
-            parent,
+        tree = self.widget = ttk.Treeview(
+            self.frame,
             columns=columns,
             show="headings",
             **self.props)
+        # scroll bar
+        scrollbar = ttk.Scrollbar(self.frame, orient=tk.VERTICAL, command=tree.yview)
+        scrollbar.pack(expand=True, fill=tk.Y, side=tk.RIGHT)
+        self.widget.pack(expand=True, fill="both", side=tk.LEFT)
+        tree.configure(yscrollcommand=scrollbar.set)
         # setting for column
         streatch = tk.YES if self.auto_size_columns else tk.NO
         for i, h in enumerate(self.headings):
@@ -372,16 +392,10 @@ class Table(Element):
             self.widget.column(i+1, **kw)
         # add data
         self.set_values(self.values, self.headings)
-        # bar
-        verscrlbar = ttk.Scrollbar(parent, 
-                           orient ="vertical", 
-                           command = self.widget.yview)
-        verscrlbar.pack(side ='right', fill ='y')
-        self.widget.configure(yscrollcommand = verscrlbar.set)
-
         if self.enable_events:
-            self.widget.bind("<<ListboxSelect>>", lambda e: self._listbox_events(e))
-        return self.widget
+            self.widget.bind("<<TreeviewSelect>>", lambda e: self._table_events(e))
+        return self.frame
+    
     def set_values(self, values: list[list[str]], headings: list[str]) -> None:
         """Set values to the table."""
         self.values = values
@@ -394,15 +408,15 @@ class Table(Element):
         # add data
         for row in self.values:
             self.widget.insert(parent="", index="end", values=row)
+    
     def get(self) -> Any:
         """Get the value of the widget."""
-        selected: list[str] = []
-        for i in self.widget.curselection():
-            selected.append(self.values[int(i)])
-        return selected
+        record_id = self.widget.focus()
+        record_values = self.widget.item(record_id, "values")
+        return record_values
 
-    def _listbox_events(self, _event: Any) -> list[str]:
-        """Handle listbox events."""
+    def _table_events(self, _event: Any) -> list[str]:
+        """Handle events."""
         self.window._event_handler(self.key, {})
 
     def update(self, *args, **kw) -> None:
@@ -412,9 +426,12 @@ class Table(Element):
             kw["values"] = values
         self.values = kw["values"]
         # update list
-        self.widget.delete(0, "end")
-        for v in self.values:
-            self.widget.insert("end", v)
+        tree = self.widget
+        for i in tree.get_children(): # clear all
+            tree.delete(i)
+        # set values
+        self.set_values(self.values, self.headings)
+        # 
         del kw["values"]
         self.widget.config(**kw)
 
