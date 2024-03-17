@@ -49,12 +49,18 @@ while True:
 window.close()
 ```
 
+
 ## Samples
 
 Please see [tests](tests/).
 
-## For Developper
+## Regarding the relationship with PySimpleGUI
 
-```sh
-mypy .
-```
+This was developed with reference to PySimpleGUI, but has been re-implemented from scratch.
+While its usage is similar to PySimpleGUI, it has been expanded with unique features.
+
+## Link
+
+- [pypi.org > tkeasygui](https://pypi.org/project/tkeasygui/)
+- [GitHub > tkeasygui](https://github.com/kujirahand/tkeasygui-python/)
+
