@@ -27,3 +27,7 @@ build-backend = "setuptools.build_meta"
 [project.urls]
 Homepage = "https://github.com/kujirahand/tkeasygui-pythont"
 Issues = "https://github.com/kujirahand/tkeasygui-python/issues"
+
+[tool.ruff.lint]
+select = ["E", "F", "I"]
+ignore = ["E501"]

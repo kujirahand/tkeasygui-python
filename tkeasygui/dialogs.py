@@ -1,10 +1,12 @@
 """
 TkEasyGUI dialogs
 """
-import tkinter.messagebox as msg
-import tkinter.simpledialog as simpledialog
 import tkinter.filedialog as filedialog
+import tkinter.messagebox as messagebox
+import tkinter.simpledialog as simpledialog
+
 import tkeasygui as eg
+
 
 #------------------------------------------------------------------------------
 # Dialogs
@@ -87,6 +89,23 @@ def popup_yes_no_cancel(message: str, title: str = "Question") -> str:
 def popup_get_text(message: str, title: str = "", default: str = "") -> (str|None):
     """Display a message in a popup window with a text entry. Return the text entered."""
     return simpledialog.askstring(title, message, initialvalue=default)
+    """
+    result = None
+    win = eg.Window(title, layout=[
+        [eg.Text(message)],
+        [eg.Input("", key="-user-", width=40)],
+        [eg.Button("OK", width=9), eg.Button("Cancel", width=9)]
+    ], modal=True)
+    while win.is_alive():
+        event, values = win.read()
+        if event == "OK":
+            result = values["-user-"]
+            break
+        if event == "Cancel":
+            break
+    win.close()
+    return result
+    """
 
 def popup_error(message: str, title: str="Error") -> None:
     """Display a message in a popup window with an error icon."""
@@ -117,13 +136,20 @@ def popup_get_folder(title: str="", default_path: str="", **kw) -> (str|None):
 # TKinter
 def ask_yes_no(message: str, title: str="Question") -> bool:
     """Display a message in a popup window with Yes and No buttons. Return True or False. (use Tkinter)"""
-    return msg.askyesno(title, message)
+    return messagebox.askyesno(title, message)
 
 def ask_ok_cancel(message: str, title: str="Question") -> bool:
     """Display a message in a popup window with OK and Cancel buttons. Return True or False. (use Tkinter)"""
-    return msg.askokcancel(title, message)
+    return messagebox.askokcancel(title, message)
 
 def ask_retry_cancel(message: str, title: str="Question") -> bool:
     """Display a message in a popup window with Retry and Cancel buttons. Return True or False. (use Tkinter)"""
-    return msg.askretrycancel(title, message)
+    return messagebox.askretrycancel(title, message)
 
+def show_message(message: str, title: str="Information") -> None:
+    """show message in a popup window"""
+    messagebox.showinfo(title, message)
+
+def show_info(message: str, title: str="Information") -> None:
+    """show message in a popup window"""
+    messagebox.showinfo(title, message)

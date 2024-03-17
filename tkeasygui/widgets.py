@@ -1,9 +1,9 @@
-import tkinter as tk
-from tkinter import ttk
-from queue import Queue
 import threading
+import tkinter as tk
+from pprint import pprint  # noqa: F401
+from queue import Queue
+from tkinter import ttk
 from typing import Any, Literal
-from pprint import pprint
 
 #------------------------------------------------------------------------------
 # Const
@@ -29,7 +29,12 @@ class Window:
     def __init__(self, title: str, layout: list[list[Any]], size: (tuple[int, int]|None)=None, resizable:bool=False, modal: bool=False, **kw) -> None:
         """Create a window with a layout of widgets."""
         self.modal: bool = modal
-        self.window: tk.Tk = tk.Tk() if not modal else tk.Toplevel(_get_active_window())
+        # check active window
+        active_win = _get_active_window()
+        if active_win is None:
+            active_win = tk.Tk()
+            active_win.configure(width=1, height=1)
+        self.window: tk.Tk|tk.Toplevel = tk.Tk() if not modal else tk.Toplevel(master=active_win)
         self.timeout: int|None = None
         self.timeout_key: str = WINDOW_TIMEOUT
         self.timeout_id: str|None = None
@@ -52,6 +57,7 @@ class Window:
             for elemment in widgets:
                 elemment.prepare_create(self)
         # create widgets
+        self.need_focus_widget: tk.Widget = None
         for widgets in layout:
             frame_row = ttk.Frame(self.frame, padding=5)
             # columns
@@ -64,6 +70,8 @@ class Window:
                     # check key
                     if elem.key != "":
                         self.key_elements[elem.key] = elem
+                    if elem.has_value or elem.key == "OK" or elem.key == "Yes":
+                        self.need_focus_widget = widget
                 except Exception as e:
                     raise Exception(f"Failed to create widget: {elem.element_type} {elem.key} {elem.props} --- {e}") from e
                 fill_prop = elem._get_fill_prop()
@@ -73,24 +81,27 @@ class Window:
                     row_prop["fill"] = "both"
             # add row
             frame_row.pack(**row_prop)
-        # modal
+        # check modal
         if modal:
             # check position
-            parent = _get_active_window()
+            parent = active_win
             if parent is not None:
                 self.window.geometry(f"+{parent.winfo_x()+20}+{parent.winfo_y()+20}")
             # set modal action
+            self.window.attributes("-topmost", 1) # topmost
+            # self.window.transient(parent)
             self.window.grab_set()
-            self.window.focus_set()
-            self.window.transient(parent)
+            self.window.focus_force()
         else:
-            self.window.eval('tk::PlaceWindow . center')
+            if isinstance(self.window, tk.Tk):
+                self.window.eval('tk::PlaceWindow . center')
         # push window
         _window_push(self)
 
     def move_to_center(self) -> None:
         """Move the window to the center of the screen."""
-        self.window.eval('tk::PlaceWindow . center')
+        if isinstance(self.window, tk.Tk):
+            self.window.eval('tk::PlaceWindow . center')
 
     def read(self, timeout: int|None=None, timeout_key: str="-TIMEOUT-") -> tuple[str, dict[str, Any]]:
         """Read events from the window."""
@@ -99,6 +110,7 @@ class Window:
         timeout = self.timeout if self.timeout is not None else 100
         while True:
             self.timeout_id = self.window.after(timeout, _timeout_handler, self)
+            self.window.after(100, _focus_window, self)
             self.window.mainloop()
             if not self.events.empty():
                 # return event
@@ -117,7 +129,7 @@ class Window:
             # get value from widget if possible
             try:
                 values[key] = val.get()
-            except:
+            except Exception:
                 # if not possible, return last_values
                 return self.last_values
         # set cache
@@ -140,7 +152,7 @@ class Window:
         self.flag_alive = False
         try:
             self.window.quit() # exit from mainloop
-        except:
+        except Exception:
             pass
 
     def close(self) -> None:
@@ -168,10 +180,34 @@ class Window:
     def __getitem__(self, key: str) -> Any:
         """Get an element by its key."""
         return self.key_elements[key]
+    
+    def hide(self) -> None:
+        """Hide window"""
+        self.window.withdraw()
+    
+    def show(self) -> None:
+        self.window.deiconify()
+
+def _timeout_handler(self: Window) -> None:
+    """Handle a timeout event."""
+    if self.timeout_id is not None:
+        self.window.after_cancel(self.timeout_id)
+    if self.timeout is not None:
+        self._event_handler("-TIMEOUT-", None)
+    self.window.quit()
+
+def _focus_window(self: Window) -> None:
+    """Focus window"""
+    if not self.flag_alive:
+        return
+    if self.need_focus_widget is not None:
+        self.need_focus_widget.focus_set()
+        self.need_focus_widget = None
+        
 
 # active window
 _window_list: list[Window] = []
-def _get_active_window() -> tk.BaseWidget|None:
+def _get_active_window() -> tk.Tk|tk.Toplevel|None:
     """Get the active window."""
     if len(_window_list) == 0:
         return None
@@ -273,7 +309,7 @@ class Text(Element):
     
     def create(self, win: Window, parent: tk.Widget) -> tk.Widget:
         """Create a Text widget."""
-        self.widget: tk.Label = tk.Label(parent, **self.props)
+        self.widget = tk.Label(parent, **self.props)
         return self.widget
     
     def get(self) -> Any:
@@ -301,10 +337,15 @@ class Button(Element):
     def create(self, win: Window, parent: tk.Widget) -> tk.Widget:
         self.widget = tk.Button(parent, **self.props)
         self.widget.bind("<Button-1>", lambda e: win._event_handler(self.key, {"event": e}))
+        self.widget.bind("<KeyPress>", lambda e: _button_key_checker(e, self, win))
         return self.widget
     def get(self) -> Any:
         """Get the value of the widget."""
         return self.props["text"]
+
+def _button_key_checker(e: tk.Event, self: Button, win: Window) -> None:
+    if e.keysym == "Return" or e.keysym == "space":
+        win._event_handler(self.key, {"event": e}) # event
 
 class Input(Element):
     """Text input element."""
@@ -504,14 +545,6 @@ class Table(Element):
 #------------------------------------------------------------------------------
 # Utility functions
 #------------------------------------------------------------------------------
-
-def _timeout_handler(self: Window):
-    """Handle a timeout event."""
-    if self.timeout_id is not None:
-        self.window.after_cancel(self.timeout_id)
-    if self.timeout is not None:
-        self._event_handler("-TIMEOUT-", None)
-    self.window.quit()
 
 element_id: int = 0
 def get_element_id() -> int:

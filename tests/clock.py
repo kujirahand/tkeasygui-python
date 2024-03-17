@@ -1,6 +1,7 @@
 # clock
-import tkeasygui as sg
 import datetime
+
+import tkeasygui as sg
 
 # create window
 layout = [

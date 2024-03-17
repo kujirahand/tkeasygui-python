@@ -1,7 +1,8 @@
 # foramt documents script
-import os
 import glob
+import os
 import re
+
 SCRIPT_DIR = os.path.dirname(__file__)
 DOCS_DIR = os.path.join(SCRIPT_DIR, "tkeasygui")
 print(DOCS_DIR)
