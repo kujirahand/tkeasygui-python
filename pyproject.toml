@@ -1,0 +1,17 @@
+[project]
+name = "kujirahand"
+version = "0.1.0"
+authors = [
+  { name="kujirahand", email="web@kujirahand.com" },
+]
+description = "Easy and Simple GUI Library"
+readme = "README.md"
+requires-python = ">=3.8"
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "License :: OSI Approved :: MIT License",
+]
+
+[project.urls]
+Homepage = "https://github.com/kujirahand/tkeasygui-pythont"
+Issues = "https://github.com/kujirahand/tkeasygui-python/issues"
