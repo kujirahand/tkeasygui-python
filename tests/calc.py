@@ -1,3 +1,6 @@
+"""
+Calc sample
+"""
 import tkeasygui as sg
 
 # define the calculator buttons
@@ -9,13 +12,12 @@ calc_buttons = [
     ["0", ".", "%", "="]
 ]
 font = ("Helvetica", 20)
-
 # create window
 layout = [
     [sg.Input("0",
              key="-output-", 
-             background_color="white", text_color="black",
              font=font,
+             readonly_background_color="white",
              readonly=True,
              expand_x=True)],
 ]

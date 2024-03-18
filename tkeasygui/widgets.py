@@ -242,7 +242,7 @@ class Element:
         self.key = key
         self.has_value: bool = False
         self.props: dict[str, Any] = kw
-        self.widdget: Any|None = None
+        self.widget: Any|None = None
         self.expand_x: bool = False
         self.expand_y: bool = False
     
@@ -278,9 +278,6 @@ class Element:
             self.expand_x = self.props.pop("expand_x")
         if "expand_y" in self.props:
             self.expand_y = self.props.pop("expand_y")
-        if "readonly" in self.props:
-            b = self.props.pop("readonly")
-            self.props["state"] = "readonly" if b else "normal"
         # convert "select_mode" to "selectmode"
         if "select_mode" in self.props:
             self.props["selectmode"] = self.props.pop("select_mode")
@@ -384,11 +381,11 @@ class Input(Element):
     def __init__(self, text: str="", key: str="", background_color: str="white", color: str = "black", text_aligh: TextAlign="left",
                  readonly: bool=False, readonly_background_color: str="silver", **kw) -> None:
         super().__init__("Input", **kw)
+        self.readonly: bool = readonly
         self.props["text"] = text # default text @see Input.create
         self.props["background"] = background_color
         self.props["foreground"] = color
         self.props["justify"] = text_aligh
-        self.props["readonly"] = readonly
         self.props["readonlybackground"] = readonly_background_color
         self.has_value = True
         if key == "":
@@ -397,8 +394,12 @@ class Input(Element):
     def create(self, win: Window, parent: tk.Widget) -> tk.Widget:
         # set default text
         self.props["textvariable"] = tk.StringVar()
+        # create
         self.widget = tk.Entry(parent, name=self.key, **self.props)
         self.widget.insert(0, self.props["text"])
+        # set readonly
+        self.props["state"] = "readonly" if self.readonly else "normal"
+        self.widget.config(state=self.props["state"])
         return self.widget
     def get(self) -> Any:
         """Get the value of the widget."""
@@ -409,12 +410,23 @@ class Input(Element):
         text = self.props["text"]
         if len(args) >= 1:
             text = args[0]
-        # update text property
+        # check readonly
+        if "readonly" in kw:
+            self.readonly = kw["readonly"]
+        # update text
+        # 1. update widget state
+        readonly = self.readonly
+        if readonly:
+            self.widget.config(state="normal")
+        # 2. update text property
         self.props["text"] = text
         self.props["textvariable"].set(text)
-        # update widget
+        # 3. update widget text
         self.widget.delete(0, "end")
         self.widget.insert(0, text)
+        # update readonly
+        self.widget.config(state="readonly" if readonly else "normal")
+        # update others
         self.widget.config(**kw)
 
 class InputText(Input):
@@ -425,9 +437,9 @@ class InputText(Input):
 
 class Multiline(Element):
     """Multiline text input element."""
-    def __init__(self, default_text: str="", key: str="", **kw) -> None:
+    def __init__(self, text: str="", default_text: str|None=None, key: str="", readonly: bool=False, **kw) -> None:
         super().__init__("Multiline", **kw)
-        self.props["default_text"] = default_text
+        self.props["default_text"] = text
         self.has_value = True
         if key == "":
             key = f"-Mulitline-{get_element_id()}-"
