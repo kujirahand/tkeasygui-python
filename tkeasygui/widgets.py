@@ -47,6 +47,7 @@ class Window:
         if active_win is None:
             active_win = tk.Tk()
             active_win.configure(width=1, height=1)
+            active_win.eval('tk::PlaceWindow . center')
         self.window: tk.Tk|tk.Toplevel = tk.Tk() if not modal else tk.Toplevel(master=active_win)
         self.timeout: int|None = None
         self.timeout_key: str = WINDOW_TIMEOUT
