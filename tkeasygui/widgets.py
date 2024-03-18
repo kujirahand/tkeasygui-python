@@ -272,6 +272,11 @@ class Element:
             b = self.props.pop("readonly")
             self.props["state"] = "readonly" if b else "normal"
         # convert "select_mode" to "selectmode"
+        if "select_mode" in self.props:
+            self.props["selectmode"] = self.props.pop("select_mode")
+        """
+        # Since it is dangerous, changed to the method of checking one by one.
+        # convert "select_mode" to "selectmode"
         new_props: dict[str, Any] = {}
         for key in self.props.keys():
             if "_" in key:
@@ -280,6 +285,7 @@ class Element:
             else:
                 new_props[key] = self.props[key]
         self.props = new_props
+        """
 
     def create(self, win: Window, parent: tk.Widget) -> Any:
         """Create a widget."""
@@ -344,8 +350,10 @@ class Button(Element):
         return self.props["text"]
 
 def _button_key_checker(e: tk.Event, self: Button, win: Window) -> None:
-    if e.keysym == "Return" or e.keysym == "space":
-        win._event_handler(self.key, {"event": e}) # event
+    """Check key event for button. (Enabled Return key)"""
+    # if e.keysym == "Return" or e.keysym == "space":
+    if e.keysym == "Return":
+        win._event_handler(self.key, {"event": e}) # throw event
 
 class Input(Element):
     """Text input element."""
