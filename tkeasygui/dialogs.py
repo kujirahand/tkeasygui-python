@@ -21,7 +21,7 @@ def popup(message: str, title: str = "") -> None:
     eg.popup("I like an apple.", "Information")
     ```
     """
-    # msg.showinfo(title, message)
+    # messagebox.showinfo(title, message)
     win = eg.Window(title, layout=[[eg.Text(message)], [eg.Button("OK")]], modal=True)
     while win.is_alive():
         event, _ = win.read()
@@ -79,7 +79,7 @@ def popup_yes_no(message: str, title: str = "Question", yes_label: str="Yes", no
     print(ja_a) # "はい" or "いいえ"
     ```
     """
-    # return "Yes" if msg.askyesno(title, message) else "No"
+    # return "Yes" if messagebox.askyesno(title, message) else "No"
     return popup_buttons(message, title, buttons=[yes_label, no_label])
 
 def popup_yes_no_cancel(message: str, title: str = "Question") -> str:
@@ -109,7 +109,7 @@ def popup_get_text(message: str, title: str = "", default: str = "") -> (str|Non
 
 def popup_error(message: str, title: str="Error") -> None:
     """Display a message in a popup window with an error icon."""
-    msg.showerror(title, message, icon="error")
+    messagebox.showerror(title, message, icon="error")
 
 def popup_get_file(title: str="", initial_folder: str="", save_as: bool=False, multiple_files: bool=False, file_types: tuple[tuple[str, str]]=(("All Files", "*.*"),), **kw) -> (str|tuple[str]|None):
     """Popup a file selection dialog. Return the file selected."""

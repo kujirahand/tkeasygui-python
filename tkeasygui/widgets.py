@@ -57,7 +57,7 @@ class Window:
             for elemment in widgets:
                 elemment.prepare_create(self)
         # create widgets
-        self.need_focus_widget: tk.Widget = None
+        self.need_focus_widget: tk.Widget|None = None
         for widgets in layout:
             frame_row = ttk.Frame(self.frame, padding=5)
             # columns
@@ -224,7 +224,7 @@ def _window_pop() -> None:
 #------------------------------------------------------------------------------
 # Element
 #------------------------------------------------------------------------------
-# for compatibility with PySimpleGUI
+# for compatibility with PySimpleGUI and etc
 element_propery_alias: dict[str, str] = {
     "ButtonText": "text",
     "label": "text",
@@ -280,18 +280,6 @@ class Element:
         # convert "select_mode" to "selectmode"
         if "select_mode" in self.props:
             self.props["selectmode"] = self.props.pop("select_mode")
-        """
-        # Since it is dangerous, changed to the method of checking one by one.
-        # convert "select_mode" to "selectmode"
-        new_props: dict[str, Any] = {}
-        for key in self.props.keys():
-            if "_" in key:
-                new_key = key.replace("_", "")
-                new_props[new_key] = self.props[key]
-            else:
-                new_props[key] = self.props[key]
-        self.props = new_props
-        """
 
     def create(self, win: Window, parent: tk.Widget) -> Any:
         """Create a widget."""
