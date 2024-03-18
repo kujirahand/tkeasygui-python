@@ -6,6 +6,7 @@ echo "https://packaging.python.org/en/latest/tutorials/packaging-projects/"
 # clean
 rm -f -r dist
 rm -f -r tkeasygui.egg-info
+python3 -m pip uninstall tkeasygui
 
 # build
 echo "--- build ---"
