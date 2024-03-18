@@ -3,7 +3,7 @@ import tkinter as tk
 from pprint import pprint  # noqa: F401
 from queue import Queue
 from tkinter import ttk
-from typing import Any, Literal
+from typing import Any, Literal, TypeAlias
 
 #------------------------------------------------------------------------------
 # Const
@@ -19,6 +19,9 @@ TABLE_SELECT_MODE_NONE: str = tk.NONE
 TABLE_SELECT_MODE_BROWSE: str = tk.BROWSE
 TABLE_SELECT_MODE_EXTENDED: str = tk.EXTENDED
 
+# type
+TextAlign: TypeAlias = Literal["left", "right", "center"]
+
 #------------------------------------------------------------------------------
 # Widget wrapper
 #------------------------------------------------------------------------------
@@ -26,7 +29,7 @@ class Window:
     """
     Main window object in TkEasyGUI
     """
-    def __init__(self, title: str, layout: list[list[Any]], size: (tuple[int, int]|None)=None, resizable:bool=False, modal: bool=False, **kw) -> None:
+    def __init__(self, title: str, layout: list[list["Element"]], size: (tuple[int, int]|None)=None, resizable:bool=False, modal: bool=False, **kw) -> None:
         """Create a window with a layout of widgets."""
         self.modal: bool = modal
         # check active window
@@ -229,6 +232,7 @@ element_propery_alias: dict[str, str] = {
     "ButtonText": "text",
     "label": "text",
     "caption": "text",
+    "justify": "text_align"
 }
 class Element:
     """Element class."""
@@ -266,7 +270,7 @@ class Element:
         # background_color
         if "background_color" in self.props:
             self.props["bg"] = self.props.pop("background_color")
-            self.props["readonlybackground"] = self.props["bg"]
+            # self.props["readonlybackground"] = self.props["bg"]
         if "text_color" in self.props:
             self.props["fg"] = self.props.pop("text_color")
         # expand_x
@@ -317,10 +321,10 @@ class Element:
 
 class Text(Element):
     """Text element."""
-    def __init__(self, text: str, justify: Literal["left","right","center"]="left", **kw) -> None:
+    def __init__(self, text: str, text_align: TextAlign="left", **kw) -> None:
         super().__init__("Text", **kw)
         self.props["text"] = text
-        self.props["justify"] = justify
+        self.props["justify"] = text_align
     
     def create(self, win: Window, parent: tk.Widget) -> tk.Widget:
         """Create a Text widget."""
@@ -357,6 +361,9 @@ class Button(Element):
     def get(self) -> Any:
         """Get the value of the widget."""
         return self.props["text"]
+    def GetText(self) -> str:
+        """Get the text of the button. (compatibility with PySimpleGUI)"""
+        return self.props["text"]
     def update(self, *args, **kw) -> None:
         """Update the widget."""
         super().update(*args, **kw)
@@ -366,7 +373,6 @@ class Button(Element):
             self.widget.config(text=text)
         self.widget.config(**kw)
 
-
 def _button_key_checker(e: tk.Event, self: Button, win: Window) -> None:
     """Check key event for button. (Enabled Return key)"""
     # if e.keysym == "Return" or e.keysym == "space":
@@ -375,9 +381,15 @@ def _button_key_checker(e: tk.Event, self: Button, win: Window) -> None:
 
 class Input(Element):
     """Text input element."""
-    def __init__(self, text: str, key: str="", **kw) -> None:
+    def __init__(self, text: str, key: str="", background_color: str="white", color: str = "black", text_aligh: TextAlign="left",
+                 readonly: bool=False, readonly_background_color: str="silver", **kw) -> None:
         super().__init__("Input", **kw)
         self.props["text"] = text
+        self.props["bg"] = background_color
+        self.props["fg"] = color
+        self.props["justify"] = text_aligh
+        self.props["readonly"] = readonly
+        self.props["readonlybackground"] = readonly_background_color
         self.has_value = True
         if key == "":
             key = f"-Input-{get_element_id()}-"
