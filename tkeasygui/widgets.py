@@ -224,6 +224,12 @@ def _window_pop() -> None:
 #------------------------------------------------------------------------------
 # Element
 #------------------------------------------------------------------------------
+# for compatibility with PySimpleGUI
+element_propery_alias: dict[str, str] = {
+    "ButtonText": "text",
+    "label": "text",
+    "caption": "text",
+}
 class Element:
     """Element class."""
     def __init__(self, element_type, key: str="", **kw) -> None:
@@ -237,7 +243,7 @@ class Element:
         self.expand_y: bool = False
     
     def _get_fill_prop(self) -> dict[str, Any]:
-        """Get the fill property."""
+        """Get the fill property in `pack` method."""
         prop = {"expand": False, "fill": "none"}
         if self.expand_x and self.expand_y:
             prop["expand"] = True
@@ -296,19 +302,28 @@ class Element:
         return "-"
     
     def update(self, *args, **kw) -> None:
-        """Update the widget."""
+        """Update the widget props (only change `props`)"""
         for k, v in kw.items():
             self.props[k] = v
-        # if self.widget is not None:
-        #    self.widget.config(**kw)
     
+    def __getattr__(self, name: str) -> Any:
+        """Get unknown attribute."""
+        # Method called when the attribute is not found in the object's instance dictionary
+        return self.__getitem__(name)
+
     def __getitem__(self, name: str) -> Any:
         """Get element property"""
+        # For compatibility with PySImpleGUI
+        if name in element_propery_alias:
+            name = element_propery_alias[name]
+        # check self.props
+        if name in self.props:
+            return self.props[name]
+        # check widget native property
         if self.widdget is not None:
             if name in self.widdget:
                 return self.widdget[name]
-        if name in self.props:
-            return self.props[name]
+        # print("@@@error.name=", name)
         return None
 
 
@@ -339,13 +354,13 @@ class Text(Element):
 
 class Button(Element):
     """Button element."""
-    def __init__(self, text: str="", key: str="", **kw) -> None:
+    def __init__(self, button_text: str="", key: str="", **kw) -> None:
         super().__init__("Button", **kw)
         if key == "":
-            key = text
+            key = button_text
         self.key = key
         self.has_value = False
-        self.props["text"] = text
+        self.props["text"] = button_text
     def create(self, win: Window, parent: tk.Widget) -> tk.Widget:
         self.widget = tk.Button(parent, **self.props)
         self.widget.bind("<Button-1>", lambda e: win._event_handler(self.key, {"event": e}))
@@ -354,6 +369,15 @@ class Button(Element):
     def get(self) -> Any:
         """Get the value of the widget."""
         return self.props["text"]
+    def update(self, *args, **kw) -> None:
+        """Update the widget."""
+        super().update(*args, **kw)
+        if len(args) >= 1:
+            text = args[0]
+            self.props["text"] = text
+            self.widget.config(text=text)
+        self.widget.config(**kw)
+
 
 def _button_key_checker(e: tk.Event, self: Button, win: Window) -> None:
     """Check key event for button. (Enabled Return key)"""
