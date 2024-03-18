@@ -172,6 +172,170 @@ def widget_update(self, **kw) -> None
 
 ------
 
+### Graph
+
+```python
+class Graph(
+    self, key: str="", background_color: str|None=None,
+    size: tuple[int, int]=(300, 300), canvas_size: tuple[int, int]|None=None,
+    graph_bottom_left: tuple[int, int]|None=None, graph_top_right: tuple[int, int]|None=None,
+    **kw)
+```
+
+Graph element.
+
+Create an element.
+
+------
+
+#### Base classes
+
+* [`Element `](#Element)
+
+------
+
+#### Methods
+
+##### Graph.create
+
+```python
+def create(self, win: Window, parent: tk.Widget) -> tk.Widget
+```
+
+Create a widget.
+
+------
+
+##### Graph.draw_arc
+
+```python
+def draw_arc(self, top_left: PointType, bottom_right: PointType, extent: int|None = None, start_angle: int|None = None, style: str|None = None, arc_color: str|None = 'black', line_width: int = 1, fill_color: str|None = None) -> int
+```
+
+Draw an arc.
+
+------
+
+##### Graph.draw_circle
+
+```python
+def draw_circle(self, center_location: PointType, radius: int|float, fill_color: str|None = None, line_color: str|None = 'black', line_width: int = 1) -> int
+```
+
+Draw a circle.
+
+------
+
+##### Graph.draw_image
+
+```python
+def draw_image(self, filename: str|None=None, data: bytes|None=None, location: PointType|None=None) -> int
+```
+
+Draw image
+
+------
+
+##### Graph.draw_line
+
+```python
+def draw_line(self, point_from: PointType, point_to: PointType, color: str = 'black', width: int = 1) -> int
+```
+
+Draw a line.
+
+------
+
+##### Graph.draw_lines
+
+```python
+def draw_lines(self, points: list[PointType], color='black', width=1) -> int
+```
+
+Draw lines.
+
+------
+
+##### Graph.draw_oval
+
+```python
+def draw_oval(self, top_left: PointType, bottom_right: PointType, fill_color: str|None = None, line_color: str|None = None, line_width: int = 1)
+```
+
+Draw an oval.
+
+------
+
+##### Graph.draw_point
+
+```python
+def draw_point(self, point: PointType, size: int = 2, color: str = 'black') -> int
+```
+
+Draw a point.
+
+------
+
+##### Graph.draw_polygon
+
+```python
+def draw_polygon(self, points: list[PointType], fill_color: str|None=None, line_color: str|None=None, line_width: int|None=None) -> None
+```
+
+Draw polygon
+
+------
+
+##### Graph.draw_rectangle
+
+```python
+def draw_rectangle(self, top_left: PointType, bottom_right: PointType, fill_color: str|None=None, line_color: str|None=None, line_width: int|None=None) -> int
+```
+
+Draw rectangle
+
+------
+
+##### Graph.draw_text
+
+```python
+def draw_text(self, text: str, location: PointType, color: str|None='black', font: FontType=None, angle: int=0, text_location: TextAlign=tk.CENTER) -> int
+```
+
+Draw text
+
+------
+
+##### Graph.erase
+
+```python
+def erase(self) -> None
+```
+
+Delete all
+
+------
+
+##### Graph.get
+
+```python
+def get(self) -> Any
+```
+
+Return Widget
+
+------
+
+##### Graph.update
+
+```python
+def update(self, *args, **kw) -> None
+```
+
+Update the widget.
+
+------
+
 ### Input
 
 ```python
@@ -590,11 +754,23 @@ Read events from the window.
 
 ------
 
+##### Window.refresh
+
+```python
+def refresh(self) -> "Window"
+```
+
+Refresh window
+
+------
+
 ##### Window.show
 
 ```python
 def show(self) -> None
 ```
+
+Show hidden window (hide -> show)
 
 ------
 
@@ -613,3 +789,11 @@ def get_element_id() -> int
 ```
 
 Get a unique id for an element.
+
+------
+
+### rgb
+
+```python
+def rgb(r: int, g: int, b: int) -> str
+```
