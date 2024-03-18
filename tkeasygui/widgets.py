@@ -522,6 +522,32 @@ class Multiline(Element):
         if self.readonly:
             self.widget_update(state="disabled")
 
+class Canvas(Element):
+    """Canvas element."""
+    def __init__(self, key: str="", background_color: str|None=None, size: tuple[int, int]=(300, 300), **kw) -> None:
+        super().__init__("Canvas", **kw)
+        self.key = key
+        self.props["size"] = size
+        if background_color:
+            self.props["background"] = background_color
+
+    def create(self, win: Window, parent: tk.Widget) -> tk.Widget:
+        self.widget = tk.Canvas(parent, name=self.key, **self.props)
+        return self.widget
+
+    def get(self) -> Any:
+        """Return Widget"""
+        return self.widget
+
+    def update(self, *args, **kw) -> None:
+        """Update the widget."""
+        self.widget_update(**kw)
+    
+    def __getattr__(self, name):
+        if name in ["Widget"]:
+            return self.widget
+        return super().__getattr__(name)
+
 class Listbox(Element):
     """Listbox element."""
     def __init__(self, values: list[str]=[], key: str="", enable_events: bool=False, select_mode: str="browse", **kw) -> None:
