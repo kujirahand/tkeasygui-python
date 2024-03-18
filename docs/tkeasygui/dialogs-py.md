@@ -34,6 +34,16 @@ Display a message in a popup window with Yes and No buttons. Return True or Fals
 
 ------
 
+### msgbox
+
+```python
+def msgbox(message: str, title: str="Message") -> None
+```
+
+show message in a popup window like VB
+
+------
+
 ### popup
 
 ```python
@@ -65,6 +75,16 @@ color = eg.popup_buttons(
     buttons=["red","yellow","green"])
 print(color)
 ```
+
+------
+
+### popup_color
+
+```python
+def popup_color(title: str="", default_color: str|None=None) -> (str|None)
+```
+
+Popup a color selection dialog. Return the color selected.
 
 ------
 
@@ -102,6 +122,16 @@ Popup a folder selection dialog. Return the folder selected.
 
 ```python
 def popup_get_text(message: str, title: str = "", default: str = "") -> (str|None)
+```
+
+Display a message in a popup window with a text entry. Return the text entered.
+
+------
+
+### popup_input
+
+```python
+def popup_input(message: str, title: str = "", default: str = "") -> (str|None)
 ```
 
 Display a message in a popup window with a text entry. Return the text entered.
@@ -147,3 +177,23 @@ def popup_yes_no_cancel(message: str, title: str = "Question") -> str
 ```
 
 Display a message in a popup window with Yes and No buttons. Return "Yes" or "No" or "Cancel".
+
+------
+
+### show_info
+
+```python
+def show_info(message: str, title: str="Information") -> None
+```
+
+show message in a popup window
+
+------
+
+### show_message
+
+```python
+def show_message(message: str, title: str="Information") -> None
+```
+
+show message in a popup window

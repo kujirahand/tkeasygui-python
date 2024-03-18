@@ -5,7 +5,7 @@
 ### Button
 
 ```python
-class Button(self, text: str="", key: str="", **kw)
+class Button(self, button_text: str="", key: str="", **kw)
 ```
 
 Button element.
@@ -21,6 +21,16 @@ Create an element.
 ------
 
 #### Methods
+
+##### Button.GetText
+
+```python
+def GetText(self) -> str
+```
+
+Get the text of the button. (compatibility with PySimpleGUI)
+
+------
 
 ##### Button.create
 
@@ -42,6 +52,66 @@ Get the value of the widget.
 
 ------
 
+##### Button.update
+
+```python
+def update(self, *args, **kw) -> None
+```
+
+Update the widget.
+
+------
+
+### Canvas
+
+```python
+class Canvas(self, key: str="", background_color: str|None=None, size: tuple[int, int]=(300, 300), **kw)
+```
+
+Canvas element.
+
+Create an element.
+
+------
+
+#### Base classes
+
+* [`Element `](#Element)
+
+------
+
+#### Methods
+
+##### Canvas.create
+
+```python
+def create(self, win: Window, parent: tk.Widget) -> tk.Widget
+```
+
+Create a widget.
+
+------
+
+##### Canvas.get
+
+```python
+def get(self) -> Any
+```
+
+Return Widget
+
+------
+
+##### Canvas.update
+
+```python
+def update(self, *args, **kw) -> None
+```
+
+Update the widget.
+
+------
+
 ### Element
 
 ```python
@@ -55,16 +125,6 @@ Create an element.
 ------
 
 #### Methods
-
-##### Element.GetText
-
-```python
-def GetText(self) -> Any
-```
-
-Get the text of the widget. (for Button)
-
-------
 
 ##### Element.create
 
@@ -100,14 +160,24 @@ def prepare_create(self, win: Window) -> None
 def update(self, *args, **kw) -> None
 ```
 
-Update the widget.
+Update the widget props (only change `props`)
+
+------
+
+##### Element.widget_update
+
+```python
+def widget_update(self, **kw) -> None
+```
 
 ------
 
 ### Input
 
 ```python
-class Input(self, text: str, key: str="", **kw)
+class Input(
+    self, text: str="", key: str="", background_color: str="white", color: str = "black", text_aligh: TextAlign="left",
+     readonly: bool=False, readonly_background_color: str="silver", **kw)
 ```
 
 Text input element.
@@ -130,7 +200,7 @@ Create an element.
 def create(self, win: Window, parent: tk.Widget) -> tk.Widget
 ```
 
-Create a widget.
+create Input widget
 
 ------
 
@@ -141,6 +211,16 @@ def get(self) -> Any
 ```
 
 Get the value of the widget.
+
+------
+
+##### Input.set_readonly
+
+```python
+def set_readonly(self, readonly: bool) -> None
+```
+
+set readonly
 
 ------
 
@@ -157,12 +237,10 @@ Update the widget.
 ### InputText
 
 ```python
-class InputText(self, text: str, key: str="", **kw)
+class InputText(text: str = '', key: str = '', background_color: str = 'white', color: str = 'black', text_aligh: Literal['left', 'right', 'center'] = 'left', readonly: bool = False, readonly_background_color: str = 'silver', **kw)
 ```
 
 InputText element. (alias of Input)
-
-Create an element.
 
 ------
 
@@ -225,7 +303,12 @@ Update the widget.
 ### Multiline
 
 ```python
-class Multiline(self, default_text: str="", key: str="", **kw)
+class Multiline(
+    self, text: str="", default_text: str|None=None, key: str="",
+     color: str="black", background_color: str="white",
+     readonly: bool=False, readonly_background_color: str='silver',
+     size: tuple[int, int]=(50, 10),
+     **kw)
 ```
 
 Multiline text input element.
@@ -259,6 +342,26 @@ def get(self) -> Any
 ```
 
 Get the value of the widget.
+
+------
+
+##### Multiline.set_readonly
+
+```python
+def set_readonly(self, readonly: bool) -> None
+```
+
+Set readonly
+
+------
+
+##### Multiline.set_text
+
+```python
+def set_text(self, text: str) -> None
+```
+
+Set text
 
 ------
 
@@ -338,7 +441,7 @@ Update the widget.
 ### Text
 
 ```python
-class Text(self, text: str, justify: Literal["left","right","center"]="left", **kw)
+class Text(self, text: str, text_align: TextAlign="left", font: FontType|None=None, **kw)
 ```
 
 Text element.
@@ -385,10 +488,28 @@ Update the widget.
 
 ------
 
+### TkEasyError
+
+```python
+class TkEasyError(self, message="TkEasyError")
+```
+
+Common base class for all non-exit exceptions.
+
+Initialize self.  See help(type(self)) for accurate signature.
+
+------
+
+#### Base classes
+
+* `builtins.Exception`
+
+------
+
 ### Window
 
 ```python
-class Window(self, title: str, layout: list[list[Any]], size: (tuple[int, int]|None)=None, resizable:bool=False, modal: bool=False, **kw)
+class Window(self, title: str, layout: list[list["Element"]], size: (tuple[str, int]|None)=None, resizable:bool=False, modal: bool=False, **kw)
 ```
 
 Main window object in TkEasyGUI
@@ -429,6 +550,16 @@ Get values from the window.
 
 ------
 
+##### Window.hide
+
+```python
+def hide(self) -> None
+```
+
+Hide window
+
+------
+
 ##### Window.is_alive
 
 ```python
@@ -456,6 +587,14 @@ def read(self, timeout: int|None=None, timeout_key: str="-TIMEOUT-") -> tuple[st
 ```
 
 Read events from the window.
+
+------
+
+##### Window.show
+
+```python
+def show(self) -> None
+```
 
 ------
 
