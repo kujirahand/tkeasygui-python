@@ -21,15 +21,24 @@ TABLE_SELECT_MODE_EXTENDED: str = tk.EXTENDED
 
 # type
 TextAlign: TypeAlias = Literal["left", "right", "center"]
+FontType: TypeAlias = tuple[str, int]
+
+# about color (Thanks)
+# https://kuroro.blog/python/YcZ6Yh4PswqUzaQXwnG2/
 
 #------------------------------------------------------------------------------
 # Widget wrapper
 #------------------------------------------------------------------------------
+class TkEasyError(Exception):
+    def __init__(self, message="TkEasyError"):
+        self.message = message
+        super().__init__(self.message)
+
 class Window:
     """
     Main window object in TkEasyGUI
     """
-    def __init__(self, title: str, layout: list[list["Element"]], size: (tuple[int, int]|None)=None, resizable:bool=False, modal: bool=False, **kw) -> None:
+    def __init__(self, title: str, layout: list[list["Element"]], size: (tuple[str, int]|None)=None, resizable:bool=False, modal: bool=False, **kw) -> None:
         """Create a window with a layout of widgets."""
         self.modal: bool = modal
         # check active window
@@ -76,7 +85,7 @@ class Window:
                     if elem.has_value or elem.key == "OK" or elem.key == "Yes":
                         self.need_focus_widget = widget
                 except Exception as e:
-                    raise Exception(f"Failed to create widget: {elem.element_type} {elem.key} {elem.props} --- {e}") from e
+                    raise Exception(f"Failed to create widget: {elem.element_type} {elem.key} {elem.props}\n{e}") from e
                 fill_prop = elem._get_fill_prop()
                 fill_prop["side"] = "left"
                 widget.pack(**fill_prop)
@@ -295,6 +304,13 @@ class Element:
         for k, v in kw.items():
             self.props[k] = v
     
+    def widget_update(self, **kw) -> None:
+        try:
+            if self.widget is not None:
+                self.widget.configure(**kw)
+        except Exception as e:
+            raise TkEasyError(f"TkEasyGUI.Element.widget_update.Error: key='{self.key}', try to update {kw}, {e}")
+    
     def __getattr__(self, name: str) -> Any:
         """Get unknown attribute."""
         # Method called when the attribute is not found in the object's instance dictionary
@@ -309,19 +325,19 @@ class Element:
         if name in self.props:
             return self.props[name]
         # check widget native property
-        if self.widdget is not None:
-            if name in self.widdget:
-                return self.widdget[name]
+        if self.widget is not None:
+            if name in self.widget:
+                return self.widget[name]
         # print("@@@error.name=", name)
         return None
 
-
 class Text(Element):
     """Text element."""
-    def __init__(self, text: str, text_align: TextAlign="left", **kw) -> None:
+    def __init__(self, text: str, text_align: TextAlign="left", font: FontType|None=None, **kw) -> None:
         super().__init__("Text", **kw)
         self.props["text"] = text
         self.props["justify"] = text_align
+        self.props["font"] = font
     
     def create(self, win: Window, parent: tk.Widget) -> tk.Widget:
         """Create a Text widget."""
@@ -338,8 +354,8 @@ class Text(Element):
         if len(args) >= 1:
             text = args[0]
             self.props["text"] = text
-            self.widget.config(text=text)
-        self.widget.config(**kw)
+            self.widget_update(text=text)
+        self.widget_update(**kw)
 
 class Button(Element):
     """Button element."""
@@ -367,8 +383,8 @@ class Button(Element):
         if len(args) >= 1:
             text = args[0]
             self.props["text"] = text
-            self.widget.config(text=text)
-        self.widget.config(**kw)
+            self.widget_update(text=text)
+        self.widget_update(**kw)
 
 def _button_key_checker(e: tk.Event, self: Button, win: Window) -> None:
     """Check key event for button. (Enabled Return key)"""
@@ -391,19 +407,28 @@ class Input(Element):
         if key == "":
             key = f"-Input-{get_element_id()}-"
         self.key = key
+    
     def create(self, win: Window, parent: tk.Widget) -> tk.Widget:
+        """create Input widget"""
         # set default text
         self.props["textvariable"] = tk.StringVar()
         # create
         self.widget = tk.Entry(parent, name=self.key, **self.props)
+        # set text
         self.widget.insert(0, self.props["text"])
         # set readonly
-        self.props["state"] = "readonly" if self.readonly else "normal"
-        self.widget.config(state=self.props["state"])
+        if self.readonly:
+            self.set_readonly(self.readonly)
         return self.widget
+
     def get(self) -> Any:
         """Get the value of the widget."""
         return self.props["textvariable"].get()
+    def set_readonly(self, readonly: bool) -> None:
+        """set readonly"""
+        self.readonly = readonly
+        state = "readonly" if self.readonly else "normal"
+        self.widget_update(state=state)
     def update(self, *args, **kw) -> None:
         """Update the widget."""
         super().update(*args, **kw)
@@ -412,12 +437,13 @@ class Input(Element):
             text = args[0]
         # check readonly
         if "readonly" in kw:
-            self.readonly = kw["readonly"]
+            self.readonly = True if kw.pop("readonly") else False
+            self.set_readonly(self.readonly)
         # update text
         # 1. update widget state
         readonly = self.readonly
         if readonly:
-            self.widget.config(state="normal")
+            self.set_readonly(False)
         # 2. update text property
         self.props["text"] = text
         self.props["textvariable"].set(text)
@@ -425,43 +451,76 @@ class Input(Element):
         self.widget.delete(0, "end")
         self.widget.insert(0, text)
         # update readonly
-        self.widget.config(state="readonly" if readonly else "normal")
+        if readonly:
+            self.set_readonly(True)
         # update others
-        self.widget.config(**kw)
+        self.widget_update(**kw)
 
 class InputText(Input):
     """InputText element. (alias of Input)"""
-    def __init__(self, text: str, key: str="", **kw) -> None:
-        super().__init__(text, key, **kw)
-        self.element_type = "InputText"
+    pass
 
 class Multiline(Element):
     """Multiline text input element."""
-    def __init__(self, text: str="", default_text: str|None=None, key: str="", readonly: bool=False, **kw) -> None:
+    def __init__(self, text: str="", default_text: str|None=None, key: str="",
+                 color: str="black", background_color: str="white",
+                 readonly: bool=False, readonly_background_color: str='silver',
+                 size: tuple[int, int]=(50, 10),
+                 **kw) -> None:
         super().__init__("Multiline", **kw)
-        self.props["default_text"] = text
+        if default_text is not None:
+            text = default_text
+        self.props["text"] = text
+        self.props["size"] = size
+        self.props["foreground"] = color
+        self.props["background"] = self.backgound_color = background_color
+        self.readonly_background_color = readonly_background_color
         self.has_value = True
+        self.readonly = readonly
         if key == "":
             key = f"-Mulitline-{get_element_id()}-"
         self.key = key
     def create(self, win: Window, parent: tk.Widget) -> tk.Widget:
         # text
-        default_text = self.props.pop("default_text", "")
+        text = self.props.pop("text", "")
         self.widget = tk.Text(parent, name=self.key, **self.props)
-        self.widget.insert("1.0", default_text)
+        self.widget.insert("1.0", text)
+        # readonly
+        if self.readonly:
+            self.set_readonly(self.readonly)
         return self.widget
     def get(self) -> Any:
         """Get the value of the widget."""
-        return self.widget.get("1.0", "end -1c") # get all text
+        text = self.widget.get("1.0", "end -1c") # get all text
+        self.props["text"] = text
+        return text
     def update(self, *args, **kw) -> None:
         """Update the widget."""
         if len(args) >= 1:
             text = args[0] # get text
-            self.widget.delete("1.0", "end") # clear text
-            self.widget.insert("1.0", text) # set text
-        for k, v in kw.items():
-            self.props[k] = v
-        self.widget.config(**kw)
+            self.set_text(text)
+        if "text" in kw:
+            self.set_text(kw["text"])
+        if "readonly" in kw:
+            self.readonly = True if kw.pop("readonly") else False
+            self.set_readonly(self.readonly)
+        self.widget_update(**kw)
+    def set_readonly(self, readonly: bool) -> None:
+        """Set readonly"""
+        self.readonly = readonly
+        state = "disabled" if readonly else "normal"
+        bgcolor = self.readonly_background_color if readonly else self.backgound_color
+        self.widget_update(state=state, background=bgcolor)
+
+    def set_text(self, text: str) -> None:
+        """Set text"""
+        if self.readonly:
+            self.widget_update(state="normal")
+        self.props["text"] = text
+        self.widget.delete("1.0", "end") # clear text
+        self.widget.insert("1.0", text) # set text
+        if self.readonly:
+            self.widget_update(state="disabled")
 
 class Listbox(Element):
     """Listbox element."""
@@ -504,7 +563,7 @@ class Listbox(Element):
         for v in self.values:
             self.widget.insert("end", v)
         del kw["values"]
-        self.widget.config(**kw)
+        self.widget_update(**kw)
 
 class Table(Element):
     """Table element."""
@@ -593,7 +652,7 @@ class Table(Element):
         self.set_values(self.values, self.headings)
         # 
         del kw["values"]
-        self.widget.config(**kw)
+        self.widget_update(**kw)
 
 #------------------------------------------------------------------------------
 # Utility functions
