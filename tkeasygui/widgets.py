@@ -302,9 +302,15 @@ class Element:
         # if self.widget is not None:
         #    self.widget.config(**kw)
     
-    def GetText(self) -> Any:
-        """Get the text of the widget. (for Button)"""
-        return self.get()
+    def __getitem__(self, name: str) -> Any:
+        """Get element property"""
+        if self.widdget is not None:
+            if name in self.widdget:
+                return self.widdget[name]
+        if name in self.props:
+            return self.props[name]
+        return None
+
 
 class Text(Element):
     """Text element."""
