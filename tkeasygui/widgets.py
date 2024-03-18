@@ -381,12 +381,12 @@ def _button_key_checker(e: tk.Event, self: Button, win: Window) -> None:
 
 class Input(Element):
     """Text input element."""
-    def __init__(self, text: str, key: str="", background_color: str="white", color: str = "black", text_aligh: TextAlign="left",
+    def __init__(self, text: str="", key: str="", background_color: str="white", color: str = "black", text_aligh: TextAlign="left",
                  readonly: bool=False, readonly_background_color: str="silver", **kw) -> None:
         super().__init__("Input", **kw)
-        self.props["text"] = text
-        self.props["bg"] = background_color
-        self.props["fg"] = color
+        self.props["text"] = text # default text @see Input.create
+        self.props["background"] = background_color
+        self.props["foreground"] = color
         self.props["justify"] = text_aligh
         self.props["readonly"] = readonly
         self.props["readonlybackground"] = readonly_background_color
@@ -395,21 +395,24 @@ class Input(Element):
             key = f"-Input-{get_element_id()}-"
         self.key = key
     def create(self, win: Window, parent: tk.Widget) -> tk.Widget:
-        self.string_var = tk.StringVar()
-        self.props["textvariable"] = self.string_var
+        # set default text
+        self.props["textvariable"] = tk.StringVar()
         self.widget = tk.Entry(parent, name=self.key, **self.props)
+        self.widget.insert(0, self.props["text"])
         return self.widget
     def get(self) -> Any:
         """Get the value of the widget."""
-        return self.string_var.get()
+        return self.props["textvariable"].get()
     def update(self, *args, **kw) -> None:
         """Update the widget."""
         super().update(*args, **kw)
         text = self.props["text"]
         if len(args) >= 1:
             text = args[0]
+        # update text property
         self.props["text"] = text
-        self.string_var.set(text)
+        self.props["textvariable"].set(text)
+        # update widget
         self.widget.delete(0, "end")
         self.widget.insert(0, text)
         self.widget.config(**kw)
