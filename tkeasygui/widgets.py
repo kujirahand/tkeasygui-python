@@ -22,6 +22,7 @@ TABLE_SELECT_MODE_EXTENDED: str = tk.EXTENDED
 # type
 TextAlign: TypeAlias = Literal["left", "right", "center"]
 FontType: TypeAlias = tuple[str, int]
+PointType: TypeAlias = tuple[int, int] | tuple[float, float]
 
 # about color (Thanks)
 # https://kuroro.blog/python/YcZ6Yh4PswqUzaQXwnG2/
@@ -198,7 +199,16 @@ class Window:
         self.window.withdraw()
     
     def show(self) -> None:
+        """ Show hidden window (hide -> show)"""
         self.window.deiconify()
+    
+    def refresh(self) -> "Window":
+        """Refresh window"""
+        try:
+            self.window.update()
+        except Exception:
+            pass
+        return self
 
 def _timeout_handler(self: Window) -> None:
     """Handle a timeout event."""
@@ -548,6 +558,108 @@ class Canvas(Element):
             return self.widget
         return super().__getattr__(name)
 
+class Graph(Element):
+    """Graph element."""
+    def __init__(self, key: str="", background_color: str|None=None,
+        size: tuple[int, int]=(300, 300), canvas_size: tuple[int, int]|None=None,
+        graph_bottom_left: tuple[int, int]|None=None, graph_top_right: tuple[int, int]|None=None,
+        **kw) -> None:
+        super().__init__("Graph", **kw)
+        self.key = key
+        # <Coordinate> graph_Declared for compatibility, but not yet implemented.
+        self.graph_bottom_left = graph_bottom_left
+        self.graph_top_right = graph_top_right
+        # </Coordinate>
+        # <size>
+        self.props["size"] = size
+        if canvas_size is not None:
+            self.props["size"] = canvas_size
+        # </size>
+        if background_color:
+            self.props["background"] = background_color
+        self.parent_window: Window|None = None
+
+    def create(self, win: Window, parent: tk.Widget) -> tk.Widget:
+        self.widget: tk.Canvas = tk.Canvas(parent, name=self.key, **self.props)
+        self.parent_window = win
+        return self.widget
+
+    def get(self) -> Any:
+        """Return Widget"""
+        return self.widget
+
+    def update(self, *args, **kw) -> None:
+        """Update the widget."""
+        self.widget_update(**kw)
+    
+    def __getattr__(self, name):
+        if name in ["Widget"]:
+            return self.widget
+        return super().__getattr__(name)
+    
+    def draw_line(self, point_from: PointType, point_to: PointType, color: str = 'black', width: int = 1) -> int:
+        """Draw a line."""
+        return self.widget.create_line(point_from, point_to, fill=color, width=width)
+    
+    def draw_lines(self, points: list[PointType], color='black', width=1) -> int:
+        """Draw lines."""
+        return self.widget.create_line(points, fill=color, width=width)
+    
+    def draw_point(self, point: PointType, size: int = 2, color: str = 'black') -> int:
+        """Draw a point."""
+        x, y = point
+        size2: float = size / 2
+        return self.widget.create_oval(x-size2, y-size2, x+size2, y+size2, fill=color)
+    
+    def draw_circle(self, center_location: PointType, radius: int|float, fill_color: str|None = None, line_color: str|None = 'black', line_width: int = 1) -> int:
+        """Draw a circle."""
+        x, y = center_location
+        return self.widget.create_oval(x-radius, y-radius, x+radius, y+radius, fill=fill_color, outline=line_color, width=line_width)
+
+    def draw_oval(self, top_left: PointType, bottom_right: PointType, fill_color: str|None = None, line_color: str|None = None, line_width: int = 1):
+        """Draw an oval."""
+        return self.widget.create_oval(top_left, bottom_right, fill=fill_color, outline=line_color, width=line_width)
+    
+    def draw_arc(self, top_left: PointType, bottom_right: PointType, extent: int|None = None, start_angle: int|None = None, style: str|None = None, arc_color: str|None = 'black', line_width: int = 1, fill_color: str|None = None) -> int:
+        """Draw an arc."""
+        return self.widget.create_arc(top_left, bottom_right, extent=extent, start=start_angle, style=style, outline=arc_color, width=line_width, fill=fill_color)
+    
+    def erase(self) -> None:
+        """Delete all"""
+        self.widget.delete("all")
+    
+    def draw_rectangle(self, top_left: PointType, bottom_right: PointType, fill_color: str|None=None, line_color: str|None=None, line_width: int|None=None) -> int:
+        """Draw rectangle"""
+        return self.widget.create_rectangle(top_left[0], top_left[1], bottom_right[0], bottom_right[1], fill=fill_color, outline=line_color, width=line_width)
+    
+    def draw_polygon(self, points: list[PointType], fill_color: str|None=None, line_color: str|None=None, line_width: int|None=None) -> None:
+        """Draw polygon"""
+        return self.widget.create_polygon(points, fill=fill_color, outline=line_color, width=line_width)
+    
+    def draw_text(self, text: str, location: PointType, color: str|None='black', font: FontType=None, angle: int=0, text_location: TextAlign=tk.CENTER) -> int:
+        """Draw text"""
+        return self.widget.create_text(location[0], location[1], text=text, font=font, fill=color, angle=angle, anchor=text_location)
+    
+    def draw_image(self, filename: str|None=None, data: bytes|None=None, location: PointType|None=None) -> int:
+        """Draw image"""
+        # check location
+        if location is None:
+            location = (0, 0)
+        # load image
+        image: bytes|None = None
+        if filename is not None:
+            image = tk.PhotoImage(file=filename)
+        elif data is not None:
+            try:
+                image = tk.PhotoImage(data=data, master=self.widget)
+            except Exception as e:
+                print(e)
+                return -1
+        if image is None:
+            return -1
+        self.widget.photo = image # important
+        return self.widget.create_image(location, image=image, anchor=tk.NW)
+
 class Listbox(Element):
     """Listbox element."""
     def __init__(self, values: list[str]=[], key: str="", enable_events: bool=False, select_mode: str="browse", **kw) -> None:
@@ -693,3 +805,9 @@ def get_element_id() -> int:
     element_id += 1
     lock.release()
     return element_id
+
+def rgb(r: int, g: int, b: int) -> str:
+    r = r & 0xFF
+    g = g & 0xFF
+    b = b & 0xFF
+    return f"#{r:02x}{g:02x}{b:02x}"
