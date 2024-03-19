@@ -126,11 +126,16 @@ class Window:
         for widgets in layout:
             frame_row = ttk.Frame(parent, padding=5)
             # columns
+            prev_element: Element|None = None
             row_prop: dict[str, Any] = {"expand": True, "fill": "x", "side": "top"}
             for _col, elemment in enumerate(widgets):
                 # create widget
+                elem: Element = elemment
+                elem.prev_element = prev_element # set prev_element
+                if prev_element is not None:
+                    prev_element.next_element = elem
+                prev_element = elem
                 try:
-                    elem: Element = elemment
                     widget: tk.Widget = elem.create(self, frame_row)
                     # check key
                     if elem.key != "":
@@ -143,9 +148,12 @@ class Window:
                 except Exception as e:
                     raise Exception(f"Failed to create widget: {elem.element_type} {elem.key} {elem.props}\n{e}") from e
                 # pack widget
+                print("@@@pack=", elem.expand_x, elem.expand_y)
                 fill_prop = elem._get_fill_prop()
                 fill_prop["side"] = "left"
                 widget.pack(**fill_prop)
+                # debug
+                print(f"Create widget: {elem.element_type} {elem.key} {fill_prop}")
                 if elem.expand_y:
                     row_prop["fill"] = "both"
             # add row
@@ -291,14 +299,16 @@ class Element:
         self.expand_x: bool = False
         self.expand_y: bool = False
         self.has_children: bool = False
+        self.prev_element: Element|None = None
+        self.next_element: Element|None = None
     
     def _get_fill_prop(self) -> dict[str, Any]:
         """Get the fill property in `pack` method."""
-        prop = {"expand": False, "fill": "none"}
+        prop: dict[str, Any] = {"expand": False, "fill": "none"}
         if self.expand_x and self.expand_y:
             prop["expand"] = True
             prop["fill"] = "both"
-        if self.expand_x:
+        elif self.expand_x:
             prop["expand"] = True
             prop["fill"] = "x"
         elif self.expand_y:
@@ -472,7 +482,7 @@ class Input(Element):
         self.props["readonlybackground"] = readonly_background_color
         self.has_value = True
         if key == "":
-            key = f"-Input-{get_element_id()}-"
+            key = f"-input{get_element_id()}-"
         self.key = key
     
     def create(self, win: Window, parent: tk.Widget) -> tk.Widget:
@@ -547,7 +557,7 @@ class Multiline(Element):
         self.has_value = True
         self.readonly = readonly
         if key == "":
-            key = f"-Mulitline-{get_element_id()}-"
+            key = f"-multiline{get_element_id()}-"
         self.key = key
     def create(self, win: Window, parent: tk.Widget) -> tk.Widget:
         # text
@@ -801,7 +811,7 @@ class Listbox(Element):
         self.enable_events = enable_events
         self.select_mode = select_mode
         if key == "":
-            key = f"-Listbox-{get_element_id()}-"
+            key = f"-listbox{get_element_id()}-"
         self.key = key
     def create(self, win: Window, parent: tk.Widget) -> tk.Widget:
         self.window: Window = win
@@ -843,7 +853,7 @@ class Listbox(Element):
 
 class Table(Element):
     """Table element."""
-    def __init__(self, values: list[list[str]]=[], headings: list[str]=[], key: str="", justification: Literal["right","left","center",""]="",
+    def __init__(self, values: list[list[str]]=[], headings: list[str]=[], key: str="", justification: TextAlign="center",
                  auto_size_columns: bool = True, max_col_width: int = 0, font: tuple[str, int]|None=None,
                  enable_events: bool=False, select_mode: str="browse", **kw) -> None:
         """Create a table."""
@@ -858,7 +868,7 @@ class Table(Element):
         self.max_col_width = max_col_width # todo
         self.font = font # todo
         if key == "":
-            key = f"-Table-{get_element_id()}-"
+            key = f"-table{get_element_id()}-"
         self.key = key
     
     def create(self, win: Window, parent: tk.Widget) -> tk.Widget:
