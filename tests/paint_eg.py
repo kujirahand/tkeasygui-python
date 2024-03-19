@@ -8,16 +8,26 @@ import tkeasygui as sg
 canvas = sg.Canvas(
     size=(400, 400),
     key="-canvas-",
-    background_color="red"
+    background_color="red",
+    enable_events=True # enable mouse events
+)
+"""
+# same as below
+canvas = sg.Canvas(
+    size=(400, 400),
+    key="-canvas-",
+    background_color="red",
 ).bind_events({
-    "<ButtonPress>": "on",
-    "<ButtonRelease>": "off",
-    "<Motion>": "motion"
-})
+    "<ButtonPress>": "mousedown",
+    "<ButtonRelease>": "mouseup",
+    "<Motion>": "mousemove"
+}, "system")
+"""
 
 # window create
-window = sg.Window("Hello World", layout=[
-    [sg.Button("Exit")], [canvas]], finalize=True)
+window = sg.Window("Paint tool", layout=[
+    [sg.Button("Exit")],
+    [canvas]])
 flag_on = False
 # event loop
 while True:
@@ -25,13 +35,18 @@ while True:
     print("#", event, values)
     if event in (None, "Exit"):
         break
-    if event == "-canvas-on":
-        flag_on = True
-    elif event == "-canvas-off":
-        flag_on = False
-    elif event == "-canvas-motion":
-        if not flag_on:
-            continue
-        e = values["event"]
-        x, y = e.x, e.y
-        canvas.tk_canvas.create_oval(x, y, x+10, y+10, fill="white", outline="white")
+    if event == "-canvas-":
+        # check event type
+        event = values["event"]
+        event_type = values["event_type"]
+        if event_type == "mousedown":
+            flag_on = True
+        elif event_type == "mouseup":
+            flag_on = False
+        elif event_type == "mousemove":
+            if not flag_on:
+                continue
+            # get mouse cursor position
+            x, y = event.x, event.y
+            # draw white circle
+            canvas.create_oval(x, y, x+10, y+10, fill="white", outline="white")

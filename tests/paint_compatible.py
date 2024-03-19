@@ -20,10 +20,8 @@ while True:
     if event in (None, "Exit"):
         break
     if event == "-canvas-on":
-        print("@", event, values)
         flag_on = True
     elif event == "-canvas-off":
-        print("@", event, values)
         flag_on = False
     elif event == "-canvas-motion":
         if not flag_on:

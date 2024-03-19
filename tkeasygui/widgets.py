@@ -33,6 +33,7 @@ TextVAlign: TypeAlias = Literal["top", "bottom", "center"]
 FontType: TypeAlias = tuple[str, int]
 PointType: TypeAlias = tuple[int, int] | tuple[float, float]
 ElementType: TypeAlias = "Element"
+EventMode: TypeAlias = Literal["user", "system"]
 # about color (Thanks)
 # https://kuroro.blog/python/YcZ6Yh4PswqUzaQXwnG2/
 
@@ -158,7 +159,7 @@ class Window:
                     raise Exception(f"Failed to create widget: {elem.element_type} {elem.key} {elem.props}\n{e}") from e
                 # bind event (before create)
                 for event_name, handle_t in elem._bind_dict.items():
-                    self.bind(elem, event_name, handle_t[0], handle_t[1])
+                    self.bind(elem, event_name, handle_t[0], handle_t[1], handle_t[2])
                 # pack widget
                 fill_prop = elem._get_fill_prop()
                 fill_prop["side"] = "left"
@@ -292,23 +293,29 @@ class Window:
             pass
         return self
     
-    def bind(self, element: "Element", event_name: str, handle_name: str, propagate: bool=True) -> None:
-        """Bind event"""
-        element._bind_dict[event_name] = (handle_name, propagate)
+    def bind(self, element: "Element", event_name: str, handle_name: str, propagate: bool=True, event_mode: EventMode = "user") -> None:
+        """[Window.bind] Bind element event and handler"""
+        element._bind_dict[event_name] = (handle_name, propagate, event_mode)
         if element.widget is None:
             return
         # bind to widget
         w: tk.Widget = element.widget
         w.bind(
             event_name,
-            lambda e: _user_bind_event_handler(self, element, handle_name, e, propagate)
+            lambda e: _bind_event_handler(self, element, handle_name, e, propagate=propagate, event_mode=event_mode)
         )
 
-def _user_bind_event_handler(win: Window, elem: "Element", handle_name: str, event: tk.Event, propagate: bool=True) -> None:
+def _bind_event_handler(win: Window, elem: "Element", handle_name: str, event: tk.Event, propagate: bool=True, event_mode: EventMode = "user") -> None:
     """Handle an event."""
-    elem.user_bind_event = event
-    event_key = f"{elem.key}{handle_name}"
-    win.events.put((event_key, {"event": event}))
+    elem.user_bind_event = event # for compatibility with PySimpleGUI
+    if event_mode == "user":
+        event_key = f"{elem.key}{handle_name}"
+        event_val = {"event": event}
+        win.events.put((event_key, event_val))
+    elif event_mode == "system":
+        event_key = elem.key
+        event_val = {"event": event, "event_type": handle_name}
+        win.events.put((event_key, event_val))
     # propagate
     if propagate:
         # todo
@@ -322,15 +329,6 @@ def _exit_mainloop() -> None:
     except Exception:
         # print("_exit_mainloop: failed to exit mainloop")
         pass
-
-"""
-def _timeout_handler(self: Window) -> None:
-    if self.timeout_id is not None:
-        self.window.after_cancel(self.timeout_id)
-    if self.timeout is not None:
-        self._event_handler("-TIMEOUT-", None)
-    _exit_mainloop()
-"""
 
 def _focus_window(self: Window) -> None:
     """Focus window"""
@@ -366,16 +364,16 @@ class Element:
         self.next_element: Element|None = None
         self.window: Window|None = None
         self.parent: tk.Widget|None = None
-        self._bind_dict: dict[str, tuple[str, bool]] = {}
+        self._bind_dict: dict[str, tuple[str, bool, EventMode]] = {}
         self.user_bind_event: tk.Event|None = None # when bind event fired then set this value
     
-    def bind(self, event_name: str, handle_name: str, propagate: bool=True) -> None:
+    def bind(self, event_name: str, handle_name: str, propagate: bool=True, event_mode: EventMode = "user") -> None:
         """
         Bind event. @see `Window.bind`
         """
-        self._bind_dict[event_name] = (handle_name, propagate)
+        self._bind_dict[event_name] = (handle_name, propagate, event_mode)
         if self.window is not None:
-            self.window.bind(self, event_name, handle_name, propagate)
+            self.window.bind(self, event_name, handle_name, propagate=propagate, event_mode=event_mode)
 
     def disptach_event(self, values: dict[str, Any]|None=None) -> None:
         """Dispatch event"""
@@ -424,7 +422,7 @@ class Element:
             bind_events = self.props.pop("bind_events")
             self.bind_events(bind_events)
 
-    def bind_events(self, events: dict[str, str]) -> ElementType:
+    def bind_events(self, events: dict[str, str], event_mode: EventMode="user") -> ElementType:
         """
         Bind user events
         **Example**
@@ -436,7 +434,7 @@ class Element:
         ```
         """
         for event_name, handle_name in events.items():
-            self.bind(event_name, handle_name)
+            self.bind(event_name, handle_name, event_mode=event_mode)
         return self
 
     def create(self, win: Window, parent: tk.Widget) -> Any:
@@ -462,6 +460,9 @@ class Element:
     def __getattr__(self, name: str) -> Any:
         """Get unknown attribute."""
         # Method called when the attribute is not found in the object's instance dictionary
+        if self.widget is not None:
+            if hasattr(self.widget, name):
+                return self.widget.__getattribute__(name)
         return self.__getitem__(name)
 
     def __getitem__(self, name: str) -> Any:
@@ -577,17 +578,25 @@ class Button(Element):
         self.key = key
         self.has_value = False
         self.props["text"] = button_text
+        self.bind_events({
+            "<Button-1>": "click",
+            "<Button-3>": "right_click"
+        }, "system")
+
     def create(self, win: Window, parent: tk.Widget) -> tk.Widget:
         self.widget = tk.Button(parent, **self.props)
-        self.widget.bind("<Button-1>", lambda e: win._event_handler(self.key, {"event": e}))
+        # bind key event
         self.widget.bind("<KeyPress>", lambda e: _button_key_checker(e, self, win))
         return self.widget
+
     def get(self) -> Any:
         """Get the value of the widget."""
         return self.props["text"]
+
     def GetText(self) -> str:
         """Get the text of the button. (compatibility with PySimpleGUI)"""
         return self.props["text"]
+
     def update(self, *args, **kw) -> None:
         """Update the widget."""
         super().update(*args, **kw)
@@ -788,17 +797,23 @@ class Slider(Element):
 
 class Canvas(Element):
     """Canvas element."""
-    def __init__(self, key: str="", background_color: str|None=None, size: tuple[int, int]=(300, 300), **kw) -> None:
+    def __init__(self, key: str="", enable_events: bool=False, background_color: str|None=None, size: tuple[int, int]=(300, 300), **kw) -> None:
         super().__init__("Canvas", **kw)
         self.key = key
         self.props["size"] = size
         if background_color:
             self.props["background"] = background_color
+        if enable_events:
+            self.bind_events({
+                "<ButtonPress>": "mousedown",
+                "<ButtonRelease>": "mouseup",
+                "<Motion>": "mousemove"
+            }, "system")
 
     def create(self, win: Window, parent: tk.Widget) -> tk.Widget:
         self.widget = tk.Canvas(parent, name=self.key, **self.props)
         return self.widget
-
+    
     def get(self) -> Any:
         """Return Widget"""
         return self.widget
@@ -809,7 +824,7 @@ class Canvas(Element):
     
     def __getattr__(self, name):
         """Get unknown attribute."""
-        if name in ["Widget", "tk_canvas"]:
+        if name in ["Widget", "tk_canvas"]: # compatibility with PySimpleGUI
             return self.widget
         return super().__getattr__(name)
 
