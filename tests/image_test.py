@@ -15,7 +15,7 @@ def main():
     while True:
         event, _ = window.read()
         if event == "Change":
-            window["-image-"].update(filename="b.png")
+            window["-image-"].update(filename="b.jpg")
         if event in [sg.WIN_CLOSED, "OK"]:
             break
 

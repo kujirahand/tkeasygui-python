@@ -29,8 +29,7 @@ layout = [
         font=("Arial", 14))],
     [sg.Button("Close", expand_x=True), sg.Button("Update")]
 ]
-win = sg.Window("Table test", layout,
-                    resizable=True, finalize=True)
+win = sg.Window("Table test", layout)
 # event loop
 while True:
     event, values = win.read()
