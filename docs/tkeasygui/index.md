@@ -1,6 +1,6 @@
 # Module tkeasygui
 
-TkEasyGUI - Easy GUI library for Python
+TkEasyGUI - A simple GUI library for Python using tkinter.
 
 ## Submodules
 

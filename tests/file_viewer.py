@@ -1,7 +1,6 @@
 import os
 
 import tkeasygui as sg
-
 # import PySimpleGUI as sg
 
 # set path
@@ -25,18 +24,23 @@ layout = [
             font=font
         ),
         # right side textbox
-        sg.Multiline(size=(40, 20), key="-body-", font=font, expand_y=True)
+        sg.Multiline(size=(40, 20), key="-body-", expand_y=True)
     ],
     [
-        sg.Button("Close", font=font)
+        sg.Button("Close"),
+        sg.Button("Run"),
     ],
 ]
-window = sg.Window("Python file Viewer", layout)
+window = sg.Window("Python file Viewer", layout, font=font)
 # event loop
 while True:
     event, values = window.read()
+    print("#", event, values)
     if event in [sg.WINDOW_CLOSED, "Close"]:
         break
+    if event == "Run":
+        filename = values["-files-"][0]
+        os.system(f"python {filename}")
     if event == "-files-":
         filename = values["-files-"][0]
         filepath = os.path.join(ROOT_DIR, filename)

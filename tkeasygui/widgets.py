@@ -1,11 +1,10 @@
 """
 TkEasyGUI Widgets
 """
-from datetime import datetime
 import io
 import threading
 import tkinter as tk
-from pprint import pprint  # noqa: F401
+from datetime import datetime
 from queue import Queue
 from tkinter import ttk
 from typing import Any, Literal, TypeAlias
@@ -177,7 +176,7 @@ class Window:
             frame_row.pack(**row_prop)
         # end of create
         if self.need_focus_widget is not None:
-            print("focus_set", self.need_focus_widget)
+            # print("focus_set", self.need_focus_widget)
             self.need_focus_widget.focus_set()
 
     def move_to_center(self) -> None:
@@ -1172,6 +1171,8 @@ class Combo(Element):
             self.set_value(args[0])
         if "values" in kw:
             self.set_values(kw.pop("values"))
+        if "value" in kw:
+            self.set_value(kw.pop("value"))
         self.widget_update(**kw)
 
 class Table(Element):

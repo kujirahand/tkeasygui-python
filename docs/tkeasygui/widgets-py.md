@@ -1,5 +1,7 @@
 # Module tkeasygui.widgets
 
+TkEasyGUI Widgets
+
 ## Classes
 
 ### Button
@@ -65,7 +67,7 @@ Update the widget.
 ### Canvas
 
 ```python
-class Canvas(self, key: str="", background_color: str|None=None, size: tuple[int, int]=(300, 300), **kw)
+class Canvas(self, key: str="", enable_events: bool=False, background_color: str|None=None, size: tuple[int, int]=(300, 300), **kw)
 ```
 
 Canvas element.
@@ -112,6 +114,209 @@ Update the widget.
 
 ------
 
+### Checkbox
+
+```python
+class Checkbox(self, text: str="", default: bool=False, key: str="", enable_events: bool=False, **kw)
+```
+
+Button element.
+
+Create an element.
+
+------
+
+#### Base classes
+
+* [`Element `](#Element)
+
+------
+
+#### Methods
+
+##### Checkbox.create
+
+```python
+def create(self, win: Window, parent: tk.Widget) -> tk.Widget
+```
+
+Create a widget.
+
+------
+
+##### Checkbox.get
+
+```python
+def get(self) -> Any
+```
+
+Get the value of the widget.
+
+------
+
+##### Checkbox.get_value
+
+```python
+def get_value(self) -> Any
+```
+
+Get the value of the widget.
+
+------
+
+##### Checkbox.set_text
+
+```python
+def set_text(self, text: str) -> None
+```
+
+Set the text of the widget.
+
+------
+
+##### Checkbox.set_value
+
+```python
+def set_value(self, b: bool) -> None
+```
+
+Set the value of the widget.
+
+------
+
+##### Checkbox.update
+
+```python
+def update(self, *args, **kw) -> None
+```
+
+Update the widget.
+
+------
+
+### Column
+
+```python
+class Column(
+    self, layout: list[list[Element]], key: str = "", background_color: str|None=None,
+     vertical_alignment: TextVAlign="top",
+     size: tuple[int, int]|None=None, **kw)
+```
+
+Frame element.
+
+Create an element.
+
+------
+
+#### Base classes
+
+* [`Element `](#Element)
+
+------
+
+#### Methods
+
+##### Column.create
+
+```python
+def create(self, win: Window, parent: tk.Widget) -> tk.Widget
+```
+
+Create a widget.
+
+------
+
+##### Column.get
+
+```python
+def get(self) -> Any
+```
+
+Return Widget
+
+------
+
+##### Column.update
+
+```python
+def update(self, *args, **kw) -> None
+```
+
+Update the widget.
+
+------
+
+### Combo
+
+```python
+class Combo(self, values: list[str]=[], default_value: str="", key: str="", enable_events: bool=False, **kw)
+```
+
+Combo element.
+
+Create an element.
+
+------
+
+#### Base classes
+
+* [`Element `](#Element)
+
+------
+
+#### Methods
+
+##### Combo.create
+
+```python
+def create(self, win: Window, parent: tk.Widget) -> tk.Widget
+```
+
+[Combo.create] create Listbox widget
+
+------
+
+##### Combo.get
+
+```python
+def get(self) -> Any
+```
+
+Get the value of the widget.
+
+------
+
+##### Combo.set_value
+
+```python
+def set_value(self, v: str) -> None
+```
+
+Set the value of the widget.
+
+------
+
+##### Combo.set_values
+
+```python
+def set_values(self, values: list[str]) -> None
+```
+
+Set values to list
+
+------
+
+##### Combo.update
+
+```python
+def update(self, *args, **kw) -> None
+```
+
+Update the widget.
+
+------
+
 ### Element
 
 ```python
@@ -126,6 +331,33 @@ Create an element.
 
 #### Methods
 
+##### Element.bind
+
+```python
+def bind(self, event_name: str, handle_name: str, propagate: bool=True, event_mode: EventMode = "user") -> None
+```
+
+Bind event. @see `Window.bind`
+
+------
+
+##### Element.bind_events
+
+```python
+def bind_events(self, events: dict[str, str], event_mode: EventMode="user") -> ElementType
+```
+
+Bind user events
+**Example**
+```
+# (1) bind events in the constructor
+eg.Canvas(key="-canvas-", bind_events={"<ButtonPress>": "on", "<ButtonRelease>": "off"})
+# (2) bind events in the method
+eg.Canvas(key="-canvas-").bind_events({"<ButtonPress>": "on", "<ButtonRelease>": "off"})
+```
+
+------
+
 ##### Element.create
 
 ```python
@@ -133,6 +365,16 @@ def create(self, win: Window, parent: tk.Widget) -> Any
 ```
 
 Create a widget.
+
+------
+
+##### Element.disptach_event
+
+```python
+def disptach_event(self, values: dict[str, Any]|None=None) -> None
+```
+
+Dispatch event
 
 ------
 
@@ -169,6 +411,56 @@ Update the widget props (only change `props`)
 ```python
 def widget_update(self, **kw) -> None
 ```
+
+------
+
+### Frame
+
+```python
+class Frame(self, title: str, layout: list[list[Element]], key: str = "", background_color: str|None=None, size: tuple[int, int]|None=None, **kw)
+```
+
+Frame element.
+
+Create an element.
+
+------
+
+#### Base classes
+
+* [`Element `](#Element)
+
+------
+
+#### Methods
+
+##### Frame.create
+
+```python
+def create(self, win: Window, parent: tk.Widget) -> tk.Widget
+```
+
+Create a widget.
+
+------
+
+##### Frame.get
+
+```python
+def get(self) -> Any
+```
+
+Return Widget
+
+------
+
+##### Frame.update
+
+```python
+def update(self, *args, **kw) -> None
+```
+
+Update the widget.
 
 ------
 
@@ -299,7 +591,7 @@ Draw rectangle
 ##### Graph.draw_text
 
 ```python
-def draw_text(self, text: str, location: PointType, color: str|None='black', font: FontType=None, angle: int=0, text_location: TextAlign=tk.CENTER) -> int
+def draw_text(self, text: str, location: PointType, color: str|None='black', font: FontType=None, angle: float|str|None=0, text_location: TextAlign=tk.CENTER) -> int
 ```
 
 Draw text
@@ -336,11 +628,64 @@ Update the widget.
 
 ------
 
+### Image
+
+```python
+class Image(self, source: bytes|str|None=None, filename=None, data=None, key: str="", background_color: str|None=None, size: tuple[int, int]=(300, 300), **kw)
+```
+
+Image element.
+
+Create an element.
+
+------
+
+#### Base classes
+
+* [`Element `](#Element)
+
+------
+
+#### Methods
+
+##### Image.create
+
+```python
+def create(self, win: Window, parent: tk.Widget) -> tk.Widget
+```
+
+Create a Image widget.
+
+------
+
+##### Image.get
+
+```python
+def get(self) -> Any
+```
+
+Return Widget
+
+------
+
+##### Image.update
+
+```python
+def update(self, source: bytes|str=None, filename: str|None=None, data: bytes|None=None, **kw) -> None
+```
+
+Update the widget.
+
+------
+
 ### Input
 
 ```python
 class Input(
-    self, text: str="", key: str="", background_color: str="white", color: str = "black", text_aligh: TextAlign="left",
+    self, text: str="", key: str="",
+     enable_events: bool=False,
+     background_color: str|None=None, color: str|None=None,
+     text_aligh: TextAlign="left",
      readonly: bool=False, readonly_background_color: str="silver", **kw)
 ```
 
@@ -401,7 +746,7 @@ Update the widget.
 ### InputText
 
 ```python
-class InputText(text: str = '', key: str = '', background_color: str = 'white', color: str = 'black', text_aligh: Literal['left', 'right', 'center'] = 'left', readonly: bool = False, readonly_background_color: str = 'silver', **kw)
+class InputText(text: str = '', key: str = '', enable_events: bool = False, background_color: str | None = None, color: str | None = None, text_aligh: Literal['left', 'right', 'center'] = 'left', readonly: bool = False, readonly_background_color: str = 'silver', **kw)
 ```
 
 InputText element. (alias of Input)
@@ -417,7 +762,7 @@ InputText element. (alias of Input)
 ### Listbox
 
 ```python
-class Listbox(self, values: list[str]=[], key: str="", enable_events: bool=False, select_mode: str="browse", **kw)
+class Listbox(self, values: list[str]=[], key: str="", enable_events: bool=False, select_mode: ListboxSelectMode="browse", **kw)
 ```
 
 Listbox element.
@@ -440,7 +785,7 @@ Create an element.
 def create(self, win: Window, parent: tk.Widget) -> tk.Widget
 ```
 
-Create a widget.
+[Listbox.create] create Listbox widget
 
 ------
 
@@ -451,6 +796,16 @@ def get(self) -> Any
 ```
 
 Get the value of the widget.
+
+------
+
+##### Listbox.set_values
+
+```python
+def set_values(self, values: list[str]) -> None
+```
+
+Set values to list
 
 ------
 
@@ -469,7 +824,8 @@ Update the widget.
 ```python
 class Multiline(
     self, text: str="", default_text: str|None=None, key: str="",
-     color: str="black", background_color: str="white",
+     enable_events: bool=False,
+     color: str|None=None, background_color: str|None=None,
      readonly: bool=False, readonly_background_color: str='silver',
      size: tuple[int, int]=(50, 10),
      **kw)
@@ -539,11 +895,66 @@ Update the widget.
 
 ------
 
+### Slider
+
+```python
+class Slider(
+    self, key: str = "", range: tuple[float, float]=(1, 10),
+     orientation: OrientationType="horizontal",
+     resolution: float=1, default_value: float|None=None,
+     enable_events: bool=False,
+     **kw)
+```
+
+Slider element.
+
+Create an element.
+
+------
+
+#### Base classes
+
+* [`Element `](#Element)
+
+------
+
+#### Methods
+
+##### Slider.create
+
+```python
+def create(self, win: Window, parent: tk.Widget) -> tk.Widget
+```
+
+Create a widget.
+
+------
+
+##### Slider.get
+
+```python
+def get(self) -> Any
+```
+
+Return Widget
+
+------
+
+##### Slider.update
+
+```python
+def update(self, value: float|None=None, **kw) -> None
+```
+
+Update the widget.
+
+------
+
 ### Table
 
 ```python
 class Table(
-    self, values: list[list[str]]=[], headings: list[str]=[], key: str="", justification: Literal["right","left","center",""]="",
+    self, values: list[list[str]]=[], headings: list[str]=[], key: str="", justification: TextAlign="center",
      auto_size_columns: bool = True, max_col_width: int = 0, font: tuple[str, int]|None=None,
      enable_events: bool=False, select_mode: str="browse", **kw)
 ```
@@ -652,6 +1063,22 @@ Update the widget.
 
 ------
 
+### Textarea
+
+```python
+class Textarea(text: str = '', default_text: str | None = None, key: str = '', enable_events: bool = False, color: str | None = None, background_color: str | None = None, readonly: bool = False, readonly_background_color: str = 'silver', size: tuple[int, int] = (50, 10), **kw)
+```
+
+Textarea element. (alias of Multiline)
+
+------
+
+#### Base classes
+
+* [`Multiline `](#Multiline)
+
+------
+
 ### TkEasyError
 
 ```python
@@ -673,7 +1100,7 @@ Initialize self.  See help(type(self)) for accurate signature.
 ### Window
 
 ```python
-class Window(self, title: str, layout: list[list["Element"]], size: (tuple[str, int]|None)=None, resizable:bool=False, modal: bool=False, **kw)
+class Window(self, title: str, layout: list[list[ElementType]], size: (tuple[str, int]|None)=None, resizable:bool=False, modal: bool=False, **kw)
 ```
 
 Main window object in TkEasyGUI
@@ -683,6 +1110,16 @@ Create a window with a layout of widgets.
 ------
 
 #### Methods
+
+##### Window.bind
+
+```python
+def bind(self, element: "Element", event_name: str, handle_name: str, propagate: bool=True, event_mode: EventMode = "user") -> None
+```
+
+[Window.bind] Bind element event and handler
+
+------
 
 ##### Window.cancel_close
 
@@ -792,8 +1229,64 @@ Get a unique id for an element.
 
 ------
 
+### get_image_tk
+
+```python
+def get_image_tk(source: bytes|str|None=None, filename: str|None = None, data: bytes|None = None) -> tk.PhotoImage|None
+```
+
+Get Image for tk
+
+------
+
+### get_root_window
+
+```python
+def get_root_window() -> tk.Tk
+```
+
+Get root window.
+
+------
+
+### imagedata_to_bytes
+
+```python
+def imagedata_to_bytes(image_data: PILImage) -> bytes
+```
+
+Convert JPEG to PNG
+
+------
+
+### imagefile_to_bytes
+
+```python
+def imagefile_to_bytes(filename: str) -> bytes
+```
+
+Read image file and convert to bytes
+
+------
+
 ### rgb
 
 ```python
 def rgb(r: int, g: int, b: int) -> str
+```
+
+------
+
+### time_checker_end
+
+```python
+def time_checker_end(start_time: datetime) -> int
+```
+
+------
+
+### time_checker_start
+
+```python
+def time_checker_start() -> datetime
 ```

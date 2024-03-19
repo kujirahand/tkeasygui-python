@@ -17,6 +17,8 @@ layout = [
     [sg.Input("0",
              key="-output-", 
              font=font,
+             background_color="white",
+             color="black",
              readonly_background_color="white",
              readonly=True,
              expand_x=True)],

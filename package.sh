@@ -3,6 +3,10 @@
 echo "[Package]"
 echo "https://packaging.python.org/en/latest/tutorials/packaging-projects/"
 
+# make manual
+echo "--- makedoc.sh ---"
+./makedoc.sh
+
 # clean
 rm -f -r dist
 rm -f -r tkeasygui.egg-info
@@ -14,7 +18,7 @@ python3 -m build
 
 # test install
 echo "--- upload test repo ---"
-python3 -m twine upload --repository testpypi dist/*
+python3 -m twine upload --repository testpypi dist/* --verbose
 echo "--- install test repo ---"
 python3 -m pip install -U --index-url https://test.pypi.org/simple/ --no-deps tkeasygui
 
