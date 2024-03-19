@@ -1,4 +1,5 @@
 import tkeasygui as eg
+
 # import PySimpleGUI as eg
 
 a_font = ("Arial", 20)
@@ -12,7 +13,8 @@ window = eg.Window("BasicUI", layout=[
 readonly = False
 while True:
     event, values = window.read()
-    if event == eg.WINDOW_CLOSED: break
+    if event == eg.WINDOW_CLOSED:
+        break
     print(event, values)
     if event == "-change-":
         print("change")

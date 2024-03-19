@@ -48,7 +48,7 @@ window.close()
 
 ## Samples
 
-- [tests](https://github.com/kujirahand/tkeasygui-python/tree/main/tests).
+- [samples](https://github.com/kujirahand/tkeasygui-python/tree/main/tests).
 
 ## Documents
 

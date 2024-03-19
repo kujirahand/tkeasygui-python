@@ -1,4 +1,5 @@
 import tkeasygui as sg
+
 # import PySimpleGUI as eg
 
 layout = [[
@@ -13,7 +14,8 @@ canvas = window["-canvas-"]
 painted = False
 while True:
     event, _ = window.read(timeout=10)
-    if event == sg.WINDOW_CLOSED: break
+    if event == sg.WINDOW_CLOSED:
+        break
     # get Widget from Canvas
     if not painted:
         widget = canvas.Widget

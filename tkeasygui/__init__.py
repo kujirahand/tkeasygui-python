@@ -1,4 +1,6 @@
-"""TkEasyGUI - Easy GUI library for Python"""
+"""
+TkEasyGUI - A simple GUI library for Python using tkinter.
+"""
 
 from tkeasygui.dialogs import *  # noqa: F403
 from tkeasygui.widgets import *  # noqa: F403

@@ -1,16 +1,8 @@
-import io
-from PIL import Image # 画像を読み取るため
-# import PySimpleGUI as sg
 import tkeasygui as sg
+from PIL import Image
 
 # load background image
-BACK_IMAGE = "./clock-back.jpg"
-back_image = Image.open(BACK_IMAGE)
-back_image = back_image.resize((400, 400))
-# convert image to bytes
-img_bytes = io.BytesIO()
-back_image.save(img_bytes, format='PNG')
-img_bytes = img_bytes.getvalue()
+back_image = Image.open("b.jpg").resize((400, 400))
 
 def main():
     layout = [
@@ -30,7 +22,7 @@ def main():
             break
         # draw image
         canvas.erase()
-        canvas.draw_image(data=img_bytes, location=(0, 0))
+        canvas.draw_image(data=back_image, location=(0, 0))
         angle1 = angle % 360
         angle2 = (angle + 90) % 360
         color = sg.rgb(100, 206 + (angle * 5 % 50), 156 + ((angle * 10) % 100))
@@ -41,3 +33,4 @@ def main():
 
 if __name__ == '__main__':
     main()
+

@@ -28,6 +28,11 @@ build-backend = "setuptools.build_meta"
 Homepage = "https://github.com/kujirahand/tkeasygui-pythont"
 Issues = "https://github.com/kujirahand/tkeasygui-python/issues"
 
+[tool.poetry.dependencies]
+python = "^3.8"
+tkinter = "*"
+Pillow = "*"
+
 [tool.ruff.lint]
 select = ["E", "F", "I"]
 ignore = ["E501"]

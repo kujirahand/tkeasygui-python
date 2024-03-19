@@ -47,13 +47,11 @@ def popup_buttons(message: str, title: str = "Question", buttons: list[str] = ["
     print(color)
     ```
     """
-    # make buttons
-    eg_buttons = [eg.Button(s, width=9) for s in buttons]
     result = buttons[-1]
     # create window
     win = eg.Window(title, layout=[
         [eg.Text(message)],
-        eg_buttons,
+        [eg.Button(s, width=9) for s in buttons],
     ], modal=True)
     # event loop
     while win.is_alive():

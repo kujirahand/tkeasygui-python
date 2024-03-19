@@ -1,3 +1,7 @@
+"""
+TkEasyGUI Widgets
+"""
+import io
 import threading
 import tkinter as tk
 from pprint import pprint  # noqa: F401
@@ -5,6 +9,9 @@ from queue import Queue
 from tkinter import ttk
 from typing import Any, Literal, TypeAlias
 
+from PIL import ImageTk
+from PIL.JpegImagePlugin import JpegImageFile
+from PIL import Image as PILImage
 #------------------------------------------------------------------------------
 # Const
 #------------------------------------------------------------------------------
@@ -23,7 +30,7 @@ TABLE_SELECT_MODE_EXTENDED: str = tk.EXTENDED
 TextAlign: TypeAlias = Literal["left", "right", "center"]
 FontType: TypeAlias = tuple[str, int]
 PointType: TypeAlias = tuple[int, int] | tuple[float, float]
-
+ElementType: TypeAlias = "Element"
 # about color (Thanks)
 # https://kuroro.blog/python/YcZ6Yh4PswqUzaQXwnG2/
 
@@ -35,20 +42,44 @@ class TkEasyError(Exception):
         self.message = message
         super().__init__(self.message)
 
+# only one root element
+_root_window: tk.Tk | None = None
+def get_root_window() -> tk.Tk:
+    """Get root window."""
+    global _root_window
+    if _root_window is None:
+        _root_window = tk.Tk()
+        _root_window.attributes('-alpha', 0)
+    return _root_window
+
+# active window
+_window_list: list["Window"] = []
+def _get_active_window() -> tk.Toplevel|None:
+    """Get the active window."""
+    if len(_window_list) == 0:
+        return None
+    return _window_list[-1].window
+
+def _window_push(win: "Window") -> None:
+    """Push a window to the list."""
+    _window_list.append(win)
+
+def _window_pop() -> None:
+    """Pop a window from the list."""
+    _window_list.pop()
+
 class Window:
     """
     Main window object in TkEasyGUI
     """
-    def __init__(self, title: str, layout: list[list["Element"]], size: (tuple[str, int]|None)=None, resizable:bool=False, modal: bool=False, **kw) -> None:
+    def __init__(self, title: str, layout: list[list[ElementType]], size: (tuple[str, int]|None)=None, resizable:bool=False, modal: bool=False, **kw) -> None:
         """Create a window with a layout of widgets."""
         self.modal: bool = modal
         # check active window
         active_win = _get_active_window()
         if active_win is None:
-            active_win = tk.Tk()
-            active_win.configure(width=1, height=1)
-            active_win.eval('tk::PlaceWindow . center')
-        self.window: tk.Tk|tk.Toplevel = tk.Tk() if not modal else tk.Toplevel(master=active_win)
+            active_win = get_root_window()
+        self.window: tk.Toplevel = tk.Toplevel(master=active_win)
         self.timeout: int|None = None
         self.timeout_key: str = WINDOW_TIMEOUT
         self.timeout_id: str|None = None
@@ -66,35 +97,8 @@ class Window:
         if size is not None:
             self.window.geometry(f"{size[0]}x{size[1]}")
         self.window.resizable(resizable, resizable)
-        # prepare create
-        for widgets in layout:
-            for elemment in widgets:
-                elemment.prepare_create(self)
         # create widgets
-        self.need_focus_widget: tk.Widget|None = None
-        for widgets in layout:
-            frame_row = ttk.Frame(self.frame, padding=5)
-            # columns
-            row_prop: dict[str, Any] = {"expand": True, "fill": "x", "side": "top"}
-            for _col, elemment in enumerate(widgets):
-                # create widget
-                try:
-                    elem: Element = elemment
-                    widget: tk.Widget = elem.create(self, frame_row)
-                    # check key
-                    if elem.key != "":
-                        self.key_elements[elem.key] = elem
-                    if elem.has_value or elem.key == "OK" or elem.key == "Yes":
-                        self.need_focus_widget = widget
-                except Exception as e:
-                    raise Exception(f"Failed to create widget: {elem.element_type} {elem.key} {elem.props}\n{e}") from e
-                fill_prop = elem._get_fill_prop()
-                fill_prop["side"] = "left"
-                widget.pack(**fill_prop)
-                if elem.expand_y:
-                    row_prop["fill"] = "both"
-            # add row
-            frame_row.pack(**row_prop)
+        self._create_widget(self.frame, layout)
         # check modal
         if modal:
             # check position
@@ -111,6 +115,42 @@ class Window:
                 self.window.eval('tk::PlaceWindow . center')
         # push window
         _window_push(self)
+    
+    def _create_widget(self, parent: tk.Widget, layout: list[list["Element"]]):
+        # prepare create
+        for widgets in layout:
+            for elemment in widgets:
+                elemment.prepare_create(self)
+        # create widgets
+        self.need_focus_widget: tk.Widget|None = None
+        for widgets in layout:
+            frame_row = ttk.Frame(parent, padding=5)
+            # columns
+            row_prop: dict[str, Any] = {"expand": True, "fill": "x", "side": "top"}
+            for _col, elemment in enumerate(widgets):
+                # create widget
+                try:
+                    elem: Element = elemment
+                    widget: tk.Widget = elem.create(self, frame_row)
+                    # check key
+                    if elem.key != "":
+                        self.key_elements[elem.key] = elem
+                    if elem.has_value or elem.key == "OK" or elem.key == "Yes":
+                        self.need_focus_widget = widget
+                    # has children?
+                    if elem.has_children:
+                        self._create_widget(widget, elem.layout)
+                except Exception as e:
+                    raise Exception(f"Failed to create widget: {elem.element_type} {elem.key} {elem.props}\n{e}") from e
+                # pack widget
+                fill_prop = elem._get_fill_prop()
+                fill_prop["side"] = "left"
+                widget.pack(**fill_prop)
+                if elem.expand_y:
+                    row_prop["fill"] = "both"
+            # add row
+            frame_row.pack(**row_prop)
+        # end of create
 
     def move_to_center(self) -> None:
         """Move the window to the center of the screen."""
@@ -125,7 +165,9 @@ class Window:
         while True:
             self.timeout_id = self.window.after(timeout, _timeout_handler, self)
             self.window.after(100, _focus_window, self)
-            self.window.mainloop()
+            # mainloop - should be called only once
+            root = get_root_window()
+            root.mainloop()
             if not self.events.empty():
                 # return event
                 key, values = self.events.get()
@@ -226,23 +268,6 @@ def _focus_window(self: Window) -> None:
     if self.need_focus_widget is not None:
         self.need_focus_widget.focus_set()
         self.need_focus_widget = None
-        
-
-# active window
-_window_list: list[Window] = []
-def _get_active_window() -> tk.Tk|tk.Toplevel|None:
-    """Get the active window."""
-    if len(_window_list) == 0:
-        return None
-    return _window_list[-1].window
-
-def _window_push(win: Window) -> None:
-    """Push a window to the list."""
-    _window_list.append(win)
-
-def _window_pop() -> None:
-    """Pop a window from the list."""
-    _window_list.pop()
 
 #------------------------------------------------------------------------------
 # Element
@@ -265,6 +290,7 @@ class Element:
         self.widget: Any|None = None
         self.expand_x: bool = False
         self.expand_y: bool = False
+        self.has_children: bool = False
     
     def _get_fill_prop(self) -> dict[str, Any]:
         """Get the fill property in `pack` method."""
@@ -339,8 +365,38 @@ class Element:
         if self.widget is not None:
             if name in self.widget:
                 return self.widget[name]
-        # print("@@@error.name=", name)
         return None
+
+class Frame(Element):
+    """Frame element."""
+    def __init__(self, title: str, layout: list[list[Element]], key: str = "", background_color: str|None=None, size: tuple[int, int]|None=None, **kw) -> None:
+        super().__init__("Frame", **kw)
+        self.has_children = True
+        self.layout = layout
+        self.key = key
+        self.props["text"] = title
+        if size is not None:
+            self.props["size"] = size
+        if background_color:
+            self.props["background"] = background_color
+
+    def create(self, win: Window, parent: tk.Widget) -> tk.Widget:
+        self.widget = tk.LabelFrame(parent, name=self.key, **self.props)
+        return self.widget
+
+    def get(self) -> Any:
+        """Return Widget"""
+        return self.widget
+
+    def update(self, *args, **kw) -> None:
+        """Update the widget."""
+        self.widget_update(**kw)
+    
+    def __getattr__(self, name):
+        """Get unknown attribute."""
+        if name in ["Widget"]:
+            return self.widget
+        return super().__getattr__(name)
 
 class Text(Element):
     """Text element."""
@@ -443,6 +499,8 @@ class Input(Element):
     def update(self, *args, **kw) -> None:
         """Update the widget."""
         super().update(*args, **kw)
+        if self.widget is None:
+            return
         text = self.props["text"]
         if len(args) >= 1:
             text = args[0]
@@ -502,6 +560,8 @@ class Multiline(Element):
         return self.widget
     def get(self) -> Any:
         """Get the value of the widget."""
+        if self.widget is None:
+            return ""
         text = self.widget.get("1.0", "end -1c") # get all text
         self.props["text"] = text
         return text
@@ -525,6 +585,8 @@ class Multiline(Element):
 
     def set_text(self, text: str) -> None:
         """Set text"""
+        if self.widget is None:
+            return
         if self.readonly:
             self.widget_update(state="normal")
         self.props["text"] = text
@@ -532,6 +594,42 @@ class Multiline(Element):
         self.widget.insert("1.0", text) # set text
         if self.readonly:
             self.widget_update(state="disabled")
+
+class Slider(Element):
+    """Slider element."""
+    def __init__(self, key: str = "", range: tuple[float, float]=(1, 10), orientation: str="v", resolution: float=1, default_value: float|None=None, **kw) -> None:
+        super().__init__("Slider", **kw)
+        self.key = key
+        self.has_value = True
+        self.range = range
+        self.resolution = resolution
+        self.default_value = default_value if default_value is not None else range[0]
+        self.orientation = orientation
+        if orientation == "v":
+            self.props["orient"] = "vertical"
+        elif orientation == "h":
+            self.props["orient"] = "horizontal"
+        elif orientation == "vertical" or orientation == "horizontal":
+            self.props["orient"] = orientation
+
+    def create(self, win: Window, parent: tk.Widget) -> tk.Widget:
+        self.scale_var = tk.DoubleVar()
+        self.widget = tk.Scale(
+            parent,
+            name=self.key,
+            variable=self.scale_var,
+            from_=self.range[0], to=self.range[1],
+            resolution=self.resolution,
+            **self.props)
+        return self.widget
+    
+    def get(self) -> Any:
+        """Return Widget"""
+        return self.scale_var
+
+    def update(self, **kw) -> None:
+        """Update the widget."""
+        self.widget_update(**kw)
 
 class Canvas(Element):
     """Canvas element."""
@@ -555,6 +653,7 @@ class Canvas(Element):
         self.widget_update(**kw)
     
     def __getattr__(self, name):
+        """Get unknown attribute."""
         if name in ["Widget"]:
             return self.widget
         return super().__getattr__(name)
@@ -594,6 +693,7 @@ class Graph(Element):
         self.widget_update(**kw)
     
     def __getattr__(self, name):
+        """Get unknown attribute."""
         if name in ["Widget"]:
             return self.widget
         return super().__getattr__(name)
@@ -637,9 +737,11 @@ class Graph(Element):
         """Draw polygon"""
         return self.widget.create_polygon(points, fill=fill_color, outline=line_color, width=line_width)
     
-    def draw_text(self, text: str, location: PointType, color: str|None='black', font: FontType=None, angle: int=0, text_location: TextAlign=tk.CENTER) -> int:
+    def draw_text(self, text: str, location: PointType, color: str|None='black', font: FontType=None, angle: float|str|None=0, text_location: TextAlign=tk.CENTER) -> int:
         """Draw text"""
-        return self.widget.create_text(location[0], location[1], text=text, font=font, fill=color, angle=angle, anchor=text_location)
+        x, y = location
+        anchor = {"left": "w", "right": "e", "center": "center"}[text_location]
+        return self.widget.create_text(x, y, text=text, font=font, fill=color, angle=angle, anchor=anchor)
     
     def draw_image(self, filename: str|None=None, data: bytes|None=None, location: PointType|None=None) -> int:
         """Draw image"""
@@ -647,19 +749,48 @@ class Graph(Element):
         if location is None:
             location = (0, 0)
         # load image
-        image: bytes|None = None
-        if filename is not None:
-            image = tk.PhotoImage(file=filename)
-        elif data is not None:
-            try:
-                image = tk.PhotoImage(data=data, master=self.widget)
-            except Exception as e:
-                print(e)
-                return -1
-        if image is None:
-            return -1
-        self.widget.photo = image # important
+        image: tk.PhotoImage|None = get_image_tk(filename=filename, data=data)
+        # important
+        self.widget.image = image # type: ignore
         return self.widget.create_image(location, image=image, anchor=tk.NW)
+
+class Image(Element):
+    """Image element."""
+    def __init__(self, source: bytes|str|None=None, filename=None, data=None, key: str="", background_color: str|None=None, size: tuple[int, int]=(300, 300), **kw) -> None:
+        super().__init__("Image", **kw)
+        self.key = key
+        self.source = source
+        self.filename = filename
+        self.data = data
+        if size is not None:
+            self.props["size"] = size
+        if background_color is not None:
+            self.props["background"] = background_color
+
+    def create(self, win: Window, parent: tk.Widget) -> tk.Widget:
+        """Create a Image widget."""
+        photo = get_image_tk(self.source, self.filename, self.data)
+        self.widget = tk.Label(parent, image=photo, name=self.key, **self.props)
+        self.widget.image = photo # type: ignore
+        return self.widget
+
+    def get(self) -> Any:
+        """Return Widget"""
+        return self.widget
+
+    def update(self, source: bytes|str=None, filename: str|None=None, data: bytes|None=None, **kw) -> None:
+        """Update the widget."""
+        image = get_image_tk(source, filename, data)
+        self.widget.configure(image=image)
+        self.widget.image = image # type: ignore
+        self.widget_update(**kw)
+    
+    def __getattr__(self, name):
+        """Get unknown attribute."""
+        if name in ["Widget"]:
+            return self.widget
+        return super().__getattr__(name)
+
 
 class Listbox(Element):
     """Listbox element."""
@@ -682,9 +813,13 @@ class Listbox(Element):
         return self.widget
     def get(self) -> Any:
         """Get the value of the widget."""
+        if self.widget is None:
+            return None
         selected: list[str] = []
-        for i in self.widget.curselection():
-            selected.append(self.values[int(i)])
+        sel: None|Any = self.widget.curselection()
+        if sel is not None:
+            for i in sel:
+                selected.append(self.values[int(i)])
         return selected
 
     def _listbox_events(self, _event: Any) -> None:
@@ -693,6 +828,8 @@ class Listbox(Element):
 
     def update(self, *args, **kw) -> None:
         """Update the widget."""
+        if self.widget is None:
+            return
         if len(args) >= 1:
             values = args[0]
             kw["values"] = values
@@ -756,6 +893,8 @@ class Table(Element):
     
     def set_values(self, values: list[list[str]], headings: list[str]) -> None:
         """Set values to the table."""
+        if self.widget is None:
+            return
         self.values = values
         self.headings = headings
         # clear
@@ -769,6 +908,8 @@ class Table(Element):
     
     def get(self) -> Any:
         """Get the value of the widget."""
+        if self.widget is None:
+            return []
         record_id = self.widget.focus()
         record_values = self.widget.item(record_id, "values")
         return record_values
@@ -784,9 +925,10 @@ class Table(Element):
             kw["values"] = values
         self.values = kw["values"]
         # update list
-        tree = self.widget
-        for i in tree.get_children(): # clear all
-            tree.delete(i)
+        if self.widget is not None:
+            tree = self.widget
+            for i in tree.get_children(): # clear all
+                tree.delete(i)
         # set values
         self.set_values(self.values, self.headings)
         # 
@@ -812,3 +954,44 @@ def rgb(r: int, g: int, b: int) -> str:
     g = g & 0xFF
     b = b & 0xFF
     return f"#{r:02x}{g:02x}{b:02x}"
+
+def get_image_tk(source: bytes|str|None=None, filename: str|None = None, data: bytes|None = None) -> tk.PhotoImage|None:
+    """Get Image for tk"""
+    # if source is bytes, set data
+    if source is not None:
+        if isinstance(source, str): # is filename
+            filename = source
+        else: # is data
+            data = source
+    # load from file?
+    if filename is not None:
+        try:
+            return ImageTk.PhotoImage(file=filename)
+        except Exception as e:
+            raise TkEasyError(f"TkEasyGUI.Image.set_image.Error: filename='{filename}', {e}")
+    # load from data
+    if data is not None:
+        try:
+            # check if data is PILImage
+            if isinstance(data, PILImage.Image):
+                return ImageTk.PhotoImage(image=data)
+            return ImageTk.PhotoImage(data=data)
+        except Exception as e:
+            print("[TkEasyGUI] get_image_tk.Error:", e, stderr=True)
+            return data
+    return None
+
+def imagedata_to_bytes(image_data: PILImage) -> bytes:
+    """Convert JPEG to PNG"""
+    img_bytes = io.BytesIO()
+    image_data.save(img_bytes, format='PNG')
+    img_bytes = img_bytes.getvalue()
+    return img_bytes
+
+def imagefile_to_bytes(filename: str) -> bytes:
+    """Read image file and convert to bytes"""
+    image = PILImage.open(filename)
+    img_bytes = io.BytesIO()
+    image.save(img_bytes, format='PNG')
+    img_bytes = img_bytes.getvalue()
+    return img_bytes
