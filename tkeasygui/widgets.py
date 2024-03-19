@@ -148,12 +148,10 @@ class Window:
                 except Exception as e:
                     raise Exception(f"Failed to create widget: {elem.element_type} {elem.key} {elem.props}\n{e}") from e
                 # pack widget
-                print("@@@pack=", elem.expand_x, elem.expand_y)
                 fill_prop = elem._get_fill_prop()
                 fill_prop["side"] = "left"
                 widget.pack(**fill_prop)
                 # debug
-                print(f"Create widget: {elem.element_type} {elem.key} {fill_prop}")
                 if elem.expand_y:
                     row_prop["fill"] = "both"
             # add row
