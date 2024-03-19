@@ -111,7 +111,7 @@ def popup_error(message: str, title: str="Error") -> None:
     """Display a message in a popup window with an error icon."""
     messagebox.showerror(title, message, icon="error")
 
-def popup_get_file(title: str="", initial_folder: str="", save_as: bool=False, multiple_files: bool=False, file_types: tuple[tuple[str, str]]=(("All Files", "*.*"),), **kw) -> (str|tuple[str]|None):
+def popup_get_file(title: str="", initial_folder: str="", save_as: bool=False, multiple_files: bool=False, file_types: tuple[tuple[str, str]]=(("All Files", "*.*"),), no_window: bool|None=None, **kw) -> (str|tuple[str]|None):
     """Popup a file selection dialog. Return the file selected."""
     if save_as:
         result = filedialog.asksaveasfilename(
