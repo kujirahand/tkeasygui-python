@@ -111,8 +111,10 @@ def popup_error(message: str, title: str="Error") -> None:
     """Display a message in a popup window with an error icon."""
     messagebox.showerror(title, message, icon="error")
 
-def popup_get_file(title: str="", initial_folder: str="", save_as: bool=False, multiple_files: bool=False, file_types: tuple[tuple[str, str]]=(("All Files", "*.*"),), no_window: bool|None=None, **kw) -> (str|tuple[str]|None):
+def popup_get_file(message: str="", title: str|None=None, initial_folder: str="", save_as: bool=False, multiple_files: bool=False, file_types: tuple[tuple[str, str]]=(("All Files", "*.*"),), no_window: bool|None=None, **kw) -> (str|tuple[str]|None):
     """Popup a file selection dialog. Return the file selected."""
+    if title is None:
+        title = message
     if save_as:
         result = filedialog.asksaveasfilename(
             title=title,
@@ -128,8 +130,10 @@ def popup_get_file(title: str="", initial_folder: str="", save_as: bool=False, m
             **kw)
     return result
 
-def popup_get_folder(title: str="", default_path: str="", **kw) -> (str|None):
+def popup_get_folder(message: str="", title: str|None=None, default_path: str="", no_window: bool|None=None, **kw) -> (str|None):
     """Popup a folder selection dialog. Return the folder selected."""
+    if title is None:
+        title = message
     return filedialog.askdirectory(title=title, initialdir=default_path, **kw)
 
 def popup_color(title: str="", default_color: str|None=None) -> (str|None):
