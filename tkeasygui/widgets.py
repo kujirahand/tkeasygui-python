@@ -1,6 +1,7 @@
 """
 TkEasyGUI Widgets
 """
+from datetime import datetime
 import io
 import threading
 import tkinter as tk
@@ -9,9 +10,9 @@ from queue import Queue
 from tkinter import ttk
 from typing import Any, Literal, TypeAlias
 
-from PIL import ImageTk
-from PIL.JpegImagePlugin import JpegImageFile
 from PIL import Image as PILImage
+from PIL import ImageTk
+
 #------------------------------------------------------------------------------
 # Const
 #------------------------------------------------------------------------------
@@ -28,6 +29,7 @@ TABLE_SELECT_MODE_EXTENDED: str = tk.EXTENDED
 
 # type
 TextAlign: TypeAlias = Literal["left", "right", "center"]
+TextVAlign: TypeAlias = Literal["top", "bottom", "center"]
 FontType: TypeAlias = tuple[str, int]
 PointType: TypeAlias = tuple[int, int] | tuple[float, float]
 ElementType: TypeAlias = "Element"
@@ -83,10 +85,12 @@ class Window:
         self.timeout: int|None = None
         self.timeout_key: str = WINDOW_TIMEOUT
         self.timeout_id: str|None = None
+        self.focus_timer_id: str|None = None
         self.events: Queue = Queue()
         self.key_elements: dict[str, Element] = {}
         self.last_values: dict[str, Any] = {}
         self.flag_alive: bool = True # Pressing the close button will turn this flag to False.
+        self.layout: list[list[ElementType]] = layout
         # Frame
         self.frame: ttk.Frame = ttk.Frame(self.window, padding=10)
         self.frame.pack(expand=True, fill="both")
@@ -117,6 +121,7 @@ class Window:
         _window_push(self)
     
     def _create_widget(self, parent: tk.Widget, layout: list[list["Element"]]):
+        """create widget from layout"""
         # prepare create
         for widgets in layout:
             for elemment in widgets:
@@ -131,6 +136,10 @@ class Window:
             for _col, elemment in enumerate(widgets):
                 # create widget
                 elem: Element = elemment
+                # set window and parent
+                elem.window = self
+                elem.parent = frame_row
+                # set prev_element and next_element
                 elem.prev_element = prev_element # set prev_element
                 if prev_element is not None:
                     prev_element.next_element = elem
@@ -147,6 +156,9 @@ class Window:
                         self._create_widget(widget, elem.layout)
                 except Exception as e:
                     raise Exception(f"Failed to create widget: {elem.element_type} {elem.key} {elem.props}\n{e}") from e
+                # bind event (before create)
+                for event_name, handle_t in elem._bind_dict.items():
+                    self.bind(elem, event_name, handle_t[0], handle_t[1])
                 # pack widget
                 fill_prop = elem._get_fill_prop()
                 fill_prop["side"] = "left"
@@ -167,20 +179,31 @@ class Window:
         """Read events from the window."""
         self.timeout = timeout
         self.timeout_key = timeout_key
-        timeout = self.timeout if self.timeout is not None else 100
+        time_id = time_checker_start()
         while True:
-            self.timeout_id = self.window.after(timeout, _timeout_handler, self)
-            self.window.after(100, _focus_window, self)
+            # set timeout
+            if self.timeout_id is not None:
+                self.window.after_cancel(self.timeout_id)
+            # self.timeout_id = self.window.after("idle", lambda: self._window_idle_handler())
+            self.timeout_id = self.window.after("idle", _exit_mainloop)
+            # set focus timer (once when window show)
+            if self.focus_timer_id is None:
+                self.focus_timer_id = self.window.after(100, _focus_window, self) # focus timer
             # mainloop - should be called only once
             root = get_root_window()
             root.mainloop()
+            # after mainloop, check events
             if not self.events.empty():
-                # return event
-                key, values = self.events.get()
-                return (key, values)
-            if self.timeout is not None:
                 break
-        return (self.timeout_key, {})
+            # check timeout
+            if timeout is None:
+                continue # no timeout
+            interval = time_checker_end(time_id)
+            if interval > timeout:
+                return (self.timeout_key, {}) # return timeout event
+        # return event
+        key, values = self.events.get()
+        return (key, values)
 
     def get_values(self) -> dict[str, Any]:
         """Get values from the window."""
@@ -198,13 +221,26 @@ class Window:
         self.last_values = values
         return values
 
+    def _window_idle_handler(self) -> None:
+        """Handle window idle event."""
+        _exit_mainloop()
+
     def _event_handler(self, key: str, values: dict[str, Any]|None) -> None:
         """Handle an event."""
+        # set value
         if values is None:
             values = {}
         for k, v in self.get_values().items():
             values[k] = v
+        # put event
         self.events.put((key, values))
+        _exit_mainloop()
+    
+    def _exit_main_loop(self) -> None:
+        """Exit mainloop"""
+        if self.timeout_id is not None:
+            self.window.after_cancel(self.timeout_id)
+        _exit_mainloop()
 
     def _close_handler(self):
         """Handle a window close event."""
@@ -212,10 +248,7 @@ class Window:
             self.window.after_cancel(self.timeout_id)
         self._event_handler(WINDOW_CLOSED, None)
         self.flag_alive = False
-        try:
-            self.window.quit() # exit from mainloop
-        except Exception:
-            pass
+        _exit_mainloop()
 
     def close(self) -> None:
         """Close the window."""
@@ -258,14 +291,46 @@ class Window:
         except Exception:
             pass
         return self
+    
+    def bind(self, element: "Element", event_name: str, handle_name: str, propagate: bool=True) -> None:
+        """Bind event"""
+        element._bind_dict[event_name] = (handle_name, propagate)
+        if element.widget is None:
+            return
+        # bind to widget
+        w: tk.Widget = element.widget
+        w.bind(
+            event_name,
+            lambda e: _user_bind_event_handler(self, element, handle_name, e, propagate)
+        )
 
+def _user_bind_event_handler(win: Window, elem: "Element", handle_name: str, event: tk.Event, propagate: bool=True) -> None:
+    """Handle an event."""
+    elem.user_bind_event = event
+    event_key = f"{elem.key}{handle_name}"
+    win.events.put((event_key, {"event": event}))
+    # propagate
+    if propagate:
+        # todo
+        pass
+
+def _exit_mainloop() -> None:
+    """Exit mainloop"""
+    root = get_root_window()
+    try:
+        root.quit() # exit from mainloop
+    except Exception:
+        # print("_exit_mainloop: failed to exit mainloop")
+        pass
+
+"""
 def _timeout_handler(self: Window) -> None:
-    """Handle a timeout event."""
     if self.timeout_id is not None:
         self.window.after_cancel(self.timeout_id)
     if self.timeout is not None:
         self._event_handler("-TIMEOUT-", None)
-    self.window.quit()
+    _exit_mainloop()
+"""
 
 def _focus_window(self: Window) -> None:
     """Focus window"""
@@ -299,7 +364,26 @@ class Element:
         self.has_children: bool = False
         self.prev_element: Element|None = None
         self.next_element: Element|None = None
+        self.window: Window|None = None
+        self.parent: tk.Widget|None = None
+        self._bind_dict: dict[str, tuple[str, bool]] = {}
+        self.user_bind_event: tk.Event|None = None # when bind event fired then set this value
     
+    def bind(self, event_name: str, handle_name: str, propagate: bool=True) -> None:
+        """
+        Bind event. @see `Window.bind`
+        """
+        self._bind_dict[event_name] = (handle_name, propagate)
+        if self.window is not None:
+            self.window.bind(self, event_name, handle_name, propagate)
+
+    def disptach_event(self, values: dict[str, Any]|None=None) -> None:
+        """Dispatch event"""
+        if values is None:
+            values = {}
+        if self.window is not None:
+            self.window._event_handler(self.key, values)
+
     def _get_fill_prop(self) -> dict[str, Any]:
         """Get the fill property in `pack` method."""
         prop: dict[str, Any] = {"expand": False, "fill": "none"}
@@ -335,6 +419,25 @@ class Element:
         # convert "select_mode" to "selectmode"
         if "select_mode" in self.props:
             self.props["selectmode"] = self.props.pop("select_mode")
+        # user bind events
+        if "bind_events" in self.props:
+            bind_events = self.props.pop("bind_events")
+            self.bind_events(bind_events)
+
+    def bind_events(self, events: dict[str, str]) -> ElementType:
+        """
+        Bind user events
+        **Example**
+        ```
+        # (1) bind events in the constructor
+        eg.Canvas(key="-canvas-", bind_events={"<ButtonPress>": "on", "<ButtonRelease>": "off"})
+        # (2) bind events in the method
+        eg.Canvas(key="-canvas-").bind_events({"<ButtonPress>": "on", "<ButtonRelease>": "off"})
+        ```
+        """
+        for event_name, handle_name in events.items():
+            self.bind(event_name, handle_name)
+        return self
 
     def create(self, win: Window, parent: tk.Widget) -> Any:
         """Create a widget."""
@@ -390,6 +493,39 @@ class Frame(Element):
 
     def create(self, win: Window, parent: tk.Widget) -> tk.Widget:
         self.widget = tk.LabelFrame(parent, name=self.key, **self.props)
+        return self.widget
+
+    def get(self) -> Any:
+        """Return Widget"""
+        return self.widget
+
+    def update(self, *args, **kw) -> None:
+        """Update the widget."""
+        self.widget_update(**kw)
+    
+    def __getattr__(self, name):
+        """Get unknown attribute."""
+        if name in ["Widget"]:
+            return self.widget
+        return super().__getattr__(name)
+
+class Column(Element):
+    """Frame element."""
+    def __init__(self, layout: list[list[Element]], key: str = "", background_color: str|None=None,
+                 vertical_alignment: TextVAlign="top",
+                 size: tuple[int, int]|None=None, **kw) -> None:
+        super().__init__("Column", **kw)
+        self.has_children = True
+        self.layout = layout
+        self.key = key
+        if size is not None:
+            self.props["size"] = size
+        if background_color:
+            self.props["background"] = background_color
+        # self.props["anchor"] = {"top": "n", "bottom": "s", "center": "center"}[vertical_alignment]
+
+    def create(self, win: Window, parent: tk.Widget) -> tk.Widget:
+        self.widget = tk.Frame(parent, name=self.key, **self.props)
         return self.widget
 
     def get(self) -> Any:
@@ -605,10 +741,14 @@ class Multiline(Element):
 
 class Slider(Element):
     """Slider element."""
-    def __init__(self, key: str = "", range: tuple[float, float]=(1, 10), orientation: str="v", resolution: float=1, default_value: float|None=None, **kw) -> None:
+    def __init__(self, key: str = "", range: tuple[float, float]=(1, 10), orientation: str="v", 
+                 resolution: float=1, default_value: float|None=None,
+                 enable_events: bool=False,
+                 **kw) -> None:
         super().__init__("Slider", **kw)
         self.key = key
         self.has_value = True
+        self.enable_events = enable_events
         self.range = range
         self.resolution = resolution
         self.default_value = default_value if default_value is not None else range[0]
@@ -622,6 +762,7 @@ class Slider(Element):
 
     def create(self, win: Window, parent: tk.Widget) -> tk.Widget:
         self.scale_var = tk.DoubleVar()
+        self.scale_var.set(self.default_value)
         self.widget = tk.Scale(
             parent,
             name=self.key,
@@ -629,15 +770,21 @@ class Slider(Element):
             from_=self.range[0], to=self.range[1],
             resolution=self.resolution,
             **self.props)
+        if self.enable_events:
+            self.widget.bind("<ButtonRelease-1>", lambda e: self.disptach_event({"event": e}))
         return self.widget
     
     def get(self) -> Any:
         """Return Widget"""
-        return self.scale_var
+        return self.scale_var.get()
 
-    def update(self, **kw) -> None:
+    def update(self, value: float|None=None, **kw) -> None:
         """Update the widget."""
-        self.widget_update(**kw)
+        if value is not None:
+            self.scale_var.set(value)
+            self.disptach_event()
+        else:
+            self.widget_update(**kw)
 
 class Canvas(Element):
     """Canvas element."""
@@ -662,7 +809,7 @@ class Canvas(Element):
     
     def __getattr__(self, name):
         """Get unknown attribute."""
-        if name in ["Widget"]:
+        if name in ["Widget", "tk_canvas"]:
             return self.widget
         return super().__getattr__(name)
 
@@ -1003,3 +1150,11 @@ def imagefile_to_bytes(filename: str) -> bytes:
     image.save(img_bytes, format='PNG')
     img_bytes = img_bytes.getvalue()
     return img_bytes
+
+def time_checker_start() -> datetime:
+    return datetime.now()
+
+def time_checker_end(start_time: datetime) -> int:
+    elapsed_time = (datetime.now() - start_time).total_seconds()
+    msec = int(elapsed_time * 1000)
+    return msec

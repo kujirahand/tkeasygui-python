@@ -1,5 +1,7 @@
 from PIL import Image
+
 import tkeasygui as sg
+
 
 def main():
     # load image with Pillow
