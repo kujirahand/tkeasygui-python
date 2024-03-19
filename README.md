@@ -5,6 +5,10 @@ In the event model, it is compatible with the well-known GUI library `PySimpleGU
 
 Python's standard UI library `Tkinter`, is often considered to have a high barrier to entry and to be difficult to use. By using this library, you can create GUI applications easily and intuitively.
 
+This project adopts the lenient MIT license. Let's enjoy creating GUI programs.
+
+- [👉日本語のREADME](https://github.com/kujirahand/tkeasygui-python/blob/main/README-ja.md)
+
 ## Install
 
 Install from pypi
@@ -48,16 +52,22 @@ window.close()
 
 ## Samples
 
+We have prepared a selection of samples to demonstrate simple usage. Please check them out.
+
 - [samples](https://github.com/kujirahand/tkeasygui-python/tree/main/tests).
 
 ## Documents
 
+Below is a detailed list of classes and methods.
+
 - [docs](https://github.com/kujirahand/tkeasygui-python/tree/main/docs)
 
-## Regarding the relationship with PySimpleGUI
+## About the relationship with PySimpleGUI
 
-This was developed with reference to PySimpleGUI, but has been re-implemented from scratch.
-While its usage is similar to PySimpleGUI, it has been expanded with unique features.
+Fundamentally, it is compatible with PySimpleGUI. Programs can be written using the same event model. 
+It should be noted that while it was developed with reference to PySimpleGUI, it has been reimplemented from scratch.
+Many unique features have been expanded.
+The basic Elements have been given the same names. However, the names of some properties are different.
 
 ## Link
 

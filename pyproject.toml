@@ -1,12 +1,25 @@
+[build-system]
+requires = ["setuptools >= 61.0"]
+build-backend = "setuptools.build_meta"
+
 [project]
 name = "tkeasygui"
 version = "0.2.1"
+dependencies = [
+  "tkinter",
+  "Pillow",
+]
+requires-python = ">=3.8"
 authors = [
   { name="kujirahand", email="web@kujirahand.com" },
 ]
-description = "Easy and Simple GUI Library"
+maintainers = [
+ { name="kujirahand", email="web@kujirahand.com" },
+]
+description = "TkEasyGUI is Easy and Simple GUI Library"
 readme = "README.md"
-requires-python = ">=3.8"
+license = {file = "LICENSE"}
+keywords = ["GUI", "Tkinter", "PySimpleGUI"]
 classifiers = [
     "Intended Audience :: Developers",
     "License :: OSI Approved :: MIT License",
@@ -20,18 +33,11 @@ classifiers = [
     "Topic :: Software Development :: User Interfaces",
 ]
 
-[build-system]
-requires = ["setuptools"]
-build-backend = "setuptools.build_meta"
-
 [project.urls]
-Homepage = "https://github.com/kujirahand/tkeasygui-pythont"
+Homepage = "https://github.com/kujirahand/tkeasygui-python"
+Documentation = "https://github.com/kujirahand/tkeasygui-python/blob/main/README.md"
+Repository = "https://github.com/kujirahand/tkeasygui-python/"
 Issues = "https://github.com/kujirahand/tkeasygui-python/issues"
-
-[tool.poetry.dependencies]
-python = "^3.8"
-tkinter = "*"
-Pillow = "*"
 
 [tool.ruff.lint]
 select = ["E", "F", "I"]
