@@ -34,6 +34,8 @@ FontType: TypeAlias = tuple[str, int]
 PointType: TypeAlias = tuple[int, int] | tuple[float, float]
 ElementType: TypeAlias = "Element"
 EventMode: TypeAlias = Literal["user", "system"]
+OrientationType: TypeAlias = Literal["v", "h", "vertical", "horizontal"]
+ListboxSelectMode: TypeAlias = Literal["multiple", "browse", "extended", "single"]
 # about color (Thanks)
 # https://kuroro.blog/python/YcZ6Yh4PswqUzaQXwnG2/
 
@@ -150,8 +152,12 @@ class Window:
                     # check key
                     if elem.key != "":
                         self.key_elements[elem.key] = elem
-                    if elem.has_value or elem.key == "OK" or elem.key == "Yes":
-                        self.need_focus_widget = widget
+                        # check focus widget
+                        if self.need_focus_widget is None:
+                            self.need_focus_widget = widget
+                        # check specila key
+                        if elem.has_value and (elem.key == "OK" or elem.key == "Yes"):
+                            self.need_focus_widget = widget
                     # has children?
                     if elem.has_children:
                         self._create_widget(widget, elem.layout)
@@ -170,6 +176,9 @@ class Window:
             # add row
             frame_row.pack(**row_prop)
         # end of create
+        if self.need_focus_widget is not None:
+            print("focus_set", self.need_focus_widget)
+            self.need_focus_widget.focus_set()
 
     def move_to_center(self) -> None:
         """Move the window to the center of the screen."""
@@ -315,6 +324,9 @@ def _bind_event_handler(win: Window, elem: "Element", handle_name: str, event: t
     elif event_mode == "system":
         event_key = elem.key
         event_val = {"event": event, "event_type": handle_name}
+        for key, key_elem in win.key_elements.items():
+            val = key_elem.get()
+            event_val[key] = val
         win.events.put((event_key, event_val))
     # propagate
     if propagate:
@@ -606,6 +618,58 @@ class Button(Element):
             self.widget_update(text=text)
         self.widget_update(**kw)
 
+class Checkbox(Element):
+    """Button element."""
+    def __init__(self, text: str="", default: bool=False, key: str="", enable_events: bool=False, **kw) -> None:
+        super().__init__("Button", **kw)
+        if key == "":
+            key = text
+        self.key = key
+        self.has_value = False
+        self.default_value = default
+        self.props["text"] = text
+        if enable_events:
+            self.bind_events({
+                "<Button-1>": "click",
+                "<Button-3>": "right_click"
+            }, "system")
+
+    def create(self, win: Window, parent: tk.Widget) -> tk.Widget:
+        self.checkbox_var = tk.BooleanVar(value=self.default_value)
+        self.widget = tk.Checkbutton(parent, variable=self.checkbox_var, **self.props)
+        return self.widget
+    
+    def get_value(self) -> Any:
+        """Get the value of the widget."""
+        return self.checkbox_var.get()
+
+    def set_value(self, b: bool) -> None:
+        """Set the value of the widget."""
+        self.checkbox_var.set(b)
+
+    def get(self) -> Any:
+        """Get the value of the widget."""
+        return self.get_value()
+
+    def set_text(self, text: str) -> None:
+        """Set the text of the widget."""
+        self.props["text"] = text
+        self.widget_update(text=text)
+
+    def update(self, *args, **kw) -> None:
+        """Update the widget."""
+        super().update(*args, **kw)
+        if len(args) >= 1:
+            self.set_value(args[0])
+        if len(args) >= 2:
+            self.set_text(args[1])
+        if "text" in kw:
+            self.set_text(kw.pop("text"))
+        if "value" in kw:
+            print("set_value", kw)
+            self.set_value(kw.pop("value"))
+        self.widget_update(**kw)
+
 def _button_key_checker(e: tk.Event, self: Button, win: Window) -> None:
     """Check key event for button. (Enabled Return key)"""
     # if e.keysym == "Return" or e.keysym == "space":
@@ -614,19 +678,33 @@ def _button_key_checker(e: tk.Event, self: Button, win: Window) -> None:
 
 class Input(Element):
     """Text input element."""
-    def __init__(self, text: str="", key: str="", background_color: str="white", color: str = "black", text_aligh: TextAlign="left",
+    def __init__(self, text: str="", key: str="",
+                 enable_events: bool=False,
+                 background_color: str|None=None, color: str|None=None,
+                 text_aligh: TextAlign="left",
                  readonly: bool=False, readonly_background_color: str="silver", **kw) -> None:
         super().__init__("Input", **kw)
         self.readonly: bool = readonly
         self.props["text"] = text # default text @see Input.create
-        self.props["background"] = background_color
-        self.props["foreground"] = color
+        if background_color is not None:
+            self.props["background"] = background_color
+        if color is not None:
+            self.props["foreground"] = color
         self.props["justify"] = text_aligh
         self.props["readonlybackground"] = readonly_background_color
         self.has_value = True
         if key == "":
             key = f"-input{get_element_id()}-"
         self.key = key
+        if enable_events:
+            self.bind_events({
+                "<FocusIn>": "focusin",
+                "<FocusOut>": "focusout",
+                "<Return>": "return",
+                "<Key>": "key",
+                "<Button-1>": "click",
+                "<Button-3>": "right_click"
+            }, "system")
     
     def create(self, win: Window, parent: tk.Widget) -> tk.Widget:
         """create Input widget"""
@@ -644,11 +722,13 @@ class Input(Element):
     def get(self) -> Any:
         """Get the value of the widget."""
         return self.props["textvariable"].get()
+
     def set_readonly(self, readonly: bool) -> None:
         """set readonly"""
         self.readonly = readonly
         state = "readonly" if self.readonly else "normal"
         self.widget_update(state=state)
+
     def update(self, *args, **kw) -> None:
         """Update the widget."""
         super().update(*args, **kw)
@@ -685,7 +765,8 @@ class InputText(Input):
 class Multiline(Element):
     """Multiline text input element."""
     def __init__(self, text: str="", default_text: str|None=None, key: str="",
-                 color: str="black", background_color: str="white",
+                 enable_events: bool=False,
+                 color: str|None=None, background_color: str|None=None,
                  readonly: bool=False, readonly_background_color: str='silver',
                  size: tuple[int, int]=(50, 10),
                  **kw) -> None:
@@ -694,14 +775,27 @@ class Multiline(Element):
             text = default_text
         self.props["text"] = text
         self.props["size"] = size
-        self.props["foreground"] = color
-        self.props["background"] = self.backgound_color = background_color
+        if color is not None:
+            self.props["foreground"] = color
+        if background_color is not None:
+            self.props["background"] = self.backgound_color = background_color
         self.readonly_background_color = readonly_background_color
         self.has_value = True
         self.readonly = readonly
         if key == "":
             key = f"-multiline{get_element_id()}-"
         self.key = key
+        # bind events
+        if enable_events:
+            self.bind_events({
+                "<FocusIn>": "focusin",
+                "<FocusOut>": "focusout",
+                "<Return>": "return",
+                "<Key>": "key",
+                "<Button-1>": "click",
+                "<Button-3>": "right_click"
+            }, "system")
+
     def create(self, win: Window, parent: tk.Widget) -> tk.Widget:
         # text
         text = self.props.pop("text", "")
@@ -711,6 +805,7 @@ class Multiline(Element):
         if self.readonly:
             self.set_readonly(self.readonly)
         return self.widget
+
     def get(self) -> Any:
         """Get the value of the widget."""
         if self.widget is None:
@@ -718,6 +813,7 @@ class Multiline(Element):
         text = self.widget.get("1.0", "end -1c") # get all text
         self.props["text"] = text
         return text
+
     def update(self, *args, **kw) -> None:
         """Update the widget."""
         if len(args) >= 1:
@@ -729,6 +825,7 @@ class Multiline(Element):
             self.readonly = True if kw.pop("readonly") else False
             self.set_readonly(self.readonly)
         self.widget_update(**kw)
+
     def set_readonly(self, readonly: bool) -> None:
         """Set readonly"""
         self.readonly = readonly
@@ -748,26 +845,36 @@ class Multiline(Element):
         if self.readonly:
             self.widget_update(state="disabled")
 
+class Textarea(Multiline):
+    """Textarea element. (alias of Multiline)"""
+    pass
+
 class Slider(Element):
     """Slider element."""
-    def __init__(self, key: str = "", range: tuple[float, float]=(1, 10), orientation: str="v", 
+    def __init__(self, key: str = "", range: tuple[float, float]=(1, 10),
+                 orientation: OrientationType="horizontal",
                  resolution: float=1, default_value: float|None=None,
                  enable_events: bool=False,
                  **kw) -> None:
         super().__init__("Slider", **kw)
         self.key = key
         self.has_value = True
-        self.enable_events = enable_events
         self.range = range
         self.resolution = resolution
         self.default_value = default_value if default_value is not None else range[0]
-        self.orientation = orientation
+        # check orientation
+        self.orientation: OrientationType = orientation
         if orientation == "v":
             self.props["orient"] = "vertical"
         elif orientation == "h":
             self.props["orient"] = "horizontal"
         elif orientation == "vertical" or orientation == "horizontal":
             self.props["orient"] = orientation
+        # event
+        if enable_events:
+            self.bind_events({
+                "<ButtonRelease-1>": "release"
+            }, "system")
 
     def create(self, win: Window, parent: tk.Widget) -> tk.Widget:
         self.scale_var = tk.DoubleVar()
@@ -779,8 +886,6 @@ class Slider(Element):
             from_=self.range[0], to=self.range[1],
             resolution=self.resolution,
             **self.props)
-        if self.enable_events:
-            self.widget.bind("<ButtonRelease-1>", lambda e: self.disptach_event({"event": e}))
         return self.widget
     
     def get(self) -> Any:
@@ -964,37 +1069,50 @@ class Image(Element):
 
 class Listbox(Element):
     """Listbox element."""
-    def __init__(self, values: list[str]=[], key: str="", enable_events: bool=False, select_mode: str="browse", **kw) -> None:
+    def __init__(self, values: list[str]=[], key: str="", enable_events: bool=False, select_mode: ListboxSelectMode="browse", **kw) -> None:
         super().__init__("Listbox", **kw)
         self.values = values
         self.has_value = True
-        self.enable_events = enable_events
         self.select_mode = select_mode
         if key == "":
             key = f"-listbox{get_element_id()}-"
         self.key = key
+        # event
+        if enable_events:
+            self.bind_events({
+                "<<ListboxSelect>>": "select"
+            }, "system")
+
     def create(self, win: Window, parent: tk.Widget) -> tk.Widget:
+        """[Listbox.create] create Listbox widget"""
         self.window: Window = win
         self.widget = tk.Listbox(parent, selectmode=self.select_mode, **self.props)
-        for v in self.values:
-            self.widget.insert("end", v)
-        if self.enable_events:
-            self.widget.bind("<<ListboxSelect>>", lambda e: self._listbox_events(e))
+        # insert values
+        self.set_values(self.values)
         return self.widget
+
+    def set_values(self, values: list[str]) -> None:
+        """Set values to list"""
+        self.values = values
+        if self.widget is not None:
+            # delete all
+            self.widget.delete(0, "end")
+            # insert data
+            for i, v in enumerate(self.values):
+                self.widget.insert(i, v)
+
     def get(self) -> Any:
         """Get the value of the widget."""
         if self.widget is None:
             return None
+        wg: tk.Listbox = self.widget
         selected: list[str] = []
-        sel: None|Any = self.widget.curselection()
-        if sel is not None:
-            for i in sel:
-                selected.append(self.values[int(i)])
+        selections: Any = wg.curselection()
+        if selections is not None:
+            for i in selections:
+                index: int = int(i)
+                selected.append(self.values[index])
         return selected
-
-    def _listbox_events(self, _event: Any) -> None:
-        """Handle listbox events."""
-        self.window._event_handler(self.key, {})
 
     def update(self, *args, **kw) -> None:
         """Update the widget."""
@@ -1002,13 +1120,58 @@ class Listbox(Element):
             return
         if len(args) >= 1:
             values = args[0]
-            kw["values"] = values
-        self.values = kw["values"]
-        # update list
-        self.widget.delete(0, "end")
-        for v in self.values:
-            self.widget.insert("end", v)
-        del kw["values"]
+            self.set_values(values)
+        if "values" in kw:
+            self.set_values(kw.pop("values"))
+        self.widget_update(**kw)
+
+class Combo(Element):
+    """Combo element."""
+    def __init__(self, values: list[str]=[], default_value: str="", key: str="", enable_events: bool=False, **kw) -> None:
+        super().__init__("Combo", **kw)
+        self.values = values
+        self.value: tk.StringVar|None = None
+        self.default_value = default_value
+        self.has_value = True
+        if key == "":
+            key = f"-combo{get_element_id()}-"
+        self.key = key
+        # event
+        if enable_events:
+            self.bind_events({
+                "<<ComboboxSelected>>": "select"
+            }, "system")
+
+    def create(self, win: Window, parent: tk.Widget) -> tk.Widget:
+        """[Combo.create] create Listbox widget"""
+        self.value = tk.StringVar(value=self.default_value)
+        self.widget = ttk.Combobox(parent, values=self.values, textvariable=self.value, **self.props)
+        return self.widget
+
+    def set_values(self, values: list[str]) -> None:
+        """Set values to list"""
+        self.values = values
+        if self.widget is not None:
+            self.widget_update(values=self.values)
+    
+    def set_value(self, v: str) -> None:
+        """Set the value of the widget."""
+        self.value.set(v)
+
+    def get(self) -> Any:
+        """Get the value of the widget."""
+        if self.widget is None:
+            return None
+        return self.value.get()
+
+    def update(self, *args, **kw) -> None:
+        """Update the widget."""
+        if self.widget is None:
+            return
+        if len(args) >= 1:
+            self.set_value(args[0])
+        if "values" in kw:
+            self.set_values(kw.pop("values"))
         self.widget_update(**kw)
 
 class Table(Element):
