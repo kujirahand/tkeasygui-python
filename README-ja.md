@@ -76,6 +76,12 @@ PySimpleGUIと完全な互換性は考えていません。
 
 ## 今後の予定
 
-- Window作成時に、絶対座標でのElementの配置
+- sg.FilesBrowse (delimiter=";")
+- sg.FolderBrowse
+- sg.ColorBrowse
+- sg.ListBrowse (select item from listbox)
+- sg.MulitilineBrowse
+- Window作成時の配置モード
+- 絶対座標でのElementの配置 / Gridレイアウト
 - HTMLっぽく？一次元のElementの配置 eg.Window(layout=[eg.Button(), eg.Button(), eg.BR(), eg.Button()])
 

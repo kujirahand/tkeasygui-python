@@ -98,8 +98,6 @@ class Window:
         self._event_hooks: dict[str, list[callable]] = {}
         # Frame
         self.frame: ttk.Frame = ttk.Frame(self.window, padding=10)
-        self.frame.pack(expand=True, fill="both")
-        self.frame.rowconfigure(0, weight=1)
         # set window properties
         self.window.title(title)
         self.window.protocol("WM_DELETE_WINDOW", lambda : self._close_handler())
@@ -108,6 +106,9 @@ class Window:
         self.window.resizable(resizable, resizable)
         # create widgets
         self._create_widget(self.frame, layout)
+        # pack frame
+        self.frame.pack(expand=True, fill="both")
+        self.frame.rowconfigure(0, weight=1)
         # check modal
         if modal:
             # check position
@@ -138,6 +139,9 @@ class Window:
                 lambda event, values: print("3", event, values),
             ],
         ```
+        **Note**
+        - If you specify a function that returns True, it changes the event name to f"{event}-stopped" and then re-collects the values associated with keys that occur afterwards.
+        - @see `Window.read`
         """
         for event_name, handle_list in hooks.items():
             for handle in handle_list:
@@ -175,14 +179,13 @@ class Window:
                 try:
                     widget: tk.Widget = elem.create(self, frame_row)
                     # check key
-                    if elem.key != "":
-                        self.key_elements[elem.key] = elem
-                        # check focus widget
-                        if self.need_focus_widget is None:
-                            self.need_focus_widget = widget
-                        # check specila key
-                        if elem.has_value and (elem.key == "OK" or elem.key == "Yes"):
-                            self.need_focus_widget = widget
+                    self.key_elements[elem.key] = elem
+                    # check focus widget
+                    if elem.has_value and (self.need_focus_widget is None):
+                        self.need_focus_widget = widget
+                    # check specila key
+                    if (self.need_focus_widget is None) and (elem.key == "OK" or elem.key == "Yes"):
+                        self.need_focus_widget = widget
                     # has children?
                     if elem.has_children:
                         self._create_widget(widget, elem.layout)
@@ -192,8 +195,7 @@ class Window:
                 for event_name, handle_t in elem._bind_dict.items():
                     self.bind(elem, event_name, handle_t[0], handle_t[1], handle_t[2])
                 # pack widget
-                fill_prop = elem._get_fill_prop()
-                fill_prop["side"] = "left"
+                fill_prop = elem._get_pack_props()
                 widget.pack(**fill_prop)
                 # debug
                 if elem.expand_y:
@@ -219,11 +221,10 @@ class Window:
             # set timeout
             if self.timeout_id is not None:
                 self.window.after_cancel(self.timeout_id)
-            # self.timeout_id = self.window.after("idle", lambda: self._window_idle_handler())
-            self.timeout_id = self.window.after("idle", _exit_mainloop)
+            self.timeout_id = self.window.after("idle", self._window_idle_handler)
             # set focus timer (once when window show)
             if self.focus_timer_id is None:
-                self.focus_timer_id = self.window.after(100, _focus_window, self) # focus timer
+                self.focus_timer_id = self.window.after("idle", _focus_window, self) # focus timer
             # mainloop - should be called only once
             root = get_root_window()
             root.mainloop()
@@ -242,10 +243,12 @@ class Window:
             flag_stop = self._dispatch_event_hooks(key, values)
             if flag_stop:
                 key = f"{key}-stopped" # change event name
+                values = self.get_values() # collect values again
         return (key, values)
     
     def _dispatch_event_hooks(self, key: str, values: dict[str, Any]) -> bool:
         """Dispatch event hooks."""
+        # execute _event_hooks
         flag_stop = False
         if key in self._event_hooks:
             for handle in self._event_hooks[key]:
@@ -294,11 +297,10 @@ class Window:
 
     def _close_handler(self):
         """Handle a window close event."""
+        self.flag_alive = False
         if self.timeout_id is not None:
             self.window.after_cancel(self.timeout_id)
         self._event_handler(WINDOW_CLOSED, None)
-        self.flag_alive = False
-        _exit_mainloop()
 
     def close(self) -> None:
         """Close the window."""
@@ -390,6 +392,7 @@ def _focus_window(self: Window) -> None:
     if self.need_focus_widget is not None:
         self.need_focus_widget.focus_set()
         self.need_focus_widget = None
+        _exit_mainloop()
 
 #------------------------------------------------------------------------------
 # Element
@@ -403,10 +406,14 @@ element_propery_alias: dict[str, str] = {
 }
 class Element:
     """Element class."""
-    def __init__(self, element_type, key: str="", **kw) -> None:
+    def __init__(self, element_type: str, key: str|None, **kw) -> None:
         """Create an element."""
+        # check key
+        if key is None or key == "":
+            key = generate_element_key(element_type)
+        # define properties
+        self.key: str = key
         self.element_type: str = element_type
-        self.key = key
         self.has_value: bool = False
         self.props: dict[str, Any] = kw
         self.widget: Any|None = None
@@ -419,6 +426,7 @@ class Element:
         self.parent: tk.Widget|None = None
         self._bind_dict: dict[str, tuple[str, bool, EventMode]] = {}
         self.user_bind_event: tk.Event|None = None # when bind event fired then set this value
+        self.vertical_alignment: TextVAlign = "center"
     
     def bind(self, event_name: str, handle_name: str, propagate: bool=True, event_mode: EventMode = "user") -> None:
         """
@@ -435,19 +443,21 @@ class Element:
         if self.window is not None:
             self.window._event_handler(self.key, values)
 
-    def _get_fill_prop(self) -> dict[str, Any]:
+    def _get_pack_props(self) -> dict[str, Any]:
         """Get the fill property in `pack` method."""
-        prop: dict[str, Any] = {"expand": False, "fill": "none"}
+        props: dict[str, Any] = {"expand": False, "fill": "none", "side": "left"}
+        # check expand
         if self.expand_x and self.expand_y:
-            prop["expand"] = True
-            prop["fill"] = "both"
+            props["expand"] = True
+            props["fill"] = "both"
         elif self.expand_x:
-            prop["expand"] = True
-            prop["fill"] = "x"
+            props["expand"] = True
+            props["fill"] = "x"
         elif self.expand_y:
-            prop["expand"] = True
-            prop["fill"] = "y"
-        return prop
+            props["expand"] = True
+            props["fill"] = "y"
+        # print("pack.props=", self.key, props)
+        return props
 
     def prepare_create(self, win: Window) -> None:
         # convert properties
@@ -546,10 +556,9 @@ class Element:
 class Frame(Element):
     """Frame element."""
     def __init__(self, title: str, layout: list[list[Element]], key: str = "", background_color: str|None=None, size: tuple[int, int]|None=None, **kw) -> None:
-        super().__init__("Frame", **kw)
+        super().__init__("Frame", key, **kw)
         self.has_children = True
         self.layout = layout
-        self.key = key
         self.props["text"] = title
         if size is not None:
             self.props["size"] = size
@@ -579,10 +588,10 @@ class Column(Element):
     def __init__(self, layout: list[list[Element]], key: str = "", background_color: str|None=None,
                  vertical_alignment: TextVAlign="top",
                  size: tuple[int, int]|None=None, **kw) -> None:
-        super().__init__("Column", **kw)
+        super().__init__("Column", key, **kw)
         self.has_children = True
         self.layout = layout
-        self.key = key
+        self.vertical_alignment = vertical_alignment
         if size is not None:
             self.props["size"] = size
         if background_color:
@@ -599,6 +608,7 @@ class Column(Element):
 
     def update(self, *args, **kw) -> None:
         """Update the widget."""
+        super().update(*args, **kw)
         self.widget_update(**kw)
     
     def __getattr__(self, name):
@@ -609,8 +619,8 @@ class Column(Element):
 
 class Text(Element):
     """Text element."""
-    def __init__(self, text: str, text_align: TextAlign="left", font: FontType|None=None, **kw) -> None:
-        super().__init__("Text", **kw)
+    def __init__(self, text: str, key: str|None=None, text_align: TextAlign="left", font: FontType|None=None, **kw) -> None:
+        super().__init__("Text", key, **kw)
         self.props["text"] = text
         self.props["justify"] = text_align
         self.props["font"] = font
@@ -622,61 +632,76 @@ class Text(Element):
     
     def get(self) -> Any:
         """Get the value of the widget."""
+        return self.get_text()
+    
+    def get_text(self) -> str:
         return self.props["text"]
     
-    def update(self, *args, **kw) -> None:
+    def set_text(self, text: str) -> None:
+        """Set the text of the widget."""
+        self.props["text"] = text
+        self.widget_update(text=text)
+
+    def update(self, text: str|None=None, *args, **kw) -> None:
         """Update the widget."""
+        if text is not None:
+            self.set_text(text)
         super().update(*args, **kw)
-        if len(args) >= 1:
-            text = args[0]
-            self.props["text"] = text
-            self.widget_update(text=text)
         self.widget_update(**kw)
 
 class Button(Element):
     """Button element."""
     def __init__(self, button_text: str="", key: str="", **kw) -> None:
-        super().__init__("Button", **kw)
         if key == "":
             key = button_text
-        self.key = key
+        super().__init__("Button", key, **kw)
         self.has_value = False
         self.props["text"] = button_text
         self.bind_events({
             "<Button-1>": "click",
-            "<Button-3>": "right_click"
+            "<Button-3>": "right_click",
+            "<Return>": "return",
         }, "system")
 
     def create(self, win: Window, parent: tk.Widget) -> tk.Widget:
         self.widget = tk.Button(parent, **self.props)
-        # bind key event
-        self.widget.bind("<KeyPress>", lambda e: _button_key_checker(e, self, win))
         return self.widget
 
     def get(self) -> Any:
         """Get the value of the widget."""
+        return self.get_text()
+    
+    def set_text(self, text: str) -> None:
+        """Set the text of the widget."""
+        self.props["text"] = text
+        self.widget_update(text=text)
+    
+    def get_text(self) -> str:
         return self.props["text"]
 
-    def GetText(self) -> str:
-        """Get the text of the button. (compatibility with PySimpleGUI)"""
-        return self.props["text"]
-
-    def update(self, *args, **kw) -> None:
+    def update(self, text: str|None=None, **kw) -> None:
         """Update the widget."""
-        super().update(*args, **kw)
-        if len(args) >= 1:
-            text = args[0]
+        if text is not None:
             self.props["text"] = text
             self.widget_update(text=text)
+        super().update(**kw)
         self.widget_update(**kw)
+    
+    def __getattr__(self, name: str) -> Any:
+        """Get unknown attribute. """
+        # Get the text of the button. (compatibility with PySimpleGUI)
+        if name == "GetText":
+            return self.get_text
+        elif name == "ButtonText":
+            return self.get_text()
+        return super().__getattr__(name)
 
 class Checkbox(Element):
     """Button element."""
     def __init__(self, text: str="", default: bool=False, key: str="", enable_events: bool=False, **kw) -> None:
-        super().__init__("Button", **kw)
         if key == "":
             key = text
-        self.key = key
+        super().__init__("Button", key, **kw)
         self.has_value = False
         self.default_value = default
         self.props["text"] = text
@@ -722,12 +747,6 @@ class Checkbox(Element):
             self.set_value(kw.pop("value"))
         self.widget_update(**kw)
 
-def _button_key_checker(e: tk.Event, self: Button, win: Window) -> None:
-    """Check key event for button. (Enabled Return key)"""
-    # if e.keysym == "Return" or e.keysym == "space":
-    if e.keysym == "Return":
-        win._event_handler(self.key, {"event": e}) # throw event
-
 class Input(Element):
     """Text input element."""
     def __init__(self, text: str="", key: str="",
@@ -735,7 +754,7 @@ class Input(Element):
                  background_color: str|None=None, color: str|None=None,
                  text_aligh: TextAlign="left",
                  readonly: bool=False, readonly_background_color: str="silver", **kw) -> None:
-        super().__init__("Input", **kw)
+        super().__init__("Input", key, **kw)
         self.readonly: bool = readonly
         self.props["text"] = text # default text @see Input.create
         if background_color is not None:
@@ -745,9 +764,6 @@ class Input(Element):
         self.props["justify"] = text_aligh
         self.props["readonlybackground"] = readonly_background_color
         self.has_value = True
-        if key == "":
-            key = f"-input{get_element_id()}-"
-        self.key = key
         if enable_events:
             self.bind_events({
                 "<FocusIn>": "focusin",
@@ -822,7 +838,7 @@ class Multiline(Element):
                  readonly: bool=False, readonly_background_color: str='silver',
                  size: tuple[int, int]=(50, 10),
                  **kw) -> None:
-        super().__init__("Multiline", **kw)
+        super().__init__("Multiline", key, **kw)
         if default_text is not None:
             text = default_text
         self.props["text"] = text
@@ -834,9 +850,6 @@ class Multiline(Element):
         self.readonly_background_color = readonly_background_color
         self.has_value = True
         self.readonly = readonly
-        if key == "":
-            key = f"-multiline{get_element_id()}-"
-        self.key = key
         # bind events
         if enable_events:
             self.bind_events({
@@ -908,8 +921,7 @@ class Slider(Element):
                  resolution: float=1, default_value: float|None=None,
                  enable_events: bool=False,
                  **kw) -> None:
-        super().__init__("Slider", **kw)
-        self.key = key
+        super().__init__("Slider", key, **kw)
         self.has_value = True
         self.range = range
         self.resolution = resolution
@@ -955,8 +967,7 @@ class Slider(Element):
 class Canvas(Element):
     """Canvas element."""
     def __init__(self, key: str="", enable_events: bool=False, background_color: str|None=None, size: tuple[int, int]=(300, 300), **kw) -> None:
-        super().__init__("Canvas", **kw)
-        self.key = key
+        super().__init__("Canvas", key, **kw)
         self.props["size"] = size
         if background_color:
             self.props["background"] = background_color
@@ -988,10 +999,10 @@ class Canvas(Element):
 class Graph(Element):
     """Graph element."""
     def __init__(self, key: str="", background_color: str|None=None,
-        size: tuple[int, int]=(300, 300), canvas_size: tuple[int, int]|None=None,
-        graph_bottom_left: tuple[int, int]|None=None, graph_top_right: tuple[int, int]|None=None,
-        **kw) -> None:
-        super().__init__("Graph", **kw)
+            size: tuple[int, int]=(300, 300), canvas_size: tuple[int, int]|None=None,
+            graph_bottom_left: tuple[int, int]|None=None, graph_top_right: tuple[int, int]|None=None,
+            **kw) -> None:
+        super().__init__("Graph", key, **kw)
         self.key = key
         # <Coordinate> graph_Declared for compatibility, but not yet implemented.
         self.graph_bottom_left = graph_bottom_left
@@ -1084,8 +1095,7 @@ class Graph(Element):
 class Image(Element):
     """Image element."""
     def __init__(self, source: bytes|str|None=None, filename=None, data=None, key: str="", background_color: str|None=None, size: tuple[int, int]=(300, 300), **kw) -> None:
-        super().__init__("Image", **kw)
-        self.key = key
+        super().__init__("Image", key, **kw)
         self.source = source
         self.filename = filename
         self.data = data
@@ -1122,12 +1132,10 @@ class Image(Element):
 class Listbox(Element):
     """Listbox element."""
     def __init__(self, values: list[str]=[], key: str="", enable_events: bool=False, select_mode: ListboxSelectMode="browse", **kw) -> None:
-        super().__init__("Listbox", **kw)
+        super().__init__("Listbox", key, **kw)
         self.values = values
         self.has_value = True
         self.select_mode = select_mode
-        if key == "":
-            key = f"-listbox{get_element_id()}-"
         self.key = key
         # event
         if enable_events:
@@ -1180,14 +1188,11 @@ class Listbox(Element):
 class Combo(Element):
     """Combo element."""
     def __init__(self, values: list[str]=[], default_value: str="", key: str="", enable_events: bool=False, **kw) -> None:
-        super().__init__("Combo", **kw)
+        super().__init__("Combo", key, **kw)
         self.values = values
         self.value: tk.StringVar|None = None
         self.default_value = default_value
         self.has_value = True
-        if key == "":
-            key = f"-combo{get_element_id()}-"
-        self.key = key
         # event
         if enable_events:
             self.bind_events({
@@ -1234,7 +1239,7 @@ class Table(Element):
                  auto_size_columns: bool = True, max_col_width: int = 0, font: tuple[str, int]|None=None,
                  enable_events: bool=False, select_mode: str="browse", **kw) -> None:
         """Create a table."""
-        super().__init__("Table", **kw)
+        super().__init__("Table", key, **kw)
         self.values = values
         self.headings = headings
         self.has_value = True
@@ -1244,9 +1249,6 @@ class Table(Element):
         self.auto_size_columns = auto_size_columns
         self.max_col_width = max_col_width # todo
         self.font = font # todo
-        if key == "":
-            key = f"-table{get_element_id()}-"
-        self.key = key
     
     def create(self, win: Window, parent: tk.Widget) -> tk.Widget:
         """Create a Table widget."""
@@ -1326,71 +1328,85 @@ class Table(Element):
 # Browse elements
 
 class FileBrowse(Element):
-    """Button element."""
+    """FileBrowse element."""
     def __init__(self, button_text: str="...", key: str="", target_key: str|None=None, **kw) -> None:
-        super().__init__("Button", **kw)
-        if key == "":
-            key = f"-filebrowse{get_element_id()}-"
-        self.key = key
+        super().__init__("Button", key, **kw)
         self.has_value = False
         self.target_key = target_key
         self.props["text"] = button_text
         self.bind_events({
             "<Button-1>": "click",
+            "<Return>": "return",
         }, "system")
 
     def create(self, win: Window, parent: tk.Widget) -> tk.Widget:
         self.widget = tk.Button(parent, **self.props)
-        # bind key event
-        self.widget.bind("<KeyPress>", lambda e: _button_key_checker(e, self, win))
         # hook
         win.register_event_hooks({
-            self.key: [
-                self.show_dialog,
-                lambda _key, _values: True, # stop propagation
-            ]
+            self.key: [self._browse_button_click_handler]
         })
+        #self.widget.bind("<KeyPress>", lambda e: self._key_checker(e, win))
         return self.widget
+    def _browse_button_click_handler(self, _key: str, values: dict[str, Any]) -> bool|None:
+        """Browse button click handler."""
+        if values["event_type"] in ["click", "return"]:
+            if self.show_dialog() is not None:
+                return True
+        return None
+
+    '''
+    def _key_checker(self, e: tk.Event, win: Window) -> None:
+        """Check key event for button. (Enabled Return key)"""
+        if e.keysym == "Return":
+            win._event_handler(self.key, {"event": e, "event_type": "return"}) # throw event
+    '''
 
     def show_dialog(self, *args) -> str|None:
         """Show file dialog"""
         target: tk.Widget = self.get_prev_widget(self.target_key)
         result = eg.popup_get_file(target.get())
-        if target is not None and result is not None:
+        if (target is not None) and (result is not None) and (result != ""):
             target.update(result)
         return result
+    
+    def set_text(self, text: str) -> None:
+        """Set the text of the button."""
+        self.props["text"] = text
+        self.widget_update(text=text)
 
-    def get(self) -> Any:
-        """Get the value of the widget."""
-        return self.props["text"]
-
-    def GetText(self) -> str:
-        """Get the text of the button. (compatibility with PySimpleGUI)"""
-        return self.props["text"]
-
-    def update(self, *args, **kw) -> None:
+    def update(self, text: str|None=None, *args, **kw) -> None:
         """Update the widget."""
+        if text is not None:
+            self.set_text(text)
         super().update(*args, **kw)
-        if len(args) >= 1:
-            text = args[0]
-            self.props["text"] = text
-            self.widget_update(text=text)
-        self.widget_update(**kw)
 
 
 #------------------------------------------------------------------------------
 # Utility functions
 #------------------------------------------------------------------------------
 
-element_id: int = 0
-def get_element_id() -> int:
+# global variables
+# auto generate element key id
+_element_key_ids: dict[str, int] = {}
+_element_key_names: dict[str, bool] = {}
+def generate_element_key(element_type: str) -> int:
     """Get a unique id for an element."""
-    global element_id
-    lock = threading.Lock()
-    lock.acquire()
-    element_id += 1
-    lock.release()
-    return element_id
+    element_type = element_type.lower()
+    if element_type not in _element_key_ids:
+        _element_key_ids[element_type] = 0
+    key: str = ""
+    while True:
+        _element_key_ids[element_type] += 1
+        element_id = _element_key_ids[element_type]
+        key = f"-{element_type}{element_id}-"
+        if key not in _element_key_names:
+            _element_key_names[key] = True
+            break
+    return key
+
+def register_element_key(key: str) -> None:
+    """Register element key."""
+    _element_key_names[key] = True
 
 def rgb(r: int, g: int, b: int) -> str:
     r = r & 0xFF

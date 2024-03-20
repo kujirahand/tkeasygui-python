@@ -71,14 +71,6 @@ The basic Elements have been given the same names. However, the names of some pr
 
 We are not considering full compatibility with PySimpleGUI.
 
-## ToDO:
-
-- sg.FileBrowse
-- sg.FilesBrowse (delimiter=";")
-- sg.FolderBrowse
-- sg.ColorBrowse
-- sg.ListBrowse (select item from listbox)
-- sg.MulitilineBrowse
 
 ## Link
 
