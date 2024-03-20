@@ -4,6 +4,9 @@
 In the event model, it is compatible with the well-known GUI library `PySimpleGUI`.
 
 - [TkEasyGUI > README.md](https://github.com/kujirahand/tkeasygui-python/blob/main/README.md)
-- [TkEasyGUI > tkeasygui]([./tkeasygui/index.md](https://github.com/kujirahand/tkeasygui-python/blob/main/docs/tkeasygui/index.md))
+- [TkEasyGUI > tkeasygui](https://github.com/kujirahand/tkeasygui-python/blob/main/docs/tkeasygui/index.md)
 
+## TkEasyGUI Original features
+
+- [Custom Events](https://github.com/kujirahand/tkeasygui-python/blob/main/docs/custom_events.md)
 

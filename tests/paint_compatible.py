@@ -12,6 +12,7 @@ window = sg.Window("Hello World", layout=[
 canvas.bind("<Motion>", "motion", True)
 canvas.bind("<ButtonPress>", "on", True)
 canvas.bind("<ButtonRelease>", "off", True)
+# mouse flag
 flag_on = False
 # event loop
 while True:
