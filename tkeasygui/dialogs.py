@@ -141,7 +141,7 @@ def popup_color(title: str="", default_color: str|None=None) -> (str|None):
     col = colorchooser.askcolor(title=title, color=default_color)
     if col[1] is None:
         return default_color
-    return col[1]
+    return f"{col[1]}".upper()
 
 #------------------------------------------------------------------------------
 # TKinter

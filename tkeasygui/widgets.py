@@ -2,7 +2,7 @@
 TkEasyGUI Widgets
 """
 import io
-import threading
+import os
 import tkinter as tk
 from datetime import datetime
 from queue import Queue
@@ -195,8 +195,8 @@ class Window:
                 for event_name, handle_t in elem._bind_dict.items():
                     self.bind(elem, event_name, handle_t[0], handle_t[1], handle_t[2])
                 # pack widget
-                fill_prop = elem._get_pack_props()
-                widget.pack(**fill_prop)
+                fill_props = elem._get_pack_props()
+                widget.pack(**fill_props)
                 # debug
                 if elem.expand_y:
                     row_prop["fill"] = "both"
@@ -1329,10 +1329,18 @@ class Table(Element):
 
 class FileBrowse(Element):
     """FileBrowse element."""
-    def __init__(self, button_text: str="...", key: str="", target_key: str|None=None, **kw) -> None:
-        super().__init__("Button", key, **kw)
+    def __init__(self, button_text: str="...", key: str="", target_key: str|None=None,
+            title: str="", file_types: tuple[tuple[str, str]]=(("All Files", "*.*"),),
+            multiple_files: bool=False, initial_folder: str|None=None,
+            save_as: bool=False, **kw) -> None:
+        super().__init__("FileBrowse", key, **kw)
         self.has_value = False
         self.target_key = target_key
+        self.title = title
+        self.file_types = file_types
+        self.save_as = save_as
+        self.multiple_files = multiple_files
+        self.initial_folder = initial_folder
         self.props["text"] = button_text
         self.bind_events({
             "<Button-1>": "click",
@@ -1343,28 +1351,35 @@ class FileBrowse(Element):
         self.widget = tk.Button(parent, **self.props)
         # hook
         win.register_event_hooks({
-            self.key: [self._browse_button_click_handler]
+            self.key: [self.show_dialog]
         })
-        #self.widget.bind("<KeyPress>", lambda e: self._key_checker(e, win))
         return self.widget
-    def _browse_button_click_handler(self, _key: str, values: dict[str, Any]) -> bool|None:
-        """Browse button click handler."""
-        if values["event_type"] in ["click", "return"]:
-            if self.show_dialog() is not None:
-                return True
-        return None
-
-    '''
-    def _key_checker(self, e: tk.Event, win: Window) -> None:
-        """Check key event for button. (Enabled Return key)"""
-        if e.keysym == "Return":
-            win._event_handler(self.key, {"event": e, "event_type": "return"}) # throw event
-    '''
+    
+    def _get_initial_directory(self) -> str:
+        target: tk.Widget = self.get_prev_widget(self.target_key)
+        # get initial directory
+        init_dir = self.initial_folder
+        if target is not None:
+            target_text = target.get()
+            if target_text != "":
+                init_dir = os.path.dirname(target_text)
+        return init_dir
 
     def show_dialog(self, *args) -> str|None:
         """Show file dialog"""
         target: tk.Widget = self.get_prev_widget(self.target_key)
-        result = eg.popup_get_file(target.get())
+        # get initial directory
+        init_dir = self._get_initial_directory()
+        # popup
+        result = eg.popup_get_file(
+            title=self.title,
+            initial_folder=init_dir,
+            save_as=self.save_as,
+            file_types=self.file_types,
+            multiple_files=self.multiple_files,
+        )
+        if isinstance(result, list) or isinstance(result, tuple):
+            result = ";".join(result)
         if (target is not None) and (result is not None) and (result != ""):
             target.update(result)
         return result
@@ -1379,6 +1394,67 @@ class FileBrowse(Element):
         if text is not None:
             self.set_text(text)
         super().update(*args, **kw)
+
+class FilesBrowse(FileBrowse):
+    """FilesBrowse element."""
+    def __init__(self, button_text: str="...", key: str="", target_key: str|None=None,
+            title: str="", file_types: tuple[tuple[str, str]]=(("All Files", "*.*"),), **kw) -> None:
+        super().__init__("FilesBrowse", key, **kw)
+        self.target_key = target_key
+        self.title = title
+        self.file_types = file_types
+        self.props["text"] = button_text
+        # force set params
+        self.multiple_files = True
+        self.save_as = False
+
+class FolderBrowse(FileBrowse):
+    """FolderBrowse element."""
+    def __init__(self, button_text: str="...", key: str="", target_key: str|None=None,
+            default_path: str|None=None,
+            title: str="", **kw) -> None:
+        super().__init__("FolderBrowse", key, **kw)
+        self.has_value = False
+        self.target_key = target_key
+        self.title = title
+        self.default_path = default_path
+        self.props["text"] = button_text
+    
+    def show_dialog(self, *args) -> str|None:
+        """Show file dialog"""
+        target: tk.Widget = self.get_prev_widget(self.target_key)
+        # popup
+        result = eg.popup_get_folder(
+            title=self.title,
+            default_path=self.default_path,
+        )
+        if (target is not None) and (result is not None) and (result != ""):
+            target.update(result)
+        return result
+
+class ColorBrowse(FileBrowse):
+    """FolderBrowse element."""
+    def __init__(self, button_text: str="...", key: str="", target_key: str|None=None,
+            default_color: str|None=None,
+            title: str="", **kw) -> None:
+        super().__init__("FolderBrowse", key, **kw)
+        self.has_value = False
+        self.target_key = target_key
+        self.title = title
+        self.default_color = default_color
+        self.props["text"] = button_text
+    
+    def show_dialog(self, *args) -> str|None:
+        """Show file dialog"""
+        target: tk.Widget = self.get_prev_widget(self.target_key)
+        # popup
+        result = eg.popup_color(
+            title=self.title,
+            default_color=self.default_color,
+        )
+        if (target is not None) and (result is not None) and (result != ""):
+            target.update(result)
+        return result
 
 
 #------------------------------------------------------------------------------
