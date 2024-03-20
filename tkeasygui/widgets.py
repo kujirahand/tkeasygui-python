@@ -12,6 +12,8 @@ from typing import Any, Literal, TypeAlias
 from PIL import Image as PILImage
 from PIL import ImageTk
 
+import tkeasygui as eg
+
 #------------------------------------------------------------------------------
 # Const
 #------------------------------------------------------------------------------
@@ -93,6 +95,7 @@ class Window:
         self.last_values: dict[str, Any] = {}
         self.flag_alive: bool = True # Pressing the close button will turn this flag to False.
         self.layout: list[list[ElementType]] = layout
+        self._event_hooks: dict[str, list[callable]] = {}
         # Frame
         self.frame: ttk.Frame = ttk.Frame(self.window, padding=10)
         self.frame.pack(expand=True, fill="both")
@@ -122,12 +125,35 @@ class Window:
         # push window
         _window_push(self)
     
+    def register_event_hooks(self, hooks: dict[str, list[callable]]) -> None:
+        """
+        [Window.register_event_hooks] Register event hooks. (append events)
+        **Example**
+        ```
+        window.register_event_hooks({
+            "-input-": [
+                lambda event, values: print("1", event, values),
+                lambda event, values: print("2", event, values),
+                lambda event, values: True, # stop event propagation
+                lambda event, values: print("3", event, values),
+            ],
+        ```
+        """
+        for event_name, handle_list in hooks.items():
+            for handle in handle_list:
+                if not (event_name in self._event_hooks):
+                    self._event_hooks[event_name] = []
+                self._event_hooks[event_name].append(handle)
+    
     def _create_widget(self, parent: tk.Widget, layout: list[list["Element"]]):
         """create widget from layout"""
+        # check layout
+        if not (len(layout) > 0 and (isinstance(layout[0], list) or isinstance(layout[0], tuple))):
+            raise TkEasyError(f"Invalid layout, should specify a two-dimensional list: {layout}")
         # prepare create
         for widgets in layout:
-            for elemment in widgets:
-                elemment.prepare_create(self)
+            for elem in widgets:
+                elem.prepare_create(self)
         # create widgets
         self.need_focus_widget: tk.Widget|None = None
         for widgets in layout:
@@ -185,7 +211,7 @@ class Window:
             self.window.eval('tk::PlaceWindow . center')
 
     def read(self, timeout: int|None=None, timeout_key: str="-TIMEOUT-") -> tuple[str, dict[str, Any]]:
-        """Read events from the window."""
+        """ [Window.read] Read events from the window."""
         self.timeout = timeout
         self.timeout_key = timeout_key
         time_id = time_checker_start()
@@ -212,7 +238,22 @@ class Window:
                 return (self.timeout_key, {}) # return timeout event
         # return event
         key, values = self.events.get()
+        if key in self._event_hooks:
+            flag_stop = self._dispatch_event_hooks(key, values)
+            if flag_stop:
+                key = f"{key}-stopped" # change event name
         return (key, values)
+    
+    def _dispatch_event_hooks(self, key: str, values: dict[str, Any]) -> bool:
+        """Dispatch event hooks."""
+        flag_stop = False
+        if key in self._event_hooks:
+            for handle in self._event_hooks[key]:
+                result = handle(key, values)
+                if result is True:
+                    flag_stop = True
+                    break
+        return flag_stop
 
     def get_values(self) -> dict[str, Any]:
         """Get values from the window."""
@@ -324,8 +365,9 @@ def _bind_event_handler(win: Window, elem: "Element", handle_name: str, event: t
         event_key = elem.key
         event_val = {"event": event, "event_type": handle_name}
         for key, key_elem in win.key_elements.items():
-            val = key_elem.get()
-            event_val[key] = val
+            if key_elem.has_value:
+                val = key_elem.get()
+                event_val[key] = val
         win.events.put((event_key, event_val))
     # propagate
     if propagate:
@@ -467,7 +509,18 @@ class Element:
                 self.widget.configure(**kw)
         except Exception as e:
             raise TkEasyError(f"TkEasyGUI.Element.widget_update.Error: key='{self.key}', try to update {kw}, {e}")
-    
+
+    def get_prev_widget(self, target_key: str|None=None) -> tk.Widget:
+        """Get the previous widget."""
+        # check target_key
+        target: tk.Widget = None
+        if target_key:
+            if target_key in self.window.key_elements:
+                target = self.window.key_elements[target_key]
+                return target
+        # get prev_widget
+        return self.prev_element
+
     def __getattr__(self, name: str) -> Any:
         """Get unknown attribute."""
         # Method called when the attribute is not found in the object's instance dictionary
@@ -1268,6 +1321,62 @@ class Table(Element):
         # 
         del kw["values"]
         self.widget_update(**kw)
+
+#------------------------------------------------------------------------------
+# Browse elements
+
+class FileBrowse(Element):
+    """Button element."""
+    def __init__(self, button_text: str="...", key: str="", target_key: str|None=None, **kw) -> None:
+        super().__init__("Button", **kw)
+        if key == "":
+            key = f"-filebrowse{get_element_id()}-"
+        self.key = key
+        self.has_value = False
+        self.target_key = target_key
+        self.props["text"] = button_text
+        self.bind_events({
+            "<Button-1>": "click",
+        }, "system")
+
+    def create(self, win: Window, parent: tk.Widget) -> tk.Widget:
+        self.widget = tk.Button(parent, **self.props)
+        # bind key event
+        self.widget.bind("<KeyPress>", lambda e: _button_key_checker(e, self, win))
+        # hook
+        win.register_event_hooks({
+            self.key: [
+                self.show_dialog,
+                lambda _key, _values: True, # stop propagation
+            ]
+        })
+        return self.widget
+
+    def show_dialog(self, *args) -> str|None:
+        """Show file dialog"""
+        target: tk.Widget = self.get_prev_widget(self.target_key)
+        result = eg.popup_get_file(target.get())
+        if target is not None and result is not None:
+            target.update(result)
+        return result
+
+    def get(self) -> Any:
+        """Get the value of the widget."""
+        return self.props["text"]
+
+    def GetText(self) -> str:
+        """Get the text of the button. (compatibility with PySimpleGUI)"""
+        return self.props["text"]
+
+    def update(self, *args, **kw) -> None:
+        """Update the widget."""
+        super().update(*args, **kw)
+        if len(args) >= 1:
+            text = args[0]
+            self.props["text"] = text
+            self.widget_update(text=text)
+        self.widget_update(**kw)
+
 
 #------------------------------------------------------------------------------
 # Utility functions

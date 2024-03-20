@@ -69,6 +69,17 @@ It should be noted that while it was developed with reference to PySimpleGUI, it
 Many unique features have been expanded.
 The basic Elements have been given the same names. However, the names of some properties are different.
 
+We are not considering full compatibility with PySimpleGUI.
+
+## ToDO:
+
+- sg.FileBrowse
+- sg.FilesBrowse (delimiter=";")
+- sg.FolderBrowse
+- sg.ColorBrowse
+- sg.ListBrowse (select item from listbox)
+- sg.MulitilineBrowse
+
 ## Link
 
 - [pypi.org > TkEasyGUI](https://pypi.org/project/tkeasygui/)

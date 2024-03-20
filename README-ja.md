@@ -66,8 +66,16 @@ window.close()
 なお、PySimpleGUIを参考に開発されましたが、ゼロから再実装されています。多くの独自の機能が拡張されています。
 基本的なElementも同じ名前にしてあります。しかし、いくつかのプロパティの名前が異なっています。
 
+PySimpleGUIと完全な互換性は考えていません。
+
 ## リンク
 
 - [pypi.org > TkEasyGUI](https://pypi.org/project/tkeasygui/)
 - [GitHub > TkEasyGUI](https://github.com/kujirahand/tkeasygui-python/)
+
+
+## 今後の予定
+
+- Window作成時に、絶対座標でのElementの配置
+- HTMLっぽく？一次元のElementの配置 eg.Window(layout=[eg.Button(), eg.Button(), eg.BR(), eg.Button()])
 
