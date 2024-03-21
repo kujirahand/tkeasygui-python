@@ -462,29 +462,42 @@ class Element:
 
     def prepare_create(self, win: Window) -> None:
         # convert properties
+        self.props = self.convert_props(self.props)
+
+    def convert_props(self, props: dict[str, Any]) -> dict[str, Any]:
+        result = {}
+        # copy
+        for key, val in props.items():
+            result[key] = val
+        # check props
         # size
-        if "size" in self.props:
-            size = self.props.pop("size", (8, 1))
-            self.props["width"] = size[0]
-            self.props["height"] = size[1]
+        if "size" in result:
+            size = result.pop("size", (8, 1))
+            result["width"] = size[0]
+            result["height"] = size[1]
         # background_color
-        if "background_color" in self.props:
-            self.props["bg"] = self.props.pop("background_color")
+        if "background_color" in result:
+            result["bg"] = result.pop("background_color")
             # self.props["readonlybackground"] = self.props["bg"]
-        if "text_color" in self.props:
-            self.props["fg"] = self.props.pop("text_color")
+        if "text_color" in result:
+            result["fg"] = result.pop("text_color")
         # expand_x
-        if "expand_x" in self.props:
-            self.expand_x = self.props.pop("expand_x")
-        if "expand_y" in self.props:
-            self.expand_y = self.props.pop("expand_y")
+        if "expand_x" in result:
+            self.expand_x = result.pop("expand_x")
+        if "expand_y" in result:
+            self.expand_y = result.pop("expand_y")
         # convert "select_mode" to "selectmode"
-        if "select_mode" in self.props:
-            self.props["selectmode"] = self.props.pop("select_mode")
+        if "select_mode" in result:
+            result["selectmode"] = result.pop("select_mode")
         # user bind events
-        if "bind_events" in self.props:
-            bind_events = self.props.pop("bind_events")
+        if "bind_events" in result:
+            bind_events = result.pop("bind_events")
             self.bind_events(bind_events)
+        # disabled
+        if "disabled" in result:
+            result["state"] = "disabled" if result.pop("disabled") else "normal"
+        #
+        return result
 
     def bind_events(self, events: dict[str, str], event_mode: EventMode="user") -> ElementType:
         """
@@ -517,6 +530,7 @@ class Element:
         # update element's props
         for k, v in kw.items():
             self.props[k] = v
+        kw = self.convert_props(kw)
         try:
             if self.widget is not None:
                 self.widget.configure(**kw)
@@ -658,7 +672,7 @@ class Button(Element):
             key = button_text
         super().__init__("Button", key, **kw)
         self.has_value = False
-        self.disabled = disabled
+        self.props["disabled"] = self.disabled = disabled
         self.props["text"] = button_text
         self.bind_events({
             "<Button-1>": "click",
