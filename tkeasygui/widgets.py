@@ -1408,6 +1408,23 @@ class FilesBrowse(FileBrowse):
         self.multiple_files = True
         self.save_as = False
 
+class FileSaveAsBrowse(FileBrowse):
+    """FileSaveAsBrowse element."""
+    def __init__(self, button_text: str="...", key: str="", target_key: str|None=None,
+            title: str="", file_types: tuple[tuple[str, str]]=(("All Files", "*.*"),), **kw) -> None:
+        super().__init__("FileSaveAsBrowse", key, **kw)
+        self.target_key = target_key
+        self.title = title
+        self.file_types = file_types
+        self.props["text"] = button_text
+        # force set params
+        self.multiple_files = False
+        self.save_as = True
+
+class FileSaveAs(FileBrowse):
+    """FileSaveAs element. (alias of FileSaveAsBrowse)"""
+    pass
+
 class FolderBrowse(FileBrowse):
     """FolderBrowse element."""
     def __init__(self, button_text: str="...", key: str="", target_key: str|None=None,

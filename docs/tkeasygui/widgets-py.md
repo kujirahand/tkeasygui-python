@@ -529,6 +529,42 @@ Update the widget.
 
 ------
 
+### FileSaveAs
+
+```python
+class FileSaveAs(button_text: str = '...', key: str = '', target_key: str | None = None, title: str = '', file_types: tuple[tuple[str, str]] = (('All Files', '*.*'),), multiple_files: bool = False, initial_folder: str | None = None, save_as: bool = False, **kw)
+```
+
+FileSaveAs element. (alias of FileSaveAsBrowse)
+
+------
+
+#### Base classes
+
+* [`FileBrowse `](#FileBrowse)
+
+------
+
+### FileSaveAsBrowse
+
+```python
+class FileSaveAsBrowse(
+    self, button_text: str="...", key: str="", target_key: str|None=None,
+    title: str="", file_types: tuple[tuple[str, str]]=(("All Files", "*.*"),), **kw)
+```
+
+FileSaveAsBrowse element.
+
+Create an element.
+
+------
+
+#### Base classes
+
+* [`FileBrowse `](#FileBrowse)
+
+------
+
 ### FilesBrowse
 
 ```python
