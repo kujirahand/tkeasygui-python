@@ -1127,6 +1127,16 @@ def get_text(self) -> str
 
 ------
 
+##### Multiline.print
+
+```python
+def print(self, text: str, text_color: str|None=None, background_color: str|None=None, end:str="\n") -> None
+```
+
+Print text.
+
+------
+
 ##### Multiline.set_readonly
 
 ```python

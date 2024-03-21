@@ -950,11 +950,16 @@ class Multiline(Element):
         text += end
         if self.widget is None:
             return
+        tags: list[str] = []
         if text_color is not None:
-            self.widget.tag_config("text_color", foreground=text_color)
+            tag = generate_element_key("--multiline-text_color")
+            self.widget.tag_config(tag, foreground=text_color)
+            tags.append(tag)
         if background_color is not None:
+            tag = generate_element_key("--multiline-background_color")
             self.widget.tag_config("background_color", background=background_color)
-        self.widget.insert("end", text, ("text_color", "background_color"))
+            tags.append(tag)
+        self.widget.insert("end", text, tags)
 
 class Textarea(Multiline):
     """Textarea element. (alias of Multiline)"""
