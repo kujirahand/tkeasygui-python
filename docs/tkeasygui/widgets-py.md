@@ -862,6 +862,16 @@ Create a Image widget.
 
 ------
 
+##### Image.erase
+
+```python
+def erase(self) -> None
+```
+
+Erase image
+
+------
+
 ##### Image.get
 
 ```python
@@ -872,10 +882,18 @@ Return Widget
 
 ------
 
+##### Image.set_image
+
+```python
+def set_image(self, source: bytes|str=None, filename: str|None=None, data: bytes|None=None) -> None
+```
+
+------
+
 ##### Image.update
 
 ```python
-def update(self, source: bytes|str=None, filename: str|None=None, data: bytes|None=None, **kw) -> None
+def update(self, source: bytes|str=None, filename: str|None=None, data: bytes|None=None, size: tuple[int,int]|None=None, **kw) -> None
 ```
 
 Update the widget.
@@ -1501,7 +1519,7 @@ Get a unique id for an element.
 ### get_image_tk
 
 ```python
-def get_image_tk(source: bytes|str|None=None, filename: str|None = None, data: bytes|None = None) -> tk.PhotoImage|None
+def get_image_tk(source: bytes|str|None=None, filename: str|None = None, data: bytes|None = None, size: tuple[int, int]|None = None) -> tk.PhotoImage|None
 ```
 
 Get Image for tk
@@ -1515,6 +1533,14 @@ def get_root_window() -> tk.Tk
 ```
 
 Get root window.
+
+------
+
+### image_resize
+
+```python
+def image_resize(img: PILImage, size: tuple[int, int]) -> PILImage
+```
 
 ------
 

@@ -143,6 +143,10 @@ def popup_color(title: str="", default_color: str|None=None) -> (str|None):
         return default_color
     return f"{col[1]}".upper()
 
+def popup_notify(message: str, title: str="Notification") -> None:
+    """Popup a information"""
+    show_message(message, title)
+
 #------------------------------------------------------------------------------
 # TKinter
 def ask_yes_no(message: str, title: str="Question") -> bool:

@@ -3,6 +3,7 @@ TkEasyGUI Widgets
 """
 import io
 import os
+import sys
 import tkinter as tk
 from datetime import datetime
 from queue import Queue
@@ -520,7 +521,8 @@ class Element:
             if self.widget is not None:
                 self.widget.configure(**kw)
         except Exception as e:
-            raise TkEasyError(f"TkEasyGUI.Element.widget_update.Error: key='{self.key}', try to update {kw}, {e}")
+            print(f"TkEasyGUI.Element.widget_update.Error: key='{self.key}', try to update {kw}, {e}", file=sys.stderr)
+            # raise TkEasyError(f"TkEasyGUI.Element.widget_update.Error: key='{self.key}', try to update {kw}, {e}")
 
     def get_prev_widget(self, target_key: str|None=None) -> tk.Widget:
         """Get the previous widget."""
@@ -651,11 +653,12 @@ class Text(Element):
 
 class Button(Element):
     """Button element."""
-    def __init__(self, button_text: str="", key: str="", **kw) -> None:
+    def __init__(self, button_text: str="", key: str="", disabled: bool=None, **kw) -> None:
         if key == "":
             key = button_text
         super().__init__("Button", key, **kw)
         self.has_value = False
+        self.disabled = disabled
         self.props["text"] = button_text
         self.bind_events({
             "<Button-1>": "click",
@@ -678,12 +681,20 @@ class Button(Element):
     
     def get_text(self) -> str:
         return self.props["text"]
+    
+    def set_disabled(self, disabled: bool) -> None:
+        self.disabled = disabled
+        state = "disabled" if disabled else "normal"
+        self.widget_update(state=state)
 
-    def update(self, text: str|None=None, **kw) -> None:
+    def update(self, text: str|None=None, disabled: bool|None=None, **kw) -> None:
         """Update the widget."""
         if text is not None:
             self.props["text"] = text
             self.widget_update(text=text)
+        if disabled is not None:
+            self.set_disabled(disabled)
+        # other
         self.widget_update(**kw)
     
     def __getattr__(self, name: str) -> Any:
