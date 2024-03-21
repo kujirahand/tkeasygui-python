@@ -1161,7 +1161,6 @@ class Image(Element):
 
     def create(self, win: Window, parent: tk.Widget) -> tk.Widget:
         """Create a Image widget."""
-        print("@@@", self.props)
         self.widget = tk.Canvas(parent, name=self.key, **self.props)
         try:
             self.set_image(self.source, self.filename, self.data)
