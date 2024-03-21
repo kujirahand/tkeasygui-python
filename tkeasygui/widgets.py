@@ -750,7 +750,7 @@ class Checkbox(Element):
 class Input(Element):
     """Text input element."""
     def __init__(self, text: str="", key: str="",
-                 enable_events: bool=False,
+                 enable_events: bool=False, enable_key_events: bool=False, enable_focus_events: bool =False,
                  background_color: str|None=None, color: str|None=None,
                  text_aligh: TextAlign="left",
                  readonly: bool=False, readonly_background_color: str="silver", **kw) -> None:
@@ -766,10 +766,16 @@ class Input(Element):
         self.has_value = True
         if enable_events:
             self.bind_events({
+                "<Return>": "return",
+            }, "system")
+        if enable_key_events:
+            self.bind_events({
+                "<Key>": "key",
+            }, "system")
+        if enable_focus_events:
+            self.bind_events({
                 "<FocusIn>": "focusin",
                 "<FocusOut>": "focusout",
-                "<Return>": "return",
-                "<Key>": "key",
                 "<Button-1>": "click",
                 "<Button-3>": "right_click"
             }, "system")
@@ -777,7 +783,10 @@ class Input(Element):
     def create(self, win: Window, parent: tk.Widget) -> tk.Widget:
         """create Input widget"""
         # set default text
-        self.props["textvariable"] = tk.StringVar()
+        self.text_var = self.props["textvariable"] = tk.StringVar()
+        # trace change
+        self.text_var.trace_add("write",
+            lambda *args: self.disptach_event({"event_type": "change", "event": args}))
         # create
         self.widget = tk.Entry(parent, name=self.key, **self.props)
         # set text
@@ -789,7 +798,13 @@ class Input(Element):
 
     def get(self) -> Any:
         """Get the value of the widget."""
-        return self.props["textvariable"].get()
+        return self.get_text()
+    
+    def set_text(self, text: str) -> None:
+        self.text_var.set(text)
+
+    def get_text(self) -> str:
+        return self.text_var.get()
 
     def set_readonly(self, readonly: bool) -> None:
         """set readonly"""
@@ -797,32 +812,22 @@ class Input(Element):
         state = "readonly" if self.readonly else "normal"
         self.widget_update(state=state)
 
-    def update(self, *args, **kw) -> None:
+    def update(self, text: str|None=None, readonly: bool|None=None, **kw) -> None:
         """Update the widget."""
-        super().update(*args, **kw)
+        super().update(**kw)
         if self.widget is None:
             return
-        text = self.props["text"]
-        if len(args) >= 1:
-            text = args[0]
         # check readonly
-        if "readonly" in kw:
-            self.readonly = True if kw.pop("readonly") else False
-            self.set_readonly(self.readonly)
-        # update text
-        # 1. update widget state
-        readonly = self.readonly
-        if readonly:
-            self.set_readonly(False)
-        # 2. update text property
-        self.props["text"] = text
-        self.props["textvariable"].set(text)
-        # 3. update widget text
-        self.widget.delete(0, "end")
-        self.widget.insert(0, text)
-        # update readonly
-        if readonly:
-            self.set_readonly(True)
+        if readonly is not None:
+            self.set_readonly(readonly)
+        # text
+        if text is not None:
+            if self.readonly:
+                self.set_readonly(False)
+                self.set_text(text)
+                self.set_readonly(True)
+            else:
+                self.set_text(text)
         # update others
         self.widget_update(**kw)
 
