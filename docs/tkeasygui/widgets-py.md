@@ -1391,7 +1391,7 @@ Initialize self.  See help(type(self)) for accurate signature.
 ### Window
 
 ```python
-class Window(self, title: str, layout: list[list[ElementType]], size: (tuple[str, int]|None)=None, resizable:bool=False, modal: bool=False, **kw)
+class Window(self, title: str, layout: list[list[ElementType]], size: tuple[str, int]|None=None, resizable:bool=False, modal: bool=False, **kw)
 ```
 
 Main window object in TkEasyGUI

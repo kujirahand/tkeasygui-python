@@ -22,4 +22,5 @@ while True:
     # push button
     if event.startswith("-btn"):
         sg.popup("Pushed " + event)
+        window[event].update(disabled=True)
 window.close()

@@ -495,9 +495,14 @@ class Element:
             self.bind_events(bind_events)
         # disabled
         if "disabled" in result:
-            result["state"] = "disabled" if result.pop("disabled") else "normal"
+            result["state"] = tk.DISABLED if result.pop("disabled") else tk.NORMAL
         #
         return result
+
+    def set_disabled(self, disabled: bool) -> None:
+        self.disabled = disabled
+        state = tk.DISABLED if disabled else tk.NORMAL
+        self.widget_update(state=state)
 
     def bind_events(self, events: dict[str, str], event_mode: EventMode="user") -> ElementType:
         """
@@ -532,7 +537,7 @@ class Element:
             self.props[k] = v
         kw = self.convert_props(kw)
         try:
-            if self.widget is not None:
+            if (self.widget is not None)and(len(kw) > 0):
                 self.widget.configure(**kw)
         except Exception as e:
             print(f"TkEasyGUI.Element.widget_update.Error: key='{self.key}', try to update {kw}, {e}", file=sys.stderr)
@@ -672,16 +677,17 @@ class Button(Element):
             key = button_text
         super().__init__("Button", key, **kw)
         self.has_value = False
-        self.props["disabled"] = self.disabled = disabled
+        self.disabled = False
+        if disabled is not None:
+            self.props["disabled"] = self.disabled = disabled
         self.props["text"] = button_text
         self.bind_events({
-            "<Button-1>": "click",
             "<Button-3>": "right_click",
             "<Return>": "return",
         }, "system")
 
     def create(self, win: Window, parent: tk.Widget) -> tk.Widget:
-        self.widget = tk.Button(parent, **self.props)
+        self.widget = tk.Button(parent, command=lambda: self.disptach_event({"event_type": "command"}),**self.props)
         return self.widget
 
     def get(self) -> Any:
@@ -695,11 +701,6 @@ class Button(Element):
     
     def get_text(self) -> str:
         return self.props["text"]
-    
-    def set_disabled(self, disabled: bool) -> None:
-        self.disabled = disabled
-        state = "disabled" if disabled else "normal"
-        self.widget_update(state=state)
 
     def update(self, text: str|None=None, disabled: bool|None=None, **kw) -> None:
         """Update the widget."""
@@ -938,12 +939,12 @@ class Multiline(Element):
         if self.widget is None:
             return
         if self.readonly:
-            self.widget_update(state="normal")
+            self.widget_update(state=tk.NORMAL)
         self.props["text"] = text
         self.widget.delete("1.0", "end") # clear text
         self.widget.insert("1.0", text) # set text
         if self.readonly:
-            self.widget_update(state="disabled")
+            self.widget_update(state=tk.DISABLED)
     
     def print(self, text: str, text_color: str|None=None, background_color: str|None=None, end:str="\n") -> None:
         """Print text."""
