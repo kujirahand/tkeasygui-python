@@ -76,9 +76,6 @@ PySimpleGUIと完全な互換性は考えていません。
 
 ## 今後の予定
 
-- sg.FilesBrowse (delimiter=";")
-- sg.FolderBrowse
-- sg.ColorBrowse
 - sg.ListBrowse (select item from listbox)
 - sg.MulitilineBrowse
 - Window作成時の配置モード
