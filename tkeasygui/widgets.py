@@ -772,13 +772,15 @@ class Checkbox(Element):
 
 class Input(Element):
     """Text input element."""
-    def __init__(self, text: str="", key: str="",
+    def __init__(self, text: str="", key: str="", default_text: str|None=None,
                  enable_events: bool=False, enable_key_events: bool=False, enable_focus_events: bool =False,
                  background_color: str|None=None, color: str|None=None,
                  text_aligh: TextAlign="left",
                  readonly: bool=False, readonly_background_color: str="silver", **kw) -> None:
         super().__init__("Input", key, **kw)
         self.readonly: bool = readonly
+        if default_text is not None: # compatibility with PySimpleGUI
+            text = default_text
         self.props["text"] = text # default text @see Input.create
         if background_color is not None:
             self.props["background"] = background_color
@@ -1302,9 +1304,18 @@ class Table(Element):
         self.select_mode = select_mode
         self.justification: str = {"": "", "right": "e", "center": "center", "left": "w"}[justification]
         self.auto_size_columns = auto_size_columns
-        self.max_col_width = max_col_width # todo
+        self.max_col_width = max_col_width
         self.col_widths = col_widths
         self.font = font # todo
+        # check col_widths
+        if self.col_widths is None:
+            self.col_widths = [len(s) for s in self.headings]
+            for row in self.values:
+                for i, cell in enumerate(row):
+                    v = max(self.col_widths[i], len(cell))
+                    if (self.max_col_width is not None) and (self.max_col_width > 0):
+                        v = min(v, self.max_col_width)
+                    self.col_widths[i] = v
     
     def create(self, win: Window, parent: tk.Widget) -> tk.Widget:
         """Create a Table widget."""
