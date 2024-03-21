@@ -509,11 +509,13 @@ class Element:
         return "-"
     
     def update(self, *args, **kw) -> None:
-        """Update the widget props (only change `props`)"""
-        for k, v in kw.items():
-            self.props[k] = v
+        """update widget configuration."""
+        pass
     
     def widget_update(self, **kw) -> None:
+        # update element's props
+        for k, v in kw.items():
+            self.props[k] = v
         try:
             if self.widget is not None:
                 self.widget.configure(**kw)
@@ -608,7 +610,6 @@ class Column(Element):
 
     def update(self, *args, **kw) -> None:
         """Update the widget."""
-        super().update(*args, **kw)
         self.widget_update(**kw)
     
     def __getattr__(self, name):
@@ -646,7 +647,6 @@ class Text(Element):
         """Update the widget."""
         if text is not None:
             self.set_text(text)
-        super().update(*args, **kw)
         self.widget_update(**kw)
 
 class Button(Element):
@@ -684,7 +684,6 @@ class Button(Element):
         if text is not None:
             self.props["text"] = text
             self.widget_update(text=text)
-        super().update(**kw)
         self.widget_update(**kw)
     
     def __getattr__(self, name: str) -> Any:
@@ -735,7 +734,6 @@ class Checkbox(Element):
 
     def update(self, *args, **kw) -> None:
         """Update the widget."""
-        super().update(*args, **kw)
         if len(args) >= 1:
             self.set_value(args[0])
         if len(args) >= 2:
@@ -814,7 +812,6 @@ class Input(Element):
 
     def update(self, text: str|None=None, readonly: bool|None=None, **kw) -> None:
         """Update the widget."""
-        super().update(**kw)
         if self.widget is None:
             return
         # check readonly
@@ -838,9 +835,9 @@ class InputText(Input):
 class Multiline(Element):
     """Multiline text input element."""
     def __init__(self, text: str="", default_text: str|None=None, key: str="",
-                 enable_events: bool=False,
+                 enable_events: bool=False, enable_key_events: bool=False, enable_focus_events: bool =False,
                  color: str|None=None, background_color: str|None=None,
-                 readonly: bool=False, readonly_background_color: str='silver',
+                 readonly: bool=False, readonly_background_color: str|None=None,
                  size: tuple[int, int]=(50, 10),
                  **kw) -> None:
         super().__init__("Multiline", key, **kw)
@@ -852,16 +849,23 @@ class Multiline(Element):
             self.props["foreground"] = color
         if background_color is not None:
             self.props["background"] = self.backgound_color = background_color
-        self.readonly_background_color = readonly_background_color
+        if readonly_background_color is not None:
+            self.readonly_background_color = readonly_background_color
         self.has_value = True
         self.readonly = readonly
         # bind events
         if enable_events:
             self.bind_events({
+                "<Return>": "return",
+            }, "system")
+        if enable_key_events:
+            self.bind_events({
+                "<Key>": "key",
+            }, "system")
+        if enable_focus_events:
+            self.bind_events({
                 "<FocusIn>": "focusin",
                 "<FocusOut>": "focusout",
-                "<Return>": "return",
-                "<Key>": "key",
                 "<Button-1>": "click",
                 "<Button-3>": "right_click"
             }, "system")
@@ -880,28 +884,27 @@ class Multiline(Element):
         """Get the value of the widget."""
         if self.widget is None:
             return ""
+        return self.get_text()
+    
+    def get_text(self) -> str:
+        if self.widget is None:
+            return ""
         text = self.widget.get("1.0", "end -1c") # get all text
-        self.props["text"] = text
         return text
 
-    def update(self, *args, **kw) -> None:
+    def update(self, text: str|None = None, readonly: bool|None = None, **kw) -> None:
         """Update the widget."""
-        if len(args) >= 1:
-            text = args[0] # get text
+        if text is not None:
             self.set_text(text)
-        if "text" in kw:
-            self.set_text(kw["text"])
-        if "readonly" in kw:
-            self.readonly = True if kw.pop("readonly") else False
-            self.set_readonly(self.readonly)
+        if readonly is not None:
+            self.set_readonly(readonly)
         self.widget_update(**kw)
 
     def set_readonly(self, readonly: bool) -> None:
         """Set readonly"""
         self.readonly = readonly
-        state = "disabled" if readonly else "normal"
-        bgcolor = self.readonly_background_color if readonly else self.backgound_color
-        self.widget_update(state=state, background=bgcolor)
+        state = tk.DISABLED if readonly else tk.NORMAL
+        self.widget_update(state=state)
 
     def set_text(self, text: str) -> None:
         """Set text"""
@@ -1394,11 +1397,11 @@ class FileBrowse(Element):
         self.props["text"] = text
         self.widget_update(text=text)
 
-    def update(self, text: str|None=None, *args, **kw) -> None:
+    def update(self, text: str|None=None, **kw) -> None:
         """Update the widget."""
         if text is not None:
             self.set_text(text)
-        super().update(*args, **kw)
+        self.widget_update(**kw)
 
 class FilesBrowse(FileBrowse):
     """FilesBrowse element."""

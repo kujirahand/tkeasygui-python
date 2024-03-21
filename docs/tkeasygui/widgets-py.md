@@ -887,7 +887,7 @@ Update the widget.
 ```python
 class Input(
     self, text: str="", key: str="",
-     enable_events: bool=False,
+     enable_events: bool=False, enable_key_events: bool=False, enable_focus_events: bool =False,
      background_color: str|None=None, color: str|None=None,
      text_aligh: TextAlign="left",
      readonly: bool=False, readonly_background_color: str="silver", **kw)
@@ -927,6 +927,14 @@ Get the value of the widget.
 
 ------
 
+##### Input.get_text
+
+```python
+def get_text(self) -> str
+```
+
+------
+
 ##### Input.set_readonly
 
 ```python
@@ -937,10 +945,18 @@ set readonly
 
 ------
 
+##### Input.set_text
+
+```python
+def set_text(self, text: str) -> None
+```
+
+------
+
 ##### Input.update
 
 ```python
-def update(self, *args, **kw) -> None
+def update(self, text: str|None=None, readonly: bool|None=None, **kw) -> None
 ```
 
 Update the widget.
@@ -950,7 +966,7 @@ Update the widget.
 ### InputText
 
 ```python
-class InputText(text: str = '', key: str = '', enable_events: bool = False, background_color: str | None = None, color: str | None = None, text_aligh: Literal['left', 'right', 'center'] = 'left', readonly: bool = False, readonly_background_color: str = 'silver', **kw)
+class InputText(text: str = '', key: str = '', enable_events: bool = False, enable_key_events: bool = False, enable_focus_events: bool = False, background_color: str | None = None, color: str | None = None, text_aligh: Literal['left', 'right', 'center'] = 'left', readonly: bool = False, readonly_background_color: str = 'silver', **kw)
 ```
 
 InputText element. (alias of Input)

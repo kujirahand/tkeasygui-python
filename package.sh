@@ -20,9 +20,10 @@ python3 -m build
 echo "--- upload test repo ---"
 python3 -m twine upload --repository testpypi dist/* --verbose
 echo "--- wait a moment ---"
-sleep 10
+sleep 20
 echo "--- install test repo ---"
 python3 -m pip install -U --index-url https://test.pypi.org/simple/ --no-deps tkeasygui
+echo "** check version **"
 
 echo "--- upload pypi ---"
 echo "[TRY]: python3 -m twine upload dist/* --verbose"
