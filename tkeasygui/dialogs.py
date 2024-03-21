@@ -107,24 +107,59 @@ def popup_input(message: str, title: str = "", default: str = "") -> (str|None):
     win.close()
     return result
 
-def popup_scrolled(message: str, title: str = "", width: int = 40, height: int = 10, readonly: bool=False) -> str:
+def popup_scrolled(message: str, title: str = "", size: tuple[int,int]=[40, 5], readonly: bool=False, font: tuple[str, int]|None=None) -> str|None:
     """Display a message in a popup window with a text entry. Return the text entered."""
     win = eg.Window(title, layout=[
-        [eg.Multiline(message, key="-text-", size=(width, height), readonly=readonly)],
-        [eg.Button("OK", width=9)]
+        [eg.Multiline(message, key="-text-", size=size, readonly=readonly, font=font)],
+        [eg.Button("OK", width=9), eg.Button("Cancel", width=5)]
     ], modal=True)
-    result = message
+    result = None
     while win.is_alive():
         event, _ = win.read()
         if event == "OK":
             result = win["-text-"].get()
+            break
+        if event == "Cancel":
+            break
+    win.close()
+    return result
+
+def popup_listbox(items: list[str], message: str = "", title: str = "", size: tuple[int,int]=(20, 7), font: tuple[str, int]|None=None, multiple:bool = False) -> str|None:
+    """Display Listbox in a popup window"""
+    select_mode = eg.LISTBOX_SELECT_MODE_BROWSE if multiple is False else eg.LISTBOX_SELECT_MODE_MULTIPLE
+    win = eg.Window(title, layout=[
+        [eg.Text(message)],
+        [eg.Listbox(values=items, key="-list-", size=size, font=font, select_mode=select_mode)],
+        [eg.Button("OK", width=9), eg.Button("Cancel", width=5)]
+    ], modal=True)
+    result = None
+    while win.is_alive():
+        event, _ = win.read()
+        if event == "Cancel":
+            result = None
+            break
+        if event == "OK":
+            selected = win["-list-"].get()
+            if multiple:
+                result = selected
+            else:
+                if len(selected) == 1:
+                    result = selected[0]
             break
     win.close()
     return result
 
 def popup_error(message: str, title: str="Error") -> None:
     """Display a message in a popup window with an error icon."""
-    messagebox.showerror(title, message, icon="error")
+    messagebox.showerror(title, message)
+
+def popup_warning(message: str, title: str="Warning") -> None:
+    """Display a message in a popup window with an warning icon."""
+    messagebox.showwarning(title, message)
+
+def popup_info(message: str, title: str="Warning") -> None:
+    """Display a message in a popup window with an warning icon."""
+    messagebox.showwarning(title, message)
 
 def popup_get_file(message: str="", title: str|None=None, initial_folder: str="", save_as: bool=False, multiple_files: bool=False, file_types: tuple[tuple[str, str]]=(("All Files", "*.*"),), no_window: bool|None=None, **kw) -> (str|tuple[str]|None):
     """Popup a file selection dialog. Return the file selected."""

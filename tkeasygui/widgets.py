@@ -1372,7 +1372,7 @@ class Combo(Element):
 class Table(Element):
     """Table element."""
     def __init__(self, values: list[list[str]]=[], headings: list[str]=[], key: str="", justification: TextAlign="center",
-                 auto_size_columns: bool = True, max_col_width: int = 0, font: tuple[str, int]|None=None,
+                 auto_size_columns: bool = True, max_col_width: int = 0,
                  col_widths: list[int]|None=None,
                  enable_events: bool=False, select_mode: str="browse", **kw) -> None:
         """Create a table."""
@@ -1386,7 +1386,6 @@ class Table(Element):
         self.auto_size_columns = auto_size_columns
         self.max_col_width = max_col_width
         self.col_widths = col_widths
-        self.font = font # todo
         # check col_widths
         if self.col_widths is None:
             self.col_widths = [len(s) for s in self.headings]
@@ -1423,7 +1422,7 @@ class Table(Element):
             if self.col_widths is not None:
                 # todo: get font size
                 font_w = 12
-                if self.font is not None:
+                if (self.font is not None) and (len(self.font) >= 2):
                     font_w = self.font[1]
                 kw["width"] = self.col_widths[i % len(self.col_widths)] * font_w
             self.widget.column(i+1, **kw)
