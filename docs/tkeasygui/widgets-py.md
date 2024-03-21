@@ -24,16 +24,6 @@ Create an element.
 
 #### Methods
 
-##### Button.GetText
-
-```python
-def GetText(self) -> str
-```
-
-Get the text of the button. (compatibility with PySimpleGUI)
-
-------
-
 ##### Button.create
 
 ```python
@@ -54,10 +44,28 @@ Get the value of the widget.
 
 ------
 
+##### Button.get_text
+
+```python
+def get_text(self) -> str
+```
+
+------
+
+##### Button.set_text
+
+```python
+def set_text(self, text: str) -> None
+```
+
+Set the text of the widget.
+
+------
+
 ##### Button.update
 
 ```python
-def update(self, *args, **kw) -> None
+def update(self, text: str|None=None, **kw) -> None
 ```
 
 Update the widget.
@@ -194,6 +202,39 @@ Update the widget.
 
 ------
 
+### ColorBrowse
+
+```python
+class ColorBrowse(
+    self, button_text: str="...", key: str="", target_key: str|None=None,
+    default_color: str|None=None,
+    title: str="", **kw)
+```
+
+FolderBrowse element.
+
+Create an element.
+
+------
+
+#### Base classes
+
+* [`FileBrowse `](#FileBrowse)
+
+------
+
+#### Methods
+
+##### ColorBrowse.show_dialog
+
+```python
+def show_dialog(self, *args) -> str|None
+```
+
+Show file dialog
+
+------
+
 ### Column
 
 ```python
@@ -320,7 +361,7 @@ Update the widget.
 ### Element
 
 ```python
-class Element(self, element_type, key: str="", **kw)
+class Element(self, element_type: str, key: str|None, **kw)
 ```
 
 Element class.
@@ -388,6 +429,16 @@ Get the value of the widget.
 
 ------
 
+##### Element.get_prev_widget
+
+```python
+def get_prev_widget(self, target_key: str|None=None) -> tk.Widget
+```
+
+Get the previous widget.
+
+------
+
 ##### Element.prepare_create
 
 ```python
@@ -411,6 +462,123 @@ Update the widget props (only change `props`)
 ```python
 def widget_update(self, **kw) -> None
 ```
+
+------
+
+### FileBrowse
+
+```python
+class FileBrowse(
+    self, button_text: str="...", key: str="", target_key: str|None=None,
+    title: str="", file_types: tuple[tuple[str, str]]=(("All Files", "*.*"),),
+    multiple_files: bool=False, initial_folder: str|None=None,
+    save_as: bool=False, **kw)
+```
+
+FileBrowse element.
+
+Create an element.
+
+------
+
+#### Base classes
+
+* [`Element `](#Element)
+
+------
+
+#### Methods
+
+##### FileBrowse.create
+
+```python
+def create(self, win: Window, parent: tk.Widget) -> tk.Widget
+```
+
+Create a widget.
+
+------
+
+##### FileBrowse.set_text
+
+```python
+def set_text(self, text: str) -> None
+```
+
+Set the text of the button.
+
+------
+
+##### FileBrowse.show_dialog
+
+```python
+def show_dialog(self, *args) -> str|None
+```
+
+Show file dialog
+
+------
+
+##### FileBrowse.update
+
+```python
+def update(self, text: str|None=None, *args, **kw) -> None
+```
+
+Update the widget.
+
+------
+
+### FilesBrowse
+
+```python
+class FilesBrowse(
+    self, button_text: str="...", key: str="", target_key: str|None=None,
+    title: str="", file_types: tuple[tuple[str, str]]=(("All Files", "*.*"),), **kw)
+```
+
+FilesBrowse element.
+
+Create an element.
+
+------
+
+#### Base classes
+
+* [`FileBrowse `](#FileBrowse)
+
+------
+
+### FolderBrowse
+
+```python
+class FolderBrowse(
+    self, button_text: str="...", key: str="", target_key: str|None=None,
+    default_path: str|None=None,
+    title: str="", **kw)
+```
+
+FolderBrowse element.
+
+Create an element.
+
+------
+
+#### Base classes
+
+* [`FileBrowse `](#FileBrowse)
+
+------
+
+#### Methods
+
+##### FolderBrowse.show_dialog
+
+```python
+def show_dialog(self, *args) -> str|None
+```
+
+Show file dialog
 
 ------
 
@@ -1016,7 +1184,7 @@ Update the widget.
 ### Text
 
 ```python
-class Text(self, text: str, text_align: TextAlign="left", font: FontType|None=None, **kw)
+class Text(self, text: str, key: str|None=None, text_align: TextAlign="left", font: FontType|None=None, **kw)
 ```
 
 Text element.
@@ -1053,10 +1221,28 @@ Get the value of the widget.
 
 ------
 
+##### Text.get_text
+
+```python
+def get_text(self) -> str
+```
+
+------
+
+##### Text.set_text
+
+```python
+def set_text(self, text: str) -> None
+```
+
+Set the text of the widget.
+
+------
+
 ##### Text.update
 
 ```python
-def update(self, *args, **kw) -> None
+def update(self, text: str|None=None, *args, **kw) -> None
 ```
 
 Update the widget.
@@ -1187,7 +1373,7 @@ Move the window to the center of the screen.
 def read(self, timeout: int|None=None, timeout_key: str="-TIMEOUT-") -> tuple[str, dict[str, Any]]
 ```
 
-Read events from the window.
+[Window.read] Read events from the window.
 
 ------
 
@@ -1198,6 +1384,29 @@ def refresh(self) -> "Window"
 ```
 
 Refresh window
+
+------
+
+##### Window.register_event_hooks
+
+```python
+def register_event_hooks(self, hooks: dict[str, list[callable]]) -> None
+```
+
+[Window.register_event_hooks] Register event hooks. (append events)
+**Example**
+```
+window.register_event_hooks({
+    "-input-": [
+        lambda event, values: print("1", event, values),
+        lambda event, values: print("2", event, values),
+        lambda event, values: True, # stop event propagation
+        lambda event, values: print("3", event, values),
+    ],
+```
+**Note**
+- If you specify a function that returns True, it changes the event name to f"{event}-stopped" and then re-collects the values associated with keys that occur afterwards.
+- **@see** `Window.read`
 
 ------
 
@@ -1219,10 +1428,10 @@ def write_event_value(self, key: str, values: dict[str, Any]) -> None
 
 ## Functions
 
-### get_element_id
+### generate_element_key
 
 ```python
-def get_element_id() -> int
+def generate_element_key(element_type: str) -> int
 ```
 
 Get a unique id for an element.
@@ -1266,6 +1475,16 @@ def imagefile_to_bytes(filename: str) -> bytes
 ```
 
 Read image file and convert to bytes
+
+------
+
+### register_element_key
+
+```python
+def register_element_key(key: str) -> None
+```
+
+Register element key.
 
 ------
 

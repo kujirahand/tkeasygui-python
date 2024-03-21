@@ -25,5 +25,6 @@ echo "--- install test repo ---"
 python3 -m pip install -U --index-url https://test.pypi.org/simple/ --no-deps tkeasygui
 
 echo "--- upload pypi ---"
-echo "[TRY]: python3 -m twine upload dist/* --verbose
+echo "[TRY]: python3 -m twine upload dist/* --verbose"
+
 
