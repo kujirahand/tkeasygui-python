@@ -52,14 +52,6 @@ def get_text(self) -> str
 
 ------
 
-##### Button.set_disabled
-
-```python
-def set_disabled(self, disabled: bool) -> None
-```
-
-------
-
 ##### Button.set_text
 
 ```python
@@ -459,6 +451,14 @@ Get the previous widget.
 
 ```python
 def prepare_create(self, win: Window) -> None
+```
+
+------
+
+##### Element.set_disabled
+
+```python
+def set_disabled(self, disabled: bool) -> None
 ```
 
 ------

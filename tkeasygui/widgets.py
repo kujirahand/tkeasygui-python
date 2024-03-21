@@ -827,7 +827,11 @@ class Input(Element):
         return self.get_text()
     
     def set_text(self, text: str) -> None:
+        if self.widget is None:
+            return
         self.text_var.set(text)
+        self.delete(0, "end")
+        self.insert(0, text)
 
     def get_text(self) -> str:
         return self.text_var.get()
