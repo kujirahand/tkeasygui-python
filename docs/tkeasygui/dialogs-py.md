@@ -138,6 +138,16 @@ Display a message in a popup window with a text entry. Return the text entered.
 
 ------
 
+### popup_notify
+
+```python
+def popup_notify(message: str, title: str="Notification") -> None
+```
+
+Popup a information
+
+------
+
 ### popup_ok
 
 ```python

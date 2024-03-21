@@ -1291,6 +1291,7 @@ class Table(Element):
     """Table element."""
     def __init__(self, values: list[list[str]]=[], headings: list[str]=[], key: str="", justification: TextAlign="center",
                  auto_size_columns: bool = True, max_col_width: int = 0, font: tuple[str, int]|None=None,
+                 col_widths: list[int]|None=None,
                  enable_events: bool=False, select_mode: str="browse", **kw) -> None:
         """Create a table."""
         super().__init__("Table", key, **kw)
@@ -1302,6 +1303,7 @@ class Table(Element):
         self.justification: str = {"": "", "right": "e", "center": "center", "left": "w"}[justification]
         self.auto_size_columns = auto_size_columns
         self.max_col_width = max_col_width # todo
+        self.col_widths = col_widths
         self.font = font # todo
     
     def create(self, win: Window, parent: tk.Widget) -> tk.Widget:
@@ -1327,6 +1329,12 @@ class Table(Element):
             kw: dict[str, Any] = {"stretch": streatch}
             if self.justification != "":
                 kw["anchor"] = self.justification
+            if self.col_widths is not None:
+                # todo: get font size
+                font_w = 12
+                if self.font is not None:
+                    font_w = self.font[1]
+                kw["width"] = self.col_widths[i % len(self.col_widths)] * font_w
             self.widget.column(i+1, **kw)
         # add data
         self.set_values(self.values, self.headings)

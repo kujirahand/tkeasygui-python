@@ -7,7 +7,7 @@ TkEasyGUI Widgets
 ### Button
 
 ```python
-class Button(self, button_text: str="", key: str="", **kw)
+class Button(self, button_text: str="", key: str="", disabled: bool=None, **kw)
 ```
 
 Button element.
@@ -52,6 +52,14 @@ def get_text(self) -> str
 
 ------
 
+##### Button.set_disabled
+
+```python
+def set_disabled(self, disabled: bool) -> None
+```
+
+------
+
 ##### Button.set_text
 
 ```python
@@ -65,7 +73,7 @@ Set the text of the widget.
 ##### Button.update
 
 ```python
-def update(self, text: str|None=None, **kw) -> None
+def update(self, text: str|None=None, disabled: bool|None=None, **kw) -> None
 ```
 
 Update the widget.
@@ -395,6 +403,14 @@ Bind user events
 eg.Canvas(key="-canvas-", bind_events={"<ButtonPress>": "on", "<ButtonRelease>": "off"})
 # (2) bind events in the method
 eg.Canvas(key="-canvas-").bind_events({"<ButtonPress>": "on", "<ButtonRelease>": "off"})
+```
+
+------
+
+##### Element.convert_props
+
+```python
+def convert_props(self, props: dict[str, Any]) -> dict[str, Any]
 ```
 
 ------
