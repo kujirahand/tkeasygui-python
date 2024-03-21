@@ -79,7 +79,7 @@ class Window:
     """
     Main window object in TkEasyGUI
     """
-    def __init__(self, title: str, layout: list[list[ElementType]], size: (tuple[str, int]|None)=None, resizable:bool=False, modal: bool=False, **kw) -> None:
+    def __init__(self, title: str, layout: list[list[ElementType]], size: tuple[str, int]|None=None, resizable:bool=False, modal: bool=False, **kw) -> None:
         """Create a window with a layout of widgets."""
         self.modal: bool = modal
         # check active window
@@ -1150,12 +1150,13 @@ class Image(Element):
         self.source = source
         self.filename = filename
         self.data = data
-        self.size = size
+        self.size = self.props["size"] = size
         if background_color is not None:
             self.props["background"] = background_color
 
     def create(self, win: Window, parent: tk.Widget) -> tk.Widget:
         """Create a Image widget."""
+        print("@@@", self.props)
         self.widget = tk.Canvas(parent, name=self.key, **self.props)
         try:
             self.set_image(self.source, self.filename, self.data)
@@ -1196,7 +1197,7 @@ class Image(Element):
     
     def __getattr__(self, name):
         """Get unknown attribute."""
-        if name in ["Widget"]:
+        if name in ["Widget", "tk_canvas", "tktext_label"]:
             return self.widget
         return super().__getattr__(name)
 
