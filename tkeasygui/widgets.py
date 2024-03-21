@@ -1107,27 +1107,48 @@ class Image(Element):
         self.source = source
         self.filename = filename
         self.data = data
-        if size is not None:
-            self.props["size"] = size
+        self.size = size
         if background_color is not None:
             self.props["background"] = background_color
 
     def create(self, win: Window, parent: tk.Widget) -> tk.Widget:
         """Create a Image widget."""
-        photo = get_image_tk(self.source, self.filename, self.data)
-        self.widget = tk.Label(parent, image=photo, name=self.key, **self.props)
-        self.widget.image = photo # type: ignore
+        self.widget = tk.Canvas(parent, name=self.key, **self.props)
+        try:
+            self.set_image(self.source, self.filename, self.data)
+        except Exception:
+            pass
         return self.widget
 
     def get(self) -> Any:
         """Return Widget"""
         return self.widget
 
-    def update(self, source: bytes|str=None, filename: str|None=None, data: bytes|None=None, **kw) -> None:
+    def erase(self) -> None:
+        """Erase image"""
+        self.widget.delete("all")
+
+    def set_image(self, source: bytes|str=None, filename: str|None=None, data: bytes|None=None) -> None:
+        if self.widget is None:
+            return
+        # set 
+        self.filename = filename
+        self.data = data
+        # erase
+        self.erase()
+        # load
+        photo = get_image_tk(source, filename, data, self.size)
+        if photo is not None:
+            self.widget.create_image(0, 0, image=photo, anchor="nw")
+            self.widget.photo = photo # type ignore
+
+    def update(self, source: bytes|str=None, filename: str|None=None, data: bytes|None=None, size: tuple[int,int]|None=None, **kw) -> None:
         """Update the widget."""
-        image = get_image_tk(source, filename, data)
-        self.widget.configure(image=image)
-        self.widget.image = image # type: ignore
+        if size is not None:
+            self.size = size
+            self.widget.configure(width=size[0], height=size[1])
+        if (source is not None) or (filename is not None) or (data is not None):
+            self.set_image(source, filename, data)
         self.widget_update(**kw)
     
     def __getattr__(self, name):
@@ -1515,7 +1536,15 @@ def rgb(r: int, g: int, b: int) -> str:
     b = b & 0xFF
     return f"#{r:02x}{g:02x}{b:02x}"
 
-def get_image_tk(source: bytes|str|None=None, filename: str|None = None, data: bytes|None = None) -> tk.PhotoImage|None:
+def image_resize(img: PILImage, size: tuple[int, int]) -> PILImage:
+    if size[0] < size[1]:
+        r = size[0] / img.size[0]
+    else:
+        r = size[1] / img.size[1]
+    w, h = size[0], int(img.size[1] * r)
+    return img.resize(size=(w, h))
+
+def get_image_tk(source: bytes|str|None=None, filename: str|None = None, data: bytes|None = None, size: tuple[int, int]|None = None) -> tk.PhotoImage|None:
     """Get Image for tk"""
     # if source is bytes, set data
     if source is not None:
@@ -1526,7 +1555,10 @@ def get_image_tk(source: bytes|str|None=None, filename: str|None = None, data: b
     # load from file?
     if filename is not None:
         try:
-            return ImageTk.PhotoImage(file=filename)
+            img: PILImage = PILImage.open(filename)
+            if size is not None:
+                img = image_resize(img, size)
+            return ImageTk.PhotoImage(image=img)
         except Exception as e:
             raise TkEasyError(f"TkEasyGUI.Image.set_image.Error: filename='{filename}', {e}")
     # load from data
@@ -1534,7 +1566,10 @@ def get_image_tk(source: bytes|str|None=None, filename: str|None = None, data: b
         try:
             # check if data is PILImage
             if isinstance(data, PILImage.Image):
-                return ImageTk.PhotoImage(image=data)
+                img: PILImage = data
+                if size is not None:
+                    img = image_resize(img, size)
+                return ImageTk.PhotoImage(image=img)
             return ImageTk.PhotoImage(data=data)
         except Exception as e:
             print("[TkEasyGUI] get_image_tk.Error:", e, stderr=True)
