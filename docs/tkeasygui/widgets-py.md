@@ -920,7 +920,7 @@ Update the widget.
 
 ```python
 class Input(
-    self, text: str="", key: str="",
+    self, text: str="", key: str="", default_text: str|None=None,
      enable_events: bool=False, enable_key_events: bool=False, enable_focus_events: bool =False,
      background_color: str|None=None, color: str|None=None,
      text_aligh: TextAlign="left",
@@ -1000,7 +1000,7 @@ Update the widget.
 ### InputText
 
 ```python
-class InputText(text: str = '', key: str = '', enable_events: bool = False, enable_key_events: bool = False, enable_focus_events: bool = False, background_color: str | None = None, color: str | None = None, text_aligh: Literal['left', 'right', 'center'] = 'left', readonly: bool = False, readonly_background_color: str = 'silver', **kw)
+class InputText(text: str = '', key: str = '', default_text: str | None = None, enable_events: bool = False, enable_key_events: bool = False, enable_focus_events: bool = False, background_color: str | None = None, color: str | None = None, text_aligh: Literal['left', 'right', 'center'] = 'left', readonly: bool = False, readonly_background_color: str = 'silver', **kw)
 ```
 
 InputText element. (alias of Input)
@@ -1218,6 +1218,7 @@ Update the widget.
 class Table(
     self, values: list[list[str]]=[], headings: list[str]=[], key: str="", justification: TextAlign="center",
      auto_size_columns: bool = True, max_col_width: int = 0, font: tuple[str, int]|None=None,
+     col_widths: list[int]|None=None,
      enable_events: bool=False, select_mode: str="browse", **kw)
 ```
 

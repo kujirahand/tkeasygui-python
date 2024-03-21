@@ -1312,7 +1312,7 @@ class Table(Element):
             self.col_widths = [len(s) for s in self.headings]
             for row in self.values:
                 for i, cell in enumerate(row):
-                    v = max(self.col_widths[i], len(cell))
+                    v = max(self.col_widths[i], len(str(cell)))
                     if (self.max_col_width is not None) and (self.max_col_width > 0):
                         v = min(v, self.max_col_width)
                     self.col_widths[i] = v
