@@ -944,6 +944,17 @@ class Multiline(Element):
         self.widget.insert("1.0", text) # set text
         if self.readonly:
             self.widget_update(state="disabled")
+    
+    def print(self, text: str, text_color: str|None=None, background_color: str|None=None, end:str="\n") -> None:
+        """Print text."""
+        text += end
+        if self.widget is None:
+            return
+        if text_color is not None:
+            self.widget.tag_config("text_color", foreground=text_color)
+        if background_color is not None:
+            self.widget.tag_config("background_color", background=background_color)
+        self.widget.insert("end", text, ("text_color", "background_color"))
 
 class Textarea(Multiline):
     """Textarea element. (alias of Multiline)"""
