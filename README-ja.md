@@ -81,4 +81,4 @@ PySimpleGUIと完全な互換性は考えていません。
 - Window作成時の配置モード
 - 絶対座標でのElementの配置 / Gridレイアウト
 - HTMLっぽく？一次元のElementの配置 eg.Window(layout=[eg.Button(), eg.Button(), eg.BR(), eg.Button()])
-
+- test --- Window.readでイベントの値を読むが、更新されていないものがないか、チェックする

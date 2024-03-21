@@ -453,7 +453,7 @@ def prepare_create(self, win: Window) -> None
 def update(self, *args, **kw) -> None
 ```
 
-Update the widget props (only change `props`)
+update widget configuration.
 
 ------
 
@@ -522,7 +522,7 @@ Show file dialog
 ##### FileBrowse.update
 
 ```python
-def update(self, text: str|None=None, *args, **kw) -> None
+def update(self, text: str|None=None, **kw) -> None
 ```
 
 Update the widget.
@@ -1044,9 +1044,9 @@ Update the widget.
 ```python
 class Multiline(
     self, text: str="", default_text: str|None=None, key: str="",
-     enable_events: bool=False,
+     enable_events: bool=False, enable_key_events: bool=False, enable_focus_events: bool =False,
      color: str|None=None, background_color: str|None=None,
-     readonly: bool=False, readonly_background_color: str='silver',
+     readonly: bool=False, readonly_background_color: str|None=None,
      size: tuple[int, int]=(50, 10),
      **kw)
 ```
@@ -1085,6 +1085,14 @@ Get the value of the widget.
 
 ------
 
+##### Multiline.get_text
+
+```python
+def get_text(self) -> str
+```
+
+------
+
 ##### Multiline.set_readonly
 
 ```python
@@ -1108,7 +1116,7 @@ Set text
 ##### Multiline.update
 
 ```python
-def update(self, *args, **kw) -> None
+def update(self, text: str|None = None, readonly: bool|None = None, **kw) -> None
 ```
 
 Update the widget.
@@ -1304,7 +1312,7 @@ Update the widget.
 ### Textarea
 
 ```python
-class Textarea(text: str = '', default_text: str | None = None, key: str = '', enable_events: bool = False, color: str | None = None, background_color: str | None = None, readonly: bool = False, readonly_background_color: str = 'silver', size: tuple[int, int] = (50, 10), **kw)
+class Textarea(text: str = '', default_text: str | None = None, key: str = '', enable_events: bool = False, enable_key_events: bool = False, enable_focus_events: bool = False, color: str | None = None, background_color: str | None = None, readonly: bool = False, readonly_background_color: str | None = None, size: tuple[int, int] = (50, 10), **kw)
 ```
 
 Textarea element. (alias of Multiline)

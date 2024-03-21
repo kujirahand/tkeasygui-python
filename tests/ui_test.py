@@ -26,7 +26,8 @@ while True:
         selected = " selected: " + "/".join(values["-listbox-"])
         window["-listbox-text-"].update(text=selected)
     if event == "-checkbox-button-":
-        window["-checkbox-"].update(value=(not values["-checkbox-"]), text="Changed")
+        b = window["-checkbox-"].get()
+        window["-checkbox-"].update(value=(not b), text="Changed")
     if event == "-combo-button-":
         window["-combo-"].update(value="combo3")
 window.close()

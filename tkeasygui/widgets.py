@@ -701,17 +701,17 @@ class Checkbox(Element):
         if key == "":
             key = text
         super().__init__("Button", key, **kw)
-        self.has_value = False
+        self.has_value = True
         self.default_value = default
         self.props["text"] = text
         if enable_events:
             self.bind_events({
-                "<Button-1>": "click",
                 "<Button-3>": "right_click"
             }, "system")
 
     def create(self, win: Window, parent: tk.Widget) -> tk.Widget:
         self.checkbox_var = tk.BooleanVar(value=self.default_value)
+        self.checkbox_var.trace_add("write", lambda *args: self.disptach_event({"event_type": "change", "event": args}))
         self.widget = tk.Checkbutton(parent, variable=self.checkbox_var, **self.props)
         return self.widget
     
