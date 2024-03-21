@@ -107,6 +107,21 @@ def popup_input(message: str, title: str = "", default: str = "") -> (str|None):
     win.close()
     return result
 
+def popup_scrolled(message: str, title: str = "", width: int = 40, height: int = 10, readonly: bool=False) -> str:
+    """Display a message in a popup window with a text entry. Return the text entered."""
+    win = eg.Window(title, layout=[
+        [eg.Multiline(message, key="-text-", size=(width, height), readonly=readonly)],
+        [eg.Button("OK", width=9)]
+    ], modal=True)
+    result = message
+    while win.is_alive():
+        event, _ = win.read()
+        if event == "OK":
+            result = win["-text-"].get()
+            break
+    win.close()
+    return result
+
 def popup_error(message: str, title: str="Error") -> None:
     """Display a message in a popup window with an error icon."""
     messagebox.showerror(title, message, icon="error")

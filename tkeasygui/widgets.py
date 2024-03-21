@@ -32,7 +32,7 @@ TABLE_SELECT_MODE_EXTENDED: str = tk.EXTENDED
 # type
 TextAlign: TypeAlias = Literal["left", "right", "center"]
 TextVAlign: TypeAlias = Literal["top", "bottom", "center"]
-FontType: TypeAlias = tuple[str, int]
+FontType: TypeAlias = tuple[str, int] | tuple[str, int, str]
 PointType: TypeAlias = tuple[int, int] | tuple[float, float]
 ElementType: TypeAlias = "Element"
 EventMode: TypeAlias = Literal["user", "system"]
@@ -79,7 +79,7 @@ class Window:
     """
     Main window object in TkEasyGUI
     """
-    def __init__(self, title: str, layout: list[list[ElementType]], size: tuple[str, int]|None=None, resizable:bool=False, modal: bool=False, **kw) -> None:
+    def __init__(self, title: str, layout: list[list[ElementType]], size: tuple[str, int]|None=None, resizable:bool=False, font:FontType|None=None, modal: bool=False, **kw) -> None:
         """Create a window with a layout of widgets."""
         self.modal: bool = modal
         # check active window
@@ -97,6 +97,7 @@ class Window:
         self.flag_alive: bool = True # Pressing the close button will turn this flag to False.
         self.layout: list[list[ElementType]] = layout
         self._event_hooks: dict[str, list[callable]] = {}
+        self.font: FontType|None = font
         # Frame
         self.frame: ttk.Frame = ttk.Frame(self.window, padding=10)
         # set window properties
@@ -190,6 +191,8 @@ class Window:
                     # has children?
                     if elem.has_children:
                         self._create_widget(widget, elem.layout)
+                    # post create
+                    elem.post_create(self, frame_row)
                 except Exception as e:
                     raise Exception(f"Failed to create widget: {elem.element_type} {elem.key} {elem.props}\n{e}") from e
                 # bind event (before create)
@@ -428,6 +431,9 @@ class Element:
         self._bind_dict: dict[str, tuple[str, bool, EventMode]] = {}
         self.user_bind_event: tk.Event|None = None # when bind event fired then set this value
         self.vertical_alignment: TextVAlign = "center"
+        self.padx: int|None = None
+        self.pady: int|None = None
+        self.font: FontType|None = None
     
     def bind(self, event_name: str, handle_name: str, propagate: bool=True, event_mode: EventMode = "user") -> None:
         """
@@ -457,12 +463,13 @@ class Element:
         elif self.expand_y:
             props["expand"] = True
             props["fill"] = "y"
+        # padx / pady
+        if self.padx is not None:
+            props["padx"] = self.padx
+        if self.pady is not None:
+            props["pady"] = self.pady
         # print("pack.props=", self.key, props)
         return props
-
-    def prepare_create(self, win: Window) -> None:
-        # convert properties
-        self.props = self.convert_props(self.props)
 
     def convert_props(self, props: dict[str, Any]) -> dict[str, Any]:
         result = {}
@@ -486,6 +493,11 @@ class Element:
             self.expand_x = result.pop("expand_x")
         if "expand_y" in result:
             self.expand_y = result.pop("expand_y")
+        # padx / pady
+        if "padx" in result:
+            self.padx = result.pop("padx")
+        if "pady" in result:
+            self.pady = result.pop("pady")
         # convert "select_mode" to "selectmode"
         if "select_mode" in result:
             result["selectmode"] = result.pop("select_mode")
@@ -496,7 +508,6 @@ class Element:
         # disabled
         if "disabled" in result:
             result["state"] = tk.DISABLED if result.pop("disabled") else tk.NORMAL
-        #
         return result
 
     def set_disabled(self, disabled: bool) -> None:
@@ -522,7 +533,17 @@ class Element:
     def create(self, win: Window, parent: tk.Widget) -> Any:
         """Create a widget."""
         return None
-    
+
+    def prepare_create(self, win: Window) -> None:
+        # convert properties
+        if win.font is not None and self.font is None:
+            self.props["font"] = self.font = win.font
+        self.props = self.convert_props(self.props)
+
+    def post_create(self, win: Window, parent: tk.Widget) -> None:
+        """Post create widget."""
+        pass
+
     def get(self) -> Any:
         """Get the value of the widget."""
         return "-"
@@ -903,14 +924,22 @@ class Multiline(Element):
             }, "system")
 
     def create(self, win: Window, parent: tk.Widget) -> tk.Widget:
+        # frame
+        self.widget_frame = widget_frame = ttk.Frame(parent)
         # text
         text = self.props.pop("text", "")
-        self.widget = tk.Text(parent, name=self.key, **self.props)
+        self.widget = tk.Text(widget_frame, name=self.key, **self.props)
         self.widget.insert("1.0", text)
         # readonly
         if self.readonly:
             self.set_readonly(self.readonly)
-        return self.widget
+        # scrollbar
+        self.scrollbar = ttk.Scrollbar(widget_frame, orient="vertical", command=self.widget.yview)
+        self.widget.configure(yscrollcommand=self.scrollbar.set)
+        # pack to frame
+        self.scrollbar.pack(side="right", fill="y")
+        self.widget.pack(side="right", fill="both", expand=True)
+        return self.widget_frame
 
     def get(self) -> Any:
         """Get the value of the widget."""
@@ -1204,6 +1233,36 @@ class Image(Element):
         if name in ["Widget", "tk_canvas", "tktext_label"]:
             return self.widget
         return super().__getattr__(name)
+
+class VSeparator(Element):
+    """VSeparator element."""
+    def __init__(self, key: str="", background_color: str|None=None, pad: int=5, size: tuple[int, int]=(5, 100), **kw) -> None:
+        super().__init__("VSeparator", key, **kw)
+        size = (pad, size[1])
+        self.size = self.props["size"] = size
+        self.props["padx"] = pad
+        if background_color is not None:
+            self.props["background"] = background_color
+        self.props["expand_y"] = True
+    
+    def create(self, win: Window, parent: tk.Widget) -> Any:
+        self.widget = ttk.Separator(parent, orient="vertical")
+        return self.widget
+
+class HSeparator(Element):
+    """HSeparator element."""
+    def __init__(self, key: str="", background_color: str|None=None, pad: int=5, size: tuple[int, int]=(100, 5), **kw) -> None:
+        super().__init__("HSeparator", key, **kw)
+        size = (size[1], pad)
+        self.size = self.props["size"] = size
+        self.props["pady"] = pad
+        if background_color is not None:
+            self.props["background"] = background_color
+        self.props["expand_x"] = True
+    
+    def create(self, win: Window, parent: tk.Widget) -> Any:
+        self.widget = ttk.Separator(parent, orient="horizontal")
+        return self.widget
 
 
 class Listbox(Element):

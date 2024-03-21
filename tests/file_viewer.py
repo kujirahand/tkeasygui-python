@@ -18,20 +18,22 @@ layout = [
     [
         sg.Listbox( 
             values=get_program_files(), 
-            size=(40, 20), 
+            size=(30, 20), 
             key="-files-", 
             enable_events=True,
             font=font
         ),
+        sg.VSeparator(pad=5),
         # right side textbox
-        sg.Multiline(size=(40, 20), key="-body-", expand_y=True)
+        sg.Multiline(size=(40, 20), key="-body-", expand_y=True, expand_x=True)
     ],
+    [sg.HSeparator(pad=5)],
     [
         sg.Button("Close"),
         sg.Button("Run"),
     ],
 ]
-window = sg.Window("Python file Viewer", layout, font=font)
+window = sg.Window("Python file Viewer", layout, font=font, resizable=True)
 # event loop
 while True:
     event, values = window.read()
