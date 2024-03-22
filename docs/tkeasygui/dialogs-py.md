@@ -128,6 +128,16 @@ Display a message in a popup window with a text entry. Return the text entered.
 
 ------
 
+### popup_info
+
+```python
+def popup_info(message: str, title: str="Warning") -> None
+```
+
+Display a message in a popup window with an warning icon.
+
+------
+
 ### popup_input
 
 ```python
@@ -135,6 +145,16 @@ def popup_input(message: str, title: str = "", default: str = "") -> (str|None)
 ```
 
 Display a message in a popup window with a text entry. Return the text entered.
+
+------
+
+### popup_listbox
+
+```python
+def popup_listbox(items: list[str], message: str = "", title: str = "", size: tuple[int,int]=(20, 7), font: tuple[str, int]|None=None, multiple:bool = False) -> str|None
+```
+
+Display Listbox in a popup window
 
 ------
 
@@ -155,6 +175,26 @@ def popup_ok(message: str, title: str="") -> None
 ```
 
 Display a message in a popup window.(Alias popup)
+
+------
+
+### popup_scrolled
+
+```python
+def popup_scrolled(message: str, title: str = "", size: tuple[int,int]=[40, 5], readonly: bool=False, font: tuple[str, int]|None=None) -> str|None
+```
+
+Display a message in a popup window with a text entry. Return the text entered.
+
+------
+
+### popup_warning
+
+```python
+def popup_warning(message: str, title: str="Warning") -> None
+```
+
+Display a message in a popup window with an warning icon.
 
 ------
 

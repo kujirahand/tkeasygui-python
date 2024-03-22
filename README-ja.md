@@ -82,3 +82,5 @@ PySimpleGUIと完全な互換性は考えていません。
 - 絶対座標でのElementの配置 / Gridレイアウト
 - HTMLっぽく？一次元のElementの配置 eg.Window(layout=[eg.Button(), eg.Button(), eg.BR(), eg.Button()])
 - test --- Window.readでイベントの値を読むが、更新されていないものがないか、チェックする
+- test --- fontを自動的に全部適用する設定にしたので、すべてのエレメントが実行できるかテスト
+- widgets.pyからElementを継承しているものを列挙して、全部を配置して作るテスト

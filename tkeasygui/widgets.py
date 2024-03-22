@@ -180,6 +180,7 @@ class Window:
                 prev_element = elem
                 try:
                     widget: tk.Widget = elem.create(self, frame_row)
+                    widget.__tkeasygui = elem # type : ignore
                     # check key
                     self.key_elements[elem.key] = elem
                     # check focus widget
@@ -194,7 +195,7 @@ class Window:
                     # post create
                     elem.post_create(self, frame_row)
                 except Exception as e:
-                    raise Exception(f"Failed to create widget: {elem.element_type} {elem.key} {elem.props}\n{e}") from e
+                    raise TkEasyError(f"Window._create_widget : Failed to create `{elem.element_type}` key=`{elem.key}` {elem.props}\n{e}") from e
                 # bind event (before create)
                 for event_name, handle_t in elem._bind_dict.items():
                     self.bind(elem, event_name, handle_t[0], handle_t[1], handle_t[2])
@@ -434,6 +435,7 @@ class Element:
         self.padx: int|None = None
         self.pady: int|None = None
         self.font: FontType|None = None
+        self.has_font_prop: bool = True
     
     def bind(self, event_name: str, handle_name: str, propagate: bool=True, event_mode: EventMode = "user") -> None:
         """
@@ -536,7 +538,7 @@ class Element:
 
     def prepare_create(self, win: Window) -> None:
         # convert properties
-        if win.font is not None and self.font is None:
+        if (win.font is not None) and (self.font is None) and self.has_font_prop:
             self.props["font"] = self.font = win.font
         self.props = self.convert_props(self.props)
 
@@ -636,6 +638,7 @@ class Column(Element):
         self.has_children = True
         self.layout = layout
         self.vertical_alignment = vertical_alignment
+        self.has_font_prop = False
         if size is not None:
             self.props["size"] = size
         if background_color:
@@ -1054,6 +1057,7 @@ class Canvas(Element):
     def __init__(self, key: str="", enable_events: bool=False, background_color: str|None=None, size: tuple[int, int]=(300, 300), **kw) -> None:
         super().__init__("Canvas", key, **kw)
         self.props["size"] = size
+        self.has_font_prop = False
         if background_color:
             self.props["background"] = background_color
         if enable_events:
@@ -1088,7 +1092,7 @@ class Graph(Element):
             graph_bottom_left: tuple[int, int]|None=None, graph_top_right: tuple[int, int]|None=None,
             **kw) -> None:
         super().__init__("Graph", key, **kw)
-        self.key = key
+        self.has_font_prop = False
         # <Coordinate> graph_Declared for compatibility, but not yet implemented.
         self.graph_bottom_left = graph_bottom_left
         self.graph_top_right = graph_top_right
@@ -1181,6 +1185,7 @@ class Image(Element):
     """Image element."""
     def __init__(self, source: bytes|str|None=None, filename=None, data=None, key: str="", background_color: str|None=None, size: tuple[int, int]=(300, 300), **kw) -> None:
         super().__init__("Image", key, **kw)
+        self.has_font_prop = False
         self.source = source
         self.filename = filename
         self.data = data
@@ -1337,8 +1342,9 @@ class Combo(Element):
 
     def create(self, win: Window, parent: tk.Widget) -> tk.Widget:
         """[Combo.create] create Listbox widget"""
-        self.value = tk.StringVar(value=self.default_value)
+        self.value = tk.StringVar()
         self.widget = ttk.Combobox(parent, values=self.values, textvariable=self.value, **self.props)
+        self.set_value(self.default_value)
         return self.widget
 
     def set_values(self, values: list[str]) -> None:
@@ -1386,6 +1392,7 @@ class Table(Element):
         self.auto_size_columns = auto_size_columns
         self.max_col_width = max_col_width
         self.col_widths = col_widths
+        self.has_font_prop = False # has, but not widget root
         # check col_widths
         if self.col_widths is None:
             self.col_widths = [len(s) for s in self.headings]
@@ -1402,11 +1409,16 @@ class Table(Element):
         # create treeview
         self.frame = ttk.Frame(parent, padding=1, relief="ridge", borderwidth=1)
         columns = tuple(i+1 for i, _ in enumerate(self.headings))
+        if "font" in self.props:
+            font = self.props.pop("font")
+        else:
+            font = None
         tree = self.widget = ttk.Treeview(
             self.frame,
             columns=columns,
             show="headings",
             **self.props)
+        self.props["font"] = font
         # scroll bar
         scrollbar = ttk.Scrollbar(self.frame, orient=tk.VERTICAL, command=tree.yview)
         scrollbar.pack(expand=True, fill=tk.Y, side=tk.RIGHT)
@@ -1512,7 +1524,10 @@ class FileBrowse(Element):
         # get initial directory
         init_dir = self.initial_folder
         if target is not None:
-            target_text = target.get()
+            try:
+                target_text = str(target.get())
+            except Exception:
+                target_text = ""
             if target_text != "":
                 init_dir = os.path.dirname(target_text)
         return init_dir

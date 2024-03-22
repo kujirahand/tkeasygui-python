@@ -447,6 +447,16 @@ Get the previous widget.
 
 ------
 
+##### Element.post_create
+
+```python
+def post_create(self, win: Window, parent: tk.Widget) -> None
+```
+
+Post create widget.
+
+------
+
 ##### Element.prepare_create
 
 ```python
@@ -848,6 +858,36 @@ Update the widget.
 
 ------
 
+### HSeparator
+
+```python
+class HSeparator(self, key: str="", background_color: str|None=None, pad: int=5, size: tuple[int, int]=(100, 5), **kw)
+```
+
+HSeparator element.
+
+Create an element.
+
+------
+
+#### Base classes
+
+* [`Element `](#Element)
+
+------
+
+#### Methods
+
+##### HSeparator.create
+
+```python
+def create(self, win: Window, parent: tk.Widget) -> Any
+```
+
+Create a widget.
+
+------
+
 ### Image
 
 ```python
@@ -1227,7 +1267,7 @@ Update the widget.
 ```python
 class Table(
     self, values: list[list[str]]=[], headings: list[str]=[], key: str="", justification: TextAlign="center",
-     auto_size_columns: bool = True, max_col_width: int = 0, font: tuple[str, int]|None=None,
+     auto_size_columns: bool = True, max_col_width: int = 0,
      col_widths: list[int]|None=None,
      enable_events: bool=False, select_mode: str="browse", **kw)
 ```
@@ -1388,10 +1428,40 @@ Initialize self.  See help(type(self)) for accurate signature.
 
 ------
 
+### VSeparator
+
+```python
+class VSeparator(self, key: str="", background_color: str|None=None, pad: int=5, size: tuple[int, int]=(5, 100), **kw)
+```
+
+VSeparator element.
+
+Create an element.
+
+------
+
+#### Base classes
+
+* [`Element `](#Element)
+
+------
+
+#### Methods
+
+##### VSeparator.create
+
+```python
+def create(self, win: Window, parent: tk.Widget) -> Any
+```
+
+Create a widget.
+
+------
+
 ### Window
 
 ```python
-class Window(self, title: str, layout: list[list[ElementType]], size: tuple[str, int]|None=None, resizable:bool=False, modal: bool=False, **kw)
+class Window(self, title: str, layout: list[list[ElementType]], size: tuple[str, int]|None=None, resizable:bool=False, font:FontType|None=None, modal: bool=False, **kw)
 ```
 
 Main window object in TkEasyGUI
