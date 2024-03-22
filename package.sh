@@ -12,6 +12,8 @@ rm -f -r dist
 rm -f -r tkeasygui.egg-info
 python3 -m pip uninstall -y tkeasygui
 
+# change version from pyproject.toml
+python3 update_version.py
 # build
 echo "--- build ---"
 python3 -m build

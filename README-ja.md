@@ -68,19 +68,30 @@ window.close()
 
 PySimpleGUIと完全な互換性は考えていません。
 
+### TkEasyGUI独自の機能
+
+- 色選択ダイアログ(eg.popup_color)など、独自のポップアップ
+- ImageはPNGだけでなくJPEGも読み込み可能
+- OSの配色をデフォルトで利用
+- 便利なイベントフックや一括イベント登録機能 - [docs/custom_events](docs/custom_events.md)
+
 ## リンク
 
 - [pypi.org > TkEasyGUI](https://pypi.org/project/tkeasygui/)
 - [GitHub > TkEasyGUI](https://github.com/kujirahand/tkeasygui-python/)
 
+## TkEasyGUIパッケージ開発者用のツール
+
+全てのElementを列挙して、`elements_test.py`を生成するツール:
+
+```sh
+./element2json.py
+```
 
 ## 今後の予定
 
-- sg.ListBrowse (select item from listbox)
 - sg.MulitilineBrowse
 - Window作成時の配置モード
-- 絶対座標でのElementの配置 / Gridレイアウト
-- HTMLっぽく？一次元のElementの配置 eg.Window(layout=[eg.Button(), eg.Button(), eg.BR(), eg.Button()])
+  - 絶対座標でのElementの配置 / Gridレイアウト
+  - HTMLっぽく？一次元のElementの配置 eg.Window(layout=[eg.Button(), eg.Button(), eg.BR(), eg.Button()])
 - test --- Window.readでイベントの値を読むが、更新されていないものがないか、チェックする
-- test --- fontを自動的に全部適用する設定にしたので、すべてのエレメントが実行できるかテスト
-- widgets.pyからElementを継承しているものを列挙して、全部を配置して作るテスト
