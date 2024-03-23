@@ -494,6 +494,8 @@ class Element:
             # self.props["readonlybackground"] = self.props["bg"]
         if "text_color" in result:
             result["fg"] = result.pop("text_color")
+        if "color" in result:
+            result["fg"] = result.pop("color")
         # expand_x
         if "expand_x" in result:
             self.expand_x = result.pop("expand_x")
