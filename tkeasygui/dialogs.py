@@ -1,6 +1,11 @@
 """
 TkEasyGUI dialogs
 """
+import os
+import platform
+import subprocess
+from typing import Any, Literal, TypeAlias
+
 import tkinter.filedialog as filedialog
 import tkinter.messagebox as messagebox
 import tkinter.simpledialog as simpledialog
@@ -8,33 +13,13 @@ from tkinter import colorchooser
 
 import tkeasygui as eg
 
-
 #------------------------------------------------------------------------------
 # Dialogs
 #------------------------------------------------------------------------------
 # like PySimpleGUI
-def popup(message: str, title: str = "") -> None:
-    """
-    Display a message in a popup window.
-    
-    #### Example:
-    ```py
-    eg.popup("I like an apple.", "Information")
-    ```
-    """
-    # messagebox.showinfo(title, message)
-    win = eg.Window(title, layout=[[eg.Text(message)], [eg.Button("OK")]], modal=True)
-    while win.is_alive():
-        event, _ = win.read()
-        if event in (None, "OK"):
-            break
-    win.close()
 
-def popup_ok(message: str, title: str="") -> None:
-    """Display a message in a popup window.(Alias popup)"""
-    popup(title, message)
-
-def popup_buttons(message: str, title: str = "Question", buttons: list[str] = ["OK", "Cancel"]) -> str:
+def popup_buttons(message: str, title: str = "Question", buttons: list[str] = ["OK", "Cancel"], 
+        auto_close_duration: int = -1, timeout_key: str="-TIMEOUT-", non_blocking: bool = False) -> str:
     """
     Popup window with user defined buttons. Return button's label.
 
@@ -47,20 +32,64 @@ def popup_buttons(message: str, title: str = "Question", buttons: list[str] = ["
     print(color)
     ```
     """
-    result = buttons[-1]
+    result = buttons[-1] if len(buttons) > 0 else None
     # create window
     win = eg.Window(title, layout=[
         [eg.Text(message)],
         [eg.Button(s, width=9) for s in buttons],
     ], modal=True)
     # event loop
+    timer_id = eg.time_checker_start()
+    autoclose_sec: int = auto_close_duration * 1000
+    if non_blocking:
+        # TODO: popup non blocking window
+        pass
     while win.is_alive():
-        event, _ = win.read()
+        event, _ = win.read(timeout=100, timeout_key=eg.WINDOW_TIMEOUT)
         if event in buttons:
             result = event
             break
+        if event == eg.WINDOW_TIMEOUT:
+            if auto_close_duration > 0 and eg.time_checker_end(timer_id) > autoclose_sec:
+                result = timeout_key # timeout_key only use result
+                break
     win.close()
     return result
+
+def popup(message: str, title: str = "") -> str:
+    """
+    Display a message in a popup window.
+    
+    #### Example:
+    ```py
+    eg.popup("I like an apple.", "Information")
+    ```
+    """
+    # messagebox.showinfo(title, message)
+    return popup_buttons(message=message, title=title, buttons=["OK"])
+
+def popup_non_blocking(message: str, title: str="", auto_close_duration: int = -1) -> str:
+    """(TODO) Display a non blocking window"""
+    return popup_buttons(message, title, buttons=["OK"], auto_close_duration=auto_close_duration, non_blocking=True)
+
+def popup_no_buttons(message: str, title: str="") -> None:
+    popup_buttons(message, title, buttons=[])
+
+def popup_auto_close(message: str, title: str="", auto_close_duration: int = 3, buttons: list[str] = ["OK", "Cancel"], timeout_key="-TIMEOUT-") -> str:
+    """Display a message in a popup window that closes automatically after a specified time."""
+    return popup_buttons(message, title, buttons=buttons, auto_close_duration=auto_close_duration, timeout_key=timeout_key)
+
+def popup_no_wait(message: str, title: str="", **kw) -> str:
+    """Display a message in a popup window without waiting."""
+    return popup_auto_close(message, title, auto_close_duration=0, **kw)
+
+def popup_ok(message: str, title: str="") -> str:
+    """Display a message in a popup window.(Alias popup)"""
+    return popup_buttons(message, title, buttons=["OK"])
+
+def popup_ok_cancel(message: str, title: str="") -> str:
+    """Display a message in a popup window with OK and Cancel buttons. Return "OK" or "Cancel"."""
+    return popup_buttons(message, title, buttons=["OK", "Cancel"])
 
 def popup_yes_no(message: str, title: str = "Question", yes_label: str="Yes", no_label: str="No") -> str:
     """
@@ -85,18 +114,23 @@ def popup_yes_no_cancel(message: str, title: str = "Question") -> str:
     """Display a message in a popup window with Yes and No buttons. Return "Yes" or "No" or "Cancel"."""
     return popup_buttons(message, title, buttons=["Yes", "No", "Cancel"])
 
-def popup_get_text(message: str, title: str = "", default: str = "") -> (str|None):
-    """Display a message in a popup window with a text entry. Return the text entered."""
-    return simpledialog.askstring(title, message, initialvalue=default)
+def popup_cancel(message: str, title: str="") -> str:
+    """Display a message in a popup window with OK and Cancel buttons. Return "OK" or "Cancel"."""
+    return popup_buttons(message, title, buttons=["Cancel"])
 
-def popup_input(message: str, title: str = "", default: str = "") -> (str|None):
+def popup_get_text(message: str, title: str = "", default: str = "", font: tuple[Any]|None=None) -> (str|None):
+    """Display a message in a popup window with a text entry. Return the text entered."""
+    # return simpledialog.askstring(title, message, initialvalue=default)
+    return popup_input(message, title, default, font=font)
+
+def popup_input(message: str, title: str = "", default: str = "", font: tuple[Any]|None=None) -> (str|None):
     """Display a message in a popup window with a text entry. Return the text entered."""
     result = None
     win = eg.Window(title, layout=[
         [eg.Text(message)],
         [eg.Input(default, key="-user-", width=40)],
         [eg.Button("OK", width=9), eg.Button("Cancel", width=9)]
-    ], modal=True)
+    ], modal=True, font=font)
     while win.is_alive():
         event, values = win.read()
         if event == "OK":
@@ -107,51 +141,10 @@ def popup_input(message: str, title: str = "", default: str = "") -> (str|None):
     win.close()
     return result
 
-def popup_scrolled(message: str, title: str = "", size: tuple[int,int]=[40, 5], readonly: bool=False, font: tuple[str, int]|None=None) -> str|None:
-    """Display a message in a popup window with a text entry. Return the text entered."""
-    win = eg.Window(title, layout=[
-        [eg.Multiline(message, key="-text-", size=size, readonly=readonly, font=font)],
-        [eg.Button("OK", width=9), eg.Button("Cancel", width=5)]
-    ], modal=True)
-    result = None
-    while win.is_alive():
-        event, _ = win.read()
-        if event == "OK":
-            result = win["-text-"].get()
-            break
-        if event == "Cancel":
-            break
-    win.close()
-    return result
-
-def popup_listbox(items: list[str], message: str = "", title: str = "", size: tuple[int,int]=(20, 7), font: tuple[str, int]|None=None, multiple:bool = False) -> str|None:
-    """Display Listbox in a popup window"""
-    select_mode = eg.LISTBOX_SELECT_MODE_BROWSE if multiple is False else eg.LISTBOX_SELECT_MODE_MULTIPLE
-    win = eg.Window(title, layout=[
-        [eg.Text(message)],
-        [eg.Listbox(values=items, key="-list-", size=size, font=font, select_mode=select_mode)],
-        [eg.Button("OK", width=9), eg.Button("Cancel", width=5)]
-    ], modal=True)
-    result = None
-    while win.is_alive():
-        event, _ = win.read()
-        if event == "Cancel":
-            result = None
-            break
-        if event == "OK":
-            selected = win["-list-"].get()
-            if multiple:
-                result = selected
-            else:
-                if len(selected) == 1:
-                    result = selected[0]
-            break
-    win.close()
-    return result
-
 def popup_error(message: str, title: str="Error") -> None:
     """Display a message in a popup window with an error icon."""
-    messagebox.showerror(title, message)
+    popup_buttons(message, title, buttons=["Error"])
+    # messagebox.showerror(title, message)
 
 def popup_warning(message: str, title: str="Warning") -> None:
     """Display a message in a popup window with an warning icon."""
@@ -186,6 +179,64 @@ def popup_get_folder(message: str="", title: str|None=None, default_path: str=""
         title = message
     return filedialog.askdirectory(title=title, initialdir=default_path, **kw)
 
+def popup_scrolled(message: str, title: str = "", size: tuple[int,int]=[40, 5], readonly: bool=False, font: tuple[str, int]|None=None) -> str|None:
+    """Display a message in a popup window with a text entry. Return the text entered."""
+    win = eg.Window(title, layout=[
+        [eg.Multiline(message, key="-text-", size=size, readonly=readonly, font=font)],
+        [eg.Button("OK", width=9), eg.Button("Cancel", width=5)]
+    ], modal=True)
+    result = None
+    while win.is_alive():
+        event, _ = win.read()
+        if event == "OK":
+            result = win["-text-"].get()
+            break
+        if event == "Cancel":
+            break
+    win.close()
+    return result
+
+#------------------------------------------------------------------------------
+# for notify
+def popup_notify(message: str, title: str="") -> None:
+    """Popup a information"""
+    if is_mac():
+        send_notification_mac(message, title)
+    elif is_win():
+        send_notification_win(message, title)
+    else:
+        popup_buttons(message, title, buttons=["OK"], auto_close_duration=1)
+
+def send_notification_mac(message: str, title: str=""):
+    """"Send Notification on mac"""
+    if title == "":
+        title = "Notification"
+    script = 'display notification "{}" with title "{}"'.format(message, title)
+    subprocess.run(['osascript', '-e', script])
+
+def send_notification_win(message: str, title: str=""):
+    """"Send Notification on win"""
+    msg = message.replace("'@", "' @")
+    if title != "":
+        title = title.replace("'@", "' @")
+        msg = f"{title}\n{msg}"
+    powershell_script = fr'''
+$bodyText = @'
+{title}
+{message}
+'@
+$ToastText01 = [Windows.UI.Notifications.ToastTemplateType, Windows.UI.Notifications, ContentType = WindowsRuntime]::ToastText01
+$TemplateContent = [Windows.UI.Notifications.ToastNotificationManager, Windows.UI.Notifications, ContentType = WindowsRuntime]::GetTemplateContent($ToastText01)
+$TemplateContent.SelectSingleNode('//text[@id="1"]').InnerText = $bodyText
+$AppId = '{{1AC14E77-02E7-4E5D-B744-2EB1AE5198B7}}\WindowsPowerShell\v1.0\powershell.exe'
+[Windows.UI.Notifications.ToastNotificationManager]::CreateToastNotifier($AppId).Show($TemplateContent)
+'''
+    # Execute PowerShell
+    subprocess.run(["powershell", "-Command", powershell_script])
+
+#------------------------------------------------------------------------------
+# TkEasyGUI original dialogs
+
 def popup_color(title: str="", default_color: str|None=None) -> (str|None):
     """Popup a color selection dialog. Return the color selected."""
     col = colorchooser.askcolor(title=title, color=default_color)
@@ -193,9 +244,30 @@ def popup_color(title: str="", default_color: str|None=None) -> (str|None):
         return default_color
     return f"{col[1]}".upper()
 
-def popup_notify(message: str, title: str="Notification") -> None:
-    """Popup a information"""
-    show_message(message, title)
+def popup_listbox(items: list[str], message: str = "", title: str = "", size: tuple[int,int]=(20, 7), font: tuple[str, int]|None=None, multiple:bool = False) -> str|None:
+    """Display Listbox in a popup window"""
+    select_mode = eg.LISTBOX_SELECT_MODE_BROWSE if multiple is False else eg.LISTBOX_SELECT_MODE_MULTIPLE
+    win = eg.Window(title, layout=[
+        [eg.Text(message)],
+        [eg.Listbox(values=items, key="-list-", size=size, font=font, select_mode=select_mode)],
+        [eg.Button("OK", width=9), eg.Button("Cancel", width=5)]
+    ], modal=True)
+    result = None
+    while win.is_alive():
+        event, _ = win.read()
+        if event == "Cancel":
+            result = None
+            break
+        if event == "OK":
+            selected = win["-list-"].get()
+            if multiple:
+                result = selected
+            else:
+                if len(selected) == 1:
+                    result = selected[0]
+            break
+    win.close()
+    return result
 
 #------------------------------------------------------------------------------
 # TKinter
@@ -223,3 +295,15 @@ def msgbox(message: str, title: str="Message") -> None:
     """show message in a popup window like VB"""
     messagebox.showinfo(title, message)
 
+#------------------------------------------------------------------------------
+# utility
+def get_platform() -> str:
+    """get platform"""
+    return platform.system()
+
+def is_mac() -> bool:
+    """platform : is mac?"""
+    return get_platform() == "Darwin"
+def is_win() -> bool:
+    """platform : is Windows?"""
+    return get_platform() == "Windows"

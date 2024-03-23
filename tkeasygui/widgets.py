@@ -30,11 +30,12 @@ TABLE_SELECT_MODE_BROWSE: str = tk.BROWSE
 TABLE_SELECT_MODE_EXTENDED: str = tk.EXTENDED
 
 # type
+WindowType: TypeAlias = "Window"
+ElementType: TypeAlias = "Element"
 TextAlign: TypeAlias = Literal["left", "right", "center"]
 TextVAlign: TypeAlias = Literal["top", "bottom", "center"]
 FontType: TypeAlias = tuple[str, int] | tuple[str, int, str]
 PointType: TypeAlias = tuple[int, int] | tuple[float, float]
-ElementType: TypeAlias = "Element"
 EventMode: TypeAlias = Literal["user", "system"]
 OrientationType: TypeAlias = Literal["v", "h", "vertical", "horizontal"]
 ListboxSelectMode: TypeAlias = Literal["multiple", "browse", "extended", "single"]
@@ -60,20 +61,22 @@ def get_root_window() -> tk.Tk:
     return _root_window
 
 # active window
-_window_list: list["Window"] = []
+_window_list: list[WindowType] = []
 def _get_active_window() -> tk.Toplevel|None:
     """Get the active window."""
     if len(_window_list) == 0:
         return None
     return _window_list[-1].window
 
-def _window_push(win: "Window") -> None:
+def _window_push(win: WindowType) -> None:
     """Push a window to the list."""
     _window_list.append(win)
 
-def _window_pop() -> None:
+def _window_pop(win: WindowType) -> None:
     """Pop a window from the list."""
-    _window_list.pop()
+    i = _window_list.index(win)
+    if i >= 0:
+        _window_list.pop()
 
 class Window:
     """
@@ -126,7 +129,8 @@ class Window:
             if isinstance(self.window, tk.Tk):
                 self.window.eval('tk::PlaceWindow . center')
         # push window
-        _window_push(self)
+        if not modal:
+            _window_push(self)
     
     def register_event_hooks(self, hooks: dict[str, list[callable]]) -> None:
         """
@@ -311,10 +315,10 @@ class Window:
         """Close the window."""
         global active_window
         try:
-            _window_pop()
             self.flag_alive = False
             self.window.quit()
             self.window.destroy()
+            _window_pop(self)
         except Exception as _:
             pass
 
