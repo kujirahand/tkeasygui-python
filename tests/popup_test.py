@@ -31,13 +31,14 @@ print(sg.popup_get_file("[12] popup_get_file"))
 print(sg.popup_get_folder("[13] popup_get_folder"))
 # Multi-line input box
 print(sg.popup_scrolled("[14] popup_scrolled"))
+# Return a calendar
+print(sg.popup_get_date("[15] popup_get_date"))
+
 # --- Below are TkEasyGUI only functionalities ---
 # Color selection dialog
-print(sg.popup_color("[15] popup_color"))
+print(sg.popup_color("[30] popup_color"))
 # Dialog with custom buttons
-print(sg.popup_buttons("[16] popup_buttons", buttons=["Apple", "Banana", "Orange"]))
-# Return a calendar
-print(sg.popup_get_date("[17] popup_get_date"))
+print(sg.popup_buttons("[31] popup_buttons", buttons=["Apple", "Banana", "Orange"]))
 
 """
 # メッセージをダイアログに表示する
@@ -70,11 +71,12 @@ print(sg.popup_get_file("[12] popup_get_file"))
 print(sg.popup_get_folder("[13] popup_get_folder"))
 # 複数行入力ボックス
 print(sg.popup_scrolled("[14] popup_scrolled"))
+# カレンダーを返す
+print(sg.popup_get_date("[15] popup_get_date"))
+
 # --- 以下はTkEasyGUIのみの機能 ---
 # 色選択ダイアログ
-print(sg.popup_color("[15] popup_color"))
+print(sg.popup_color("[30] popup_color"))
 # 任意のボタンを持つダイアログ
-print(sg.popup_buttons("[16] popup_buttons", buttons=["Apple","Banana","Orange"]))
-# カレンダーを返す
-print(sg.popup_get_date("[17] popup_get_date"))
+print(sg.popup_buttons("[31] popup_buttons", buttons=["Apple","Banana","Orange"]))
 """

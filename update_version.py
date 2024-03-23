@@ -1,3 +1,4 @@
+#!/usr/bin/env python
 # pyprojet.tomlを見てパッケージのバージョンを更新する
 # 使い方: python update_version.py
 

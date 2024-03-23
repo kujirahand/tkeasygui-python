@@ -34,6 +34,36 @@ Display a message in a popup window with Yes and No buttons. Return True or Fals
 
 ------
 
+### get_platform
+
+```python
+def get_platform() -> str
+```
+
+get platform
+
+------
+
+### is_mac
+
+```python
+def is_mac() -> bool
+```
+
+platform : is mac?
+
+------
+
+### is_win
+
+```python
+def is_win() -> bool
+```
+
+platform : is Windows?
+
+------
+
 ### msgbox
 
 ```python
@@ -47,7 +77,7 @@ show message in a popup window like VB
 ### popup
 
 ```python
-def popup(message: str, title: str = "") -> None
+def popup(message: str, title: str = "") -> str
 ```
 
 Display a message in a popup window.
@@ -59,10 +89,21 @@ eg.popup("I like an apple.", "Information")
 
 ------
 
+### popup_auto_close
+
+```python
+def popup_auto_close(message: str, title: str="", auto_close_duration: int = 3, buttons: list[str] = ["OK", "Cancel"], timeout_key="-TIMEOUT-") -> str
+```
+
+Display a message in a popup window that closes automatically after a specified time.
+
+------
+
 ### popup_buttons
 
 ```python
-def popup_buttons(message: str, title: str = "Question", buttons: list[str] = ["OK", "Cancel"]) -> str
+def popup_buttons(message: str, title: str = "Question", buttons: list[str] = ["OK", "Cancel"], 
+    auto_close_duration: int = -1, timeout_key: str="-TIMEOUT-", non_blocking: bool = False) -> str
 ```
 
 Popup window with user defined buttons. Return button's label.
@@ -75,6 +116,16 @@ color = eg.popup_buttons(
     buttons=["red","yellow","green"])
 print(color)
 ```
+
+------
+
+### popup_cancel
+
+```python
+def popup_cancel(message: str, title: str="") -> str
+```
+
+Display a message in a popup window with OK and Cancel buttons. Return "OK" or "Cancel".
 
 ------
 
@@ -95,6 +146,16 @@ def popup_error(message: str, title: str="Error") -> None
 ```
 
 Display a message in a popup window with an error icon.
+
+------
+
+### popup_get_date
+
+```python
+def popup_get_date(message: str = "", title: str = "", current_date:datetime|None=None, font: tuple[str, int]|None=None) -> datetime|None
+```
+
+Display a calendar in a popup window. Return the datetime entered or None.
 
 ------
 
@@ -121,7 +182,7 @@ Popup a folder selection dialog. Return the folder selected.
 ### popup_get_text
 
 ```python
-def popup_get_text(message: str, title: str = "", default: str = "") -> (str|None)
+def popup_get_text(message: str, title: str = "", default: str = "", font: tuple[Any]|None=None) -> (str|None)
 ```
 
 Display a message in a popup window with a text entry. Return the text entered.
@@ -141,7 +202,7 @@ Display a message in a popup window with an warning icon.
 ### popup_input
 
 ```python
-def popup_input(message: str, title: str = "", default: str = "") -> (str|None)
+def popup_input(message: str, title: str = "", default: str = "", font: tuple[Any]|None=None) -> (str|None)
 ```
 
 Display a message in a popup window with a text entry. Return the text entered.
@@ -158,10 +219,38 @@ Display Listbox in a popup window
 
 ------
 
+### popup_no_buttons
+
+```python
+def popup_no_buttons(message: str, title: str="") -> None
+```
+
+------
+
+### popup_no_wait
+
+```python
+def popup_no_wait(message: str, title: str="", **kw) -> str
+```
+
+Display a message in a popup window without waiting.
+
+------
+
+### popup_non_blocking
+
+```python
+def popup_non_blocking(message: str, title: str="", auto_close_duration: int = -1) -> str
+```
+
+(TODO) Display a non blocking window
+
+------
+
 ### popup_notify
 
 ```python
-def popup_notify(message: str, title: str="Notification") -> None
+def popup_notify(message: str, title: str="") -> None
 ```
 
 Popup a information
@@ -171,10 +260,20 @@ Popup a information
 ### popup_ok
 
 ```python
-def popup_ok(message: str, title: str="") -> None
+def popup_ok(message: str, title: str="") -> str
 ```
 
 Display a message in a popup window.(Alias popup)
+
+------
+
+### popup_ok_cancel
+
+```python
+def popup_ok_cancel(message: str, title: str="") -> str
+```
+
+Display a message in a popup window with OK and Cancel buttons. Return "OK" or "Cancel".
 
 ------
 
@@ -227,6 +326,26 @@ def popup_yes_no_cancel(message: str, title: str = "Question") -> str
 ```
 
 Display a message in a popup window with Yes and No buttons. Return "Yes" or "No" or "Cancel".
+
+------
+
+### send_notification_mac
+
+```python
+def send_notification_mac(message: str, title: str="")
+```
+
+"Send Notification on mac
+
+------
+
+### send_notification_win
+
+```python
+def send_notification_win(message: str, title: str="")
+```
+
+"Send Notification on win
 
 ------
 
