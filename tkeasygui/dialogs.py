@@ -1,9 +1,9 @@
 """
 TkEasyGUI dialogs
 """
-import os
 import platform
 import subprocess
+from datetime import datetime, timedelta
 from typing import Any, Literal, TypeAlias
 
 import tkinter.filedialog as filedialog
@@ -194,6 +194,97 @@ def popup_scrolled(message: str, title: str = "", size: tuple[int,int]=[40, 5], 
         if event == "Cancel":
             break
     win.close()
+    return result
+
+def popup_get_date(message: str = "", title: str = "", current_date:datetime|None=None, font: tuple[str, int]|None=None) -> datetime|None:
+    """Display a calendar in a popup window. Return the datetime entered or None."""
+    if current_date is None:
+        current_date = datetime.now()
+    # week names
+    week_names = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"]
+    week_colors = [None, None, None, None, None, "blue", "red"]
+    # set
+    result = None
+    first_date = datetime(year=current_date.year, month=current_date.month, day=1)
+    layout = []
+    # header
+    if message != "":
+        layout.append([eg.Text(message)])
+        layout.append([eg.HSeparator()])
+    # select month
+    month_button = [
+        eg.Button("←", key="-prev-"),
+        eg.Button(f"{current_date.year:04} / {current_date.month:02}", key="-ym-"),
+        eg.Button("→", key="-next-")
+    ]
+    layout.append(month_button)
+    week_buttons = [
+        eg.Button(name, size=[2,1], disabled=True, text_color=week_colors[i])
+        for i, name in enumerate(week_names)]
+    layout.append(week_buttons)
+    # Return day of the week, where Monday == 0 ... Sunday == 6.
+    week_i:int = current_date.weekday()
+    top_date = first_date
+    if week_i >= 1:
+        top_date = first_date - timedelta(days=week_i)
+    cols = []
+    cur = top_date
+    for i in range(35):
+        cols.append(eg.Button(
+            cur.day, size=[2,1], key=f"-b{i}-",
+            text_color=week_colors[i%7],
+            disabled=(current_date.month != cur.month)))
+        if i % 7 == 6:
+            layout.append(cols)
+            cols = []
+        cur = cur + timedelta(days=1)
+    layout.append([eg.HSeparator()])
+    layout.append([
+        eg.Text(f"{current_date.year}-{current_date.month}-{current_date.day}", key="-result-"), 
+        eg.Text("|"),
+        eg.Button("OK"), eg.Button("Cancel")])
+    # update label
+    def update_date(top: datetime):
+        cur = top
+        for i in range(35):
+            btn = window[f"-b{i}-"]
+            btn.update(cur.day, disabled=(current_date.month != cur.month))
+            cur = cur + timedelta(days=1)
+        window["-ym-"].update(f"{top.year:04}/{top.month:02}")
+        update_result(top)
+    # update result
+    def update_result(current_date):
+        window["-result-"].update(f"{current_date.year:04}-{current_date.month:02}-{current_date.day:02}")
+    # calendar window
+    window = eg.Window(title, layout, font=font, modal=True)
+    result = None
+    while window.is_alive():
+        event, _ = window.read()
+        if event == "OK":
+            result = current_date
+            break
+        elif event == "Cancel":
+            result = None
+            break
+        elif event == "-prev-":
+            y, m = current_date.year, current_date.month - 1
+            if m == 0:
+                y -= 1
+                m = 12
+            current_date = datetime(year=y, month=m, day=1)
+            update_date(datetime(year=current_date.year, month=current_date.month, day=1))
+        elif event == "-next-":
+            y, m = current_date.year, current_date.month + 1
+            if m == 13:
+                y += 1
+                m = 1
+            current_date = datetime(year=y, month=m, day=1)
+            update_date(datetime(year=current_date.year, month=current_date.month, day=1))
+        elif event.startswith("-b"):
+            elm:eg.Button = window[event]
+            current_date = datetime(year=current_date.year, month=current_date.month, day=int(elm.get_text()))
+            update_result(current_date)
+    window.close()
     return result
 
 #------------------------------------------------------------------------------
