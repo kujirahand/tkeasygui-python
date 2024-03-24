@@ -255,8 +255,9 @@ def popup_get_date(message: str = "", title: str = "", current_date:datetime|Non
             btn: eg.Button = window[f"-b{i}-"]
             # selected
             selected = current_date.month == cur.month and current_date.day == cur.day
-            fg = "green" if selected else week_colors[i%7]
-            bg = "blue" if selected else "white"
+            # todo: change color?
+            # fg = "green" if selected else week_colors[i%7]
+            # bg = "blue" if selected else "white"
             # update
             btn.set_text(cur.day if not selected else f"*{cur.day}*")
             btn.set_disabled(current_date.month != cur.month)
