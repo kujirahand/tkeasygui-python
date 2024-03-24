@@ -9,6 +9,10 @@ This project adopts the lenient MIT license. This license will not change in the
 
 - [👉日本語のREADME](https://github.com/kujirahand/tkeasygui-python/blob/main/README-ja.md)
 
+## Platform
+
+- Windows / macOS / Linux (tkinter required)
+
 ## Install
 
 Install from pypi
