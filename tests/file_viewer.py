@@ -1,5 +1,4 @@
 import os
-import glob
 import subprocess
 from threading import Thread
 

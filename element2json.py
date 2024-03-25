@@ -3,8 +3,9 @@
 Test all elements of tkeasygui
 """
 import json
-import re
 import os
+import re
+
 TEST_FILENAME="elements_test.py"
 def read_file() -> str:
     with open("tkeasygui/widgets.py", "r", encoding="utf-8") as f:
@@ -21,8 +22,8 @@ def read_file() -> str:
             elements.append(klass)
     # print(elements)
     elements2 = []
-    pat_elements = "|".join(elements)
-    pat_re = f"^class ([a-zA-Z]+)\({pat_elements}\)"
+    # pat_elements = "|".join(elements)
+    # pat_re = f"^class ([a-zA-Z]+)\({pat_elements}\)"
     lines = lines_org.copy()
     # print("***", pat_re)
     while len(lines) > 0:
@@ -52,7 +53,7 @@ def read_file() -> str:
         if "def __init__" not in line:
             continue
         # print("==", class_name, "=>")
-        r = re.match(f"def __init__\((.+)", line)
+        r = re.match("def __init__\((.+)", line)
         if r:
             # args
             args = r.group(1)

@@ -3,13 +3,11 @@ TkEasyGUI dialogs
 """
 import platform
 import subprocess
-from datetime import datetime, timedelta
-from typing import Any, Literal, TypeAlias
-
 import tkinter.filedialog as filedialog
 import tkinter.messagebox as messagebox
-import tkinter.simpledialog as simpledialog
+from datetime import datetime, timedelta
 from tkinter import colorchooser
+from typing import Any
 
 import TkEasyGUI as eg
 
@@ -205,7 +203,6 @@ def popup_get_date(message: str = "", title: str = "", current_date:datetime|Non
     week_colors = [None, None, None, None, None, "blue", "red"]
     # set
     result = None
-    first_date = datetime(year=current_date.year, month=current_date.month, day=1)
     layout = []
     # header
     if message != "":

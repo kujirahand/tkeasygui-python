@@ -151,7 +151,7 @@ class Window:
         """
         for event_name, handle_list in hooks.items():
             for handle in handle_list:
-                if not (event_name in self._event_hooks):
+                if event_name not in self._event_hooks:
                     self._event_hooks[event_name] = []
                 self._event_hooks[event_name].append(handle)
     
