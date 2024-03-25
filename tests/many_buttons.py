@@ -1,4 +1,4 @@
-import tkeasygui as sg
+import TkEasyGUI as sg
 
 # make 10 buttons
 layout = [[]]

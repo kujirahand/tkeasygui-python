@@ -1,4 +1,4 @@
-import tkeasygui as eg
+import TkEasyGUI as eg
 
 # import PySimpleGUI as eg
 

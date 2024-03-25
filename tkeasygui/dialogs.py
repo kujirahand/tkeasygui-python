@@ -11,7 +11,7 @@ import tkinter.messagebox as messagebox
 import tkinter.simpledialog as simpledialog
 from tkinter import colorchooser
 
-import tkeasygui as eg
+import TkEasyGUI as eg
 
 #------------------------------------------------------------------------------
 # Dialogs

@@ -1,4 +1,4 @@
-import tkeasygui as sg
+import TkEasyGUI as sg
 
 data = [
     ["名前", "年齢", "住所"],

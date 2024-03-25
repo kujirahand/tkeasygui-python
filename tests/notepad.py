@@ -1,6 +1,6 @@
 import os
 
-import tkeasygui as eg
+import TkEasyGUI as eg
 
 # set path
 SCRIPT_DIR = os.path.dirname(__file__)

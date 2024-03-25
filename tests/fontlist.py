@@ -1,7 +1,7 @@
 import tkinter as tk
 import tkinter.font as font
 
-import tkeasygui as sg
+import TkEasyGUI as sg
 
 # list fonts
 tk = tk.Tk()

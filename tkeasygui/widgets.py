@@ -13,7 +13,7 @@ from typing import Any, Literal, TypeAlias
 from PIL import Image as PILImage
 from PIL import ImageTk
 
-import tkeasygui as eg
+import TkEasyGUI as eg
 
 #------------------------------------------------------------------------------
 # Const

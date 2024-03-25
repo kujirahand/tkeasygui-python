@@ -1,5 +1,5 @@
 # import PySimpleGUI as sg
-import tkeasygui as sg
+import TkEasyGUI as sg
 
 # canvas
 canvas = sg.Canvas(size=(400, 400), key="-canvas-", background_color="red")

@@ -1,4 +1,4 @@
-import tkeasygui as sg
+import TkEasyGUI as sg
 
 # Create window
 layout = [[sg.Text(

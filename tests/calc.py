@@ -1,7 +1,7 @@
 """
 Calc sample
 """
-import tkeasygui as sg
+import TkEasyGUI as sg
 
 # define the calculator buttons
 calc_buttons = [

@@ -1,6 +1,6 @@
 from PIL import Image
 
-import tkeasygui as sg
+import TkEasyGUI as sg
 
 
 def main():

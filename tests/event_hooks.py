@@ -1,4 +1,4 @@
-import tkeasygui as eg
+import TkEasyGUI as eg
 
 window = eg.Window("Event Hook Test", layout=[
     [eg.Text("Please Push OK Button, and see console log.")],

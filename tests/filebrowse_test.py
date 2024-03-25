@@ -2,7 +2,7 @@
 FileBrowse test
 """
 # import PySimpleGUI as sg
-import tkeasygui as sg
+import TkEasyGUI as sg
 
 # window create
 window = sg.Window("FileBrowser test", layout=[

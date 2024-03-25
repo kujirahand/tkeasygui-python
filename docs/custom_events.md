@@ -68,7 +68,7 @@ You can hook an event before a system event occurs.
 This mechanism is utilized within elements like `FileBrowse`.
 
 ```py
-import tkeasygui as eg
+import TkEasyGUI as eg
 
 window = eg.Window("Event Hook Test", layout=[
     [eg.Button("OK")],

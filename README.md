@@ -34,7 +34,7 @@ python -m pip install git+https://github.com/kujirahand/tkeasygui-python
 To create a simple window with only labels and buttons, you would write as follows:
 
 ```py
-import tkeasygui as eg
+import TkEasyGUI as eg
 
 # Create window
 layout = [

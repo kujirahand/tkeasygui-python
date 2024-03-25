@@ -32,7 +32,7 @@ python -m pip install git+https://github.com/kujirahand/tkeasygui-python
 ラベルとボタンのみを持つシンプルなウィンドウを作成するには、以下のように記述します。
 
 ```py
-import tkeasygui as eg
+import TkEasyGUI as eg
 
 # ウィンドウの作成
 layout = [

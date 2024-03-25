@@ -4,7 +4,7 @@ import subprocess
 from threading import Thread
 
 # import PySimpleGUI as sg
-import tkeasygui as sg
+import TkEasyGUI as sg
 
 # set path
 ROOT_DIR = os.path.dirname(os.path.abspath(__file__))

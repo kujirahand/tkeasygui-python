@@ -1,6 +1,6 @@
 from PIL import Image
 
-import tkeasygui as sg
+import TkEasyGUI as sg
 
 # load background image
 back_image = Image.open("b.jpg").resize((400, 400))

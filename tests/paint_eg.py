@@ -2,7 +2,7 @@
 Paint tool for TkEasyGUI
 Using original event model
 """
-import tkeasygui as sg
+import TkEasyGUI as sg
 
 # canvas
 canvas = sg.Canvas(
