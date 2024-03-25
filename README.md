@@ -29,6 +29,11 @@ Install from GitHub Repository
 python -m pip install git+https://github.com/kujirahand/tkeasygui-python
 ```
 
+### memo
+
+- version.0.2.24 : changed package name `tkeasygui` to `TkEasyGUI`
+
+
 ## How to use
 
 To create a simple window with only labels and buttons, you would write as follows:
