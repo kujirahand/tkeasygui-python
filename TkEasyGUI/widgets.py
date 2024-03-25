@@ -43,6 +43,13 @@ ListboxSelectMode: TypeAlias = Literal["multiple", "browse", "extended", "single
 # https://kuroro.blog/python/YcZ6Yh4PswqUzaQXwnG2/
 
 #------------------------------------------------------------------------------
+# theme
+_tkeasygui_info: dict[str, Any] = {}
+def theme(name: str) -> None:
+    """Set theme"""
+    _tkeasygui_info["theme"] = name
+
+#------------------------------------------------------------------------------
 # Widget wrapper
 #------------------------------------------------------------------------------
 class TkEasyError(Exception):
@@ -60,6 +67,14 @@ def get_root_window() -> tk.Tk:
         _root_window.eval('tk::PlaceWindow . center')
         _root_window.attributes('-alpha', 0)
         _root_window.withdraw()
+        # set theme
+        try:
+            if "theme" in _tkeasygui_info:
+                name = _tkeasygui_info["theme"]
+                ttk.Style().theme_use(name)
+        except Exception as e:
+            print(f"TkEasyGUI.theme: failed to set theme {name} {e}", file=sys.stderr)
+            pass
     return _root_window
 
 # active window
@@ -103,6 +118,7 @@ class Window:
         self.layout: list[list[ElementType]] = layout
         self._event_hooks: dict[str, list[callable]] = {}
         self.font: FontType|None = font
+        self.radio_group_dict: dict[str, list[tk.IntVar, int]] = {}
         # Frame
         self.frame: ttk.Frame = ttk.Frame(self.window, padding=10)
         # set window properties
@@ -753,12 +769,16 @@ class Button(Element):
             return self.get_text()
         return super().__getattr__(name)
 
+class Submit(Button):
+    """Subtmi element. (Alias of Button) : todo: add submit event"""
+    pass
+
 class Checkbox(Element):
-    """Button element."""
+    """Checkbox element."""
     def __init__(self, text: str="", default: bool=False, key: str="", enable_events: bool=False, **kw) -> None:
         if key == "":
             key = text
-        super().__init__("Button", key, **kw)
+        super().__init__("Checkbox", key, **kw)
         self.has_value = True
         self.default_value = default
         self.props["text"] = text
@@ -801,6 +821,66 @@ class Checkbox(Element):
         if "value" in kw:
             print("set_value", kw)
             self.set_value(kw.pop("value"))
+        self.widget_update(**kw)
+
+class Radio(Element):
+    """Checkbox element."""
+    def __init__(self, text: str="", group_id: int|str="group", default: bool=False, key: str="", enable_events: bool=False, **kw) -> None:
+        if key == "":
+            key = text
+        super().__init__("Radio", key, **kw)
+        self.has_value = True
+        self.default_value = default
+        self.value: int = 0
+        self.props["text"] = text
+        self.group_id: str = str(group_id)
+        if enable_events:
+            self.bind_events({
+                "<Button-3>": "right_click"
+            }, "system")
+
+    def create(self, win: Window, parent: tk.Widget) -> tk.Widget:
+        # create radio group
+        if self.group_id not in win.radio_group_dict:
+            win.radio_group_dict[self.group_id] = [tk.IntVar(value=0), 1]
+            win.radio_group_dict[self.group_id][0].trace_add("write", lambda *args: self.disptach_event({"event_type": "change", "event": args}))
+        else:
+            win.radio_group_dict[self.group_id][1] += 1
+        self.value = win.radio_group_dict[self.group_id][1]
+        # create radiobutton
+        self.widget = tk.Radiobutton(parent, value=self.value, variable=win.radio_group_dict[self.group_id][0], **self.props)
+        if self.default_value:
+            self.select()
+        return self.widget
+    
+    def select(self) -> None:
+        """Select the radio button."""
+        self.window.radio_group_dict[self.group_id][0].set(self.value)
+        if self.widget is not None:
+            w: tk.Radiobutton = self.widget
+            w.flash()
+    
+    def is_selected(self) -> bool:
+        """Check if the radio button is selected."""
+        return self.window.radio_group_dict[self.group_id][0].get() == self.value
+
+    def get_value(self) -> bool:
+        """Get the value of the widget."""
+        return self.value
+
+    def get(self) -> Any:
+        """Get the value of the widget."""
+        return self.is_selected()
+
+    def set_text(self, text: str) -> None:
+        """Set the text of the widget."""
+        self.props["text"] = text
+        self.widget_update(text=text)
+
+    def update(self, text: str|None=None, **kw) -> None:
+        """Update the widget."""
+        if text is not None:
+            self.set_text(text)
         self.widget_update(**kw)
 
 class Input(Element):
@@ -1008,6 +1088,10 @@ class Multiline(Element):
 
 class Textarea(Multiline):
     """Textarea element. (alias of Multiline)"""
+    pass
+
+class Output(Multiline):
+    """Output element. (alias of Multiline) TODO: implement"""
     pass
 
 class Slider(Element):
