@@ -10,7 +10,7 @@ echo "--- makedoc.sh ---"
 # clean
 rm -f -r dist
 rm -f -r tkeasygui.egg-info
-python3 -m pip uninstall -y tkeasygui
+python3 -m pip uninstall -y TkEasyGUI
 
 # change version from pyproject.toml
 python3 update_version.py
@@ -24,7 +24,7 @@ python3 -m twine upload --repository testpypi dist/* --verbose
 echo "--- wait a moment ---"
 
 echo "--- install test repo ---"
-echo "[TRY]: python3 -m pip install -U --index-url https://test.pypi.org/simple/ --no-deps tkeasygui"
+echo "[TRY]: python3 -m pip install -U --index-url https://test.pypi.org/simple/ --no-deps TkEasyGUI"
 echo "** check version **"
 
 echo "--- upload pypi ---"

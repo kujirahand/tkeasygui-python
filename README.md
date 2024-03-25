@@ -19,7 +19,7 @@ Install from pypi
 
 
 ```sh
-python -m pip install tkeasygui
+python -m pip install TkEasyGUI
 ```
 
 Install from GitHub Repository

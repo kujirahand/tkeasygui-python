@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "TkEasyGUI"
-version = "0.2.22"
+version = "0.2.23"
 dependencies = [
   "Pillow",
 ]
@@ -15,7 +15,7 @@ authors = [
 maintainers = [
  { name="kujirahand", email="web@kujirahand.com" },
 ]
-description = "TkEasyGUI is Easy and Simple GUI Library"
+description = "TkEasyGUI is simple GUI Library for Python3 with Tkinter"
 readme = "README.md"
 license = {file = "LICENSE"}
 keywords = ["GUI", "Tkinter", "PySimpleGUI"]
