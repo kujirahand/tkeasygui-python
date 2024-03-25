@@ -29,8 +29,7 @@ python -m pip install git+https://github.com/kujirahand/tkeasygui-python
 
 ### メモ - v0.2.24
 
-- バージョン0.2.24から、パッケージ名も`tkeasygui`から`TkEasyGUI`と修正しました。もし以前のバージョンを使っていて、うまくパッケージがインポートできないときは、古いパッケージ名で`import tkeasygui as eg; print(eg.__file__)`を実行してパッケージパスを調べて、古いパッケージ名を削除した上で改めて、上記のインストールコマンドを実行してください。
-
+- バージョン0.2.24から、パッケージ名も`tkeasygui`から`TkEasyGUI`と修正しました。もし以前のバージョンを使ったことがあり、うまくパッケージがインポートできなくなった、古いパッケージ名で`import tkeasygui as eg; print(eg.__file__)`を実行してパッケージパスを調べてください。そして、古いパッケージ名のディレクトリ`tkeasygui`を削除した上で改めて、上記のインストールコマンドを実行してください。
 
 ## 簡単な使い方
 
