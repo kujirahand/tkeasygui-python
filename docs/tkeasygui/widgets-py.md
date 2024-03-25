@@ -1,4 +1,4 @@
-# Module tkeasygui.widgets
+# Module TkEasyGUI.widgets
 
 TkEasyGUI Widgets
 
@@ -128,7 +128,7 @@ Update the widget.
 class Checkbox(self, text: str="", default: bool=False, key: str="", enable_events: bool=False, **kw)
 ```
 
-Button element.
+Checkbox element.
 
 Create an element.
 
@@ -1207,6 +1207,112 @@ Update the widget.
 
 ------
 
+### Output
+
+```python
+class Output(text: str = '', default_text: str | None = None, key: str = '', enable_events: bool = False, enable_key_events: bool = False, enable_focus_events: bool = False, color: str | None = None, background_color: str | None = None, readonly: bool = False, readonly_background_color: str | None = None, size: tuple[int, int] = (50, 10), **kw)
+```
+
+Output element. (alias of Multiline) TODO: implement
+
+------
+
+#### Base classes
+
+* [`Multiline `](#Multiline)
+
+------
+
+### Radio
+
+```python
+class Radio(self, text: str="", group_id: int|str="group", default: bool=False, key: str="", enable_events: bool=False, **kw)
+```
+
+Checkbox element.
+
+Create an element.
+
+------
+
+#### Base classes
+
+* [`Element `](#Element)
+
+------
+
+#### Methods
+
+##### Radio.create
+
+```python
+def create(self, win: Window, parent: tk.Widget) -> tk.Widget
+```
+
+Create a widget.
+
+------
+
+##### Radio.get
+
+```python
+def get(self) -> Any
+```
+
+Get the value of the widget.
+
+------
+
+##### Radio.get_value
+
+```python
+def get_value(self) -> bool
+```
+
+Get the value of the widget.
+
+------
+
+##### Radio.is_selected
+
+```python
+def is_selected(self) -> bool
+```
+
+Check if the radio button is selected.
+
+------
+
+##### Radio.select
+
+```python
+def select(self) -> None
+```
+
+Select the radio button.
+
+------
+
+##### Radio.set_text
+
+```python
+def set_text(self, text: str) -> None
+```
+
+Set the text of the widget.
+
+------
+
+##### Radio.update
+
+```python
+def update(self, text: str|None=None, **kw) -> None
+```
+
+Update the widget.
+
+------
+
 ### Slider
 
 ```python
@@ -1259,6 +1365,22 @@ def update(self, value: float|None=None, **kw) -> None
 ```
 
 Update the widget.
+
+------
+
+### Submit
+
+```python
+class Submit(button_text: str = '', key: str = '', disabled: bool = None, **kw)
+```
+
+Subtmi element. (Alias of Button) : todo: add submit event
+
+------
+
+#### Base classes
+
+* [`Button `](#Button)
 
 ------
 
@@ -1676,6 +1798,16 @@ Register element key.
 ```python
 def rgb(r: int, g: int, b: int) -> str
 ```
+
+------
+
+### theme
+
+```python
+def theme(name: str) -> None
+```
+
+Set theme
 
 ------
 

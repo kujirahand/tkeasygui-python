@@ -1,11 +1,11 @@
-# Module tkeasygui
+# Module TkEasyGUI
 
 TkEasyGUI - A simple GUI library for Python using tkinter.
 
 ## Submodules
 
-[tkeasygui.dialogs](dialogs-py.md)
+[TkEasyGUI.dialogs](dialogs-py.md)
 
-[tkeasygui.version](version-py.md)
+[TkEasyGUI.version](version-py.md)
 
-[tkeasygui.widgets](widgets-py.md)
+[TkEasyGUI.widgets](widgets-py.md)

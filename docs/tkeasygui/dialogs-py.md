@@ -1,4 +1,4 @@
-# Module tkeasygui.dialogs
+# Module TkEasyGUI.dialogs
 
 TkEasyGUI dialogs
 
