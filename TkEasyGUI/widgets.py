@@ -57,7 +57,9 @@ def get_root_window() -> tk.Tk:
     global _root_window
     if _root_window is None:
         _root_window = tk.Tk()
+        _root_window.eval('tk::PlaceWindow . center')
         _root_window.attributes('-alpha', 0)
+        _root_window.withdraw()
     return _root_window
 
 # active window

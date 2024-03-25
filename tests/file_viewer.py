@@ -1,5 +1,7 @@
+#!/usr/bin/env python
 import os
 import subprocess
+import sys
 from threading import Thread
 
 # import PySimpleGUI as sg
@@ -17,7 +19,7 @@ def get_program_files():
     return files
 
 def run_program(filename):
-    subprocess.run(["python", filename])
+    subprocess.run([sys.executable, filename])
 
 layout = [
     [sg.Text("TkEasyGUI samples:")],

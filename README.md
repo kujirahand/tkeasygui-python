@@ -31,8 +31,7 @@ python -m pip install git+https://github.com/kujirahand/tkeasygui-python
 
 ### memo
 
-- version.0.2.24 : changed package name `tkeasygui` to `TkEasyGUI`
-
+- version.0.2.24 : changed package name `tkeasygui` to `TkEasyGUI`. If you are using an older version and are unable to import packages successfully, please execute `import tkeasygui as eg; print(eg.__file__)` using the old package name to check the package path. Then, after deleting the old package name, re-execute the installation command mentioned above.
 
 ## How to use
 
