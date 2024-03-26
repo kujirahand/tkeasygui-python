@@ -37,7 +37,7 @@ python -m pip install git+https://github.com/kujirahand/tkeasygui-python
    - Please run the command below to completely remove the old `tkeasygui` package.
    - Start the `python` command or `IDLE` and execute the following command.
 
-```py
+```py:remove_old_package.py
 # remove old package
 import os, shutil, PIL
 packages = os.path.dirname(PIL.__path__[0])

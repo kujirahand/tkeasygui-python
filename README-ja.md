@@ -34,7 +34,7 @@ python -m pip install git+https://github.com/kujirahand/tkeasygui-python
   - うまくパッケージがインポートできなくなった場合、下記のコマンドを実行して、古い`tkeasygui`パッケージを完全に削除してください。
   - `python`コマンドや`IDLE`などを起動して以下のコマンドを実行してください。
 
-```py:remove_old_package
+```py:remove_old_package.py
 # remove old package
 import os, shutil, PIL
 packages = os.path.dirname(PIL.__path__[0])
