@@ -2,6 +2,8 @@
 
 `TkEasyGUI`は、PythonでのGUIアプリケーション開発の敷居を大幅に下げるライブラリです。`Tkinter`のような従来のUIライブラリが持つ複雑さを解消し、より多くの開発者がGUIアプリの開発を楽しめます。本ライブラリは、簡単にGUIを構築できるライブラリ`PySimpleGUI`の概念を引き継ぎつつ、独自の機能を追加しています。
 
+- [👉English](https://github.com/kujirahand/tkeasygui-python/blob/main/README.md)
+
 ## TkEasyGUIの特徴:
 
 - `TkEasyGUI`は、GUIアプリケーションを簡単かつシンプルに作成することができるPythonライブラリです。
@@ -42,7 +44,6 @@ old_package = os.path.join(packages, "tkeasygui")
 print(f"Remove: {old_package}")
 shutil.rmtree(old_package)
 ```
-
 
 ## 簡単な使い方
 
