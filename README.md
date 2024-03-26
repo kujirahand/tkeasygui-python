@@ -31,7 +31,19 @@ python -m pip install git+https://github.com/kujirahand/tkeasygui-python
 
 ### memo
 
-- version.0.2.24 : changed package name `tkeasygui` to `TkEasyGUI`. If you are using an older version and are unable to import packages successfully, please execute `import tkeasygui as eg; print(eg.__file__)` using the old package name to check the package path. Then, after deleting the old package name, re-execute the installation command mentioned above.
+- From version 0.2.24, the package name has also been changed from `tkeasygui` to `TkEasyGUI`.
+   - If you have used a previous version, you will see `ModuleNotFoundError: No module named 'TKEasyGUI'`.
+   - Please run the command below to completely remove the old `tkeasygui` package.
+   - Start the `python` command or `IDLE` and execute the following command.
+
+```py
+# remove old package
+import os, shutil, PIL
+packages = os.path.dirname(PIL.__path__[0])
+old_package = os.path.join(packages, "tkeasygui")
+print(f"Remove: {old_package}")
+shutil.rmtree(old_package)
+```
 
 ## How to use
 
