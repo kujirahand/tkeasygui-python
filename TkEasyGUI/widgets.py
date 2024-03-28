@@ -889,6 +889,7 @@ class Input(Element):
                  enable_events: bool=False, enable_key_events: bool=False, enable_focus_events: bool =False,
                  background_color: str|None=None, color: str|None=None,
                  text_aligh: TextAlign="left",
+                 password_char: str|None=None,
                  readonly: bool=False, readonly_background_color: str="silver", **kw) -> None:
         super().__init__("Input", key, **kw)
         self.readonly: bool = readonly
@@ -901,6 +902,8 @@ class Input(Element):
             self.props["foreground"] = color
         self.props["justify"] = text_aligh
         self.props["readonlybackground"] = readonly_background_color
+        if password_char is not None:
+            self.props["show"] = password_char
         self.has_value = True
         if enable_events:
             self.bind_events({
