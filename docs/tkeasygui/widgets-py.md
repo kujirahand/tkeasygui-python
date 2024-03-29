@@ -964,6 +964,7 @@ class Input(
      enable_events: bool=False, enable_key_events: bool=False, enable_focus_events: bool =False,
      background_color: str|None=None, color: str|None=None,
      text_aligh: TextAlign="left",
+     password_char: str|None=None,
      readonly: bool=False, readonly_background_color: str="silver", **kw)
 ```
 
@@ -1040,7 +1041,7 @@ Update the widget.
 ### InputText
 
 ```python
-class InputText(text: str = '', key: str = '', default_text: str | None = None, enable_events: bool = False, enable_key_events: bool = False, enable_focus_events: bool = False, background_color: str | None = None, color: str | None = None, text_aligh: Literal['left', 'right', 'center'] = 'left', readonly: bool = False, readonly_background_color: str = 'silver', **kw)
+class InputText(text: str = '', key: str = '', default_text: str | None = None, enable_events: bool = False, enable_key_events: bool = False, enable_focus_events: bool = False, background_color: str | None = None, color: str | None = None, text_aligh: Literal['left', 'right', 'center'] = 'left', password_char: str | None = None, readonly: bool = False, readonly_background_color: str = 'silver', **kw)
 ```
 
 InputText element. (alias of Input)
@@ -1654,6 +1655,26 @@ Check if the window is alive.
 
 ------
 
+##### Window.maximize
+
+```python
+def maximize(self) -> None
+```
+
+Maximize the window. (`resizable` should be set to True)
+
+------
+
+##### Window.minimize
+
+```python
+def minimize(self) -> None
+```
+
+Minimize the window.
+
+------
+
 ##### Window.move_to_center
 
 ```python
@@ -1661,6 +1682,16 @@ def move_to_center(self) -> None
 ```
 
 Move the window to the center of the screen.
+
+------
+
+##### Window.normal
+
+```python
+def normal(self) -> None
+```
+
+set normal window.
 
 ------
 
@@ -1707,6 +1738,16 @@ window.register_event_hooks({
 
 ------
 
+##### Window.set_title
+
+```python
+def set_title(self, title: str) -> None
+```
+
+Set the title of the window.
+
+------
+
 ##### Window.show
 
 ```python
@@ -1714,6 +1755,16 @@ def show(self) -> None
 ```
 
 Show hidden window (hide -> show)
+
+------
+
+##### Window.un_hide
+
+```python
+def un_hide(self) -> None
+```
+
+Un hide the window.
 
 ------
 

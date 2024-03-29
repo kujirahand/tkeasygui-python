@@ -1,9 +1,6 @@
 # import PySimpleGUI as sg
 import TkEasyGUI as sg
 
-print(sg.popup_get_date("[1] popup_get_date"))
-quit()
-
 def main():
     while True:
         # select buttons
