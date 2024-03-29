@@ -21,13 +21,14 @@ import TkEasyGUI as eg
 WINDOW_CLOSED: str = "WINDOW_CLOSED"
 WIN_CLOSED: str = "WINDOW_CLOSED"
 WINDOW_TIMEOUT: str = "-TIMEOUT-"
-LISTBOX_SELECT_MODE_MULTIPLE: str = 'multiple'
-LISTBOX_SELECT_MODE_BROWSE: str = 'browse'
-LISTBOX_SELECT_MODE_EXTENDED: str = 'extended'
-LISTBOX_SELECT_MODE_SINGLE: str = 'single'
+LISTBOX_SELECT_MODE_MULTIPLE: str = "multiple"
+LISTBOX_SELECT_MODE_BROWSE: str = "browse"
+LISTBOX_SELECT_MODE_EXTENDED: str = "extended"
+LISTBOX_SELECT_MODE_SINGLE: str = "single"
 TABLE_SELECT_MODE_NONE: str = tk.NONE
 TABLE_SELECT_MODE_BROWSE: str = tk.BROWSE
 TABLE_SELECT_MODE_EXTENDED: str = tk.EXTENDED
+EG_SWAP_EVENT_NAME: str = "--swap_event_name--"
 
 # type
 WindowType: TypeAlias = "Window"
@@ -224,6 +225,9 @@ class Window:
                 # bind event (before create)
                 for event_name, handle_t in elem._bind_dict.items():
                     self.bind(elem, event_name, handle_t[0], handle_t[1], handle_t[2])
+                # menu ?
+                if isinstance(elem, Menu):
+                    continue
                 # pack widget
                 fill_props = elem._get_pack_props()
                 widget.pack(**fill_props)
@@ -349,6 +353,9 @@ class Window:
             values = {}
         for k, v in self.get_values().items():
             values[k] = v
+        # check EG_SWAP_EVENT_NAME
+        if EG_SWAP_EVENT_NAME in values:
+            key = values.pop(EG_SWAP_EVENT_NAME)
         # put event
         self.events.put((key, values))
         _exit_mainloop()
@@ -754,6 +761,77 @@ class Text(Element):
         if text is not None:
             self.set_text(text)
         self.widget_update(**kw)
+
+class Menu(Element):
+    """Text element."""
+    def __init__(self, items:Any|None=None, menu_definition:list[list[str|list[Any]]]|None=None, **kw) -> None:
+        super().__init__("Menu", None, **kw)
+        self.items = menu_definition
+        if items is not None:
+            self.items = items
+    
+    def create(self, win: Window, parent: tk.Widget) -> tk.Widget:
+        """Create a Text widget."""
+        self.widget = tk.Menu(win.window)
+        win.window.config(menu=self.widget)
+        # make items
+        self._create_menu(self.widget, self.items, 0)
+        return self.widget
+    
+    def _add_command(self, parent: tk.Menu, label: str) -> None:
+        parent.add_command(label=label, command=lambda : self.disptach_event({EG_SWAP_EVENT_NAME: label}))
+
+    def _create_menu(self, parent: tk.Menu, items: list[list[str|list[Any]]], level:int = 0) -> None:
+        i = 0
+        while i < len(items):
+            item = items[i]
+            # print(f"{'-' * level}[{i}].{item}")
+            if isinstance(item, int) or isinstance(item, float):
+                item = str(item)
+            if isinstance(item, str):
+                if item == "-" or item == "---":
+                    parent.add_separator()
+                    i += 1
+                    continue
+                # next item
+                next_item = items[i+1] if i+1 < len(items) else None
+                if (next_item is None) or (not isinstance(next_item, list)):
+                    self._add_command(parent, item)
+                    # print(f"{'-' * level} add_command label={item}")
+                    i += 1
+                    continue
+                else: # if isinstance(next_item, list):
+                    # submenu
+                    submenu = tk.Menu(parent, tearoff=False)
+                    parent.add_cascade(label=item, menu=submenu)
+                    self._create_menu(submenu, next_item, level+1)
+                    i += 2
+                    continue
+            if isinstance(item, list):
+                self._create_menu(parent, item, level+1)
+                i += 1
+                continue
+            # others
+            i += 1
+
+    def get(self) -> Any:
+        """Get the value of the widget."""
+        return self.get_text()
+    
+    def get_text(self) -> str:
+        return self.props["text"]
+    
+    def set_text(self, text: str) -> None:
+        """Set the text of the widget."""
+        self.props["text"] = text
+        self.widget_update(text=text)
+
+    def update(self, text: str|None=None, *args, **kw) -> None:
+        """Update the widget."""
+        if text is not None:
+            self.set_text(text)
+        self.widget_update(**kw)
+
 
 class Button(Element):
     """Button element."""
