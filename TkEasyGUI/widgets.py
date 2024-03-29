@@ -119,6 +119,9 @@ class Window:
         self._event_hooks: dict[str, list[callable]] = {}
         self.font: FontType|None = font
         self.radio_group_dict: dict[str, list[tk.IntVar, int]] = {}
+        self.minimized: bool = False
+        self.maximized: bool = False
+        self.is_hidden: bool = False
         # Frame
         self.frame: ttk.Frame = ttk.Frame(self.window, padding=10)
         # set window properties
@@ -284,6 +287,40 @@ class Window:
                     flag_stop = True
                     break
         return flag_stop
+    
+    def set_title(self, title: str) -> None:
+        """Set the title of the window."""
+        self.window.title(title)
+
+    def minimize(self) -> None:
+        """Minimize the window."""
+        self.window.iconify()
+        self.minimized = True
+
+    def normal(self) -> None:
+        """set normal window."""
+        if self.minimized:
+            self.window.deiconify()
+            self.minimized = False
+        if self.maximized:
+            self.window.state("normal")
+            self.maximized = False
+
+    def hide(self) -> None:
+        """Hide the window."""
+        self.window.withdraw()
+        self.is_hidden = True
+
+    def un_hide(self) -> None:
+        """Un hide the window."""
+        if self.is_hidden:
+            self.window.deiconify()
+            self.is_hidden = False
+
+    def maximize(self) -> None:
+        """Maximize the window. (`resizable` should be set to True)"""
+        self.window.state("zoomed")
+        self.maximized = True
 
     def get_values(self) -> dict[str, Any]:
         """Get values from the window."""
@@ -454,8 +491,8 @@ class Element:
         self._bind_dict: dict[str, tuple[str, bool, EventMode]] = {}
         self.user_bind_event: tk.Event|None = None # when bind event fired then set this value
         self.vertical_alignment: TextVAlign = "center"
-        self.padx: int|None = None
-        self.pady: int|None = None
+        self.padx: int|tuple[int,int]|None = 1
+        self.pady: int|tuple[int,int]|None = None
         self.font: FontType|None = None
         self.has_font_prop: bool = True
     
