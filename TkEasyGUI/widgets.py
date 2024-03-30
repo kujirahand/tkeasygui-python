@@ -103,7 +103,7 @@ class Window:
     def __init__(self, title: str, layout: list[list[ElementType]], size: tuple[str, int]|None=None, 
                  resizable:bool=False, font:FontType|None=None, modal: bool=False, 
                  keep_on_top:bool=False, no_titlebar: bool=False, grab_anywhere: bool=False,
-                 **kw) -> None:
+                 alpha_channel: float=1.0, **kw) -> None:
         """Create a window with a layout of widgets."""
         self.modal: bool = modal
         # check active window
@@ -134,6 +134,7 @@ class Window:
         self._start_y: int|None = None
         self._mouse_x: int|None = None
         self._mouse_y: int|None = None
+        self.alpha_channel: float = alpha_channel
         # Frame
         self.frame: ttk.Frame = ttk.Frame(self.window, padding=10)
         # set window properties
@@ -153,6 +154,8 @@ class Window:
             self.hide_titlebar(True)
         if grab_anywhere:
             self.set_grab_anywhere(True)
+        if alpha_channel < 1.0:
+            self.set_alpha_channel(alpha_channel)
         # check modal
         if modal:
             # check position
@@ -342,6 +345,11 @@ class Window:
         """Maximize the window. (`resizable` should be set to True)"""
         self.window.state("zoomed")
         self.maximized = True
+    
+    def set_alpha_channel(self, alpha: float) -> None:
+        """Set the alpha channel of the window."""
+        self.window.attributes("-alpha", alpha)
+        self.alpha_channel = alpha
 
     def get_values(self) -> dict[str, Any]:
         """Get values from the window."""

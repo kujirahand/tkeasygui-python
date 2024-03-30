@@ -7,6 +7,7 @@ window = sg.Window("Keeo on Top", layout=[
     keep_on_top=True,
     no_titlebar=True,
     grab_anywhere=True,
+    alpha_channel=0.7,
 )
 while True:
     event, values = window.read()
