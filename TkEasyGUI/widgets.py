@@ -763,7 +763,20 @@ class Text(Element):
         self.widget_update(**kw)
 
 class Menu(Element):
-    """Text element."""
+    """
+    Menu element.
+    **Example**
+    ```
+    menu = eg.Menu([
+        ["File", ["Open", "Save", "---","Exit"]],
+        ["Edit", ["Copy", "Paste"]],
+    ])
+    ```
+    **Note**
+    - "!label" is disabled
+    - "label::-event_name-" is set event name
+    - "---" is separator
+    """
     def __init__(self, items:Any|None=None, menu_definition:list[list[str|list[Any]]]|None=None, **kw) -> None:
         super().__init__("Menu", None, **kw)
         self.items = menu_definition
@@ -779,7 +792,22 @@ class Menu(Element):
         return self.widget
     
     def _add_command(self, parent: tk.Menu, label: str) -> None:
-        parent.add_command(label=label, command=lambda : self.disptach_event({EG_SWAP_EVENT_NAME: label}))
+        # is separator?
+        if label == "-" or label == "---":
+            parent.add_separator()
+            return
+        # command
+        key = label
+        state = tk.NORMAL
+        if label.startswith("!"):
+            label = label[1:]
+            state = tk.DISABLED
+        if "::" in label:
+            label, key = label.split("::")
+        parent.add_command(
+            label=label, 
+            state=state,
+            command=lambda : self.disptach_event({EG_SWAP_EVENT_NAME: key}))
 
     def _create_menu(self, parent: tk.Menu, items: list[list[str|list[Any]]], level:int = 0) -> None:
         i = 0
@@ -789,11 +817,7 @@ class Menu(Element):
             if isinstance(item, int) or isinstance(item, float):
                 item = str(item)
             if isinstance(item, str):
-                if item == "-" or item == "---":
-                    parent.add_separator()
-                    i += 1
-                    continue
-                # next item
+                # check next item
                 next_item = items[i+1] if i+1 < len(items) else None
                 if (next_item is None) or (not isinstance(next_item, list)):
                     self._add_command(parent, item)
