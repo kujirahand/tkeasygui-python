@@ -4,7 +4,7 @@ import os
 import re
 
 SCRIPT_DIR = os.path.dirname(__file__)
-DOCS_DIR = os.path.join(SCRIPT_DIR, "tkeasygui")
+DOCS_DIR = os.path.join(SCRIPT_DIR, "TkEasyGUI")
 print(DOCS_DIR)
 # 指定のディレクトリ以下のmdファイルを列挙
 files = glob.glob(os.path.join(DOCS_DIR, "*.md"), recursive=True)
