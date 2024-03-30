@@ -1667,7 +1667,7 @@ class Window(
     self, title: str, layout: list[list[ElementType]], size: tuple[str, int]|None=None, 
      resizable:bool=False, font:FontType|None=None, modal: bool=False, 
      keep_on_top:bool=False, no_titlebar: bool=False, grab_anywhere: bool=False,
-     **kw)
+     alpha_channel: float=1.0, **kw)
 ```
 
 Main window object in TkEasyGUI
@@ -1848,6 +1848,16 @@ def send_to_back(self) -> None
 ```
 
 Send the window to the back, and make it not keep on top.
+
+------
+
+##### Window.set_alpha_channel
+
+```python
+def set_alpha_channel(self, alpha: float) -> None
+```
+
+Set the alpha channel of the window.
 
 ------
 
