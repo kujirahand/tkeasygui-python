@@ -451,7 +451,6 @@ class Window:
     def set_grab_anywhere(self, flag: bool) -> None:
         """Set grab anywhere"""
         self._grab_anywhere = flag
-        print("@@set_grab_anywhere", flag)
         if flag:
             self.window.bind("<B1-Motion>", self._move_window)
             self.window.bind("<ButtonPress-1>", self._start_move_window)
@@ -481,8 +480,8 @@ class Window:
         self._start_y = int(loc[2])
         self._mouse_x = self.window.winfo_x() + event.x
         self._mouse_y = self.window.winfo_y() + event.y
-        # print(f"@@@_start_xy={self._start_x}x{self._start_y}")
-        # print(f"@@@_mouse_xy={self._mouse_x}x{self._mouse_y}")
+        # print(f"_start_xy={self._start_x}x{self._start_y}")
+        # print(f"_mouse_xy={self._mouse_x}x{self._mouse_y}")
     
     def _stop_move_window(self, event: tk.Event) -> None:
         """Stop move window"""

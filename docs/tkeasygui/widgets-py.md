@@ -1663,7 +1663,11 @@ Create a widget.
 ### Window
 
 ```python
-class Window(self, title: str, layout: list[list[ElementType]], size: tuple[str, int]|None=None, resizable:bool=False, font:FontType|None=None, modal: bool=False, **kw)
+class Window(
+    self, title: str, layout: list[list[ElementType]], size: tuple[str, int]|None=None, 
+     resizable:bool=False, font:FontType|None=None, modal: bool=False, 
+     keep_on_top:bool=False, no_titlebar: bool=False, grab_anywhere: bool=False,
+     **kw)
 ```
 
 Main window object in TkEasyGUI
@@ -1724,6 +1728,16 @@ Hide window
 
 ------
 
+##### Window.hide_titlebar
+
+```python
+def hide_titlebar(self, flag: bool) -> None
+```
+
+Hide the titlebar.
+
+------
+
 ##### Window.is_alive
 
 ```python
@@ -1731,6 +1745,16 @@ def is_alive(self) -> bool
 ```
 
 Check if the window is alive.
+
+------
+
+##### Window.keep_on_top
+
+```python
+def keep_on_top(self, flag: bool) -> None
+```
+
+Set the window to keep on top.
 
 ------
 
@@ -1814,6 +1838,26 @@ window.register_event_hooks({
 **Note**
 - If you specify a function that returns True, it changes the event name to f"{event}-stopped" and then re-collects the values associated with keys that occur afterwards.
 - **@see** `Window.read`
+
+------
+
+##### Window.send_to_back
+
+```python
+def send_to_back(self) -> None
+```
+
+Send the window to the back, and make it not keep on top.
+
+------
+
+##### Window.set_grab_anywhere
+
+```python
+def set_grab_anywhere(self, flag: bool) -> None
+```
+
+Set grab anywhere
 
 ------
 
