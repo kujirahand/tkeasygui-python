@@ -100,7 +100,10 @@ class Window:
     """
     Main window object in TkEasyGUI
     """
-    def __init__(self, title: str, layout: list[list[ElementType]], size: tuple[str, int]|None=None, resizable:bool=False, font:FontType|None=None, modal: bool=False, **kw) -> None:
+    def __init__(self, title: str, layout: list[list[ElementType]], size: tuple[str, int]|None=None, 
+                 resizable:bool=False, font:FontType|None=None, modal: bool=False, 
+                 keep_on_top:bool=False, no_titlebar: bool=False, grab_anywhere: bool=False,
+                 **kw) -> None:
         """Create a window with a layout of widgets."""
         self.modal: bool = modal
         # check active window
@@ -123,6 +126,14 @@ class Window:
         self.minimized: bool = False
         self.maximized: bool = False
         self.is_hidden: bool = False
+        self._keep_on_top: bool = keep_on_top
+        self._no_titlebar: bool = no_titlebar
+        self._grab_anywhere: bool = grab_anywhere
+        self._grab_flag: bool = False
+        self._start_x: int|None = None
+        self._start_y: int|None = None
+        self._mouse_x: int|None = None
+        self._mouse_y: int|None = None
         # Frame
         self.frame: ttk.Frame = ttk.Frame(self.window, padding=10)
         # set window properties
@@ -136,6 +147,12 @@ class Window:
         # pack frame
         self.frame.pack(expand=True, fill="both")
         self.frame.rowconfigure(0, weight=1)
+        if keep_on_top:
+            self.window.attributes("-topmost", True)
+        if no_titlebar:
+            self.hide_titlebar(True)
+        if grab_anywhere:
+            self.set_grab_anywhere(True)
         # check modal
         if modal:
             # check position
@@ -372,6 +389,22 @@ class Window:
         if self.timeout_id is not None:
             self.window.after_cancel(self.timeout_id)
         self._event_handler(WINDOW_CLOSED, None)
+    
+    def keep_on_top(self, flag: bool) -> None:
+        """Set the window to keep on top."""
+        self.window.attributes("-topmost", flag)
+        self._keep_on_top = flag
+    
+    def send_to_back(self) -> None:
+        """Send the window to the back, and make it not keep on top."""
+        self.window.attributes("-topmost", False)
+        self._keep_on_top = False
+        self.window.lower()
+
+    def hide_titlebar(self, flag: bool) -> None:
+        """Hide the titlebar."""
+        self.window.overrideredirect(flag)
+        self._no_titlebar = not flag
 
     def close(self) -> None:
         """Close the window."""
@@ -414,6 +447,46 @@ class Window:
         except Exception:
             pass
         return self
+
+    def set_grab_anywhere(self, flag: bool) -> None:
+        """Set grab anywhere"""
+        self._grab_anywhere = flag
+        print("@@set_grab_anywhere", flag)
+        if flag:
+            self.window.bind("<B1-Motion>", self._move_window)
+            self.window.bind("<ButtonPress-1>", self._start_move_window)
+            self.window.bind("<ButtonRelease-1>", self._stop_move_window)
+        else:
+            self.window.unbind("<B1-Motion>")
+            self.window.unbind("<ButtonPress-1>")
+            self.window.unbind("<ButtonRelease-1>")
+    
+    def _move_window(self, event: tk.Event) -> None:
+        """Move window"""
+        if (not self._grab_anywhere) or (self._grab_flag == False):
+            return
+        mouse_x = self.window.winfo_x() + event.x
+        mouse_y = self.window.winfo_y() + event.y
+        move_x = mouse_x - self._mouse_x
+        move_y = mouse_y - self._mouse_y
+        win_x = self._start_x + move_x
+        win_y = self._start_y + move_y
+        self.window.geometry(f"+{win_x}+{win_y}")
+
+    def _start_move_window(self, event: tk.Event) -> None:
+        """Start move window"""
+        self._grab_flag = True
+        loc = self.window.geometry().split("+")
+        self._start_x = int(loc[1])
+        self._start_y = int(loc[2])
+        self._mouse_x = self.window.winfo_x() + event.x
+        self._mouse_y = self.window.winfo_y() + event.y
+        # print(f"@@@_start_xy={self._start_x}x{self._start_y}")
+        # print(f"@@@_mouse_xy={self._mouse_x}x{self._mouse_y}")
+    
+    def _stop_move_window(self, event: tk.Event) -> None:
+        """Stop move window"""
+        self._grab_flag = False
     
     def bind(self, element: "Element", event_name: str, handle_name: str, propagate: bool=True, event_mode: EventMode = "user") -> None:
         """[Window.bind] Bind element event and handler"""
