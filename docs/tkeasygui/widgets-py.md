@@ -1114,6 +1114,85 @@ Update the widget.
 
 ------
 
+### Menu
+
+```python
+class Menu(self, items:Any|None=None, menu_definition:list[list[str|list[Any]]]|None=None, **kw)
+```
+
+Menu element.
+**Example**
+```
+menu = eg.Menu([
+    ["File", ["Open", "Save", "---","Exit"]],
+    ["Edit", ["Copy", "Paste"]],
+])
+```
+**Note**
+- "!label" is disabled
+- **"label**: :-event_name-" is set event name
+- "---" is separator
+
+Create an element.
+
+------
+
+#### Base classes
+
+* [`Element `](#Element)
+
+------
+
+#### Methods
+
+##### Menu.create
+
+```python
+def create(self, win: Window, parent: tk.Widget) -> tk.Widget
+```
+
+Create a Text widget.
+
+------
+
+##### Menu.get
+
+```python
+def get(self) -> Any
+```
+
+Get the value of the widget.
+
+------
+
+##### Menu.get_text
+
+```python
+def get_text(self) -> str
+```
+
+------
+
+##### Menu.set_text
+
+```python
+def set_text(self, text: str) -> None
+```
+
+Set the text of the widget.
+
+------
+
+##### Menu.update
+
+```python
+def update(self, text: str|None=None, *args, **kw) -> None
+```
+
+Update the widget.
+
+------
+
 ### Multiline
 
 ```python
