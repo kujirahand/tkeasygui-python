@@ -1224,8 +1224,9 @@ class Multiline(Element):
             tags.append(tag)
         if background_color is not None:
             tag = generate_element_key("--multiline-background_color")
-            self.widget.tag_config("background_color", background=background_color)
+            self.widget.tag_config(tag, background=background_color)
             tags.append(tag)
+        print(tags)
         self.widget.insert("end", text, tags)
 
 class Textarea(Multiline):
