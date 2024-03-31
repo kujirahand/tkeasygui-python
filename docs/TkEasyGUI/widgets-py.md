@@ -361,7 +361,7 @@ Update the widget.
 ### Element
 
 ```python
-class Element(self, element_type: str, key: str|None, **kw)
+class Element(self, element_type: str, tk_type: str, key: str|None, **kw)
 ```
 
 Element class.
@@ -444,6 +444,14 @@ def get_prev_widget(self, target_key: str|None=None) -> tk.Widget
 ```
 
 Get the previous widget.
+
+------
+
+##### Element.get_style_name
+
+```python
+def get_style_name(self) -> str
+```
 
 ------
 
@@ -960,12 +968,20 @@ Update the widget.
 
 ```python
 class Input(
-    self, text: str="", key: str="", default_text: str|None=None,
-     enable_events: bool=False, enable_key_events: bool=False, enable_focus_events: bool =False,
-     background_color: str|None=None, color: str|None=None,
-     text_aligh: TextAlign="left",
-     password_char: str|None=None,
-     readonly: bool=False, readonly_background_color: str="silver", **kw)
+    self,
+    text: str="", # default text
+    key: str="", # key
+    default_text: str|None=None, # same as text
+    enable_events: bool=False,
+    enable_key_events: bool=False, 
+    enable_focus_events: bool =False,
+    text_aligh: TextAlign="left",
+    password_char: str|None=None, # if you want to use it as a password input box, set "*"
+    readonly: bool=False, # read only box
+    color: str|None=None, # text color
+    text_color: str|None=None, # same as color
+    background_color: str|None=None, # background color
+    readonly_background_color: str|None=None)
 ```
 
 Text input element.
@@ -1041,7 +1057,7 @@ Update the widget.
 ### InputText
 
 ```python
-class InputText(text: str = '', key: str = '', default_text: str | None = None, enable_events: bool = False, enable_key_events: bool = False, enable_focus_events: bool = False, background_color: str | None = None, color: str | None = None, text_aligh: Literal['left', 'right', 'center'] = 'left', password_char: str | None = None, readonly: bool = False, readonly_background_color: str = 'silver', **kw)
+class InputText(text: str = '', key: str = '', default_text: str | None = None, enable_events: bool = False, enable_key_events: bool = False, enable_focus_events: bool = False, text_aligh: Literal['left', 'right', 'center'] = 'left', password_char: str | None = None, readonly: bool = False, color: str | None = None, text_color: str | None = None, background_color: str | None = None, readonly_background_color: str | None = None)
 ```
 
 InputText element. (alias of Input)
@@ -1399,7 +1415,7 @@ Update the widget.
 class Slider(
     self, key: str = "", range: tuple[float, float]=(1, 10),
      orientation: OrientationType="horizontal",
-     resolution: float=1, default_value: float|None=None,
+     resolution: float|None=None, default_value: float|None=None,
      enable_events: bool=False,
      **kw)
 ```
@@ -1936,6 +1952,16 @@ def get_root_window() -> tk.Tk
 ```
 
 Get root window.
+
+------
+
+### get_ttk_style
+
+```python
+def get_ttk_style() -> ttk.Style
+```
+
+Get ttk style
 
 ------
 

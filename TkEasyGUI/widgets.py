@@ -40,6 +40,9 @@ PointType: TypeAlias = tuple[int, int] | tuple[float, float]
 EventMode: TypeAlias = Literal["user", "system"]
 OrientationType: TypeAlias = Literal["v", "h", "vertical", "horizontal"]
 ListboxSelectMode: TypeAlias = Literal["multiple", "browse", "extended", "single"]
+PadType: TypeAlias = int | tuple[int, int] | tuple[tuple[int, int], tuple[int, int]]
+ReliefType: TypeAlias = Literal["flat", "groove", "raised", "ridge", "solid", "sunken"]
+
 # about color (Thanks)
 # https://kuroro.blog/python/YcZ6Yh4PswqUzaQXwnG2/
 
@@ -59,7 +62,8 @@ class TkEasyError(Exception):
         super().__init__(self.message)
 
 # only one root element
-_root_window: tk.Tk | None = None
+_root_window: tk.Tk|None = None
+_ttk_style: ttk.Style|None = None
 def get_root_window() -> tk.Tk:
     """Get root window."""
     global _root_window
@@ -72,11 +76,19 @@ def get_root_window() -> tk.Tk:
         try:
             if "theme" in _tkeasygui_info:
                 name = _tkeasygui_info["theme"]
-                ttk.Style().theme_use(name)
+                _ttk_style = get_ttk_style()
+                _ttk_style.theme_use(name)
         except Exception as e:
             print(f"TkEasyGUI.theme: failed to set theme {name} {e}", file=sys.stderr)
             pass
     return _root_window
+
+def get_ttk_style() -> ttk.Style:
+    """Get ttk style"""
+    global _ttk_style
+    if _ttk_style is None:
+        _ttk_style = ttk.Style()
+    return _ttk_style
 
 # active window
 _window_list: list[WindowType] = []
@@ -100,10 +112,19 @@ class Window:
     """
     Main window object in TkEasyGUI
     """
-    def __init__(self, title: str, layout: list[list[ElementType]], size: tuple[str, int]|None=None, 
-                 resizable:bool=False, font:FontType|None=None, modal: bool=False, 
-                 keep_on_top:bool=False, no_titlebar: bool=False, grab_anywhere: bool=False,
-                 alpha_channel: float=1.0, **kw) -> None:
+    def __init__(
+                self,
+                title: str,
+                layout: list[list[ElementType]],
+                size: tuple[str, int]|None=None, 
+                resizable:bool=False,
+                font:FontType|None=None,
+                modal: bool=False, 
+                keep_on_top:bool=False, # keep on top
+                no_titlebar: bool=False, # hide titlebar
+                grab_anywhere: bool=False, # can move window by dragging anywhere
+                alpha_channel: float=1.0,
+                **kw) -> None:
         """Create a window with a layout of widgets."""
         self.modal: bool = modal
         # check active window
@@ -411,8 +432,11 @@ class Window:
 
     def hide_titlebar(self, flag: bool) -> None:
         """Hide the titlebar."""
-        self.window.overrideredirect(flag)
-        self._no_titlebar = not flag
+        try:
+            self.window.overrideredirect(flag)
+            self._no_titlebar = flag
+        except Exception as e:
+            pass
 
     def close(self) -> None:
         """Close the window."""
@@ -557,7 +581,13 @@ element_propery_alias: dict[str, str] = {
 }
 class Element:
     """Element class."""
-    def __init__(self, element_type: str, key: str|None, **kw) -> None:
+    def __init__(
+            self,
+            element_type: str, # element type
+            ttk_style_name: str, # tkinter widget type
+            key: str|None, # key
+            metadata: dict[str, Any]|None=None, # meta data
+            **kw) -> None:
         """Create an element."""
         # check key
         if key is None or key == "":
@@ -565,6 +595,10 @@ class Element:
         # define properties
         self.key: str = key
         self.element_type: str = element_type
+        self.ttk_style_name: str = ttk_style_name
+        self.use_ttk: bool = True if ttk_style_name != "" else False
+        self.metadata = metadata
+        self.style_name: str = self.get_style_name()
         self.has_value: bool = False
         self.props: dict[str, Any] = kw
         self.widget: Any|None = None
@@ -597,6 +631,50 @@ class Element:
             values = {}
         if self.window is not None:
             self.window._event_handler(self.key, values)
+    
+    def _justify_to_anchor(self, justify: TextAlign) -> str:
+        """Convert justify to anchor"""
+        if justify == "left":
+            return "w"
+        if justify == "right":
+            return "e"
+        return "center"
+    def _set_pack_props(self,
+                expand_x: bool|None=None,
+                expand_y: bool|None=None,
+                pad: PadType=None) ->None:
+        """Set pack properties"""
+        if expand_x is not None:
+            self.expand_x = expand_x
+        if expand_y is not None:
+            self.expand_y = expand_y
+        if pad is not None:
+            if isinstance(pad, int):
+                self.padx = self.pady = pad
+            elif isinstance(pad, tuple):
+                self.padx = pad[0]
+                self.pady = pad[1]
+            else:
+                self.padx = pad[0][0]
+                self.pady = pad[0][1]
+
+    def _set_text_props(self,
+                font: FontType|None=None,
+                text_align: TextAlign|None=None,
+                color: str|None=None,
+                text_color: str|None=None,
+                background_color: str|None=None) ->None:
+        """set default props style"""
+        if font is not None:
+            self.props["font"] = font
+        if text_align is not None:
+            self.props["justify"] = text_align
+        if color is not None:
+            self.props["fg"] = color
+        if text_color is not None:
+            self.props["fg"] = text_color
+        if background_color is not None:
+            self.props["bg"] = background_color
 
     def _get_pack_props(self) -> dict[str, Any]:
         """Get the fill property in `pack` method."""
@@ -633,7 +711,6 @@ class Element:
         # background_color
         if "background_color" in result:
             result["bg"] = result.pop("background_color")
-            # self.props["readonlybackground"] = self.props["bg"]
         if "text_color" in result:
             result["fg"] = result.pop("text_color")
         if "color" in result:
@@ -689,6 +766,48 @@ class Element:
         if (win.font is not None) and (self.font is None) and self.has_font_prop:
             self.props["font"] = self.font = win.font
         self.props = self.convert_props(self.props)
+        # check use ttk
+        if not self.use_ttk:
+            return
+        # set style
+        style = get_ttk_style()
+        style_name = self.style_name
+        # set font style
+        font = None
+        if "font" in self.props:
+            font = self.props.pop("font")
+            style.configure(style_name, font=font)
+        # fg / bg
+        if "fg" in self.props:
+            fg = self.props.pop("fg")
+            style.configure(style_name, foreground=fg)
+            if self.ttk_style_name == "TLabelframe":
+                style.configure(f"{style_name}.Label", foreground=fg)
+        if "bg" in self.props:
+            bg = self.props.pop("bg")
+            style.configure(style_name, background=bg)
+            if self.ttk_style_name == "TLabelframe":
+                style.configure(f"{style_name}.Label", background=bg)
+        # set readonlybackground
+        if "readonlybackground" in self.props:
+            readonlybackground = self.props.pop("readonlybackground")
+            style.map(style_name, background=[("readonly", readonlybackground)])
+        # check element type
+        # Button ?
+        if self.ttk_style_name == "TButton" or self.ttk_style_name == "TLabel":
+            if "justify" in self.props:
+                anchor = self._justify_to_anchor(self.props.pop("justify"))
+                style.configure(style_name, anchor=anchor)
+            if "height" in self.props:
+                height = self.props.pop("height")
+                self.pady = (height-1)//2
+    
+    def get_style_name(self) -> str:
+        if "." in self.ttk_style_name:
+            return f"{self.ttk_style_name}"
+        else:
+            return f"{self.key}.{self.ttk_style_name}"
+
 
     def post_create(self, win: Window, parent: tk.Widget) -> None:
         """Post create widget."""
@@ -749,18 +868,53 @@ class Element:
 
 class Frame(Element):
     """Frame element."""
-    def __init__(self, title: str, layout: list[list[Element]], key: str = "", background_color: str|None=None, size: tuple[int, int]|None=None, **kw) -> None:
-        super().__init__("Frame", key, **kw)
+    def __init__(
+                self,
+                title: str,
+                layout: list[list[Element]],
+                key: str = "",
+                size: tuple[int, int]|None=None,
+                relief: ReliefType="groove",
+                # text props
+                font: FontType|None=None, # font
+                color: str|None=None,
+                text_color: str|None=None,
+                background_color: str|None=None,
+                label_outside: bool=False,
+                # pack props
+                expand_x: bool = False,
+                expand_y: bool = False,
+                pad: PadType|None = None,
+                # other
+                metadata: dict[str, Any]|None=None,
+                use_ttk: bool=False,
+                **kw) -> None:
+        # super().__init__("Frame", "TLabelframe", key, metadata, **kw)
+        style_name = "TLabelframe" if use_ttk else ""
+        super().__init__("Frame", style_name, key, metadata, **kw)
         self.has_children = True
         self.layout = layout
+        self.label_outside = label_outside
         self.props["text"] = title
+        self.props["relief"] = relief
+        self._set_text_props(color=color, text_color=text_color, background_color=background_color, font=font)
+        self._set_pack_props(expand_x=expand_x, expand_y=expand_y, pad=pad)
+        self.use_ttk: bool = use_ttk
+
         if size is not None:
             self.props["size"] = size
-        if background_color:
-            self.props["background"] = background_color
 
     def create(self, win: Window, parent: tk.Widget) -> tk.Widget:
-        self.widget = tk.LabelFrame(parent, name=self.key, **self.props)
+        """Create a Frame widget."""
+        if self.use_ttk:
+            get_ttk_style().configure(self.get_style_name(), labeloutside=self.label_outside)
+            self.widget = ttk.LabelFrame(
+                parent,
+                name=self.key,
+                style=self.get_style_name(),
+                **self.props)
+        else:
+            self.widget = tk.LabelFrame(parent, name=self.key, **self.props)
         return self.widget
 
     def get(self) -> Any:
@@ -779,22 +933,34 @@ class Frame(Element):
 
 class Column(Element):
     """Frame element."""
-    def __init__(self, layout: list[list[Element]], key: str = "", background_color: str|None=None,
-                 vertical_alignment: TextVAlign="top",
-                 size: tuple[int, int]|None=None, **kw) -> None:
-        super().__init__("Column", key, **kw)
+    def __init__(
+                self,
+                layout: list[list[Element]],
+                key: str = "",
+                background_color: str|None=None,
+                vertical_alignment: TextVAlign="top",
+                size: tuple[int, int]|None=None,
+                # pack props
+                expand_x: bool = False,
+                expand_y: bool = False,
+                pad: PadType|None = None,
+                # other
+                metadata: dict[str, Any]|None=None,
+                **kw) -> None:
+        super().__init__("Column", "TFrame", key, metadata, **kw)
         self.has_children = True
         self.layout = layout
         self.vertical_alignment = vertical_alignment
         self.has_font_prop = False
+        self._set_pack_props(expand_x=expand_x, expand_y=expand_y, pad=pad)
         if size is not None:
             self.props["size"] = size
         if background_color:
-            self.props["background"] = background_color
+            self.props["bg"] = background_color
         # self.props["anchor"] = {"top": "n", "bottom": "s", "center": "center"}[vertical_alignment]
 
     def create(self, win: Window, parent: tk.Widget) -> tk.Widget:
-        self.widget = tk.Frame(parent, name=self.key, **self.props)
+        self.widget = ttk.Frame(parent, name=self.key, **self.props)
         return self.widget
 
     def get(self) -> Any:
@@ -813,15 +979,32 @@ class Column(Element):
 
 class Text(Element):
     """Text element."""
-    def __init__(self, text: str, key: str|None=None, text_align: TextAlign="left", font: FontType|None=None, **kw) -> None:
-        super().__init__("Text", key, **kw)
+    def __init__(
+                self,
+                text: str = "",
+                key: str|None=None,
+                # text props
+                text_align: TextAlign|None="left", # text align
+                font: FontType|None=None, # font
+                color: str|None=None, # text color
+                text_color: str|None=None, # same as color
+                background_color: str|None=None, # background color
+                # pack props
+                expand_x: bool = False,
+                expand_y: bool = False,
+                pad: PadType|None = None,
+                # other
+                metadata: dict[str, Any]|None=None, # user metadata
+                **kw
+                ) -> None:
+        super().__init__("Text", "TLabel", key, metadata, **kw)
         self.props["text"] = text
-        self.props["justify"] = text_align
-        self.props["font"] = font
-    
+        self._set_text_props(font=font, text_align=text_align, color=color, text_color=text_color, background_color=background_color)
+        self._set_pack_props(expand_x=expand_x, expand_y=expand_y, pad=pad)
+
     def create(self, win: Window, parent: tk.Widget) -> tk.Widget:
         """Create a Text widget."""
-        self.widget = tk.Label(parent, **self.props)
+        self.widget = ttk.Label(parent, style=self.get_style_name(), **self.props)
         return self.widget
     
     def get(self) -> Any:
@@ -857,8 +1040,14 @@ class Menu(Element):
     - "label::-event_name-" is set event name
     - "---" is separator
     """
-    def __init__(self, items:Any|None=None, menu_definition:list[list[str|list[Any]]]|None=None, **kw) -> None:
-        super().__init__("Menu", None, **kw)
+    def __init__(
+                self,
+                items:Any|None=None,
+                menu_definition:list[list[str|list[Any]]]|None=None,
+                key: str|None=None,
+                metadata: dict[str, Any]|None=None,
+                **kw) -> None:
+        super().__init__("Menu", "", key, metadata, **kw)
         self.items = menu_definition
         if items is not None:
             self.items = items
@@ -939,22 +1128,59 @@ class Menu(Element):
 
 class Button(Element):
     """Button element."""
-    def __init__(self, button_text: str="", key: str="", disabled: bool=None, **kw) -> None:
-        if key == "":
-            key = button_text
-        super().__init__("Button", key, **kw)
+    def __init__(
+                self,
+                button_text: str="",
+                key: str="",
+                disabled: bool=None,
+                size: tuple[int, int]|None=None,
+                use_ttk_buttons: bool=False,
+                tooltip: str|None=None, # (TODO) tooltip
+                # text props
+                text_align: TextAlign|None="left", # text align
+                font: FontType|None=None, # font
+                color: str|None=None, # text color
+                text_color: str|None=None, # same as color
+                background_color: str|None=None, # background color
+                # pack props
+                expand_x: bool = False,
+                expand_y: bool = False,
+                pad: PadType|None = None,
+                # other
+                metadata: dict[str, Any]|None=None,
+                **kw
+                ) -> None:
+        key = button_text if key == "" else key
+        super().__init__("Button", "TButton", key, metadata, **kw)
+        self.use_ttk = use_ttk_buttons # can select ttk or tk button
         self.has_value = False
         self.disabled = False
         if disabled is not None:
             self.props["disabled"] = self.disabled = disabled
+        if size is not None:
+            self.props["size"] = size
         self.props["text"] = button_text
+        if tooltip is not None:
+            pass # self.props["tooltip"] = tooltip
+        self._set_text_props(font=font, text_align=text_align, color=color, text_color=text_color, background_color=background_color)
+        self._set_pack_props(expand_x=expand_x, expand_y=expand_y, pad=pad)
         self.bind_events({
             "<Button-3>": "right_click",
             "<Return>": "return",
         }, "system")
 
     def create(self, win: Window, parent: tk.Widget) -> tk.Widget:
-        self.widget = tk.Button(parent, command=lambda: self.disptach_event({"event_type": "command"}),**self.props)
+        if self.use_ttk:
+            self.widget = ttk.Button(
+                parent,
+                style=self.get_style_name(),
+                command=lambda: self.disptach_event({"event_type": "command"}),
+                **self.props)
+        else:
+            self.widget = tk.Button(
+                parent,
+                command=lambda: self.disptach_event({"event_type": "command"}),
+                **self.props)
         return self.widget
 
     def get(self) -> Any:
@@ -994,10 +1220,17 @@ class Submit(Button):
 
 class Checkbox(Element):
     """Checkbox element."""
-    def __init__(self, text: str="", default: bool=False, key: str="", enable_events: bool=False, **kw) -> None:
+    def __init__(
+                self, text: str="",
+                default: bool=False,
+                key: str="",
+                enable_events: bool=False,
+                # other
+                metadata: dict[str, Any]|None=None,
+                **kw) -> None:
         if key == "":
             key = text
-        super().__init__("Checkbox", key, **kw)
+        super().__init__("Checkbox", "TCheckbutton", key, metadata, **kw)
         self.has_value = True
         self.default_value = default
         self.props["text"] = text
@@ -1009,7 +1242,7 @@ class Checkbox(Element):
     def create(self, win: Window, parent: tk.Widget) -> tk.Widget:
         self.checkbox_var = tk.BooleanVar(value=self.default_value)
         self.checkbox_var.trace_add("write", lambda *args: self.disptach_event({"event_type": "change", "event": args}))
-        self.widget = tk.Checkbutton(parent, variable=self.checkbox_var, **self.props)
+        self.widget = ttk.Checkbutton(parent, style=self.get_style_name(), variable=self.checkbox_var, **self.props)
         return self.widget
     
     def get_value(self) -> Any:
@@ -1044,10 +1277,18 @@ class Checkbox(Element):
 
 class Radio(Element):
     """Checkbox element."""
-    def __init__(self, text: str="", group_id: int|str="group", default: bool=False, key: str="", enable_events: bool=False, **kw) -> None:
+    def __init__(
+                self, text: str="",
+                group_id: int|str="group",
+                default: bool=False,
+                key: str="",
+                enable_events: bool=False,
+                # other
+                metadata: dict[str, Any]|None=None,
+                **kw) -> None:
         if key == "":
             key = text
-        super().__init__("Radio", key, **kw)
+        super().__init__("Radio", "TRadiobutton", key, metadata, **kw)
         self.has_value = True
         self.default_value = default
         self.value: int = 0
@@ -1067,7 +1308,12 @@ class Radio(Element):
             win.radio_group_dict[self.group_id][1] += 1
         self.value = win.radio_group_dict[self.group_id][1]
         # create radiobutton
-        self.widget = tk.Radiobutton(parent, value=self.value, variable=win.radio_group_dict[self.group_id][0], **self.props)
+        self.widget = ttk.Radiobutton(
+            parent,
+            value=self.value,
+            variable=win.radio_group_dict[self.group_id][0],
+            style=self.get_style_name(),
+            **self.props)
         if self.default_value:
             self.select()
         return self.widget
@@ -1077,7 +1323,7 @@ class Radio(Element):
         self.window.radio_group_dict[self.group_id][0].set(self.value)
         if self.widget is not None:
             w: tk.Radiobutton = self.widget
-            w.flash()
+            # w.flash() # TODO: flash is not defined
     
     def is_selected(self) -> bool:
         """Check if the radio button is selected."""
@@ -1103,26 +1349,42 @@ class Radio(Element):
         self.widget_update(**kw)
 
 class Input(Element):
-    """Text input element."""
-    def __init__(self, text: str="", key: str="", default_text: str|None=None,
-                 enable_events: bool=False, enable_key_events: bool=False, enable_focus_events: bool =False,
-                 background_color: str|None=None, color: str|None=None,
-                 text_aligh: TextAlign="left",
-                 password_char: str|None=None,
-                 readonly: bool=False, readonly_background_color: str="silver", **kw) -> None:
-        super().__init__("Input", key, **kw)
+    """
+    Text input element.
+    """
+    def __init__(
+                self,
+                text: str="", # default text
+                key: str="", # key
+                default_text: str|None=None, # same as text
+                enable_events: bool=False,
+                enable_key_events: bool=False, 
+                enable_focus_events: bool =False,
+                text_align: TextAlign="left",
+                readonly_background_color: str|None="silver",
+                expand_x: bool=False, # expand x
+                password_char: str|None=None, # if you want to use it as a password input box, set "*"
+                readonly: bool=False, # read only box
+                # text props
+                font: FontType|None=None, # font
+                color: str|None=None, # text color
+                text_color: str|None=None, # same as color
+                background_color: str|None=None, # background color
+                # other
+                metadata: dict[str, Any]|None = None,
+                **kw
+                ) -> None:
+        super().__init__("Input", "TEntry", key, metadata, **kw)
         self.readonly: bool = readonly
         if default_text is not None: # compatibility with PySimpleGUI
             text = default_text
         self.props["text"] = text # default text @see Input.create
-        if background_color is not None:
-            self.props["background"] = background_color
-        if color is not None:
-            self.props["foreground"] = color
-        self.props["justify"] = text_aligh
-        self.props["readonlybackground"] = readonly_background_color
+        self._set_text_props(font=font, text_align=text_align, color=color, text_color=text_color, background_color=background_color)
+        if readonly_background_color is not None:
+            self.props["readonlybackground"] = readonly_background_color
         if password_char is not None:
             self.props["show"] = password_char
+        self.expand_x = expand_x
         self.has_value = True
         if enable_events:
             self.bind_events({
@@ -1148,7 +1410,7 @@ class Input(Element):
         self.text_var.trace_add("write",
             lambda *args: self.disptach_event({"event_type": "change", "event": args}))
         # create
-        self.widget = tk.Entry(parent, name=self.key, **self.props)
+        self.widget = ttk.Entry(parent, style=self.get_style_name(), name=self.key, **self.props)
         # set text
         self.widget.insert(0, self.props["text"])
         # set readonly
@@ -1163,9 +1425,11 @@ class Input(Element):
     def set_text(self, text: str) -> None:
         if self.widget is None:
             return
+        # change text
         self.text_var.set(text)
-        self.delete(0, "end")
-        self.insert(0, text)
+        #  OR
+        #   self.delete(0, "end")
+        #   self.insert(0, text)
 
     def get_text(self) -> str:
         return self.text_var.get()
@@ -1200,21 +1464,37 @@ class InputText(Input):
 
 class Multiline(Element):
     """Multiline text input element."""
-    def __init__(self, text: str="", default_text: str|None=None, key: str="",
-                 enable_events: bool=False, enable_key_events: bool=False, enable_focus_events: bool =False,
-                 color: str|None=None, background_color: str|None=None,
-                 readonly: bool=False, readonly_background_color: str|None=None,
-                 size: tuple[int, int]=(50, 10),
-                 **kw) -> None:
-        super().__init__("Multiline", key, **kw)
+    def __init__(
+                self,
+                text: str="", # default text
+                default_text: str|None=None, # same as text
+                key: str="", # key
+                readonly: bool=False,
+                enable_events: bool=False, 
+                enable_key_events: bool=False,
+                enable_focus_events: bool =False,
+                size: tuple[int, int]=(50, 10), # element size (unit=character)
+                # text props
+                font: FontType|None=None, # font
+                color: str|None=None, # text color
+                text_color: str|None=None, # same as color
+                background_color: str|None=None, # background color
+                # pack props
+                expand_x: bool = False,
+                expand_y: bool = False,
+                pad: PadType|None = None,
+                # other
+                readonly_background_color: str|None=None,
+                metadata: dict[str, Any]|None = None,
+                **kw
+                ) -> None:
+        super().__init__("Multiline", "", key, metadata, **kw)
         if default_text is not None:
             text = default_text
         self.props["text"] = text
         self.props["size"] = size
-        if color is not None:
-            self.props["foreground"] = color
-        if background_color is not None:
-            self.props["background"] = self.backgound_color = background_color
+        self._set_text_props(font=font, color=color, text_color=text_color, background_color=background_color)
+        self._set_pack_props(expand_x=expand_x, expand_y=expand_y, pad=pad)
         if readonly_background_color is not None:
             self.readonly_background_color = readonly_background_color
         self.has_value = True
@@ -1319,15 +1599,23 @@ class Output(Multiline):
 
 class Slider(Element):
     """Slider element."""
-    def __init__(self, key: str = "", range: tuple[float, float]=(1, 10),
-                 orientation: OrientationType="horizontal",
-                 resolution: float=1, default_value: float|None=None,
-                 enable_events: bool=False,
-                 **kw) -> None:
-        super().__init__("Slider", key, **kw)
+    def __init__(
+                self,
+                key: str = "",
+                range: tuple[float, float]=(1, 10),
+                orientation: OrientationType="horizontal",
+                resolution: float|None=None,
+                default_value: float|None=None,
+                enable_events: bool=False,
+                # other
+                metadata: dict[str, Any]|None=None,
+                **kw) -> None:
+        style_name = "Horizontal.TScale" if (orientation == "h" or orientation == "horizontal") else "Vertical.TScale"
+        super().__init__("Slider", style_name, key, metadata, **kw)
         self.has_value = True
+        self.has_font_prop = False
         self.range = range
-        self.resolution = resolution
+        self.resolution = resolution # dummy @see Slider.create
         self.default_value = default_value if default_value is not None else range[0]
         # check orientation
         self.orientation: OrientationType = orientation
@@ -1346,12 +1634,12 @@ class Slider(Element):
     def create(self, win: Window, parent: tk.Widget) -> tk.Widget:
         self.scale_var = tk.DoubleVar()
         self.scale_var.set(self.default_value)
-        self.widget = tk.Scale(
+        self.widget = ttk.Scale(
             parent,
             name=self.key,
             variable=self.scale_var,
             from_=self.range[0], to=self.range[1],
-            resolution=self.resolution,
+            # resolution=self.resolution, # (memo) ttk.Scale does not support resolution
             **self.props)
         return self.widget
     
@@ -1369,8 +1657,16 @@ class Slider(Element):
 
 class Canvas(Element):
     """Canvas element."""
-    def __init__(self, key: str="", enable_events: bool=False, background_color: str|None=None, size: tuple[int, int]=(300, 300), **kw) -> None:
-        super().__init__("Canvas", key, **kw)
+    def __init__(
+                self,
+                key: str="",
+                enable_events: bool=False,
+                background_color: str|None=None,
+                size: tuple[int, int]=(300, 300),
+                # other
+                metadata: dict[str, Any]|None=None,
+                **kw) -> None:
+        super().__init__("Canvas", "", key, metadata, **kw)
         self.props["size"] = size
         self.has_font_prop = False
         if background_color:
@@ -1402,11 +1698,17 @@ class Canvas(Element):
 
 class Graph(Element):
     """Graph element."""
-    def __init__(self, key: str="", background_color: str|None=None,
-            size: tuple[int, int]=(300, 300), canvas_size: tuple[int, int]|None=None,
-            graph_bottom_left: tuple[int, int]|None=None, graph_top_right: tuple[int, int]|None=None,
+    def __init__(
+            self, key: str="",
+            background_color: str|None=None,
+            size: tuple[int, int]=(300, 300),
+            canvas_size: tuple[int, int]|None=None,
+            graph_bottom_left: tuple[int, int]|None=None,
+            graph_top_right: tuple[int, int]|None=None,
+            # other
+            metadata: dict[str, Any]|None=None,
             **kw) -> None:
-        super().__init__("Graph", key, **kw)
+        super().__init__("Graph", "", key, metadata, **kw)
         self.has_font_prop = False
         # <Coordinate> graph_Declared for compatibility, but not yet implemented.
         self.graph_bottom_left = graph_bottom_left
@@ -1498,8 +1800,18 @@ class Graph(Element):
 
 class Image(Element):
     """Image element."""
-    def __init__(self, source: bytes|str|None=None, filename=None, data=None, key: str="", background_color: str|None=None, size: tuple[int, int]=(300, 300), **kw) -> None:
-        super().__init__("Image", key, **kw)
+    def __init__(
+                self,
+                source: bytes|str|None=None,
+                filename=None,
+                data=None,
+                key: str="",
+                background_color: str|None=None,
+                size: tuple[int, int]=(300, 300),
+                # other
+                metadata: dict[str, Any]|None=None,
+                **kw) -> None:
+        super().__init__("Image", "", key, metadata, **kw)
         self.has_font_prop = False
         self.source = source
         self.filename = filename
@@ -1556,8 +1868,16 @@ class Image(Element):
 
 class VSeparator(Element):
     """VSeparator element."""
-    def __init__(self, key: str="", background_color: str|None=None, pad: int=5, size: tuple[int, int]=(5, 100), **kw) -> None:
-        super().__init__("VSeparator", key, **kw)
+    def __init__(
+                self,
+                key: str="",
+                background_color: str|None=None,
+                pad: PadType=5,
+                size: tuple[int, int]=(5, 100),
+                # other
+                metadata: dict[str, Any]|None=None,
+                **kw) -> None:
+        super().__init__("VSeparator", "TSeparator", key, metadata, **kw)
         size = (pad, size[1])
         self.size = self.props["size"] = size
         self.props["padx"] = pad
@@ -1571,8 +1891,16 @@ class VSeparator(Element):
 
 class HSeparator(Element):
     """HSeparator element."""
-    def __init__(self, key: str="", background_color: str|None=None, pad: int=5, size: tuple[int, int]=(100, 5), **kw) -> None:
-        super().__init__("HSeparator", key, **kw)
+    def __init__(
+                self,
+                key: str="",
+                background_color: str|None=None,
+                pad: PadType=5,
+                size: tuple[int, int]=(100, 5),
+                # other
+                metadata: dict[str, Any]|None=None,
+                **kw) -> None:
+        super().__init__("HSeparator", "TSeparator", key, metadata, **kw)
         size = (size[1], pad)
         self.size = self.props["size"] = size
         self.props["pady"] = pad
@@ -1587,8 +1915,16 @@ class HSeparator(Element):
 
 class Listbox(Element):
     """Listbox element."""
-    def __init__(self, values: list[str]=[], key: str="", enable_events: bool=False, select_mode: ListboxSelectMode="browse", **kw) -> None:
-        super().__init__("Listbox", key, **kw)
+    def __init__(
+                self,
+                values: list[str]=[],
+                key: str="",
+                enable_events: bool=False,
+                select_mode: ListboxSelectMode="browse",
+                # other
+                metadata: dict[str, Any]|None=None,
+                **kw) -> None:
+        super().__init__("Listbox", "", key, metadata, **kw)
         self.values = values
         self.has_value = True
         self.select_mode = select_mode
@@ -1643,8 +1979,16 @@ class Listbox(Element):
 
 class Combo(Element):
     """Combo element."""
-    def __init__(self, values: list[str]=[], default_value: str="", key: str="", enable_events: bool=False, **kw) -> None:
-        super().__init__("Combo", key, **kw)
+    def __init__(
+                self,
+                values: list[str]=[],
+                default_value: str="",
+                key: str="",
+                enable_events: bool=False,
+                # other
+                metadata: dict[str, Any]|None=None,
+                **kw) -> None:
+        super().__init__("Combo", "TCombobox", key, metadata, **kw)
         self.values = values
         self.value: tk.StringVar|None = None
         self.default_value = default_value
@@ -1692,12 +2036,22 @@ class Combo(Element):
 
 class Table(Element):
     """Table element."""
-    def __init__(self, values: list[list[str]]=[], headings: list[str]=[], key: str="", justification: TextAlign="center",
-                 auto_size_columns: bool = True, max_col_width: int = 0,
-                 col_widths: list[int]|None=None,
-                 enable_events: bool=False, select_mode: str="browse", **kw) -> None:
+    def __init__(
+                self,
+                values: list[list[str]]=[],
+                headings: list[str]=[],
+                key: str="",
+                justification: TextAlign="center",
+                auto_size_columns: bool = True,
+                max_col_width: int = 0,
+                col_widths: list[int]|None=None,
+                enable_events: bool=False,
+                select_mode: str="browse",
+                # other
+                metadata: dict[str, Any]|None=None,
+                **kw) -> None:
         """Create a table."""
-        super().__init__("Table", key, **kw)
+        super().__init__("Table", "Treeview", key, metadata, **kw)
         self.values = values
         self.headings = headings
         self.has_value = True
@@ -1808,11 +2162,20 @@ class Table(Element):
 
 class FileBrowse(Element):
     """FileBrowse element."""
-    def __init__(self, button_text: str="...", key: str="", target_key: str|None=None,
-            title: str="", file_types: tuple[tuple[str, str]]=(("All Files", "*.*"),),
-            multiple_files: bool=False, initial_folder: str|None=None,
-            save_as: bool=False, **kw) -> None:
-        super().__init__("FileBrowse", key, **kw)
+    def __init__(
+                self, button_text: str="...",
+                key: str="",
+                target_key: str|None=None,
+                title: str="",
+                file_types: tuple[tuple[str, str]]=(("All Files", "*.*"),),
+                multiple_files: bool=False,
+                initial_folder: str|None=None,
+                save_as: bool=False,
+                # other
+                metadata: dict[str, Any]|None=None,
+                **kw
+                ) -> None:
+        super().__init__("FileBrowse", "", key, metadata, **kw)
         self.has_value = False
         self.target_key = target_key
         self.title = title
@@ -1879,9 +2242,18 @@ class FileBrowse(Element):
 
 class FilesBrowse(FileBrowse):
     """FilesBrowse element."""
-    def __init__(self, button_text: str="...", key: str="", target_key: str|None=None,
-            title: str="", file_types: tuple[tuple[str, str]]=(("All Files", "*.*"),), **kw) -> None:
-        super().__init__("FilesBrowse", key, **kw)
+    def __init__(
+                self,
+                button_text: str="...",
+                key: str="",
+                target_key: str|None=None,
+                title: str="",
+                file_types: tuple[tuple[str, str]]=(("All Files", "*.*"),),
+                # other
+                metadata: dict[str, Any]|None=None,
+                **kw
+                ) -> None:
+        super().__init__("FilesBrowse", "", key, metadata, **kw)
         self.target_key = target_key
         self.title = title
         self.file_types = file_types
@@ -1892,9 +2264,18 @@ class FilesBrowse(FileBrowse):
 
 class FileSaveAsBrowse(FileBrowse):
     """FileSaveAsBrowse element."""
-    def __init__(self, button_text: str="...", key: str="", target_key: str|None=None,
-            title: str="", file_types: tuple[tuple[str, str]]=(("All Files", "*.*"),), **kw) -> None:
-        super().__init__("FileSaveAsBrowse", key, **kw)
+    def __init__(
+                self,
+                button_text: str="...",
+                key: str="",
+                target_key: str|None=None,
+                title: str="",
+                file_types: tuple[tuple[str, str]]=(("All Files", "*.*"),),
+                # other
+                metadata: dict[str, Any]|None=None,
+                **kw
+                ) -> None:
+        super().__init__("FileSaveAsBrowse", "", key, metadata, **kw)
         self.target_key = target_key
         self.title = title
         self.file_types = file_types
@@ -1909,10 +2290,18 @@ class FileSaveAs(FileBrowse):
 
 class FolderBrowse(FileBrowse):
     """FolderBrowse element."""
-    def __init__(self, button_text: str="...", key: str="", target_key: str|None=None,
-            default_path: str|None=None,
-            title: str="", **kw) -> None:
-        super().__init__("FolderBrowse", key, **kw)
+    def __init__(
+                self,
+                button_text: str="...",
+                key: str="",
+                target_key: str|None=None,
+                default_path: str|None=None,
+                title: str="",
+                # other
+                metadata: dict[str, Any]|None=None,
+                **kw
+                ) -> None:
+        super().__init__("FolderBrowse", "", key, metadata, **kw)
         self.has_value = False
         self.target_key = target_key
         self.title = title
@@ -1933,10 +2322,18 @@ class FolderBrowse(FileBrowse):
 
 class ColorBrowse(FileBrowse):
     """FolderBrowse element."""
-    def __init__(self, button_text: str="...", key: str="", target_key: str|None=None,
-            default_color: str|None=None,
-            title: str="", **kw) -> None:
-        super().__init__("FolderBrowse", key, **kw)
+    def __init__(
+                self,
+                button_text: str="...",
+                key: str="",
+                target_key: str|None=None,
+                default_color: str|None=None,
+                title: str="",
+                # other
+                metadata: dict[str, Any]|None=None,
+                **kw
+                ) -> None:
+        super().__init__("FolderBrowse", "", key, metadata, **kw)
         self.has_value = False
         self.target_key = target_key
         self.title = title

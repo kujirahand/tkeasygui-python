@@ -53,36 +53,48 @@ def read_file() -> str:
         if "def __init__" not in line:
             continue
         # print("==", class_name, "=>")
-        r = re.match("def __init__\((.+)", line)
-        if r:
-            # args
-            args = r.group(1)
-            if class_name not in init_args:
-                init_args[class_name] = []
-            if "layout:" in args:
-                init_args[class_name].append("layout=[[]]")
-            if "text:" in args:
-                init_args[class_name].append("text='text'")
-            if "title:" in args:
-                init_args[class_name].append("title='title'")
-            if "default_text:" in args:
-                init_args[class_name].append("default_text='default_text'")
-            # extra
-            if class_name == "Button":
-                init_args[class_name].append("button_text='OK'")
-            if class_name == "Table":
-                init_args[class_name].append("values=[[1,2,3],[4,5,6],[7,8,9]]")
-                init_args[class_name].append("headings=['aaa', 'bbb', 'ccc']")
-            if class_name == "Image":
-                init_args[class_name].append("filename='a.png'")
-                init_args[class_name].append("size=(100,100)")
-            if class_name == "Canvas":
-                init_args[class_name].append("size=(100,100)")
-            if class_name == "Graph":
-                init_args[class_name].append("size=(100,100)")
-            if class_name == "Combo":
-                init_args[class_name].append("values=['combo1', 'combo2', 'combo3']")
-                init_args[class_name].append("default_value='combo1'")
+        # check end of __init__
+        def_params = []
+        while len(lines) > 0:
+            line = lines.pop(0).strip()
+            if line == "":
+                continue
+            if ") ->" in line:
+                break
+            # remove comment
+            line = re.sub(r"#.+$", "", line)
+            def_params.append(line)
+        line = "".join(def_params)
+        # args
+        args = line
+        if class_name not in init_args:
+            init_args[class_name] = []
+        if "layout:" in args:
+            init_args[class_name].append("layout=[[]]")
+        if "text:" in args:
+            init_args[class_name].append("text='text'")
+        if "title:" in args:
+            init_args[class_name].append("title='title'")
+        if "default_text:" in args:
+            init_args[class_name].append("default_text='default_text'")
+        # extra
+        if class_name == "Menu":
+            init_args[class_name].append("menu_definition=[['File', ['Open', 'Save', 'Exit']], ['Edit', ['Copy', 'Paste']]]")
+        if class_name == "Button":
+            init_args[class_name].append("button_text='OK'")
+        if class_name == "Table":
+            init_args[class_name].append("values=[[1,2,3],[4,5,6],[7,8,9]]")
+            init_args[class_name].append("headings=['aaa', 'bbb', 'ccc']")
+        if class_name == "Image":
+            init_args[class_name].append("filename='a.png'")
+            init_args[class_name].append("size=(100,100)")
+        if class_name == "Canvas":
+            init_args[class_name].append("size=(100,100)")
+        if class_name == "Graph":
+            init_args[class_name].append("size=(100,100)")
+        if class_name == "Combo":
+            init_args[class_name].append("values=['combo1', 'combo2', 'combo3']")
+            init_args[class_name].append("default_value='combo1'")
     print(init_args)
     return [elements, elements2, init_args]
  
@@ -104,7 +116,10 @@ layout = [
     for i, e in enumerate(elements):
         args = init_args.get(e, [])
         args_s = ",".join(args)
-        src += f"        eg.{e}({args_s}),\n"
+        if "Browse" in e:
+            src += f"        eg.Input(''), eg.{e}({args_s}),\n"
+        else:
+            src += f"        eg.{e}({args_s}),\n"
         if i % 5 == 4:
             src += "    ],\n"
             src += "    [\n"

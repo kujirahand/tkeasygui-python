@@ -2,6 +2,7 @@
     "Frame",
     "Column",
     "Text",
+    "Menu",
     "Button",
     "Checkbox",
     "Radio",
