@@ -1,6 +1,6 @@
 # TkEasyGUI
 
-**TkEasyGUI** is a Python library that allows for the easy and simple creation of GUI applications.
+`TkEasyGUI` is a Python library that allows for the easy and simple creation of GUI applications.
 In the event model, it is compatible with the well-known GUI library `PySimpleGUI`.
 
 Python's standard UI library `Tkinter`, is often considered to have a high barrier to entry and to be difficult to use. By using this library, you can create GUI applications easily and intuitively.
@@ -30,15 +30,16 @@ Install from GitHub Repository
 python -m pip install git+https://github.com/kujirahand/tkeasygui-python
 ```
 
-### memo
+### Install memo
 
 - From version 0.2.24, the package name has also been changed from `tkeasygui` to `TkEasyGUI`.
-   - If you have used a previous version, you will see `ModuleNotFoundError: No module named 'TKEasyGUI'`.
-   - Please run the command below to completely remove the old `tkeasygui` package.
-   - Start the `python` command or `IDLE` and execute the following command.
+  - If you have used a previous version, you will see `ModuleNotFoundError: No module named 'TKEasyGUI'`.
+  - Please run the command below to completely remove the old `tkeasygui` package.
+  - It seems that cache files remain even if you use the `pip uninstall tkeasygui` command.
+  - Start the `python` command or `IDLE` and execute the following command.
 
 ```py:remove_old_package.py
-# remove old package
+# remove old package directory
 import os, shutil, PIL
 packages = os.path.dirname(PIL.__path__[0])
 old_package = os.path.join(packages, "tkeasygui")
@@ -85,12 +86,10 @@ Below is a detailed list of classes and methods.
 
 ## About the relationship with PySimpleGUI
 
-Fundamentally, it is compatible with PySimpleGUI. Programs can be written using the same event model. 
-It should be noted that while it was developed with reference to PySimpleGUI, it has been reimplemented from scratch.
-Many unique features have been expanded.
-The basic Elements have been given the same names. However, the names of some properties are different.
-
-We are not considering full compatibility with PySimpleGUI.
+- When utilizing basic features, it is compatible with PySimpleGUI. You can write programs using the same event model as PySimpleGUI.
+- The names of basic GUI components are also kept the same. However, while some property names differ, many unique features have been implemented.
+- This project was developed with PySimpleGUI in mind, but has been implemented entirely from scratch. There are no licensing issues.
+- We are not considering full compatibility with PySimpleGUI.
 
 ## Link
 

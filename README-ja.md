@@ -29,15 +29,17 @@ GitHubリポジトリからインストールします。
 python -m pip install git+https://github.com/kujirahand/tkeasygui-python
 ```
 
-### メモ - v0.2.24
+### インストールのメモ - v0.2.24
 
-- バージョン0.2.24から、パッケージ名も`tkeasygui`から`TkEasyGUI`と修正しました。
+- バージョン0.2.24から、パッケージ名を`tkeasygui`から`TkEasyGUI`と修正しました。
   - もし以前のバージョンを使ったことがある場合、`ModuleNotFoundError: No module named 'TKEasyGUI'`が表示されます。
   - うまくパッケージがインポートできなくなった場合、下記のコマンドを実行して、古い`tkeasygui`パッケージを完全に削除してください。
-  - `python`コマンドや`IDLE`などを起動して以下のコマンドを実行してください。
+  - なお、`pip uninstall tkeasygui`コマンドを使っても、キャッシュファイルなどが残ってしまうようです。
+  - 以下のコードを実行するなどして、完全に`tkeasygui`というパッケージを削除してください。 
+    - `python`コマンドや`IDLE`などを起動して以下のコマンドを実行してください。
 
 ```py:remove_old_package.py
-# remove old package
+# 古い名前のパッケージを完全に削除
 import os, shutil, PIL
 packages = os.path.dirname(PIL.__path__[0])
 old_package = os.path.join(packages, "tkeasygui")
@@ -72,7 +74,7 @@ window.close()
 
 ## サンプル
 
-簡単な使い方を示すサンプルを取りそろえています。確認してみてください。
+簡単な使い方を示すサンプルを揃えました。確認してみてください。
 
 - [samples](https://github.com/kujirahand/tkeasygui-python/tree/main/tests).
 
@@ -84,9 +86,9 @@ window.close()
 
 ## PySimpleGUIとの関係について
 
-基本的に、PySimpleGUIと互換性があります。それと同じイベントモデルでプログラムを記述できます。
-なお、PySimpleGUIを参考に開発されましたが、ゼロから再実装されています。多くの独自の機能が拡張されています。
-基本的なElementも同じ名前にしてあります。しかし、いくつかのプロパティの名前が異なっています。
+- 基本機能を使う場合、PySimpleGUIと互換性があります。PySimpleGUIと同じイベントモデルでプログラムを記述できます。
+- 基本的なGUI部品の名前も同じにしてあります。しかし、いくつかのプロパティの名前が異なっていますが、多くの独自機能が実装されています。
+- 本プロジェクトは、PySimpleGUIの存在を意識して開発しましたが、完全にゼロから実装しています。ライセンス的にも問題はありません。
 
 PySimpleGUIと完全な互換性は考えていません。
 
