@@ -33,7 +33,7 @@ python -m pip install git+https://github.com/kujirahand/tkeasygui-python
 ### Install memo
 
 - From version 0.2.24, the package name has also been changed from `tkeasygui` to `TkEasyGUI`.
-  - Updating from older versions (less than 0.2.24) will fail. [See here](/docs/installation_trouble.md)
+  - Updating from older versions (less than 0.2.24) will fail. ([See the solution](https://github.com/kujirahand/tkeasygui-python/blob/main/docs/installation_trouble.md))
 
 ## How to use
 
