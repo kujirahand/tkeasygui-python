@@ -8,7 +8,6 @@ Python's standard UI library `Tkinter`, is often considered to have a high barri
 This project adopts the lenient MIT license. This license will not change in the future. Let's enjoy creating GUI programs.
 
 - [👉日本語のREADME](https://github.com/kujirahand/tkeasygui-python/blob/main/README-ja.md)
-  - [(注意) パッケージ名が大文字込みの`TkEasyGUI`に変わりました](https://github.com/kujirahand/tkeasygui-python/blob/main/README-ja.md#%E3%83%A1%E3%83%A2---v0224)
 
 ## Platform
 
@@ -30,10 +29,7 @@ Install from GitHub Repository
 python -m pip install git+https://github.com/kujirahand/tkeasygui-python
 ```
 
-### Install memo
-
-- From version 0.2.24, the package name has also been changed from `tkeasygui` to `TkEasyGUI`.
-  - Updating from older versions (less than 0.2.24) will fail. ([See the solution](https://github.com/kujirahand/tkeasygui-python/blob/main/docs/installation_trouble.md))
+- (memo) Updating from older versions (less than 0.2.24) will fail. ([See the solution](https://github.com/kujirahand/tkeasygui-python/blob/main/docs/installation_trouble.md))
 
 ## How to use
 
