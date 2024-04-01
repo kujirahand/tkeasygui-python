@@ -983,6 +983,7 @@ class Text(Element):
                 self,
                 text: str = "",
                 key: str|None=None,
+                enable_events: bool=False, # enabled events (click)
                 # text props
                 text_align: TextAlign|None="left", # text align
                 font: FontType|None=None, # font
@@ -997,14 +998,22 @@ class Text(Element):
                 metadata: dict[str, Any]|None=None, # user metadata
                 **kw
                 ) -> None:
-        super().__init__("Text", "TLabel", key, metadata, **kw)
+        # super().__init__("Text", "TLabel", key, metadata, **kw)
+        key = text if (key is None) else key
+        super().__init__("Text", "", key, metadata, **kw)
         self.props["text"] = text
         self._set_text_props(font=font, text_align=text_align, color=color, text_color=text_color, background_color=background_color)
         self._set_pack_props(expand_x=expand_x, expand_y=expand_y, pad=pad)
+        self.enable_events = enable_events
 
     def create(self, win: Window, parent: tk.Widget) -> tk.Widget:
         """Create a Text widget."""
-        self.widget = ttk.Label(parent, style=self.get_style_name(), **self.props)
+        if self.use_ttk:
+            self.widget = ttk.Label(parent, style=self.get_style_name(), **self.props)
+        else:
+            self.widget = ttk.Label(parent, **self.props)            
+        if self.enable_events:
+            self.widget.bind("<Button-1>", lambda e: self.disptach_event({"event_type": "click", "event": e}))
         return self.widget
     
     def get(self) -> Any:

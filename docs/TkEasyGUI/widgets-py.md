@@ -7,7 +7,27 @@ TkEasyGUI Widgets
 ### Button
 
 ```python
-class Button(self, button_text: str="", key: str="", disabled: bool=None, **kw)
+class Button(
+    self,
+    button_text: str="",
+    key: str="",
+    disabled: bool=None,
+    size: tuple[int, int]|None=None,
+    use_ttk_buttons: bool=False,
+    tooltip: str|None=None, # (TODO) tooltip
+    # text props
+    text_align: TextAlign|None="left", # text align
+    font: FontType|None=None, # font
+    color: str|None=None, # text color
+    text_color: str|None=None, # same as color
+    background_color: str|None=None, # background color
+    # pack props
+    expand_x: bool = False,
+    expand_y: bool = False,
+    pad: PadType|None = None,
+    # other
+    metadata: dict[str, Any]|None=None,
+    **kw)
 ```
 
 Button element.
@@ -75,7 +95,15 @@ Update the widget.
 ### Canvas
 
 ```python
-class Canvas(self, key: str="", enable_events: bool=False, background_color: str|None=None, size: tuple[int, int]=(300, 300), **kw)
+class Canvas(
+    self,
+    key: str="",
+    enable_events: bool=False,
+    background_color: str|None=None,
+    size: tuple[int, int]=(300, 300),
+    # other
+    metadata: dict[str, Any]|None=None,
+    **kw)
 ```
 
 Canvas element.
@@ -125,7 +153,14 @@ Update the widget.
 ### Checkbox
 
 ```python
-class Checkbox(self, text: str="", default: bool=False, key: str="", enable_events: bool=False, **kw)
+class Checkbox(
+    self, text: str="",
+    default: bool=False,
+    key: str="",
+    enable_events: bool=False,
+    # other
+    metadata: dict[str, Any]|None=None,
+    **kw)
 ```
 
 Checkbox element.
@@ -206,9 +241,15 @@ Update the widget.
 
 ```python
 class ColorBrowse(
-    self, button_text: str="...", key: str="", target_key: str|None=None,
+    self,
+    button_text: str="...",
+    key: str="",
+    target_key: str|None=None,
     default_color: str|None=None,
-    title: str="", **kw)
+    title: str="",
+    # other
+    metadata: dict[str, Any]|None=None,
+    **kw)
 ```
 
 FolderBrowse element.
@@ -239,9 +280,19 @@ Show file dialog
 
 ```python
 class Column(
-    self, layout: list[list[Element]], key: str = "", background_color: str|None=None,
-     vertical_alignment: TextVAlign="top",
-     size: tuple[int, int]|None=None, **kw)
+    self,
+    layout: list[list[Element]],
+    key: str = "",
+    background_color: str|None=None,
+    vertical_alignment: TextVAlign="top",
+    size: tuple[int, int]|None=None,
+    # pack props
+    expand_x: bool = False,
+    expand_y: bool = False,
+    pad: PadType|None = None,
+    # other
+    metadata: dict[str, Any]|None=None,
+    **kw)
 ```
 
 Frame element.
@@ -291,7 +342,15 @@ Update the widget.
 ### Combo
 
 ```python
-class Combo(self, values: list[str]=[], default_value: str="", key: str="", enable_events: bool=False, **kw)
+class Combo(
+    self,
+    values: list[str]=[],
+    default_value: str="",
+    key: str="",
+    enable_events: bool=False,
+    # other
+    metadata: dict[str, Any]|None=None,
+    **kw)
 ```
 
 Combo element.
@@ -361,7 +420,13 @@ Update the widget.
 ### Element
 
 ```python
-class Element(self, element_type: str, tk_type: str, key: str|None, **kw)
+class Element(
+    self,
+    element_type: str, # element type
+    ttk_style_name: str, # tkinter widget type
+    key: str|None, # key
+    metadata: dict[str, Any]|None=None, # meta data
+    **kw)
 ```
 
 Element class.
@@ -503,10 +568,17 @@ def widget_update(self, **kw) -> None
 
 ```python
 class FileBrowse(
-    self, button_text: str="...", key: str="", target_key: str|None=None,
-    title: str="", file_types: tuple[tuple[str, str]]=(("All Files", "*.*"),),
-    multiple_files: bool=False, initial_folder: str|None=None,
-    save_as: bool=False, **kw)
+    self, button_text: str="...",
+    key: str="",
+    target_key: str|None=None,
+    title: str="",
+    file_types: tuple[tuple[str, str]]=(("All Files", "*.*"),),
+    multiple_files: bool=False,
+    initial_folder: str|None=None,
+    save_as: bool=False,
+    # other
+    metadata: dict[str, Any]|None=None,
+    **kw)
 ```
 
 FileBrowse element.
@@ -566,7 +638,7 @@ Update the widget.
 ### FileSaveAs
 
 ```python
-class FileSaveAs(button_text: str = '...', key: str = '', target_key: str | None = None, title: str = '', file_types: tuple[tuple[str, str]] = (('All Files', '*.*'),), multiple_files: bool = False, initial_folder: str | None = None, save_as: bool = False, **kw)
+class FileSaveAs(button_text: str = '...', key: str = '', target_key: str | None = None, title: str = '', file_types: tuple[tuple[str, str]] = (('All Files', '*.*'),), multiple_files: bool = False, initial_folder: str | None = None, save_as: bool = False, metadata: dict[str, typing.Any] | None = None, **kw)
 ```
 
 FileSaveAs element. (alias of FileSaveAsBrowse)
@@ -583,8 +655,15 @@ FileSaveAs element. (alias of FileSaveAsBrowse)
 
 ```python
 class FileSaveAsBrowse(
-    self, button_text: str="...", key: str="", target_key: str|None=None,
-    title: str="", file_types: tuple[tuple[str, str]]=(("All Files", "*.*"),), **kw)
+    self,
+    button_text: str="...",
+    key: str="",
+    target_key: str|None=None,
+    title: str="",
+    file_types: tuple[tuple[str, str]]=(("All Files", "*.*"),),
+    # other
+    metadata: dict[str, Any]|None=None,
+    **kw)
 ```
 
 FileSaveAsBrowse element.
@@ -603,8 +682,15 @@ Create an element.
 
 ```python
 class FilesBrowse(
-    self, button_text: str="...", key: str="", target_key: str|None=None,
-    title: str="", file_types: tuple[tuple[str, str]]=(("All Files", "*.*"),), **kw)
+    self,
+    button_text: str="...",
+    key: str="",
+    target_key: str|None=None,
+    title: str="",
+    file_types: tuple[tuple[str, str]]=(("All Files", "*.*"),),
+    # other
+    metadata: dict[str, Any]|None=None,
+    **kw)
 ```
 
 FilesBrowse element.
@@ -623,9 +709,15 @@ Create an element.
 
 ```python
 class FolderBrowse(
-    self, button_text: str="...", key: str="", target_key: str|None=None,
+    self,
+    button_text: str="...",
+    key: str="",
+    target_key: str|None=None,
     default_path: str|None=None,
-    title: str="", **kw)
+    title: str="",
+    # other
+    metadata: dict[str, Any]|None=None,
+    **kw)
 ```
 
 FolderBrowse element.
@@ -655,7 +747,27 @@ Show file dialog
 ### Frame
 
 ```python
-class Frame(self, title: str, layout: list[list[Element]], key: str = "", background_color: str|None=None, size: tuple[int, int]|None=None, **kw)
+class Frame(
+    self,
+    title: str,
+    layout: list[list[Element]],
+    key: str = "",
+    size: tuple[int, int]|None=None,
+    relief: ReliefType="groove",
+    # text props
+    font: FontType|None=None, # font
+    color: str|None=None,
+    text_color: str|None=None,
+    background_color: str|None=None,
+    label_outside: bool=False,
+    # pack props
+    expand_x: bool = False,
+    expand_y: bool = False,
+    pad: PadType|None = None,
+    # other
+    metadata: dict[str, Any]|None=None,
+    use_ttk: bool=False,
+    **kw)
 ```
 
 Frame element.
@@ -678,7 +790,7 @@ Create an element.
 def create(self, win: Window, parent: tk.Widget) -> tk.Widget
 ```
 
-Create a widget.
+Create a Frame widget.
 
 ------
 
@@ -706,9 +818,14 @@ Update the widget.
 
 ```python
 class Graph(
-    self, key: str="", background_color: str|None=None,
-    size: tuple[int, int]=(300, 300), canvas_size: tuple[int, int]|None=None,
-    graph_bottom_left: tuple[int, int]|None=None, graph_top_right: tuple[int, int]|None=None,
+    self, key: str="",
+    background_color: str|None=None,
+    size: tuple[int, int]=(300, 300),
+    canvas_size: tuple[int, int]|None=None,
+    graph_bottom_left: tuple[int, int]|None=None,
+    graph_top_right: tuple[int, int]|None=None,
+    # other
+    metadata: dict[str, Any]|None=None,
     **kw)
 ```
 
@@ -869,7 +986,15 @@ Update the widget.
 ### HSeparator
 
 ```python
-class HSeparator(self, key: str="", background_color: str|None=None, pad: int=5, size: tuple[int, int]=(100, 5), **kw)
+class HSeparator(
+    self,
+    key: str="",
+    background_color: str|None=None,
+    pad: PadType=5,
+    size: tuple[int, int]=(100, 5),
+    # other
+    metadata: dict[str, Any]|None=None,
+    **kw)
 ```
 
 HSeparator element.
@@ -899,7 +1024,17 @@ Create a widget.
 ### Image
 
 ```python
-class Image(self, source: bytes|str|None=None, filename=None, data=None, key: str="", background_color: str|None=None, size: tuple[int, int]=(300, 300), **kw)
+class Image(
+    self,
+    source: bytes|str|None=None,
+    filename=None,
+    data=None,
+    key: str="",
+    background_color: str|None=None,
+    size: tuple[int, int]=(300, 300),
+    # other
+    metadata: dict[str, Any]|None=None,
+    **kw)
 ```
 
 Image element.
@@ -975,13 +1110,19 @@ class Input(
     enable_events: bool=False,
     enable_key_events: bool=False, 
     enable_focus_events: bool =False,
-    text_aligh: TextAlign="left",
+    text_align: TextAlign="left",
+    readonly_background_color: str|None="silver",
+    expand_x: bool=False, # expand x
     password_char: str|None=None, # if you want to use it as a password input box, set "*"
     readonly: bool=False, # read only box
+    # text props
+    font: FontType|None=None, # font
     color: str|None=None, # text color
     text_color: str|None=None, # same as color
     background_color: str|None=None, # background color
-    readonly_background_color: str|None=None)
+    # other
+    metadata: dict[str, Any]|None = None,
+    **kw)
 ```
 
 Text input element.
@@ -1057,7 +1198,7 @@ Update the widget.
 ### InputText
 
 ```python
-class InputText(text: str = '', key: str = '', default_text: str | None = None, enable_events: bool = False, enable_key_events: bool = False, enable_focus_events: bool = False, text_aligh: Literal['left', 'right', 'center'] = 'left', password_char: str | None = None, readonly: bool = False, color: str | None = None, text_color: str | None = None, background_color: str | None = None, readonly_background_color: str | None = None)
+class InputText(text: str = '', key: str = '', default_text: str | None = None, enable_events: bool = False, enable_key_events: bool = False, enable_focus_events: bool = False, text_align: Literal['left', 'right', 'center'] = 'left', readonly_background_color: str | None = 'silver', expand_x: bool = False, password_char: str | None = None, readonly: bool = False, font: tuple[str, int] | tuple[str, int, str] | None = None, color: str | None = None, text_color: str | None = None, background_color: str | None = None, metadata: dict[str, typing.Any] | None = None, **kw)
 ```
 
 InputText element. (alias of Input)
@@ -1073,7 +1214,15 @@ InputText element. (alias of Input)
 ### Listbox
 
 ```python
-class Listbox(self, values: list[str]=[], key: str="", enable_events: bool=False, select_mode: ListboxSelectMode="browse", **kw)
+class Listbox(
+    self,
+    values: list[str]=[],
+    key: str="",
+    enable_events: bool=False,
+    select_mode: ListboxSelectMode="browse",
+    # other
+    metadata: dict[str, Any]|None=None,
+    **kw)
 ```
 
 Listbox element.
@@ -1133,7 +1282,13 @@ Update the widget.
 ### Menu
 
 ```python
-class Menu(self, items:Any|None=None, menu_definition:list[list[str|list[Any]]]|None=None, **kw)
+class Menu(
+    self,
+    items:Any|None=None,
+    menu_definition:list[list[str|list[Any]]]|None=None,
+    key: str|None=None,
+    metadata: dict[str, Any]|None=None,
+    **kw)
 ```
 
 Menu element.
@@ -1213,12 +1368,28 @@ Update the widget.
 
 ```python
 class Multiline(
-    self, text: str="", default_text: str|None=None, key: str="",
-     enable_events: bool=False, enable_key_events: bool=False, enable_focus_events: bool =False,
-     color: str|None=None, background_color: str|None=None,
-     readonly: bool=False, readonly_background_color: str|None=None,
-     size: tuple[int, int]=(50, 10),
-     **kw)
+    self,
+    text: str="", # default text
+    default_text: str|None=None, # same as text
+    key: str="", # key
+    readonly: bool=False,
+    enable_events: bool=False, 
+    enable_key_events: bool=False,
+    enable_focus_events: bool =False,
+    size: tuple[int, int]=(50, 10), # element size (unit=character)
+    # text props
+    font: FontType|None=None, # font
+    color: str|None=None, # text color
+    text_color: str|None=None, # same as color
+    background_color: str|None=None, # background color
+    # pack props
+    expand_x: bool = False,
+    expand_y: bool = False,
+    pad: PadType|None = None,
+    # other
+    readonly_background_color: str|None=None,
+    metadata: dict[str, Any]|None = None,
+    **kw)
 ```
 
 Multiline text input element.
@@ -1306,7 +1477,7 @@ Update the widget.
 ### Output
 
 ```python
-class Output(text: str = '', default_text: str | None = None, key: str = '', enable_events: bool = False, enable_key_events: bool = False, enable_focus_events: bool = False, color: str | None = None, background_color: str | None = None, readonly: bool = False, readonly_background_color: str | None = None, size: tuple[int, int] = (50, 10), **kw)
+class Output(text: str = '', default_text: str | None = None, key: str = '', readonly: bool = False, enable_events: bool = False, enable_key_events: bool = False, enable_focus_events: bool = False, size: tuple[int, int] = (50, 10), font: tuple[str, int] | tuple[str, int, str] | None = None, color: str | None = None, text_color: str | None = None, background_color: str | None = None, expand_x: bool = False, expand_y: bool = False, pad: int | tuple[int, int] | tuple[tuple[int, int], tuple[int, int]] | None = None, readonly_background_color: str | None = None, metadata: dict[str, typing.Any] | None = None, **kw)
 ```
 
 Output element. (alias of Multiline) TODO: implement
@@ -1322,7 +1493,15 @@ Output element. (alias of Multiline) TODO: implement
 ### Radio
 
 ```python
-class Radio(self, text: str="", group_id: int|str="group", default: bool=False, key: str="", enable_events: bool=False, **kw)
+class Radio(
+    self, text: str="",
+    group_id: int|str="group",
+    default: bool=False,
+    key: str="",
+    enable_events: bool=False,
+    # other
+    metadata: dict[str, Any]|None=None,
+    **kw)
 ```
 
 Checkbox element.
@@ -1413,11 +1592,16 @@ Update the widget.
 
 ```python
 class Slider(
-    self, key: str = "", range: tuple[float, float]=(1, 10),
-     orientation: OrientationType="horizontal",
-     resolution: float|None=None, default_value: float|None=None,
-     enable_events: bool=False,
-     **kw)
+    self,
+    key: str = "",
+    range: tuple[float, float]=(1, 10),
+    orientation: OrientationType="horizontal",
+    resolution: float|None=None,
+    default_value: float|None=None,
+    enable_events: bool=False,
+    # other
+    metadata: dict[str, Any]|None=None,
+    **kw)
 ```
 
 Slider element.
@@ -1467,7 +1651,7 @@ Update the widget.
 ### Submit
 
 ```python
-class Submit(button_text: str = '', key: str = '', disabled: bool = None, **kw)
+class Submit(button_text: str = '', key: str = '', disabled: bool = None, size: tuple[int, int] | None = None, use_ttk_buttons: bool = False, tooltip: str | None = None, text_align: Optional[Literal['left', 'right', 'center']] = 'left', font: tuple[str, int] | tuple[str, int, str] | None = None, color: str | None = None, text_color: str | None = None, background_color: str | None = None, expand_x: bool = False, expand_y: bool = False, pad: int | tuple[int, int] | tuple[tuple[int, int], tuple[int, int]] | None = None, metadata: dict[str, typing.Any] | None = None, **kw)
 ```
 
 Subtmi element. (Alias of Button) : todo: add submit event
@@ -1484,10 +1668,19 @@ Subtmi element. (Alias of Button) : todo: add submit event
 
 ```python
 class Table(
-    self, values: list[list[str]]=[], headings: list[str]=[], key: str="", justification: TextAlign="center",
-     auto_size_columns: bool = True, max_col_width: int = 0,
-     col_widths: list[int]|None=None,
-     enable_events: bool=False, select_mode: str="browse", **kw)
+    self,
+    values: list[list[str]]=[],
+    headings: list[str]=[],
+    key: str="",
+    justification: TextAlign="center",
+    auto_size_columns: bool = True,
+    max_col_width: int = 0,
+    col_widths: list[int]|None=None,
+    enable_events: bool=False,
+    select_mode: str="browse",
+    # other
+    metadata: dict[str, Any]|None=None,
+    **kw)
 ```
 
 Table element.
@@ -1547,7 +1740,23 @@ Update the widget.
 ### Text
 
 ```python
-class Text(self, text: str, key: str|None=None, text_align: TextAlign="left", font: FontType|None=None, **kw)
+class Text(
+    self,
+    text: str = "",
+    key: str|None=None,
+    # text props
+    text_align: TextAlign|None="left", # text align
+    font: FontType|None=None, # font
+    color: str|None=None, # text color
+    text_color: str|None=None, # same as color
+    background_color: str|None=None, # background color
+    # pack props
+    expand_x: bool = False,
+    expand_y: bool = False,
+    pad: PadType|None = None,
+    # other
+    metadata: dict[str, Any]|None=None, # user metadata
+    **kw)
 ```
 
 Text element.
@@ -1615,7 +1824,7 @@ Update the widget.
 ### Textarea
 
 ```python
-class Textarea(text: str = '', default_text: str | None = None, key: str = '', enable_events: bool = False, enable_key_events: bool = False, enable_focus_events: bool = False, color: str | None = None, background_color: str | None = None, readonly: bool = False, readonly_background_color: str | None = None, size: tuple[int, int] = (50, 10), **kw)
+class Textarea(text: str = '', default_text: str | None = None, key: str = '', readonly: bool = False, enable_events: bool = False, enable_key_events: bool = False, enable_focus_events: bool = False, size: tuple[int, int] = (50, 10), font: tuple[str, int] | tuple[str, int, str] | None = None, color: str | None = None, text_color: str | None = None, background_color: str | None = None, expand_x: bool = False, expand_y: bool = False, pad: int | tuple[int, int] | tuple[tuple[int, int], tuple[int, int]] | None = None, readonly_background_color: str | None = None, metadata: dict[str, typing.Any] | None = None, **kw)
 ```
 
 Textarea element. (alias of Multiline)
@@ -1649,7 +1858,15 @@ Initialize self.  See help(type(self)) for accurate signature.
 ### VSeparator
 
 ```python
-class VSeparator(self, key: str="", background_color: str|None=None, pad: int=5, size: tuple[int, int]=(5, 100), **kw)
+class VSeparator(
+    self,
+    key: str="",
+    background_color: str|None=None,
+    pad: PadType=5,
+    size: tuple[int, int]=(5, 100),
+    # other
+    metadata: dict[str, Any]|None=None,
+    **kw)
 ```
 
 VSeparator element.
@@ -1680,10 +1897,18 @@ Create a widget.
 
 ```python
 class Window(
-    self, title: str, layout: list[list[ElementType]], size: tuple[str, int]|None=None, 
-     resizable:bool=False, font:FontType|None=None, modal: bool=False, 
-     keep_on_top:bool=False, no_titlebar: bool=False, grab_anywhere: bool=False,
-     alpha_channel: float=1.0, **kw)
+    self,
+    title: str,
+    layout: list[list[ElementType]],
+    size: tuple[str, int]|None=None, 
+    resizable:bool=False,
+    font:FontType|None=None,
+    modal: bool=False, 
+    keep_on_top:bool=False, # keep on top
+    no_titlebar: bool=False, # hide titlebar
+    grab_anywhere: bool=False, # can move window by dragging anywhere
+    alpha_channel: float=1.0,
+    **kw)
 ```
 
 Main window object in TkEasyGUI
