@@ -272,7 +272,7 @@ class Window:
                 # pack widget
                 fill_props = elem._get_pack_props()
                 widget.pack(**fill_props)
-                # debug
+                # expand_y?
                 if elem.expand_y:
                     row_prop["fill"] = "both"
             # add row

@@ -1694,6 +1694,16 @@ class Table(
     col_widths: list[int]|None=None,
     enable_events: bool=False,
     select_mode: str="browse",
+    # text props
+    text_align: TextAlign|None="left", # text align
+    font: FontType|None=None, # font
+    color: str|None=None, # text color
+    text_color: str|None=None, # same as color
+    background_color: str|None=None, # background color
+    # pack props
+    expand_x: bool = False,
+    expand_y: bool = False,
+    pad: PadType|None = None,
     # other
     metadata: dict[str, Any]|None=None,
     **kw)
