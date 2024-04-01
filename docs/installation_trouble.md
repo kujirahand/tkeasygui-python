@@ -1,4 +1,6 @@
-### TkEasyGUI - (en) Installation troubles
+# TkEasyGUI - Installation troubles
+
+### (en) Installation troubles
 
 - From version 0.2.24, the package name has also been changed from `tkeasygui` to `TkEasyGUI`.
   - Updating from older versions (less than 0.2.24) will fail. 
@@ -17,7 +19,7 @@ print(f"Remove: {old_package}")
 shutil.rmtree(old_package)
 ```
 
-### TkEasyGUI - (ja) インストールのトラブルについて
+### (ja) インストールのトラブルについて
 
 - 0.2.24以降、パッケージ名が、全部小文字の`tkeasygui`から大文字込みの`TkEasyGUI`に変わりました。
   - その影響で古いバージョンからアップデートしようとすると、`ModuleNotFoundError: No module named 'TKEasyGUI'`というエラーが発生します。これを防ぐために、上記のPythonコードをIDLEやREPL(`python`コマンドで起動するインタプリタ)で実行してください。
