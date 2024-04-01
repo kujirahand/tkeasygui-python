@@ -7,7 +7,8 @@ Python's standard UI library `Tkinter`, is often considered to have a high barri
 
 This project adopts the lenient MIT license. This license will not change in the future. Let's enjoy creating GUI programs.
 
-- [👉日本語のREADME](https://github.com/kujirahand/tkeasygui-python/blob/main/README-ja.md)
+- [👉日本語の説明](https://github.com/kujirahand/tkeasygui-python/blob/main/README-ja.md)
+- [👉中文解释](https://github.com/kujirahand/tkeasygui-python/blob/main/README-zh.md)
 
 ## Platform
 
