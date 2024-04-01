@@ -667,6 +667,7 @@ class Element:
         """set default props style"""
         if font is not None:
             self.props["font"] = font
+            self.font = font
         if text_align is not None:
             self.props["justify"] = text_align
         if color is not None:
@@ -998,8 +999,8 @@ class Text(Element):
                 metadata: dict[str, Any]|None=None, # user metadata
                 **kw
                 ) -> None:
-        # super().__init__("Text", "TLabel", key, metadata, **kw)
         key = text if (key is None) else key
+        # super().__init__("Text", "TLabel", key, metadata, **kw)
         super().__init__("Text", "", key, metadata, **kw)
         self.props["text"] = text
         self._set_text_props(font=font, text_align=text_align, color=color, text_color=text_color, background_color=background_color)
@@ -1011,7 +1012,7 @@ class Text(Element):
         if self.use_ttk:
             self.widget = ttk.Label(parent, style=self.get_style_name(), **self.props)
         else:
-            self.widget = ttk.Label(parent, **self.props)            
+            self.widget = tk.Label(parent, **self.props)
         if self.enable_events:
             self.widget.bind("<Button-1>", lambda e: self.disptach_event({"event_type": "click", "event": e}))
         return self.widget
@@ -1033,6 +1034,12 @@ class Text(Element):
         if text is not None:
             self.set_text(text)
         self.widget_update(**kw)
+
+class Label(Text):
+    """
+    Label element (alias of Text)
+    """
+    pass
 
 class Menu(Element):
     """
@@ -1366,9 +1373,9 @@ class Input(Element):
                 text: str="", # default text
                 key: str="", # key
                 default_text: str|None=None, # same as text
-                enable_events: bool=False,
-                enable_key_events: bool=False, 
-                enable_focus_events: bool =False,
+                enable_events: bool=False, # enabled events ([enter] or [change])
+                enable_key_events: bool=False,  # enabled key events
+                enable_focus_events: bool =False, # enabled focus events
                 text_align: TextAlign="left",
                 readonly_background_color: str|None="silver",
                 expand_x: bool=False, # expand x
@@ -1416,8 +1423,9 @@ class Input(Element):
         # set default text
         self.text_var = self.props["textvariable"] = tk.StringVar()
         # trace change
-        self.text_var.trace_add("write",
-            lambda *args: self.disptach_event({"event_type": "change", "event": args}))
+        if self.enable_events:
+            self.text_var.trace_add("write",
+                lambda *args: self.disptach_event({"event_type": "change", "event": args}))
         # create
         self.widget = ttk.Entry(parent, style=self.get_style_name(), name=self.key, **self.props)
         # set text
@@ -2056,27 +2064,45 @@ class Table(Element):
                 col_widths: list[int]|None=None,
                 enable_events: bool=False,
                 select_mode: str="browse",
+                # text props
+                text_align: TextAlign|None="left", # text align
+                font: FontType|None=None, # font
+                color: str|None=None, # text color
+                text_color: str|None=None, # same as color
+                background_color: str|None=None, # background color
+                # pack props
+                expand_x: bool = False,
+                expand_y: bool = False,
+                pad: PadType|None = None,
                 # other
                 metadata: dict[str, Any]|None=None,
                 **kw) -> None:
         """Create a table."""
-        super().__init__("Table", "Treeview", key, metadata, **kw)
+        # super().__init__("Table", "Treeview", key, metadata, **kw)
+        super().__init__("Table", "", key, metadata, **kw)
         self.values = values
         self.headings = headings
         self.has_value = True
         self.enable_events = enable_events
         self.select_mode = select_mode
-        self.justification: str = {"": "", "right": "e", "center": "center", "left": "w"}[justification]
         self.auto_size_columns = auto_size_columns
         self.max_col_width = max_col_width
         self.col_widths = col_widths
         self.has_font_prop = False # has, but not widget root
+        # justification
+        if justification is not None:
+            self.justification: str = self._justify_to_anchor(justification)
+        if text_align is not None:
+            self.justification: str = self._justify_to_anchor(justification)
+        # set props
+        self._set_text_props(font=font, color=color, text_color=text_color, background_color=background_color)
+        self._set_pack_props(expand_x=expand_x, expand_y=expand_y, pad=pad)
         # check col_widths
         if self.col_widths is None:
             self.col_widths = [len(s) for s in self.headings]
             for row in self.values:
                 for i, cell in enumerate(row):
-                    v = max(self.col_widths[i], len(str(cell)))
+                    v = max(self.col_widths[i], len(str(cell))+1)
                     if (self.max_col_width is not None) and (self.max_col_width > 0):
                         v = min(v, self.max_col_width)
                     self.col_widths[i] = v
@@ -2085,23 +2111,26 @@ class Table(Element):
         """Create a Table widget."""
         self.window: Window = win
         # create treeview
+        # - FRAME
         self.frame = ttk.Frame(parent, padding=1, relief="ridge", borderwidth=1)
         columns = tuple(i+1 for i, _ in enumerate(self.headings))
+        # - TREE (font)
+        font = None
         if "font" in self.props:
             font = self.props.pop("font")
-        else:
-            font = None
+        # - TREE
         tree = self.widget = ttk.Treeview(
             self.frame,
             columns=columns,
             show="headings",
             **self.props)
         self.props["font"] = font
-        # scroll bar
+        # - SCROLLBAR
         scrollbar = ttk.Scrollbar(self.frame, orient=tk.VERTICAL, command=tree.yview)
-        scrollbar.pack(expand=True, fill=tk.Y, side=tk.RIGHT)
-        self.widget.pack(expand=True, fill="both", side=tk.LEFT)
         tree.configure(yscrollcommand=scrollbar.set)
+        # - pack to frame
+        self.widget.pack(expand=True, fill="both", side=tk.LEFT)
+        scrollbar.pack(fill=tk.Y, side=tk.LEFT)
         # setting for column
         streatch = tk.YES if self.auto_size_columns else tk.NO
         for i, h in enumerate(self.headings):

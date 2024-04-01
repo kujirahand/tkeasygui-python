@@ -1107,9 +1107,9 @@ class Input(
     text: str="", # default text
     key: str="", # key
     default_text: str|None=None, # same as text
-    enable_events: bool=False,
-    enable_key_events: bool=False, 
-    enable_focus_events: bool =False,
+    enable_events: bool=False, # enabled events ([enter] or [change])
+    enable_key_events: bool=False,  # enabled key events
+    enable_focus_events: bool =False, # enabled focus events
     text_align: TextAlign="left",
     readonly_background_color: str|None="silver",
     expand_x: bool=False, # expand x
@@ -1208,6 +1208,22 @@ InputText element. (alias of Input)
 #### Base classes
 
 * [`Input `](#Input)
+
+------
+
+### Label
+
+```python
+class Label(text: str = '', key: str | None = None, enable_events: bool = False, text_align: Optional[Literal['left', 'right', 'center']] = 'left', font: tuple[str, int] | tuple[str, int, str] | None = None, color: str | None = None, text_color: str | None = None, background_color: str | None = None, expand_x: bool = False, expand_y: bool = False, pad: int | tuple[int, int] | tuple[tuple[int, int], tuple[int, int]] | None = None, metadata: dict[str, typing.Any] | None = None, **kw)
+```
+
+Label element (alias of Text)
+
+------
+
+#### Base classes
+
+* [`Text `](#Text)
 
 ------
 
@@ -1744,6 +1760,7 @@ class Text(
     self,
     text: str = "",
     key: str|None=None,
+    enable_events: bool=False, # enabled events (click)
     # text props
     text_align: TextAlign|None="left", # text align
     font: FontType|None=None, # font
