@@ -8,7 +8,7 @@ import tkinter as tk
 from datetime import datetime
 from queue import Queue
 from tkinter import ttk
-from typing import Any, Literal, TypeAlias
+from typing import Any, Literal, TypeAlias, Union
 
 from PIL import Image as PILImage
 from PIL import ImageTk
@@ -75,7 +75,7 @@ def get_root_window() -> tk.Tk:
     """Get root window."""
     global _root_window
     if _root_window is None:
-        _root_window = tk.Tk()
+        _root_window = tk._get_default_root() # tk.Tk()
         _root_window.eval('tk::PlaceWindow . center')
         _root_window.attributes('-alpha', 0)
         _root_window.withdraw()
@@ -89,6 +89,12 @@ def get_root_window() -> tk.Tk:
             print(f"TkEasyGUI.theme: failed to set theme {name} {e}", file=sys.stderr)
             pass
     return _root_window
+
+def get_font_list() -> list[str]:
+    """Get font list"""
+    root = get_root_window()
+    root.withdraw()
+    return list(tk.font.families())
 
 def get_ttk_style() -> ttk.Style:
     """Get ttk style"""
@@ -259,6 +265,7 @@ class Window:
                     widget: tk.Widget = elem.create(self, frame_row)
                     widget.__tkeasygui = elem # type : ignore
                 except Exception as e:
+                    print(e.__traceback__, file=sys.stderr)
                     raise TkEasyError(
                         f"Window._create_widget.Failed `{elem.element_type}` key=`{elem.get_name()}` {elem.props} reason:{e}"
                     ) from e
@@ -306,6 +313,19 @@ class Window:
         """Move the window to the center of the screen."""
         if isinstance(self.window, tk.Tk):
             self.window.eval('tk::PlaceWindow . center')
+
+    def get_element_by_key(self, key: str) -> Union[ElementType, None]:
+        """Get an element by its key."""
+        return self.key_elements[key] if key in self.key_elements else None
+    
+    def get_elements_by_type(self, element_type: str) -> list[ElementType]:
+        """Get elements by type."""
+        result: list[ElementType] = []
+        for rows in self.layout:
+            for elem in rows:
+                if elem.element_type.lower() == element_type.lower():
+                    result.append(elem)
+        return result
 
     def read(self, timeout: int|None=None, timeout_key: str="-TIMEOUT-") -> tuple[str, dict[str, Any]]:
         """ [Window.read] Read events from the window."""
@@ -1433,9 +1453,10 @@ class Input(Element):
                 ) -> None:
         super().__init__("Input", "TEntry", key, True, metadata, **kw)
         self.readonly: bool = readonly
+        self.enable_events: bool = enable_events
         if default_text is not None: # compatibility with PySimpleGUI
             text = default_text
-        self.props["text"] = text # default text @see Input.create
+        self.default_text = text # default text @see Input.create
         self._set_text_props(font=font, text_align=text_align, color=color, text_color=text_color, background_color=background_color)
         if readonly_background_color is not None:
             self.props["readonlybackground"] = readonly_background_color
@@ -1463,18 +1484,21 @@ class Input(Element):
     def create(self, win: Window, parent: tk.Widget) -> tk.Widget:
         """create Input widget"""
         # set default text
-        self.text_var = self.props["textvariable"] = tk.StringVar()
+        self.text_var = tk.StringVar(value=self.default_text)
+        print(self.text_var.get())
+        # create
+        self.widget = ttk.Entry(
+            parent,
+            textvariable=self.text_var,
+            style=self.style_name,
+            **self.props)
+        # set readonly
+        if self.readonly:
+            self.set_readonly(self.readonly)
         # trace change
         if self.enable_events:
             self.text_var.trace_add("write",
                 lambda *args: self.disptach_event({"event_type": "change", "event": args}))
-        # create
-        self.widget = ttk.Entry(parent, style=self.style_name, **self.props)
-        # set text
-        self.widget.insert(0, self.props["text"])
-        # set readonly
-        if self.readonly:
-            self.set_readonly(self.readonly)
         return self.widget
 
     def get(self) -> Any:
@@ -1485,6 +1509,7 @@ class Input(Element):
         if self.widget is None:
             return
         # change text
+        self.widget.config(textvariable=self.text_var)
         self.text_var.set(text)
         #  OR
         #   self.delete(0, "end")

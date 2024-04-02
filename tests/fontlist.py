@@ -4,28 +4,27 @@ import tkinter.font as font
 import TkEasyGUI as sg
 
 # list fonts
-tk = tk.Tk()
-tk.withdraw()
-fontlist = list(font.families())
-print(fontlist)
+fontlist = sg.get_font_list()
 
 # create window
 layout = [
     [sg.Listbox( 
         values=fontlist,
         size=(40, 20), 
-        key="-files-", 
+        key="-fontlist-", 
         enable_events=True,
     )],
-    [sg.Input("", key="-input-", expand_x=True)],
+    [sg.Input("-", key="-font-", expand_x=True)],
 ]
-window = sg.Window("Font List", layout)
+window = sg.Window("Font List", layout, font=("Arial", 14))
 # event loop
 while True:
     event, values = window.read()
     print("# event:", event, values)
     if event == sg.WINDOW_CLOSED:
         break
-    if event == "-files-":
-        f = values["-files-"][0] if values["-files-"] else "-"
-        window["-input-"].update(f)
+    if event == "-fontlist-":
+        f = values["-fontlist-"][0] if values["-fontlist-"] else "-"
+        window["-font-"].update(f)
+window.close()
+

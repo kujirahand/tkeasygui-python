@@ -505,6 +505,16 @@ Get the value of the widget.
 
 ------
 
+##### Element.get_name
+
+```python
+def get_name(self) -> str
+```
+
+Get element name.
+
+------
+
 ##### Element.get_prev_widget
 
 ```python
@@ -1975,6 +1985,26 @@ Close the window.
 
 ------
 
+##### Window.get_element_by_key
+
+```python
+def get_element_by_key(self, key: str) -> Union[ElementType, None]
+```
+
+Get an element by its key.
+
+------
+
+##### Window.get_elements_by_type
+
+```python
+def get_elements_by_type(self, element_type: str) -> list[ElementType]
+```
+
+Get elements by type.
+
+------
+
 ##### Window.get_values
 
 ```python
@@ -2193,6 +2223,16 @@ def generate_element_style_key(element_type: str) -> int
 ```
 
 Get a unique id for an element.
+
+------
+
+### get_font_list
+
+```python
+def get_font_list() -> list[str]
+```
+
+Get font list
 
 ------
 
