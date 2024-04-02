@@ -61,6 +61,13 @@ class TkEasyError(Exception):
         self.message = message
         super().__init__(self.message)
 
+# Prioritize compatibility with PySimpleGUI
+_compatibility: bool = True
+def set_PySimpleGUI_compatibility(flag: bool=True) -> None:
+    """Set compatibility with PySimpleGUI (Default=True)"""
+    global _compatibility
+    _compatibility = flag
+
 # only one root element
 _root_window: tk.Tk|None = None
 _ttk_style: ttk.Style|None = None
@@ -987,9 +994,8 @@ class Column(Element):
             self.props["anchor"] = self._justify_to_anchor(text_align)
 
     def create(self, win: Window, parent: tk.Widget) -> tk.Widget:
-        self.widget = ttk.Frame(parent, style=self.get_style_name(), name=self.key, **self.props)
         # self.widget = tk.Frame(parent, name=self.key, **self.props)
-        print("@@@@ Column.create", self.key, self.props)
+        self.widget = ttk.Frame(parent, style=self.get_style_name(), name=self.key, **self.props)
         return self.widget
 
     def get(self) -> Any:
@@ -2091,6 +2097,7 @@ class Table(Element):
                 max_col_width: int = 0,
                 col_widths: list[int]|None=None,
                 enable_events: bool=False,
+                event_returns_values: bool|None=None, # Returns the table value if set to True, otherwise returns the index.
                 select_mode: str="browse",
                 # text props
                 text_align: TextAlign|None="left", # text align
@@ -2117,6 +2124,10 @@ class Table(Element):
         self.max_col_width = max_col_width
         self.col_widths = col_widths
         self.has_font_prop = False # has, but not widget root
+        # event_returns_values ?
+        self.event_returns_values: bool = not _compatibility
+        if event_returns_values is not None:
+            self.event_returns_values = event_returns_values 
         # justification
         if justification is not None:
             self.justification: str = self._justify_to_anchor(justification)
@@ -2167,7 +2178,7 @@ class Table(Element):
             if self.justification != "":
                 kw["anchor"] = self.justification
             if self.col_widths is not None:
-                # todo: get font size
+                # get font size
                 font_w = 12
                 if (self.font is not None) and (len(self.font) >= 2):
                     font_w = self.font[1]
@@ -2191,15 +2202,20 @@ class Table(Element):
         for i, h in enumerate(self.headings):
             self.widget.heading(i+1, text=h, anchor="center")
         # add data
-        for row in self.values:
-            self.widget.insert(parent="", index="end", values=row)
+        for row_no, row in enumerate(self.values):
+            self.widget.insert(parent="", iid=row_no, index="end", values=row)
     
     def get(self) -> Any:
         """Get the value of the widget."""
         if self.widget is None:
             return []
-        record_id = self.widget.focus()
-        record_values = self.widget.item(record_id, "values")
+        record_ids = self.widget.focus()
+        if self.event_returns_values:
+            record_values = self.widget.item(record_ids, "values")
+        else:
+            if isinstance(record_ids, str):
+                record_ids = [record_ids]
+            record_values = list(map(lambda id_s: int(id_s), record_ids))
         return record_values
 
     def _table_events(self, _event: Any) -> None:
