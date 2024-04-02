@@ -260,10 +260,10 @@ class Window:
                     widget.__tkeasygui = elem # type : ignore
                 except Exception as e:
                     raise TkEasyError(
-                        f"Window._create_widget.Failed `{elem.element_type}` key=`{elem.key}` {elem.props} reason:{e}"
+                        f"Window._create_widget.Failed `{elem.element_type}` key=`{elem.get_name()}` {elem.props} reason:{e}"
                     ) from e
                 # check key
-                if elem.has_value:
+                if elem.has_value or (elem.key is not None):
                     self.key_elements[elem.key] = elem
                 # check focus widget
                 if elem.has_value and (self.need_focus_widget is None):
@@ -642,6 +642,12 @@ class Element:
         self.col_no: int = -1
         self.row_no: int = -1
     
+    def get_name(self) -> str:
+        """Get element name."""
+        if self.key is None:
+            return "-unknown-"
+        return str(self.key)
+    
     def bind(self, event_name: str, handle_name: str, propagate: bool=True, event_mode: EventMode = "user") -> None:
         """
         Bind event. @see `Window.bind`
@@ -945,11 +951,10 @@ class Frame(Element):
             get_ttk_style().configure(self.style_name, labeloutside=self.label_outside)
             self.widget = ttk.LabelFrame(
                 parent,
-                name=self.key,
                 style=self.style_name,
                 **self.props)
         else:
-            self.widget = tk.LabelFrame(parent, name=self.key, **self.props)
+            self.widget = tk.LabelFrame(parent, **self.props)
         return self.widget
 
     def get(self) -> Any:
@@ -998,8 +1003,8 @@ class Column(Element):
             self.props["anchor"] = self._justify_to_anchor(text_align)
 
     def create(self, win: Window, parent: tk.Widget) -> tk.Widget:
-        # self.widget = tk.Frame(parent, name=self.key, **self.props)
-        self.widget = ttk.Frame(parent, style=self.style_name, name=self.key, **self.props)
+        # self.widget = tk.Frame(parent, **self.props)
+        self.widget = ttk.Frame(parent, style=self.style_name, **self.props)
         return self.widget
 
     def get(self) -> Any:
@@ -1037,7 +1042,7 @@ class Text(Element):
                 metadata: dict[str, Any]|None=None, # user metadata
                 **kw
                 ) -> None:
-        key = text if (key is None) else key
+        key = text if (key is None) or (key == "") else key
         super().__init__("Text", "", key, False, metadata, **kw)
         self.props["text"] = text
         self._set_text_props(font=font, text_align=text_align, color=color, text_color=text_color, background_color=background_color)
@@ -1203,7 +1208,7 @@ class Button(Element):
                 metadata: dict[str, Any]|None=None,
                 **kw
                 ) -> None:
-        key = button_text if key == "" else key
+        key = button_text if (key is None) or (key == "") else key
         super().__init__("Button", "TButton", key, False, metadata, **kw)
         self.use_ttk = use_ttk_buttons # can select ttk or tk button
         self.disabled = False
@@ -1225,7 +1230,6 @@ class Button(Element):
         if self.use_ttk:
             self.widget = ttk.Button(
                 parent,
-                style=self.style_name,
                 command=lambda: self.disptach_event({"event_type": "command"}),
                 **self.props)
         else:
@@ -1280,7 +1284,7 @@ class Checkbox(Element):
                 # other
                 metadata: dict[str, Any]|None=None,
                 **kw) -> None:
-        if key == "":
+        if key is None or key == "":
             key = text
         super().__init__("Checkbox", "TCheckbutton", key, True, metadata, **kw)
         self.default_value = default
@@ -1337,7 +1341,7 @@ class Radio(Element):
                 # other
                 metadata: dict[str, Any]|None=None,
                 **kw) -> None:
-        if key == "":
+        if key is None or key == "":
             key = text
         super().__init__("Radio", "TRadiobutton", key, True, metadata, **kw)
         self.default_value = default
@@ -1465,7 +1469,7 @@ class Input(Element):
             self.text_var.trace_add("write",
                 lambda *args: self.disptach_event({"event_type": "change", "event": args}))
         # create
-        self.widget = ttk.Entry(parent, style=self.style_name, name=self.key, **self.props)
+        self.widget = ttk.Entry(parent, style=self.style_name, **self.props)
         # set text
         self.widget.insert(0, self.props["text"])
         # set readonly
@@ -1576,7 +1580,7 @@ class Multiline(Element):
         self.widget_frame = widget_frame = ttk.Frame(parent)
         # text
         text = self.props.pop("text", "")
-        self.widget = tk.Text(widget_frame, name=self.key, **self.props)
+        self.widget = tk.Text(widget_frame, **self.props)
         self.widget.insert("1.0", text)
         # readonly
         if self.readonly:
@@ -1691,7 +1695,6 @@ class Slider(Element):
         self.scale_var.set(self.default_value)
         self.widget = ttk.Scale(
             parent,
-            name=self.key,
             variable=self.scale_var,
             from_=self.range[0], to=self.range[1],
             # resolution=self.resolution, # (memo) ttk.Scale does not support resolution
@@ -1734,7 +1737,7 @@ class Canvas(Element):
             }, "system")
 
     def create(self, win: Window, parent: tk.Widget) -> tk.Widget:
-        self.widget = tk.Canvas(parent, name=self.key, **self.props)
+        self.widget = tk.Canvas(parent, **self.props)
         return self.widget
     
     def get(self) -> Any:
@@ -1779,7 +1782,7 @@ class Graph(Element):
         self.parent_window: Window|None = None
 
     def create(self, win: Window, parent: tk.Widget) -> tk.Widget:
-        self.widget: tk.Canvas = tk.Canvas(parent, name=self.key, **self.props)
+        self.widget: tk.Canvas = tk.Canvas(parent, **self.props)
         self.parent_window = win
         return self.widget
 
@@ -1877,7 +1880,7 @@ class Image(Element):
 
     def create(self, win: Window, parent: tk.Widget) -> tk.Widget:
         """Create a Image widget."""
-        self.widget = tk.Canvas(parent, name=self.key, **self.props)
+        self.widget = tk.Canvas(parent, **self.props)
         try:
             self.set_image(self.source, self.filename, self.data)
         except Exception:
@@ -2118,7 +2121,6 @@ class Table(Element):
         super().__init__("Table", "", key, True, metadata, **kw)
         self.values = values
         self.headings = headings
-        self.has_value = True
         self.enable_events = enable_events
         self.select_mode = select_mode
         self.auto_size_columns = auto_size_columns
@@ -2259,7 +2261,6 @@ class FileBrowse(Element):
                 **kw
                 ) -> None:
         super().__init__("FileBrowse", "", key, False, metadata, **kw)
-        self.has_value = False
         self.target_key = target_key
         self.title = title
         self.file_types = file_types
@@ -2385,7 +2386,6 @@ class FolderBrowse(FileBrowse):
                 **kw
                 ) -> None:
         super().__init__("FolderBrowse", "", key, False, metadata, **kw)
-        self.has_value = False
         self.target_key = target_key
         self.title = title
         self.default_path = default_path
@@ -2417,7 +2417,6 @@ class ColorBrowse(FileBrowse):
                 **kw
                 ) -> None:
         super().__init__("FolderBrowse", "", key, False, metadata, **kw)
-        self.has_value = False
         self.target_key = target_key
         self.title = title
         self.default_color = default_color
