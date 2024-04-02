@@ -3,6 +3,7 @@ TkEasyGUI Widgets
 """
 import io
 import os
+import platform
 import sys
 import tkinter as tk
 from datetime import datetime
@@ -47,17 +48,31 @@ ReliefType: TypeAlias = Literal["flat", "groove", "raised", "ridge", "solid", "s
 # https://kuroro.blog/python/YcZ6Yh4PswqUzaQXwnG2/
 
 #------------------------------------------------------------------------------
+# utility
+def get_platform() -> str:
+    """get platform"""
+    return platform.system()
+
+def is_mac() -> bool:
+    """platform : is mac?"""
+    return get_platform() == "Darwin"
+def is_win() -> bool:
+    """platform : is Windows?"""
+    return get_platform() == "Windows"
+
+#------------------------------------------------------------------------------
 # theme
 _tkeasygui_info: dict[str, Any] = {}
 def theme(name: str) -> None:
     """Set theme"""
-    change_look_and_feel(name)
+    set_theme(name)
 
-def change_look_and_feel(name: str) -> None:
+def set_theme(name: str) -> None:
     """Change look and feel"""
     win = get_root_window()
     win.withdraw()
-    ttk.Style().theme_use(name)
+    style = get_ttk_style()
+    style.theme_use(name)
     _tkeasygui_info["theme"] = name
 
 def get_tnemes() -> list[str]:
@@ -68,7 +83,7 @@ def get_tnemes() -> list[str]:
 
 def get_current_theme() -> str:
     """Get current theme"""
-    return _tkeasygui_info.get("theme", "default")
+    return _tkeasygui_info.get("theme", "")
 
 #------------------------------------------------------------------------------
 # Widget wrapper
@@ -102,6 +117,13 @@ def get_root_window() -> tk.Tk:
                 name = _tkeasygui_info["theme"]
                 _ttk_style = get_ttk_style()
                 _ttk_style.theme_use(name)
+            else:
+                if is_mac():
+                    set_theme("aqua")
+                elif is_win():
+                    set_theme("winnative")
+                else:
+                    set_theme("default")
         except Exception as e:
             print(f"TkEasyGUI.theme: failed to set theme {name} {e}", file=sys.stderr)
             pass
@@ -492,7 +514,7 @@ class Window:
         try:
             self.window.overrideredirect(flag)
             self._no_titlebar = flag
-        except Exception as e:
+        except Exception:
             pass
 
     def close(self) -> None:
@@ -521,10 +543,6 @@ class Window:
         """Get an element by its key."""
         return self.key_elements[key]
     
-    def hide(self) -> None:
-        """Hide window"""
-        self.window.withdraw()
-    
     def show(self) -> None:
         """ Show hidden window (hide -> show)"""
         self.window.deiconify()
@@ -551,7 +569,7 @@ class Window:
     
     def _move_window(self, event: tk.Event) -> None:
         """Move window"""
-        if (not self._grab_anywhere) or (self._grab_flag == False):
+        if (not self._grab_anywhere) or (not self._grab_flag):
             return
         mouse_x = self.window.winfo_x() + event.x
         mouse_y = self.window.winfo_y() + event.y
@@ -848,6 +866,9 @@ class Element:
         # set style
         style = get_ttk_style()
         style_name = self.style_name
+        # create style
+        if style_name not in style.element_names():
+            style.element_create(style_name, "from", get_current_theme())
         # set font style
         font = None
         if "font" in self.props:
@@ -1088,10 +1109,9 @@ class Text(Element):
 
     def create(self, win: Window, parent: tk.Widget) -> tk.Widget:
         """Create a Text widget."""
-        if self.use_ttk:
-            self.widget = ttk.Label(parent, style=self.style_name, **self.props)
-        else:
-            self.widget = tk.Label(parent, **self.props)
+        if "justify" in self.props:
+            self.props["anchor"] = self._justify_to_anchor(self.props.pop("justify"))
+        self.widget = tk.Label(parent, **self.props)
         if self.enable_events:
             self.widget.bind("<Button-1>", lambda e: self.disptach_event({"event_type": "click", "event": e}))
         return self.widget
@@ -1219,7 +1239,6 @@ class Menu(Element):
         if text is not None:
             self.set_text(text)
         self.widget_update(**kw)
-
 
 class Button(Element):
     """Button element."""
@@ -1412,9 +1431,6 @@ class Radio(Element):
     def select(self) -> None:
         """Select the radio button."""
         self.window.radio_group_dict[self.group_id][0].set(self.value)
-        if self.widget is not None:
-            w: tk.Radiobutton = self.widget
-            # w.flash() # TODO: flash is not defined
     
     def is_selected(self) -> bool:
         """Check if the radio button is selected."""

@@ -1,7 +1,6 @@
 """
 TkEasyGUI dialogs
 """
-import platform
 import subprocess
 import tkinter.filedialog as filedialog
 import tkinter.messagebox as messagebox
@@ -305,9 +304,9 @@ def popup_get_date(message: str = "", title: str = "", current_date:datetime|Non
 # for notify
 def popup_notify(message: str, title: str="") -> None:
     """Popup a information"""
-    if is_mac():
+    if eg.is_mac():
         send_notification_mac(message, title)
-    elif is_win():
+    elif eg.is_win():
         send_notification_win(message, title)
     else:
         popup_buttons(message, title, buttons=["OK"], auto_close_duration=1)
@@ -400,15 +399,3 @@ def msgbox(message: str, title: str="Message") -> None:
     """show message in a popup window like VB"""
     messagebox.showinfo(title, message)
 
-#------------------------------------------------------------------------------
-# utility
-def get_platform() -> str:
-    """get platform"""
-    return platform.system()
-
-def is_mac() -> bool:
-    """platform : is mac?"""
-    return get_platform() == "Darwin"
-def is_win() -> bool:
-    """platform : is Windows?"""
-    return get_platform() == "Windows"
