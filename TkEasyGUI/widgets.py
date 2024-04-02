@@ -229,40 +229,51 @@ class Window:
                 elem.prepare_create(self)
         # create widgets
         self.need_focus_widget: tk.Widget|None = None
-        for widgets in layout:
-            frame_row = ttk.Frame(parent, padding=5)
+        for row_no, widgets in enumerate(layout):
+            frame_row = ttk.Frame(parent, padding=5, name=f"tkeasygui_frame_row_{row_no}")
             # columns
             prev_element: Element|None = None
-            row_prop: dict[str, Any] = {"expand": True, "fill": "x", "side": "top"}
-            for _col, elemment in enumerate(widgets):
+            row_prop: dict[str, Any] = {"expand": False, "fill": "x", "side": "top"}
+            for col_no, elemment in enumerate(widgets):
                 # create widget
                 elem: Element = elemment
                 # set window and parent
                 elem.window = self
                 elem.parent = frame_row
+                elem.col_no = col_no
+                elem.row_no = row_no
                 # set prev_element and next_element
                 elem.prev_element = prev_element # set prev_element
                 if prev_element is not None:
                     prev_element.next_element = elem
                 prev_element = elem
+                # create widget
                 try:
                     widget: tk.Widget = elem.create(self, frame_row)
                     widget.__tkeasygui = elem # type : ignore
-                    # check key
-                    self.key_elements[elem.key] = elem
-                    # check focus widget
-                    if elem.has_value and (self.need_focus_widget is None):
-                        self.need_focus_widget = widget
-                    # check specila key
-                    if (self.need_focus_widget is None) and (elem.key == "OK" or elem.key == "Yes"):
-                        self.need_focus_widget = widget
+                except Exception as e:
+                    raise TkEasyError(
+                        f"Window._create_widget.Failed `{elem.element_type}` key=`{elem.key}` {elem.props} reason:{e}"
+                    ) from e
+                # check key
+                self.key_elements[elem.key] = elem
+                # check focus widget
+                if elem.has_value and (self.need_focus_widget is None):
+                    self.need_focus_widget = widget
+                # check specila key
+                if (self.need_focus_widget is None) and (elem.key == "OK" or elem.key == "Yes"):
+                    self.need_focus_widget = widget
+                # create sub widgets
+                try:
                     # has children?
                     if elem.has_children:
                         self._create_widget(widget, elem.layout)
-                    # post create
-                    elem.post_create(self, frame_row)
                 except Exception as e:
-                    raise TkEasyError(f"Window._create_widget : Failed to create `{elem.element_type}` key=`{elem.key}` {elem.props}\n{e}") from e
+                    raise TkEasyError(
+                        f"Window._create_widget.Failed_sub_widgets `{elem.element_type}` key=`{elem.key}` {elem.props} reason:{e}"
+                    ) from e
+                # post create
+                elem.post_create(self, frame_row)
                 # bind event (before create)
                 for event_name, handle_t in elem._bind_dict.items():
                     self.bind(elem, event_name, handle_t[0], handle_t[1], handle_t[2])
@@ -274,6 +285,7 @@ class Window:
                 widget.pack(**fill_props)
                 # expand_y?
                 if elem.expand_y:
+                    row_prop["expand"] = True
                     row_prop["fill"] = "both"
             # add row
             frame_row.pack(**row_prop)
@@ -604,6 +616,7 @@ class Element:
         self.widget: Any|None = None
         self.expand_x: bool = False
         self.expand_y: bool = False
+        self.anchor: str|None = None
         self.has_children: bool = False
         self.prev_element: Element|None = None
         self.next_element: Element|None = None
@@ -616,6 +629,8 @@ class Element:
         self.pady: int|tuple[int,int]|None = None
         self.font: FontType|None = None
         self.has_font_prop: bool = True
+        self.col_no: int = -1
+        self.row_no: int = -1
     
     def bind(self, event_name: str, handle_name: str, propagate: bool=True, event_mode: EventMode = "user") -> None:
         """
@@ -639,6 +654,7 @@ class Element:
         if justify == "right":
             return "e"
         return "center"
+
     def _set_pack_props(self,
                 expand_x: bool|None=None,
                 expand_y: bool|None=None,
@@ -695,6 +711,9 @@ class Element:
             props["padx"] = self.padx
         if self.pady is not None:
             props["pady"] = self.pady
+        # anchor
+        if self.anchor is not None:
+            props["anchor"] = self.anchor
         # print("pack.props=", self.key, props)
         return props
 
@@ -726,6 +745,9 @@ class Element:
             self.padx = result.pop("padx")
         if "pady" in result:
             self.pady = result.pop("pady")
+        # anchor
+        if "anchor" in result:
+            self.anchor = result.pop("anchor")
         # convert "select_mode" to "selectmode"
         if "select_mode" in result:
             result["selectmode"] = result.pop("select_mode")
@@ -941,6 +963,8 @@ class Column(Element):
                 background_color: str|None=None,
                 vertical_alignment: TextVAlign="top",
                 size: tuple[int, int]|None=None,
+                # text props
+                text_align: TextAlign|None="left", # text align
                 # pack props
                 expand_x: bool = False,
                 expand_y: bool = False,
@@ -949,6 +973,7 @@ class Column(Element):
                 metadata: dict[str, Any]|None=None,
                 **kw) -> None:
         super().__init__("Column", "TFrame", key, metadata, **kw)
+        # super().__init__("Column", "", key, metadata, **kw)
         self.has_children = True
         self.layout = layout
         self.vertical_alignment = vertical_alignment
@@ -956,12 +981,15 @@ class Column(Element):
         self._set_pack_props(expand_x=expand_x, expand_y=expand_y, pad=pad)
         if size is not None:
             self.props["size"] = size
-        if background_color:
-            self.props["bg"] = background_color
-        # self.props["anchor"] = {"top": "n", "bottom": "s", "center": "center"}[vertical_alignment]
+        if background_color is not None:
+            self.props["background_color"] = background_color
+        if text_align is not None:
+            self.props["anchor"] = self._justify_to_anchor(text_align)
 
     def create(self, win: Window, parent: tk.Widget) -> tk.Widget:
-        self.widget = ttk.Frame(parent, name=self.key, **self.props)
+        self.widget = ttk.Frame(parent, style=self.get_style_name(), name=self.key, **self.props)
+        # self.widget = tk.Frame(parent, name=self.key, **self.props)
+        print("@@@@ Column.create", self.key, self.props)
         return self.widget
 
     def get(self) -> Any:
