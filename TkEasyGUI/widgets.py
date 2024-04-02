@@ -51,7 +51,24 @@ ReliefType: TypeAlias = Literal["flat", "groove", "raised", "ridge", "solid", "s
 _tkeasygui_info: dict[str, Any] = {}
 def theme(name: str) -> None:
     """Set theme"""
+    change_look_and_feel(name)
+
+def change_look_and_feel(name: str) -> None:
+    """Change look and feel"""
+    win = get_root_window()
+    win.withdraw()
+    ttk.Style().theme_use(name)
     _tkeasygui_info["theme"] = name
+
+def get_tnemes() -> list[str]:
+    """Get themes"""
+    win = get_root_window()
+    win.withdraw()
+    return ttk.Style().theme_names()
+
+def get_current_theme() -> str:
+    """Get current theme"""
+    return _tkeasygui_info.get("theme", "default")
 
 #------------------------------------------------------------------------------
 # Widget wrapper
