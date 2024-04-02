@@ -85,6 +85,16 @@ def get_current_theme() -> str:
     """Get current theme"""
     return _tkeasygui_info.get("theme", "")
 
+def set_default_theme() -> None:
+    """Set default theme"""
+    if is_mac():
+        set_theme("aqua")
+    elif is_win():
+        # set_theme("winnative")
+        set_theme("vista")
+    else:
+        set_theme("clam")
+
 #------------------------------------------------------------------------------
 # Widget wrapper
 #------------------------------------------------------------------------------
@@ -118,12 +128,7 @@ def get_root_window() -> tk.Tk:
                 _ttk_style = get_ttk_style()
                 _ttk_style.theme_use(name)
             else:
-                if is_mac():
-                    set_theme("aqua")
-                elif is_win():
-                    set_theme("winnative")
-                else:
-                    set_theme("default")
+                set_default_theme()
         except Exception as e:
             print(f"TkEasyGUI.theme: failed to set theme {name} {e}", file=sys.stderr)
             pass

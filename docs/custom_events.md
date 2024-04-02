@@ -9,7 +9,7 @@ After creating the element, bind the event with the bind method.
 The event name will be in the format of "f{key}{handle_name}".
 
 ```py
-# (1) creste Element
+# (1) create Element
 canvas = sg.Canvas(size=(400, 400), key="-canvas-")
 window = sg.Window("Canvas", layout=[[canvas]], finalize=True)
 
