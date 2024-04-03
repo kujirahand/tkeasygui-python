@@ -344,12 +344,14 @@ class Window:
                     continue
                 # pack widget
                 fill_props = elem._get_pack_props()
-                print("@", fill_props)
                 widget.pack(**fill_props)
                 # expand_y?
                 if elem.expand_y:
                     row_prop["expand"] = True
                     row_prop["fill"] = "both"
+                # pady
+                if elem.pady is not None:
+                    row_prop["pady"] = elem.pady
             # add row
             frame_row.pack(**row_prop)
         # end of create
