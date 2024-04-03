@@ -1838,7 +1838,7 @@ class Canvas(Element):
     
     def __getattr__(self, name):
         """Get unknown attribute."""
-        if name in ["Widget", "tk_canvas"]: # compatibility with PySimpleGUI
+        if name in ["Widget", "tk_canvas", "TKCanvas"]: # compatibility with PySimpleGUI
             return self.widget
         return super().__getattr__(name)
 

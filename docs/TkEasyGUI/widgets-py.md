@@ -15,6 +15,7 @@ class Button(
     size: tuple[int, int]|None=None,
     use_ttk_buttons: bool=False,
     tooltip: str|None=None, # (TODO) tooltip
+    button_color: str|tuple[str, str]|None=None,
     # text props
     text_align: TextAlign|None="left", # text align
     font: FontType|None=None, # font
@@ -72,6 +73,16 @@ def get_text(self) -> str
 
 ------
 
+##### Button.set_button_color
+
+```python
+def set_button_color(self, button_color: str|tuple[str,str], update: bool=True) -> None
+```
+
+Set the button color.
+
+------
+
 ##### Button.set_text
 
 ```python
@@ -85,7 +96,7 @@ Set the text of the widget.
 ##### Button.update
 
 ```python
-def update(self, text: str|None=None, disabled: bool|None=None, **kw) -> None
+def update(self, text: str|None=None, disabled: bool|None=None, button_color: str|tuple[str,str]|None=None, **kw) -> None
 ```
 
 Update the widget.
@@ -1686,7 +1697,7 @@ Update the widget.
 ### Submit
 
 ```python
-class Submit(button_text: str = '', key: str | None = None, disabled: bool = None, size: tuple[int, int] | None = None, use_ttk_buttons: bool = False, tooltip: str | None = None, text_align: Optional[Literal['left', 'right', 'center']] = 'left', font: tuple[str, int] | tuple[str, int, str] | None = None, color: str | None = None, text_color: str | None = None, background_color: str | None = None, expand_x: bool = False, expand_y: bool = False, pad: int | tuple[int, int] | tuple[tuple[int, int], tuple[int, int]] | None = None, metadata: dict[str, typing.Any] | None = None, **kw)
+class Submit(button_text: str = '', key: str | None = None, disabled: bool = None, size: tuple[int, int] | None = None, use_ttk_buttons: bool = False, tooltip: str | None = None, button_color: str | tuple[str, str] | None = None, text_align: Optional[Literal['left', 'right', 'center']] = 'left', font: tuple[str, int] | tuple[str, int, str] | None = None, color: str | None = None, text_color: str | None = None, background_color: str | None = None, expand_x: bool = False, expand_y: bool = False, pad: int | tuple[int, int] | tuple[tuple[int, int], tuple[int, int]] | None = None, metadata: dict[str, typing.Any] | None = None, **kw)
 ```
 
 Subtmi element. (Alias of Button) : todo: add submit event

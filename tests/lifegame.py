@@ -44,7 +44,6 @@ def create_gui(board):
     for i in range(ROWS):
         row = []
         for j in range(COLS):
-            # row.append(sg.Button(j, key=(i, j), size=(1, 1), pad=(0, 0)))
             row.append(sg.Text("", key=(i, j), size=(2, 1), pad=(0,0), enable_events=True))
         layout.append(row)
 
