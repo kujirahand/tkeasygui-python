@@ -6,6 +6,7 @@ import os
 import platform
 import sys
 import tkinter as tk
+import tkinter.font as tkfont
 from datetime import datetime
 from queue import Queue
 from tkinter import ttk
@@ -139,7 +140,7 @@ def get_font_list() -> list[str]:
     """Get font list"""
     root = get_root_window()
     root.withdraw()
-    return list(tk.font.families())
+    return list(tkfont.families())
 
 def get_ttk_style() -> ttk.Style:
     """Get ttk style"""
@@ -288,7 +289,8 @@ class Window:
         # create widgets
         self.need_focus_widget: tk.Widget|None = None
         for row_no, widgets in enumerate(layout):
-            frame_row = ttk.Frame(parent, padding=5, name=f"tkeasygui_frame_row_{row_no}")
+            # frame_row = ttk.Frame(parent, padding=5, name=f"tkeasygui_frame_row_{row_no}")
+            frame_row = ttk.Frame(parent, name=f"tkeasygui_frame_row_{row_no}")
             # columns
             prev_element: Element|None = None
             row_prop: dict[str, Any] = {"expand": False, "fill": "x", "side": "top"}
@@ -342,6 +344,7 @@ class Window:
                     continue
                 # pack widget
                 fill_props = elem._get_pack_props()
+                print("@", fill_props)
                 widget.pack(**fill_props)
                 # expand_y?
                 if elem.expand_y:
@@ -1256,6 +1259,7 @@ class Button(Element):
                 size: tuple[int, int]|None=None,
                 use_ttk_buttons: bool=False,
                 tooltip: str|None=None, # (TODO) tooltip
+                button_color: str|tuple[str, str]|None=None,
                 # text props
                 text_align: TextAlign|None="left", # text align
                 font: FontType|None=None, # font
@@ -1281,6 +1285,8 @@ class Button(Element):
         self.props["text"] = button_text
         if tooltip is not None:
             pass # self.props["tooltip"] = tooltip
+        if button_color is not None:
+            self.set_button_color(button_color, update=False)
         self._set_text_props(font=font, text_align=text_align, color=color, text_color=text_color, background_color=background_color)
         self._set_pack_props(expand_x=expand_x, expand_y=expand_y, pad=pad)
         self.bind_events({
@@ -1301,6 +1307,20 @@ class Button(Element):
                 **self.props)
         return self.widget
 
+    def set_button_color(self, button_color: str|tuple[str,str], update: bool=True) -> None:
+        """Set the button color."""
+        props = {}
+        if isinstance(button_color, tuple):
+            if len(button_color) == 2:
+                props["text_color"] = button_color[0]
+                props["background_color"] = button_color[1]
+            elif len(button_color) == 1:
+                props["background_color"] = button_color[0]
+        else:
+            props["background_color"] = button_color
+        if update:
+            self.widget_update(props)
+
     def get(self) -> Any:
         """Get the value of the widget."""
         return self.get_text()
@@ -1313,13 +1333,15 @@ class Button(Element):
     def get_text(self) -> str:
         return self.props["text"]
 
-    def update(self, text: str|None=None, disabled: bool|None=None, **kw) -> None:
+    def update(self, text: str|None=None, disabled: bool|None=None, button_color: str|tuple[str,str]|None=None, **kw) -> None:
         """Update the widget."""
         if text is not None:
             self.props["text"] = text
             self.widget_update(text=text)
         if disabled is not None:
             self.set_disabled(disabled)
+        if button_color is not None:
+            self.set_button_color(button_color, update=False)
         # other
         self.widget_update(**kw)
     

@@ -22,7 +22,7 @@ while True:
     if event == sg.WINDOW_CLOSED:
         break
     if event == "-fontlist-":
-        f = values["-fontlist-"][0] if values["-fontlist-"] else "-"
-        window["-font-"].update(f)
+        if values["-fontlist-"]:
+            window["-font-"].update(values["-fontlist-"][0])
 window.close()
 
