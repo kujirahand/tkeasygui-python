@@ -2039,6 +2039,7 @@ class Listbox(Element):
     def __init__(
                 self,
                 values: list[str] = [],
+                default_values: list[str] = [],
                 key: str|None = None,
                 enable_events: bool = False,
                 select_mode: ListboxSelectMode = LISTBOX_SELECT_MODE_BROWSE,
@@ -2048,6 +2049,7 @@ class Listbox(Element):
         super().__init__("Listbox", "", key, True, metadata, **kw)
         self.values = values
         self.select_mode = select_mode
+        self.default_values = default_values
         # event
         if enable_events:
             self.bind_events({
@@ -2060,7 +2062,19 @@ class Listbox(Element):
         self.widget = tk.Listbox(parent, selectmode=self.select_mode, **self.props)
         # insert values
         self.set_values(self.values)
+        self.select_values(self.default_values)
         return self.widget
+
+    def select_values(self, values: list[str]) -> None:
+        """Select values"""
+        if self.widget is None:
+            return
+        for v in values:
+            try:
+                index = self.values.index(v)
+                self.widget.selection_set(index)
+            except ValueError:
+                pass
 
     def set_values(self, values: list[str]) -> None:
         """Set values to list"""
