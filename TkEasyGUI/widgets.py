@@ -1097,6 +1097,7 @@ class Text(Element):
                 text: str = "",
                 key: str|None=None,
                 enable_events: bool=False, # enabled events (click)
+                wrap_length: int|None=None, # wrap length(unit=pixel)
                 # text props
                 text_align: TextAlign|None="left", # text align
                 font: FontType|None=None, # font
@@ -1117,11 +1118,15 @@ class Text(Element):
         self._set_text_props(font=font, text_align=text_align, color=color, text_color=text_color, background_color=background_color)
         self._set_pack_props(expand_x=expand_x, expand_y=expand_y, pad=pad)
         self.enable_events = enable_events
+        if wrap_length is not None:
+            self.props["wraplength"] = wrap_length
 
     def create(self, win: Window, parent: tk.Widget) -> tk.Widget:
         """Create a Text widget."""
         if "justify" in self.props:
-            self.props["anchor"] = self._justify_to_anchor(self.props.pop("justify"))
+            val = self.props.pop("justify")
+            self.props["anchor"] = self._justify_to_anchor(val)
+            self.props["justify"] = val
         self.widget = tk.Label(parent, **self.props)
         if self.enable_events:
             self.widget.bind("<Button-1>", lambda e: self.disptach_event({"event_type": "click", "event": e}))
