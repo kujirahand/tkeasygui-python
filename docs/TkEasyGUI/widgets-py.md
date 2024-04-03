@@ -1241,6 +1241,7 @@ Label element (alias of Text)
 class Listbox(
     self,
     values: list[str] = [],
+    default_values: list[str] = [],
     key: str|None = None,
     enable_events: bool = False,
     select_mode: ListboxSelectMode = LISTBOX_SELECT_MODE_BROWSE,
@@ -1280,6 +1281,16 @@ def get(self) -> Any
 ```
 
 Get the value of the widget.
+
+------
+
+##### Listbox.select_values
+
+```python
+def select_values(self, values: list[str]) -> None
+```
+
+Select values
 
 ------
 
@@ -2021,7 +2032,7 @@ Get values from the window.
 def hide(self) -> None
 ```
 
-Hide window
+Hide the window.
 
 ------
 
@@ -2226,6 +2237,16 @@ Get a unique id for an element.
 
 ------
 
+### get_current_theme
+
+```python
+def get_current_theme() -> str
+```
+
+Get current theme
+
+------
+
 ### get_font_list
 
 ```python
@@ -2246,6 +2267,16 @@ Get Image for tk
 
 ------
 
+### get_platform
+
+```python
+def get_platform() -> str
+```
+
+get platform
+
+------
+
 ### get_root_window
 
 ```python
@@ -2253,6 +2284,16 @@ def get_root_window() -> tk.Tk
 ```
 
 Get root window.
+
+------
+
+### get_tnemes
+
+```python
+def get_tnemes() -> list[str]
+```
+
+Get themes
 
 ------
 
@@ -2294,6 +2335,26 @@ Read image file and convert to bytes
 
 ------
 
+### is_mac
+
+```python
+def is_mac() -> bool
+```
+
+platform : is mac?
+
+------
+
+### is_win
+
+```python
+def is_win() -> bool
+```
+
+platform : is Windows?
+
+------
+
 ### register_element_key
 
 ```python
@@ -2319,6 +2380,26 @@ def set_PySimpleGUI_compatibility(flag: bool=True) -> None
 ```
 
 Set compatibility with PySimpleGUI (Default=True)
+
+------
+
+### set_default_theme
+
+```python
+def set_default_theme() -> None
+```
+
+Set default theme
+
+------
+
+### set_theme
+
+```python
+def set_theme(name: str) -> None
+```
+
+Change look and feel
 
 ------
 

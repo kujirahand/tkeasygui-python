@@ -34,36 +34,6 @@ Display a message in a popup window with Yes and No buttons. Return True or Fals
 
 ------
 
-### get_platform
-
-```python
-def get_platform() -> str
-```
-
-get platform
-
-------
-
-### is_mac
-
-```python
-def is_mac() -> bool
-```
-
-platform : is mac?
-
-------
-
-### is_win
-
-```python
-def is_win() -> bool
-```
-
-platform : is Windows?
-
-------
-
 ### msgbox
 
 ```python
