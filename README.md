@@ -11,7 +11,7 @@ This project adopts the lenient MIT license. This license will not change in the
 
 ## Platform
 
-- Windows / macOS / Linux (tkinter required)
+- Windows / macOS / Linux (Tkinter required)
 
 ## Install
 
