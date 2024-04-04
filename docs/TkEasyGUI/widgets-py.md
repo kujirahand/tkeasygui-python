@@ -1233,7 +1233,7 @@ InputText element. (alias of Input)
 ### Label
 
 ```python
-class Label(text: str = '', key: str | None = None, enable_events: bool = False, text_align: Optional[Literal['left', 'right', 'center']] = 'left', font: tuple[str, int] | tuple[str, int, str] | None = None, color: str | None = None, text_color: str | None = None, background_color: str | None = None, expand_x: bool = False, expand_y: bool = False, pad: int | tuple[int, int] | tuple[tuple[int, int], tuple[int, int]] | None = None, metadata: dict[str, typing.Any] | None = None, **kw)
+class Label(text: str = '', key: str | None = None, enable_events: bool = False, wrap_length: int | None = None, text_align: Optional[Literal['left', 'right', 'center']] = 'left', font: tuple[str, int] | tuple[str, int, str] | None = None, color: str | None = None, text_color: str | None = None, background_color: str | None = None, expand_x: bool = False, expand_y: bool = False, pad: int | tuple[int, int] | tuple[tuple[int, int], tuple[int, int]] | None = None, metadata: dict[str, typing.Any] | None = None, **kw)
 ```
 
 Label element (alias of Text)
@@ -1802,6 +1802,7 @@ class Text(
     text: str = "",
     key: str|None=None,
     enable_events: bool=False, # enabled events (click)
+    wrap_length: int|None=None, # wrap length(unit=pixel)
     # text props
     text_align: TextAlign|None="left", # text align
     font: FontType|None=None, # font
