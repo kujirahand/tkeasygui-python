@@ -356,7 +356,6 @@ class Window:
             frame_row.pack(**row_prop)
         # end of create
         if self.need_focus_widget is not None:
-            # print("focus_set", self.need_focus_widget)
             self.need_focus_widget.focus_set()
 
     def move_to_center(self) -> None:
@@ -598,8 +597,6 @@ class Window:
         self._start_y = int(loc[2])
         self._mouse_x = self.window.winfo_x() + event.x
         self._mouse_y = self.window.winfo_y() + event.y
-        # print(f"_start_xy={self._start_x}x{self._start_y}")
-        # print(f"_mouse_xy={self._mouse_x}x{self._mouse_y}")
     
     def _stop_move_window(self, event: tk.Event) -> None:
         """Stop move window"""
@@ -796,7 +793,6 @@ class Element:
         # anchor
         if self.anchor is not None:
             props["anchor"] = self.anchor
-        # print("pack.props=", self.key, props)
         return props
 
     def convert_props(self, props: dict[str, Any]) -> dict[str, Any]:
@@ -942,7 +938,6 @@ class Element:
                 self.widget.configure(**kw)
         except Exception as e:
             print(f"TkEasyGUI.Element.widget_update.Error: key='{self.key}', try to update {kw}, {e}", file=sys.stderr)
-            # raise TkEasyError(f"TkEasyGUI.Element.widget_update.Error: key='{self.key}', try to update {kw}, {e}")
 
     def get_prev_widget(self, target_key: str|None=None) -> tk.Widget:
         """Get the previous widget."""
@@ -1213,7 +1208,6 @@ class Menu(Element):
         i = 0
         while i < len(items):
             item = items[i]
-            # print(f"{'-' * level}[{i}].{item}")
             if isinstance(item, int) or isinstance(item, float):
                 item = str(item)
             if isinstance(item, str):
@@ -1221,7 +1215,6 @@ class Menu(Element):
                 next_item = items[i+1] if i+1 < len(items) else None
                 if (next_item is None) or (not isinstance(next_item, list)):
                     self._add_command(parent, item)
-                    # print(f"{'-' * level} add_command label={item}")
                     i += 1
                     continue
                 else: # if isinstance(next_item, list):
@@ -1417,7 +1410,6 @@ class Checkbox(Element):
         if "text" in kw:
             self.set_text(kw.pop("text"))
         if "value" in kw:
-            print("set_value", kw)
             self.set_value(kw.pop("value"))
         self.widget_update(**kw)
 
@@ -1553,7 +1545,6 @@ class Input(Element):
         """create Input widget"""
         # set default text
         self.text_var = tk.StringVar(value=self.default_text)
-        print(self.text_var.get())
         # create
         self.widget = ttk.Entry(
             parent,
@@ -1738,7 +1729,6 @@ class Multiline(Element):
             tag = generate_element_style_key("--multiline-background_color")
             self.widget.tag_config(tag, background=background_color)
             tags.append(tag)
-        print(tags)
         self.widget.insert("end", text, tags)
 
 class Textarea(Multiline):
