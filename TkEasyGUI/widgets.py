@@ -16,7 +16,8 @@ from typing import Any, Literal, TypeAlias, Union
 from PIL import Image as PILImage
 from PIL import ImageTk
 
-import TkEasyGUI as eg
+from . import utils
+from . import dialogs
 
 #------------------------------------------------------------------------------
 # Const
@@ -1579,6 +1580,7 @@ class Input(Element):
         return self.get_text()
     
     def set_text(self, text: str) -> None:
+        """set text"""
         if self.widget is None:
             return
         # change text
@@ -1589,7 +1591,22 @@ class Input(Element):
         #   self.insert(0, text)
 
     def get_text(self) -> str:
+        """get text"""
         return self.text_var.get()
+    
+    def get_selected_text(self) -> str:
+        """get selected text"""
+        if self.widget is None:
+            return ""
+        try:
+            return self.widget.selection_get()
+        except Exception as e:
+            return ""
+
+    def copy_selected_text(self) -> None:
+        """Copy selected text"""
+        text = self.get_selected_text()
+        utils.set_clipboard(text)
 
     def set_readonly(self, readonly: bool) -> None:
         """set readonly"""
@@ -1693,10 +1710,28 @@ class Multiline(Element):
         return self.get_text()
     
     def get_text(self) -> str:
+        """Get the text of the widget."""
         if self.widget is None:
             return ""
         text = self.widget.get("1.0", "end -1c") # get all text
         return text
+    
+    def get_selected_text(self) -> str:
+        """Get the selected text."""
+        if self.widget is None:
+            return ""
+        try:
+            text = self.widget.selection_get()
+        except Exception as e:
+            text = ""
+        return text
+    
+    def copy_selected_text(self) -> None:
+        """Copy the selected text."""
+        if self.widget is None:
+            return
+        text = self.get_selected_text()
+        utils.set_clipboard(text)
 
     def update(self, text: str|None = None, readonly: bool|None = None, **kw) -> None:
         """Update the widget."""
@@ -1724,6 +1759,112 @@ class Multiline(Element):
         if self.readonly:
             self.widget_update(state=tk.DISABLED)
     
+    def get_selection_pos(self) -> tuple[str, str]:
+        """Get selection position, returns (start_pos, end_pos)."""
+        if self.widget is None:
+            return ("", "")
+        try:
+            sel_start, sel_end = self.widget.tag_ranges("sel")
+            return (sel_start, sel_end)
+        except Exception as _:
+            pos = self.get_cursor_pos()
+            return (pos, pos)
+
+    def set_selection_pos(self, start_pos: str, end_pos: str) -> None:
+        """Set selection position."""
+        if self.widget is None:
+            return
+        try:
+            text: tk.Text = self.widget
+            text.tag_remove('sel', "1.0", "end")
+            text.tag_add('sel', start_pos, end_pos)
+        except Exception as _:
+            self.set_cursor_pos(start_pos)
+
+    def pos_to_index(self, pos: str) -> str:
+        """Convert position to index."""
+        row, col = pos.split(".")
+        row, col = int(row), int(col)
+        text = self.get_text()
+        retcode = "\r\n" if "\r\n" in text else "\n"
+        retcode_len = len(retcode)
+        start = 0
+        for i, line in enumerate(text.split("\n")):
+            if (row - 1) == i:
+                start += col
+                break
+            start += len(line) + retcode_len
+        return start
+
+    def index_to_pos(self, index: int) -> str:
+        """Convert index to postion."""
+        text = self.get_text()
+        retcode = "\r\n" if "\r\n" in text else "\n"
+        retcode_len = len(retcode)
+        row = 1
+        col = 0
+        start = 0
+        for line_no, line in enumerate(text.split("\n")):
+            line_start = start
+            line_end = line_start + len(line) + retcode_len
+            if line_start <= index <= line_end:
+                row = line_no + 1
+                col = index - line_start
+                break
+        return f"{row}.{col}"
+
+    def get_cursor_pos(self) -> str:
+        """Get Cursor position. liek `3.0` row=3, col=0"""
+        if self.widget is None:
+            return 0
+        try:
+            cur = self.widget.index("insert")
+        except Exception as _:
+            cur = ""
+        return cur
+
+    def set_cursor_pos(self, pos: str) -> None:
+        """Set cursor position. (like `3.0`, row=3, col=0)"""
+        if self.widget is None:
+            return
+        self.widget.mark_set(tk.INSERT, pos)
+
+    def get_selection_start(self) -> int:
+        """get selection start"""
+        if self.widget is None:
+            return 0
+        try:
+            sel_start, _ = self.widget.tag_ranges("sel")
+            return self.pos_to_index(sel_start)
+        except Exception as _:
+            pos = self.get_cursor_pos()
+            return self.pos_to_index(pos)
+        
+    def set_selection_start(self, index: int, sel_length: int=0) -> None:
+        """set selection start"""
+        pos1 = self.index_to_pos(index)
+        pos2 = self.index_to_pos(index + sel_length)
+        print("@@@", pos1, pos2)
+        self.set_selection_pos(pos1, pos2)
+
+    def get_selection_length(self) -> int:
+        """get selection length"""
+        if self.widget is None:
+            return 0
+        try:
+            text = self.get_selected_text()
+            return len(text)
+        except Exception as _:
+            return 0
+
+    def select_all(self) -> None:
+        """select all text"""
+        if self.widget is None:
+            return
+        self.widget.tag_add(tk.SEL, "1.0", tk.END)
+        self.widget.mark_set(tk.INSERT, "1.0")
+        self.widget.see(tk.INSERT)
+
     def print(self, text: str, text_color: str|None=None, background_color: str|None=None, end:str="\n") -> None:
         """Print text."""
         text += end
@@ -2406,7 +2547,7 @@ class FileBrowse(Element):
         # get initial directory
         init_dir = self._get_initial_directory()
         # popup
-        result = eg.popup_get_file(
+        result = dialogs.popup_get_file(
             title=self.title,
             initial_folder=init_dir,
             save_as=self.save_as,
@@ -2501,7 +2642,7 @@ class FolderBrowse(FileBrowse):
         """Show file dialog"""
         target: tk.Widget = self.get_prev_widget(self.target_key)
         # popup
-        result = eg.popup_get_folder(
+        result = dialogs.popup_get_folder(
             title=self.title,
             default_path=self.default_path,
         )
@@ -2532,7 +2673,7 @@ class ColorBrowse(FileBrowse):
         """Show file dialog"""
         target: tk.Widget = self.get_prev_widget(self.target_key)
         # popup
-        result = eg.popup_color(
+        result = dialogs.popup_color(
             title=self.title,
             default_color=self.default_color,
         )
