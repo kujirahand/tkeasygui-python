@@ -2229,6 +2229,26 @@ def write_event_value(self, key: str, values: dict[str, Any]) -> None
 
 ## Functions
 
+### convert_color_html
+
+```python
+def convert_color_html(color_name: str) -> str
+```
+
+Convert RGB color(16bit tuple) to HTML color name.
+
+------
+
+### convert_color_rgb16 {: #convert_color_rgb16 }
+
+```python
+def convert_color_rgb16(color_name: str) -> tuple[int, int, int]
+```
+
+Convert color to RGB, return (r, g, b) tuple. range=0-65535
+
+------
+
 ### generate_element_id
 
 ```python

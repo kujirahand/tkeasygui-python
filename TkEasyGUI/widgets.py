@@ -7,6 +7,7 @@ import platform
 import sys
 import tkinter as tk
 import tkinter.font as tkfont
+from tkinter import scrolledtext
 from datetime import datetime
 from queue import Queue
 from tkinter import ttk
@@ -1673,22 +1674,17 @@ class Multiline(Element):
             }, "system")
 
     def create(self, win: Window, parent: tk.Widget) -> tk.Widget:
-        # frame
-        self.widget_frame = widget_frame = ttk.Frame(parent)
+        """Create a Multiline widget."""
         # text
         text = self.props.pop("text", "")
-        self.widget = tk.Text(widget_frame, **self.props)
+        # create
+        self.widget = scrolledtext.ScrolledText(parent, **self.props)
+        # set text
         self.widget.insert("1.0", text)
         # readonly
         if self.readonly:
             self.set_readonly(self.readonly)
-        # scrollbar
-        self.scrollbar = ttk.Scrollbar(widget_frame, orient="vertical", command=self.widget.yview)
-        self.widget.configure(yscrollcommand=self.scrollbar.set)
-        # pack to frame
-        self.scrollbar.pack(side="right", fill="y")
-        self.widget.pack(side="right", fill="both", expand=True)
-        return self.widget_frame
+        return self.widget
 
     def get(self) -> Any:
         """Get the value of the widget."""

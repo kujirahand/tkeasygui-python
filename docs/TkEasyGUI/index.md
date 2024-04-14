@@ -6,6 +6,8 @@ TkEasyGUI - A simple GUI library for Python using tkinter.
 
 [TkEasyGUI.dialogs](dialogs-py.md)
 
+[TkEasyGUI.utils](utils-py.md)
+
 [TkEasyGUI.version](version-py.md)
 
 [TkEasyGUI.widgets](widgets-py.md)
