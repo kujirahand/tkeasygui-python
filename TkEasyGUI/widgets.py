@@ -1543,6 +1543,9 @@ class Input(Element):
     
     def create(self, win: Window, parent: tk.Widget) -> tk.Widget:
         """create Input widget"""
+        # check props
+        if "height" in self.props:
+            self.props.pop("height") # no property
         # set default text
         self.text_var = tk.StringVar(value=self.default_text)
         # create
