@@ -7,6 +7,7 @@ name = "TkEasyGUI"
 version = "0.2.43"
 dependencies = [
   "Pillow",
+  "pyperclip",
 ]
 requires-python = ">=3.8"
 authors = [

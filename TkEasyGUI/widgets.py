@@ -97,6 +97,16 @@ def set_default_theme() -> None:
     else:
         set_theme("clam")
 
+def convert_color_rgb16(color_name: str) -> tuple[int, int, int]:
+    """Convert color to RGB, return (r, g, b) tuple. range=0-65535"""
+    root = get_root_window()
+    return root.winfo_rgb(color_name)
+
+def convert_color_html(color_name: str) -> str:
+    """Convert RGB color(16bit tuple) to HTML color name."""
+    r, g, b = convert_color_rgb16(color_name)
+    return f"#{r//256:02x}{g//256:02x}{b//256:02x}"
+
 #------------------------------------------------------------------------------
 # Widget wrapper
 #------------------------------------------------------------------------------
