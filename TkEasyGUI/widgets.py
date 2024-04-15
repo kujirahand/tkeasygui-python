@@ -1631,6 +1631,14 @@ class Input(Element):
                 self.set_text(text)
         # update others
         self.widget_update(**kw)
+    
+    def select_all(self):
+        """select_all"""
+        if self.widget is None:
+            return
+        input: tk.Entry = self.widget
+        input.select_range(0, "end")
+        input.icursor("end")
 
 class InputText(Input):
     """InputText element. (alias of Input)"""
@@ -1726,12 +1734,32 @@ class Multiline(Element):
             text = ""
         return text
     
-    def copy_selected_text(self) -> None:
+    def copy(self) -> str:
         """Copy the selected text."""
         if self.widget is None:
             return
         text = self.get_selected_text()
         utils.set_clipboard(text)
+        return text
+    
+    def paste(self) -> None:
+        """Paste the text."""
+        if self.widget is None:
+            return
+        text = utils.get_clipboard()
+        self.widget.insert(tk.INSERT, text)
+        self.widget.tag_remove(tk.SEL, '1.0', tk.END) 
+        self.widget.see(tk.INSERT)
+
+    def cut(self) -> str:
+        """Cut the selected text."""
+        if self.widget is None:
+            return
+        text = ""
+        if self.widget.tag_ranges(tk.SEL):
+            text = self.copy()
+            self.widget.delete(tk.SEL_FIRST, tk.SEL_LAST)
+        return text
 
     def update(self, text: str|None = None, readonly: bool|None = None, **kw) -> None:
         """Update the widget."""
@@ -1807,7 +1835,8 @@ class Multiline(Element):
         for line_no, line in enumerate(text.split("\n")):
             line_start = start
             line_end = line_start + len(line) + retcode_len
-            if line_start <= index <= line_end:
+            start = line_end
+            if index < line_end:
                 row = line_no + 1
                 col = index - line_start
                 break
@@ -1844,8 +1873,10 @@ class Multiline(Element):
         """set selection start"""
         pos1 = self.index_to_pos(index)
         pos2 = self.index_to_pos(index + sel_length)
-        print("@@@", pos1, pos2)
-        self.set_selection_pos(pos1, pos2)
+        if sel_length > 0:
+            self.set_selection_pos(pos1, pos2)
+        else:
+            self.set_cursor_pos(pos1)
 
     def get_selection_length(self) -> int:
         """get selection length"""
@@ -1861,9 +1892,11 @@ class Multiline(Element):
         """select all text"""
         if self.widget is None:
             return
-        self.widget.tag_add(tk.SEL, "1.0", tk.END)
-        self.widget.mark_set(tk.INSERT, "1.0")
+        text: tk.Text = self.widget
+        text.tag_add(tk.SEL, "1.0", tk.END)
+        text.mark_set(tk.INSERT, '1.0')
         self.widget.see(tk.INSERT)
+        print("@select_all")
 
     def print(self, text: str, text_color: str|None=None, background_color: str|None=None, end:str="\n") -> None:
         """Print text."""
