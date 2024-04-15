@@ -25,6 +25,7 @@ WINDOW_CLOSED: str = "WINDOW_CLOSED"
 WIN_CLOSED: str = "WINDOW_CLOSED"
 WINDOW_TIMEOUT: str = "-TIMEOUT-"
 TIMEOUT_KEY: str = WINDOW_TIMEOUT
+WINDOW_KEY_EVENT: str = "-WINDOW_KEY_EVENT-"
 LISTBOX_SELECT_MODE_MULTIPLE: str = "multiple"
 LISTBOX_SELECT_MODE_BROWSE: str = "browse"
 LISTBOX_SELECT_MODE_EXTENDED: str = "extended"
@@ -194,6 +195,8 @@ class Window:
                 no_titlebar: bool=False, # hide titlebar
                 grab_anywhere: bool=False, # can move window by dragging anywhere
                 alpha_channel: float=1.0,
+                enable_key_events: bool=False, # enable keyboard events
+                return_keyboard_events: bool=False, # enable keyboard events (for compatibility)
                 **kw) -> None:
         """Create a window with a layout of widgets."""
         self.modal: bool = modal
@@ -226,6 +229,8 @@ class Window:
         self._mouse_x: int|None = None
         self._mouse_y: int|None = None
         self.alpha_channel: float = alpha_channel
+        self.enable_key_events: bool = enable_key_events
+        self.return_keyboard_events: bool = return_keyboard_events
         # Frame
         self.frame: ttk.Frame = ttk.Frame(self.window, padding=10)
         # set window properties
@@ -247,6 +252,14 @@ class Window:
             self.set_grab_anywhere(True)
         if alpha_channel < 1.0:
             self.set_alpha_channel(alpha_channel)
+        # bind events
+        if self.enable_key_events:
+            self.window.bind("<Key>", lambda e: self._event_handler(
+                WINDOW_KEY_EVENT,
+                {"event": e, "key": e.keysym, "event_type": "key"}))
+        if self.return_keyboard_events: # for compatibility with PySimpleGUI
+            self.window.bind("<Key>", lambda e: self._event_handler(
+                e.keysym if len(e.keysym) == 1 else f"{e.keysym}:{e.keycode}", {}))
         # check modal
         if modal:
             # check position
