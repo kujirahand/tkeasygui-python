@@ -1632,13 +1632,99 @@ class Input(Element):
         # update others
         self.widget_update(**kw)
     
-    def select_all(self):
+    def select_all(self) -> None:
         """select_all"""
         if self.widget is None:
             return
         input: tk.Entry = self.widget
         input.select_range(0, "end")
         input.icursor("end")
+    
+    def copy(self) -> str:
+        """copy to clipboard"""
+        if self.widget is None:
+            return
+        text = self.get_selected_text()
+        utils.set_clipboard(text)
+        return text
+
+    def cut(self) -> str:
+        """cut to clipboard"""
+        if self.widget is None:
+            return
+        self.copy()
+        return self.delete_selected()
+    
+    def delete_selected(self) -> str:
+        """delete selected text"""
+        if self.widget is None:
+            return
+        try:
+            text = self.get_selected_text()
+            self.widget.delete(tk.SEL_FIRST, tk.SEL_LAST)
+        except Exception as _:
+            return ""
+        return text
+
+    def paste(self):
+        """paste from clipboard"""
+        if self.widget is None:
+            return
+        # delete selected
+        self.delete_selected()
+        # insert
+        text = utils.get_clipboard()
+        input: tk.Entry = self.widget
+        current_cursor_position = input.index(tk.INSERT)
+        input.insert(current_cursor_position, text)
+    
+    def get_selection_pos(self) -> tuple[int, int]:
+        """get selection positions"""
+        try:
+            entry: tk.Entry = self.widget
+            start_pos = entry.index(tk.SEL_FIRST)
+            end_pos = entry.index(tk.SEL_LAST)
+            return start_pos, end_pos
+        except Exception as _:
+            cur = self.get_cursor_pos()
+            return [cur, cur]
+    
+    def get_cursor_pos(self) -> int:
+        """get cursor position"""
+        cursor_pos = self.widget.index(tk.INSERT)
+        return cursor_pos
+
+    def set_cursor_pos(self, index: int) -> None:
+        """set cursor position"""
+        self.widget.icursor(index)
+ 
+    def get_selection_start(self) -> int:
+        """get selection start"""
+        try:
+            entry: tk.Entry = self.widget
+            start_pos = entry.index(tk.SEL_FIRST)
+            return start_pos
+        except Exception as _:
+            return self.get_cursor_pos()
+
+    def get_selection_length(self) -> tuple[int, int]:
+        """get selection length"""
+        try:
+            entry: tk.Entry = self.widget
+            start_pos = entry.index(tk.SEL_FIRST)
+            end_pos = entry.index(tk.SEL_LAST)
+            return end_pos - start_pos
+        except Exception as _:
+            return 0
+    
+    def set_selection_start(self, sel_start: int, sel_length: int=0) -> None:
+        """set selection start and length"""
+        try:
+            entry: tk.Entry = self.widget
+            sel_end = sel_start + sel_length
+            entry.selection_range(sel_start, sel_end)
+        except Exception as _:
+            pass
 
 class InputText(Input):
     """InputText element. (alias of Input)"""
