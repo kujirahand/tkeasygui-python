@@ -11,8 +11,7 @@ from tkinter import scrolledtext
 from datetime import datetime
 from queue import Queue
 from tkinter import ttk
-from typing import Any, Literal, TypeAlias, Union
-
+from typing import Any, Literal, TypeAlias, Union, Generator
 from PIL import Image as PILImage
 from PIL import ImageTk
 
@@ -266,6 +265,14 @@ class Window:
         if not modal:
             _window_push(self)
     
+    def __enter__(self):
+        """Initialize resource"""
+        return self
+
+    def __exit__(self, exc_type, exc_value, traceback):
+        """Finalize resource"""
+        self.close()
+    
     def register_event_hooks(self, hooks: dict[str, list[callable]]) -> None:
         """
         [Window.register_event_hooks] Register event hooks. (append events)
@@ -421,6 +428,24 @@ class Window:
                 key = f"{key}-stopped" # change event name
                 values = self.get_values() # collect values again
         return (key, values)
+    
+    def event_iter(self, timeout: int|None=None, timeout_key: str=TIMEOUT_KEY) -> Any:
+        """
+        Return generator with event and values
+        **Example**
+        ```py
+        import TkEasyGUI as eg
+        # create a window
+        with eg.Window("test", layout=[[eg.Button("Hello")]]) as window:
+            # event loop
+            for event, values in window.event_iter():
+                if event == "Hello":
+                    eg.popup("Hello, World!")
+        ```
+       """
+        while self.is_alive():
+            event, values = self.read(timeout=timeout, timeout_key=timeout_key)
+            yield (event, values)
     
     def _dispatch_event_hooks(self, key: str, values: dict[str, Any]) -> bool:
         """Dispatch event hooks."""

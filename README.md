@@ -37,24 +37,37 @@ To create a simple window with only labels and buttons, you would write as follo
 
 ```py
 import TkEasyGUI as eg
+# define layout
+layout = [[eg.Text("Hello, World!")],
+          [eg.Button("Exit")]]
+# create a window
+with eg.Window("test", layout) as window:
+    # event loop
+    for event, values in window.event_iter():
+        if event == "Exit":
+            eg.popup("Thank you.")
+            break
+```
 
-# Create window
-layout = [
-    [eg.Text("Hello, World!")],
-    [eg.Button("OK")]
-]
-window = eg.Window("Hello", layout=layout)
+You can describe it using an event model similar to the famous GUI library, PySimpleGUI.
 
-# Event loop
-while window.is_alive():
-    # get event
+```py
+import TkEasyGUI as eg
+# define layout
+layout = [[eg.Text("Hello, World!")],
+          [eg.Button("Exit")]]
+# create a window
+window = eg.Window("test", layout)
+# event loop
+while True:
     event, values = window.read()
-    # check event
-    if event == "OK":
-        eg.popup("Pushed OK Button")
+    if event in ["Exit", eg.WINDOW_CLOSED]:
+        eg.popup("Thank you.")
         break
+# close window
 window.close()
 ```
+
 
 ## Samples
 

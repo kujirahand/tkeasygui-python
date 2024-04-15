@@ -37,22 +37,34 @@ python -m pip install git+https://github.com/kujirahand/tkeasygui-python
 
 ```py
 import TkEasyGUI as eg
+# define layout
+layout = [[eg.Text("Hello, World!")],
+          [eg.Button("Exit")]]
+# create a window
+with eg.Window("test", layout) as window:
+    # event loop
+    for event, values in window.event_iter():
+        if event == "Exit":
+            eg.popup("Thank you.")
+            break
+```
 
-# ウィンドウの作成
-layout = [
-    [eg.Text("Hello, World!")],
-    [eg.Button("OK")]
-]
-window = eg.Window("Hello", layout=layout)
+PySimpleGUIと同じイベントモデルの使い勝手で記述できます。
 
-# イベントループ
-while window.is_alive():
-    # イベントの取得
+```py
+import TkEasyGUI as eg
+# define layout
+layout = [[eg.Text("Hello, World!")],
+          [eg.Button("Exit")]]
+# create a window
+window = eg.Window("test", layout)
+# event loop
+while True:
     event, values = window.read()
-    # イベントの確認
-    if event == "OK":
-        eg.popup("Pushed OK Button")
+    if event in ["Exit", eg.WINDOW_CLOSED]:
+        eg.popup("Thank you.")
         break
+# close window
 window.close()
 ```
 
