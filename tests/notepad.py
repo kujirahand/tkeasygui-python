@@ -9,14 +9,14 @@ SAVE_FILE = os.path.join(SCRIPT_DIR, "notepad-save-data.txt")
 # create window
 layout = [
     [eg.Multiline(size=(40, 15), key="text")],
-    [eg.Button("Save"), eg.Button("Open")],
+    [eg.Button("Save"), eg.Button("Open"), eg.Button("Exit")],
 ]
-window = eg.Window("メモ帳", layout=layout)
+window = eg.Window("Notepad", layout=layout)
 
 # event loop
 while True:
     event, values = window.read()
-    if event == eg.WINDOW_CLOSED: # close button
+    if event in ["Exit", eg.WINDOW_CLOSED]: # exit button
         break
     # save button
     if event == "Save":

@@ -1158,6 +1158,26 @@ Create an element.
 
 #### Methods
 
+##### Input.copy
+
+```python
+def copy(self) -> str
+```
+
+copy to clipboard
+
+------
+
+##### Input.copy_selected_text
+
+```python
+def copy_selected_text(self) -> None
+```
+
+Copy selected text
+
+------
+
 ##### Input.create
 
 ```python
@@ -1165,6 +1185,26 @@ def create(self, win: Window, parent: tk.Widget) -> tk.Widget
 ```
 
 create Input widget
+
+------
+
+##### Input.cut
+
+```python
+def cut(self) -> str
+```
+
+cut to clipboard
+
+------
+
+##### Input.delete_selected
+
+```python
+def delete_selected(self) -> str
+```
+
+delete selected text
 
 ------
 
@@ -1178,11 +1218,93 @@ Get the value of the widget.
 
 ------
 
+##### Input.get_cursor_pos
+
+```python
+def get_cursor_pos(self) -> int
+```
+
+get cursor position
+
+------
+
+##### Input.get_selected_text
+
+```python
+def get_selected_text(self) -> str
+```
+
+get selected text
+
+------
+
+##### Input.get_selection_length
+
+```python
+def get_selection_length(self) -> tuple[int, int]
+```
+
+get selection length
+
+------
+
+##### Input.get_selection_pos
+
+```python
+def get_selection_pos(self) -> tuple[int, int]
+```
+
+get selection positions
+
+------
+
+##### Input.get_selection_start
+
+```python
+def get_selection_start(self) -> int
+```
+
+get selection start
+
+------
+
 ##### Input.get_text
 
 ```python
 def get_text(self) -> str
 ```
+
+get text
+
+------
+
+##### Input.paste
+
+```python
+def paste(self)
+```
+
+paste from clipboard
+
+------
+
+##### Input.select_all
+
+```python
+def select_all(self) -> None
+```
+
+select_all
+
+------
+
+##### Input.set_cursor_pos
+
+```python
+def set_cursor_pos(self, index: int) -> None
+```
+
+set cursor position
 
 ------
 
@@ -1196,11 +1318,23 @@ set readonly
 
 ------
 
+##### Input.set_selection_start
+
+```python
+def set_selection_start(self, sel_start: int, sel_length: int=0) -> None
+```
+
+set selection start and length
+
+------
+
 ##### Input.set_text
 
 ```python
 def set_text(self, text: str) -> None
 ```
+
+set text
 
 ------
 
@@ -1452,13 +1586,33 @@ Create an element.
 
 #### Methods
 
+##### Multiline.copy
+
+```python
+def copy(self) -> str
+```
+
+Copy the selected text.
+
+------
+
 ##### Multiline.create
 
 ```python
 def create(self, win: Window, parent: tk.Widget) -> tk.Widget
 ```
 
-Create a widget.
+Create a Multiline widget.
+
+------
+
+##### Multiline.cut
+
+```python
+def cut(self) -> str
+```
+
+Cut the selected text.
 
 ------
 
@@ -1472,11 +1626,93 @@ Get the value of the widget.
 
 ------
 
+##### Multiline.get_cursor_pos
+
+```python
+def get_cursor_pos(self) -> str
+```
+
+Get Cursor position. liek `3.0` row=3, col=0
+
+------
+
+##### Multiline.get_selected_text
+
+```python
+def get_selected_text(self) -> str
+```
+
+Get the selected text.
+
+------
+
+##### Multiline.get_selection_length
+
+```python
+def get_selection_length(self) -> int
+```
+
+get selection length
+
+------
+
+##### Multiline.get_selection_pos
+
+```python
+def get_selection_pos(self) -> tuple[str, str]
+```
+
+Get selection position, returns (start_pos, end_pos).
+
+------
+
+##### Multiline.get_selection_start
+
+```python
+def get_selection_start(self) -> int
+```
+
+get selection start
+
+------
+
 ##### Multiline.get_text
 
 ```python
 def get_text(self) -> str
 ```
+
+Get the text of the widget.
+
+------
+
+##### Multiline.index_to_pos
+
+```python
+def index_to_pos(self, index: int) -> str
+```
+
+Convert index to postion.
+
+------
+
+##### Multiline.paste
+
+```python
+def paste(self) -> None
+```
+
+Paste the text.
+
+------
+
+##### Multiline.pos_to_index
+
+```python
+def pos_to_index(self, pos: str) -> str
+```
+
+Convert position to index.
 
 ------
 
@@ -1490,6 +1726,26 @@ Print text.
 
 ------
 
+##### Multiline.select_all
+
+```python
+def select_all(self) -> None
+```
+
+select all text
+
+------
+
+##### Multiline.set_cursor_pos
+
+```python
+def set_cursor_pos(self, pos: str) -> None
+```
+
+Set cursor position. (like `3.0`, row=3, col=0)
+
+------
+
 ##### Multiline.set_readonly
 
 ```python
@@ -1497,6 +1753,26 @@ def set_readonly(self, readonly: bool) -> None
 ```
 
 Set readonly
+
+------
+
+##### Multiline.set_selection_pos
+
+```python
+def set_selection_pos(self, start_pos: str, end_pos: str) -> None
+```
+
+Set selection position.
+
+------
+
+##### Multiline.set_selection_start
+
+```python
+def set_selection_start(self, index: int, sel_length: int=0) -> None
+```
+
+set selection start
 
 ------
 
@@ -2005,6 +2281,26 @@ def close(self) -> None
 ```
 
 Close the window.
+
+------
+
+##### Window.event_iter
+
+```python
+def event_iter(self, timeout: int|None=None, timeout_key: str=TIMEOUT_KEY) -> Any
+```
+
+Return generator with event and values
+**Example**
+```py
+import TkEasyGUI as eg
+# create a window
+with eg.Window("test", layout=[[eg.Button("Hello")]]) as window:
+    # event loop
+    for event, values in window.event_iter():
+        if event == "Hello":
+            eg.popup("Hello, World!")
+```
 
 ------
 
