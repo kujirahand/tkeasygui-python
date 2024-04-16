@@ -18,7 +18,7 @@ from PIL import Image as PILImage
 from PIL import ImageTk
 
 from . import utils
-from .utils import WindowType, ElementType, TextAlign, TextVAlign, FontType, PointType, EventMode, OrientationType, ListboxSelectMode, PadType, ReliefType
+from .utils import Window, Element, TextAlign, TextVAlign, FontType, PointType, EventMode, OrientationType, ListboxSelectMode, PadType, ReliefType
 from . import dialogs
 
 #------------------------------------------------------------------------------
@@ -152,18 +152,18 @@ def get_ttk_style() -> ttk.Style:
     return _ttk_style
 
 # active window
-_window_list: list[WindowType] = []
+_window_list: list[Window] = []
 def _get_active_window() -> Union[tk.Toplevel, None]:
     """Get the active window."""
     if len(_window_list) == 0:
         return None
     return _window_list[-1].window
 
-def _window_push(win: WindowType) -> None:
+def _window_push(win: Window) -> None:
     """Push a window to the list."""
     _window_list.append(win)
 
-def _window_pop(win: WindowType) -> None:
+def _window_pop(win: Window) -> None:
     """Pop a window from the list."""
     i = _window_list.index(win)
     if i >= 0:
@@ -176,7 +176,7 @@ class Window:
     def __init__(
                 self,
                 title: str,
-                layout: list[list[ElementType]],
+                layout: list[list[Element]],
                 size: Union[tuple[str, int], None] = None, 
                 resizable:bool = False,
                 font: Union[FontType, None] = None,
@@ -203,7 +203,7 @@ class Window:
         self.key_elements: dict[str, Element] = {}
         self.last_values: dict[str, Any] = {}
         self.flag_alive: bool = True # Pressing the close button will turn this flag to False.
-        self.layout: list[list[ElementType]] = layout
+        self.layout: list[list[Element]] = layout
         self._event_hooks: dict[str, list[callable]] = {}
         self.font: Union[FontType, None] = font
         self.radio_group_dict: dict[str, list[tk.IntVar, int]] = {}
@@ -385,13 +385,13 @@ class Window:
         if isinstance(self.window, tk.Tk):
             self.window.eval('tk::PlaceWindow . center')
 
-    def get_element_by_key(self, key: str) -> Union[ElementType, None]:
+    def get_element_by_key(self, key: str) -> Union[Element, None]:
         """Get an element by its key."""
         return self.key_elements[key] if key in self.key_elements else None
     
-    def get_elements_by_type(self, element_type: str) -> list[ElementType]:
+    def get_elements_by_type(self, element_type: str) -> list[Element]:
         """Get elements by type."""
-        result: list[ElementType] = []
+        result: list[Element] = []
         for rows in self.layout:
             for elem in rows:
                 if elem.element_type.lower() == element_type.lower():
@@ -883,7 +883,7 @@ class Element:
         state = tk.DISABLED if disabled else tk.NORMAL
         self.widget_update(state=state)
 
-    def bind_events(self, events: dict[str, str], event_mode: EventMode="user") -> ElementType:
+    def bind_events(self, events: dict[str, str], event_mode: EventMode="user") -> Element:
         """
         Bind user events
         **Example**

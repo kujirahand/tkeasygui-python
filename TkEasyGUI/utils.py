@@ -1,9 +1,9 @@
-from typing import Literal, Union
+from typing import Literal, Union, TypeVar
 import pyperclip
 
 # define TypeAlias
-WindowType = "Window"
-ElementType = "Element"
+Window = TypeVar("Window")
+Element = TypeVar("Element")
 TextAlign = Literal["left", "right", "center"]
 TextVAlign = Literal["top", "bottom", "center"]
 FontType = Union[tuple[str, int], tuple[str, int, str]]
