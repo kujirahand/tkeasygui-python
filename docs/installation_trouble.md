@@ -16,6 +16,20 @@ print(f"Remove: {old_package}")
 shutil.rmtree(old_package)
 ```
 
+上記がうまく行かない場合、次の操作を試してください。
+
+- PowerShellを開いて、`pip uninstall tkeasygui` を実行
+- `python`コマンドを実行して下記のプログラムを実行して、site-packageのパスを調べてください
+
+```py
+import os, shutil, PIL
+print(PIL.__path__[0])
+```
+
+site-packageのパスにある、tkeasyguiを完全に削除します。
+その後で、`pip install TkEasyGUI`を実行してください。
+
+
 ### (en) Installation troubles
 
 - From version 0.2.24, the package name has also been changed from `tkeasygui` to `TkEasyGUI`.
