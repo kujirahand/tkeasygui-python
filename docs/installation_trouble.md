@@ -17,7 +17,11 @@ if os.path.exists(old_package): shutil.rmtree(old_package)
 print("ok")
 ```
 
+これは、pipの問題で、パッケージを`pip uninstall`コマンドでアンインストールしても、古いパッケージ名のフォルダが残ってしまうことが問題です。
+
 ### 上記手順がうまくいかない場合
+
+上記手順で削除できない場合があるようです。お手数ですが下記の手順を確認してください。
 
 (1) ターミナル(PowerShell/ターミナル.app)を開いて、一度、TkEasyGUIがインストールできるか確認しましょう。
 
