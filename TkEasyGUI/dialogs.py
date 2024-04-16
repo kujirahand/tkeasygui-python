@@ -6,9 +6,10 @@ import tkinter.filedialog as filedialog
 import tkinter.messagebox as messagebox
 from datetime import datetime, timedelta
 from tkinter import colorchooser
-from typing import Any
+from typing import Union
 
-import TkEasyGUI as eg
+from .utils import WindowType, ElementType, TextAlign, TextVAlign, FontType, PointType, EventMode, OrientationType, ListboxSelectMode, PadType, ReliefType
+from . import widgets as eg
 
 #------------------------------------------------------------------------------
 # Dialogs
@@ -115,12 +116,12 @@ def popup_cancel(message: str, title: str="") -> str:
     """Display a message in a popup window with OK and Cancel buttons. Return "OK" or "Cancel"."""
     return popup_buttons(message, title, buttons=["Cancel"])
 
-def popup_get_text(message: str, title: str = "", default: str = "", font: tuple[Any]|None=None) -> (str|None):
+def popup_get_text(message: str, title: str = "", default: str = "", font: eg.FontType=None) -> Union[str, None]:
     """Display a message in a popup window with a text entry. Return the text entered."""
     # return simpledialog.askstring(title, message, initialvalue=default)
     return popup_input(message, title, default, font=font)
 
-def popup_input(message: str, title: str = "", default: str = "", font: tuple[Any]|None=None) -> (str|None):
+def popup_input(message: str, title: str = "", default: str = "", font: eg.FontType=None) -> Union[str, None]:
     """Display a message in a popup window with a text entry. Return the text entered."""
     result = None
     win = eg.Window(title, layout=[
@@ -151,7 +152,15 @@ def popup_info(message: str, title: str="Warning") -> None:
     """Display a message in a popup window with an warning icon."""
     messagebox.showwarning(title, message)
 
-def popup_get_file(message: str="", title: str|None=None, initial_folder: str="", save_as: bool=False, multiple_files: bool=False, file_types: tuple[tuple[str, str]]=(("All Files", "*.*"),), no_window: bool|None=None, **kw) -> (str|tuple[str]|None):
+def popup_get_file(
+        message: str="",
+        title: Union[str, None] = None,
+        initial_folder: str = "",
+        save_as: bool = False, # show `save as` dialog
+        multiple_files: bool = False, # can select multiple files
+        file_types: tuple[tuple[str, str]] = (("All Files", "*.*"),),
+        no_window: Union[bool, None] = None, # for compatibility
+        **kw) -> Union[str, tuple[str], None]:
     """Popup a file selection dialog. Return the file selected."""
     if title is None:
         title = message
@@ -170,13 +179,25 @@ def popup_get_file(message: str="", title: str|None=None, initial_folder: str=""
             **kw)
     return result
 
-def popup_get_folder(message: str="", title: str|None=None, default_path: str="", no_window: bool|None=None, **kw) -> (str|None):
+def popup_get_folder(
+            message: str = "",
+            title: Union[str, None] = None,
+            default_path: str = "",
+            no_window: Union[bool, None] = None, # for compatibility
+            **kw
+            ) -> Union[str, None]:
     """Popup a folder selection dialog. Return the folder selected."""
     if title is None:
         title = message
     return filedialog.askdirectory(title=title, initialdir=default_path, **kw)
 
-def popup_scrolled(message: str, title: str = "", size: tuple[int,int]=[40, 5], readonly: bool=False, font: tuple[str, int]|None=None) -> str|None:
+def popup_scrolled(
+            message: str,
+            title: str = "",
+            size: tuple[int,int] = [40, 5],
+            readonly: bool = False,
+            font: Union[FontType, None] = None
+            ) -> Union[str, None]:
     """Display a message in a popup window with a text entry. Return the text entered."""
     win = eg.Window(title, layout=[
         [eg.Multiline(message, key="-text-", size=size, readonly=readonly, font=font)],
@@ -193,7 +214,12 @@ def popup_scrolled(message: str, title: str = "", size: tuple[int,int]=[40, 5], 
     win.close()
     return result
 
-def popup_get_date(message: str = "", title: str = "", current_date:datetime|None=None, font: tuple[str, int]|None=None) -> datetime|None:
+def popup_get_date(
+        message: str = "",
+        title: str = "",
+        current_date: Union[datetime, None] = None,
+        font: Union[tuple[str, int], None] = None
+        ) -> Union[datetime, None]:
     """Display a calendar in a popup window. Return the datetime entered or None."""
     if current_date is None:
         current_date = datetime.now()
@@ -341,14 +367,21 @@ $AppId = '{{1AC14E77-02E7-4E5D-B744-2EB1AE5198B7}}\WindowsPowerShell\v1.0\powers
 #------------------------------------------------------------------------------
 # TkEasyGUI original dialogs
 
-def popup_color(title: str="", default_color: str|None=None) -> (str|None):
+def popup_color(title: str="", default_color: Union[str, None]=None) -> (Union[str, None]):
     """Popup a color selection dialog. Return the color selected."""
     col = colorchooser.askcolor(title=title, color=default_color)
     if col[1] is None:
         return default_color
     return f"{col[1]}".upper()
 
-def popup_listbox(items: list[str], message: str = "", title: str = "", size: tuple[int,int]=(20, 7), font: tuple[str, int]|None=None, multiple:bool = False) -> str|None:
+def popup_listbox(
+        items: list[str], # list of items
+        message: str = "",
+        title: str = "",
+        size: tuple[int,int] = (20, 7),
+        font: Union[FontType, None] = None,
+        multiple:bool = False # multiple selection
+        ) -> Union[str, None]:
     """Display Listbox in a popup window"""
     select_mode = eg.LISTBOX_SELECT_MODE_BROWSE if multiple is False else eg.LISTBOX_SELECT_MODE_MULTIPLE
     win = eg.Window(title, layout=[
