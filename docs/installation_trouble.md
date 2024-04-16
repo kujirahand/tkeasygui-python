@@ -19,7 +19,7 @@ print("ok")
 
 ### 上記手順がうまくいかない場合
 
-(1) 一度、TkEasyGUIがインストールできるか確認しましょう。
+(1) ターミナル(PowerShell/ターミナル.app)を開いて、一度、TkEasyGUIがインストールできるか確認しましょう。
 
 ```sh
 python -m pip install tkeasygui
@@ -31,26 +31,26 @@ python -m pip install tkeasygui
 python -m pip show tkeasygui
 ```
 
-(3) 表示された情報の中に下記のようなLocation情報があります。
+(3) 上記手順で表示された情報の中に下記のようなLocation情報があります。
 
 ```
 Location: C:\Users\<username>\AppData\Local\Programs\Python\Python312\Lib\site-packages
 ```
 
-(4) そこで、エクスプローラーかFinderを使って、上記フォルダを開きます。
-
-(5) ターミナル(PowerShell/ターミナル.app)を開いて、下記のコマンドを実行して、一度、古いtkeasyguiを削除します。
+(4) Locationを確認した後、下記のコマンドを実行して、古いtkeasyguiをアンインストールします。
 
 ```sh
-pip uninstall tkeasygui
+python -m pip uninstall tkeasygui
 ```
 
-(6) site-packages以下にある「tkeasygui」フォルダを完全に削除します。
+(5) エクスプローラー(Windows)かFinder(macOS)を使って上記(4)のフォルダを開きます。
 
-(7) その後で、改めて、TkEasyGUIをインストールします。
+(6) 上記(4)のフォルダ(site-packages)の中にある「tkeasygui」というフォルダを探して削除します。
+
+(7) 改めて、TkEasyGUIをインストールします。
 
 ```sh
-pip install TkEasyGUI
+python -m pip install TkEasyGUI
 ```
 
 
