@@ -53,6 +53,9 @@ python -m pip uninstall tkeasygui
 python -m pip install TkEasyGUI
 ```
 
+--------------
+
+以上です。(以下は英語で手順を示したものです。)
 
 ### (en) Installation troubles
 
