@@ -13,12 +13,12 @@ import os, shutil, PIL
 packages = os.path.dirname(PIL.__path__[0])
 old_package = os.path.join(packages, "tkeasygui")
 print(f"Remove: {old_package}")
-shutil.rmtree(old_package)
+if os.path.exists(old_package): shutil.rmtree(old_package)
 ```
 
 上記がうまく行かない場合、次の操作を試してください。
 
-- PowerShellを開いて、`pip uninstall tkeasygui` を実行
+- ターミナル(PowerShell/ターミナル.app)を開いて、`pip uninstall tkeasygui` を実行
 - `python`コマンドを実行して下記のプログラムを実行して、site-packageのパスを調べてください
 
 ```py
