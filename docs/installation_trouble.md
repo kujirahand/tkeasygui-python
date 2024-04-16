@@ -17,18 +17,41 @@ if os.path.exists(old_package): shutil.rmtree(old_package)
 print("ok")
 ```
 
-上記がうまく行かない場合、次の操作を試してください。
+### 上記手順がうまくいかない場合
 
-- ターミナル(PowerShell/ターミナル.app)を開いて、`pip uninstall tkeasygui` を実行
-- `python`コマンドを実行して下記のプログラムを実行して、site-packageのパスを調べてください
+(1) 一度、TkEasyGUIがインストールできるか確認しましょう。
 
-```py
-import os, shutil, PIL
-print(PIL.__path__[0])
+```sh
+python -m pip install tkeasygui
 ```
 
-site-packageのパスにある、tkeasyguiを完全に削除します。
-その後で、`pip install TkEasyGUI`を実行してください。
+(2) 続いて、インストールパスを調べます。
+
+```sh
+python -m pip show tkeasygui
+```
+
+(3) 表示された情報の中に下記のようなLocation情報があります。
+
+```
+Location: C:\Users\<username>\AppData\Local\Programs\Python\Python312\Lib\site-packages
+```
+
+(4) そこで、エクスプローラーかFinderを使って、上記フォルダを開きます。
+
+(5) ターミナル(PowerShell/ターミナル.app)を開いて、下記のコマンドを実行して、一度、古いtkeasyguiを削除します。
+
+```sh
+pip uninstall tkeasygui
+```
+
+(6) site-packages以下にある「tkeasygui」フォルダを完全に削除します。
+
+(7) その後で、改めて、TkEasyGUIをインストールします。
+
+```sh
+pip install TkEasyGUI
+```
 
 
 ### (en) Installation troubles
