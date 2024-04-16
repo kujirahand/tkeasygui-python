@@ -2243,6 +2243,8 @@ class Window(
     no_titlebar: bool=False, # hide titlebar
     grab_anywhere: bool=False, # can move window by dragging anywhere
     alpha_channel: float=1.0,
+    enable_key_events: bool=False, # enable keyboard events
+    return_keyboard_events: bool=False, # enable keyboard events (for compatibility)
     **kw)
 ```
 

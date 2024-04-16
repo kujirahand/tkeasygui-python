@@ -74,6 +74,8 @@ window.close()
 
 - [samples](https://github.com/kujirahand/tkeasygui-python/tree/main/tests).
 
+`tests/file_viewer.py`を実行することで、すべてのサンプルを手軽に起動できます。
+
 ## ドキュメント
 
 ライブラリの詳細なクラスやメソッドの一覧です。
@@ -90,10 +92,12 @@ PySimpleGUIと完全な互換性は考えていません。
 
 ### TkEasyGUI独自の機能
 
-- 色選択ダイアログ(eg.popup_color)など、独自のポップアップ
+- for文と `window.event_iter()` を使って気軽にイベント処理が可能
+- 色選択ダイアログ(eg.popup_color)など、独自のポップアップダイアログを用意
 - ImageはPNGだけでなくJPEGも読み込み可能
-- OSの配色をデフォルトで利用
 - 便利なイベントフックや一括イベント登録機能 - [docs/custom_events](docs/custom_events.md)
+- テキストボックス(Muliline/Input)に便利なCopy/Paste/Cutなどのメソッドを追加
+- OSの配色をデフォルトで利用
 
 ## リンク
 

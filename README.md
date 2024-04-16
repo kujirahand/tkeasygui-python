@@ -75,6 +75,8 @@ We have prepared a selection of samples to demonstrate simple usage. Please chec
 
 - [samples](https://github.com/kujirahand/tkeasygui-python/tree/main/tests).
 
+Running `tests/file_viewer.py` allows all samples to be easily launched.
+
 ## Documents
 
 Below is a detailed list of classes and methods.
@@ -87,6 +89,15 @@ Below is a detailed list of classes and methods.
 - The names of basic GUI components are also kept the same. However, while some property names differ, many unique features have been implemented.
 - This project was developed with PySimpleGUI in mind, but has been implemented entirely from scratch. There are no licensing issues.
 - We are not considering full compatibility with PySimpleGUI.
+
+### TkEasyGUI features:
+
+- Using a `for` loop and `window.event_iter()` enables straightforward event processing.
+- Custom popup dialogs, such as a color selection dialog (`eg.popup_color`), are available.
+- The `Image` class supports not only PNG but also JPEG formats.
+- Convenient event hooks and features for bulk event registration are provided - [docs/custom_events](docs/custom_events.md).
+- Methods such as Copy, Paste, and Cut are added to text boxes (Multiline/Input).
+- The system's default color scheme is utilized.
 
 ## Link
 
