@@ -19,7 +19,7 @@ get text from clipboard
 def get_clipboard():
 ```
 
-- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/utils.py#L25)
+- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/utils.py#L26)
 
 ## set_clipboard
 
@@ -29,5 +29,5 @@ copy text to clipboard
 def set_clipboard(text):
 ```
 
-- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/utils.py#L21)
+- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/utils.py#L22)
 

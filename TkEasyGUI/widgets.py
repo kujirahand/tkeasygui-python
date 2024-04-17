@@ -308,9 +308,10 @@ class Window:
     
     def register_event_hooks(self, hooks: dict[str, list[callable]]) -> None:
         """
-        [Window.register_event_hooks] Register event hooks. (append events)
+        Register event hooks. (append hook events)
+
         **Example**
-        ```
+        ```py
         window.register_event_hooks({
             "-input-": [
                 lambda event, values: print("1", event, values),
@@ -319,9 +320,10 @@ class Window:
                 lambda event, values: print("3", event, values),
             ],
         ```
+
         **Note**
         - If you specify a function that returns True, it changes the event name to f"{event}-stopped" and then re-collects the values associated with keys that occur afterwards.
-        - @see `Window.read`
+        - @see [Window.read](#windowread)
         """
         for event_name, handle_list in hooks.items():
             for handle in handle_list:
@@ -446,7 +448,7 @@ class Window:
         return result
 
     def read(self, timeout: Union[int, None] = None, timeout_key: str="-TIMEOUT-") -> tuple[str, dict[str, Any]]:
-        """ [Window.read] Read events from the window."""
+        """ Read events from the window."""
         self.timeout = timeout
         self.timeout_key = timeout_key
         time_id = time_checker_start()
