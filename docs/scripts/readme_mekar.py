@@ -22,7 +22,8 @@ with open(ELEMENTS_JSON, "r", encoding="utf-8") as fp:
     elements = json.load(fp)
     result = []
     for name in elements:
-        result.append(f"- [{name}](/docs/TkEasyGUI/widgets-py.md#{name})")
+        name2 = name.replace(" ", "-").lower()
+        result.append(f"- [{name}](/docs/TkEasyGUI/widgets-py.md#{name2})")
     readme = readme.replace("__ELEMENTS__", "\n".join(result))
 
 # write
