@@ -872,7 +872,7 @@ class Element:
             props["anchor"] = self.anchor
         return props
 
-    def convert_props(self, props: dict[str, Any]) -> dict[str, Any]:
+    def _convert_props(self, props: dict[str, Any]) -> dict[str, Any]:
         result = {}
         # copy
         for key, val in props.items():
@@ -916,20 +916,16 @@ class Element:
         return result
 
     def set_disabled(self, disabled: bool) -> None:
+        """
+        Set disabled widgets state
+        """
         self.disabled = disabled
         state = tk.DISABLED if disabled else tk.NORMAL
         self.widget_update(state=state)
 
     def bind_events(self, events: dict[str, str], event_mode: EventMode="user") -> Element:
         """
-        Bind user events
-        **Example**
-        ```
-        # (1) bind events in the constructor
-        eg.Canvas(key="-canvas-", bind_events={"<ButtonPress>": "on", "<ButtonRelease>": "off"})
-        # (2) bind events in the method
-        eg.Canvas(key="-canvas-").bind_events({"<ButtonPress>": "on", "<ButtonRelease>": "off"})
-        ```
+        Bind user events. @see [custom events](/docs/custom_events.md)
         """
         for event_name, handle_name in events.items():
             self.bind(event_name, handle_name, event_mode=event_mode)
@@ -943,7 +939,7 @@ class Element:
         # convert properties
         if (win.font is not None) and (self.font is None) and self.has_font_prop:
             self.props["font"] = self.font = win.font
-        self.props = self.convert_props(self.props)
+        self.props = self._convert_props(self.props)
         # check ttk
         if self.use_ttk is None:
             self.use_ttk = win.use_ttk
@@ -1012,7 +1008,7 @@ class Element:
         # update element's props
         for k, v in kw.items():
             self.props[k] = v
-        kw = self.convert_props(kw)
+        kw = self._convert_props(kw)
         try:
             if (self.widget is not None)and(len(kw) > 0):
                 self.widget.configure(**kw)
@@ -1375,6 +1371,7 @@ class Button(Element):
         }, "system")
 
     def create(self, win: Window, parent: tk.Widget) -> tk.Widget:
+        """Create a Button widget."""
         if self.use_ttk:
             self.widget = ttk.Button(
                 parent,
@@ -1402,15 +1399,16 @@ class Button(Element):
             self.widget_update(props)
 
     def get(self) -> Any:
-        """Get the value of the widget."""
+        """Returns the text of the button.."""
         return self.get_text()
     
     def set_text(self, text: str) -> None:
-        """Set the text of the widget."""
+        """Set the text of the button."""
         self.props["text"] = text
         self.widget_update(text=text)
     
     def get_text(self) -> str:
+        """Get the text of the button."""
         return self.props["text"]
 
     def update(self,
