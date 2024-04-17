@@ -1,7 +1,8 @@
 # import PySimpleGUI as sg
-import TkEasyGUI as sg
 import random
 import time
+
+import TkEasyGUI as sg
 
 # ライフゲームのセルの状態
 DEAD = 0

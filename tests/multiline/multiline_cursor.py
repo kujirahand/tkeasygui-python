@@ -24,7 +24,8 @@ multiline:eg.Multiline = window["-multiline-"]
 while window.is_alive():
     event, values = window.read()
     print(event, values)
-    if event == "終了": break
+    if event == "終了":
+        break
     elif event == "get_selection_pos":
         start_pos, end_pos = multiline.get_selection_pos()
         eg.popup(f"{start_pos}-{end_pos}")

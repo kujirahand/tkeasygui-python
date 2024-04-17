@@ -1,8 +1,6 @@
 # foramt documents script
-import glob
-import os
-import re
 import json
+import os
 
 # path
 SCRIPT_DIR = os.path.dirname(__file__)

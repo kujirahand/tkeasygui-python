@@ -1,4 +1,5 @@
 import TkEasyGUI as eg
+
 selected_file = eg.popup_get_file(
     "Select a file",
     file_types=[("text file", "*.txt"), ("all", "*")])

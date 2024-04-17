@@ -1,4 +1,5 @@
 import TkEasyGUI as eg
+
 # define layout
 layout = [[eg.Text("Hello, World!")],
           [eg.Button("Exit")]]

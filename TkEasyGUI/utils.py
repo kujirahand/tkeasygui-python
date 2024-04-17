@@ -2,7 +2,8 @@
 TkEasyGUI utilities functions
 """
 
-from typing import Literal, Union, TypeVar
+from typing import Literal, TypeVar, Union
+
 import pyperclip
 
 # define TypeAlias

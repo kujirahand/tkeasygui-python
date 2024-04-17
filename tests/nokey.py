@@ -16,6 +16,6 @@ while True:
             cm = inch * 2.54
             result = f"{inch} inch is {cm} cm"
             sg.popup(result)
-        except:
+        except Exception as _e:
             sg.popup("Please input number.")
 window.close()

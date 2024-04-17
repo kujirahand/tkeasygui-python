@@ -8,8 +8,10 @@ from datetime import datetime, timedelta
 from tkinter import colorchooser
 from typing import Union
 
-from .utils import Window, Element, TextAlign, TextVAlign, FontType, PointType, EventMode, OrientationType, ListboxSelectMode, PadType, ReliefType
 from . import widgets as eg
+from .utils import (
+    FontType,
+)
 
 #------------------------------------------------------------------------------
 # Dialogs

@@ -1,8 +1,9 @@
-import TkEasyGUI as eg
-import os
 import glob
 import inspect
+import os
 import re
+
+import TkEasyGUI as eg
 
 SCRIPT_DIR = os.path.dirname(__file__)
 OUTPUT_DIR = os.path.join(SCRIPT_DIR, "docs", "TkEasyGUI")
@@ -14,19 +15,9 @@ def main():
     root_name = eg.__package__
 
     # get modules
-    modules = []
     files = glob.glob(os.path.join(package_path, "*.py"))
     for file in files:
         read_module(file, root_name)
-    """
-    for prop in dir(eg):
-        if prop.startswith("__"):
-            continue
-        p = getattr(eg, prop)
-        if str(type(p)) == "<class 'module'>":
-            modules.append(prop)
-    print(modules)
-    """
 
 def read_module(file: str, root_name: str):
     module_name = os.path.basename(file).replace(".py", "")
@@ -62,7 +53,7 @@ def read_module(file: str, root_name: str):
                 print("@@@", prop)
                 code_def = get_function_definition(p.__init__, skip_self=True)
                 code_def = re.sub("^def __init__", f"class {class_name}", code_def)
-                code_def = re.sub("->\s*None\s*:", f"", code_def)
+                code_def = re.sub("->\s*None\s*:", "", code_def)
                 if prop == "Button":
                     print("@@@", code_def)
                     # print(inspect.getsource(p.__init__))
@@ -92,7 +83,7 @@ def read_module(file: str, root_name: str):
                     print("###", e)
                     continue
                 def_code = get_function_definition(method, skip_self=True)
-                method_doc += f"```py\n"
+                method_doc += "```py\n"
                 method_doc += def_code
                 method_doc += "```\n\n"
                 method_doc += f"- [source]({REPO}{fname}#L{code.co_firstlineno})\n"
@@ -121,7 +112,7 @@ def read_module(file: str, root_name: str):
             fname = code.co_filename.replace(SCRIPT_DIR, "")
             functions += f"## {prop}\n\n"
             functions += doc + "\n\n"
-            functions += f"```py\n"
+            functions += "```py\n"
             functions += def_code
             functions += "```\n\n"
             functions += f"- [source]({REPO}{fname}#L{code.co_firstlineno})\n"

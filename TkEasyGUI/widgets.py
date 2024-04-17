@@ -7,20 +7,30 @@ import platform
 import sys
 import tkinter as tk
 import tkinter.font as tkfont
-from tkinter import font as tkinter_font
-from tkinter import scrolledtext
 from datetime import datetime
 from queue import Queue
-from tkinter import ttk
-from typing import Any, Literal, Union
-# from typing import TypeAlias
+from tkinter import font as tkinter_font
+from tkinter import scrolledtext, ttk
+from typing import Any, Union
 
+# from typing import TypeAlias
 from PIL import Image as PILImage
 from PIL import ImageTk
 
-from . import utils
-from .utils import Window, Element, TextAlign, TextVAlign, FontType, PointType, EventMode, OrientationType, ListboxSelectMode, PadType, ReliefType
-from . import dialogs
+from . import dialogs, utils
+from .utils import (
+    Element,
+    EventMode,
+    FontType,
+    ListboxSelectMode,
+    OrientationType,
+    PadType,
+    PointType,
+    ReliefType,
+    TextAlign,
+    TextVAlign,
+    Window,
+)
 
 #------------------------------------------------------------------------------
 # Const
@@ -1673,7 +1683,7 @@ class Input(Element):
             return ""
         try:
             return self.widget.selection_get()
-        except Exception as e:
+        except Exception:
             return ""
 
     def copy_selected_text(self) -> None:
@@ -1889,7 +1899,7 @@ class Multiline(Element):
             return ""
         try:
             text = self.widget.selection_get()
-        except Exception as e:
+        except Exception:
             text = ""
         return text
     
@@ -2149,8 +2159,10 @@ class Slider(Element):
         self.scale_var.set(self.default_value)
         # command
         command = None
+        def on_command(*event):
+            self.disptach_event({"event_type": "change", "event": event})
         if self.enable_events:
-            command = lambda *event: self.disptach_event({"event_type": "change", "event": event})
+            command = on_command
         # widget
         self.widget = tk.Scale(
             parent,
