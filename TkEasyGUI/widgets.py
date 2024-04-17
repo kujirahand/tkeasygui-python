@@ -1606,7 +1606,7 @@ class Input(Element):
                 **kw
                 ) -> None:
         super().__init__("Input", "TEntry", key, True, metadata, **kw)
-        self.use_ttk = True
+        self.use_ttk = False
         self.readonly: bool = readonly
         self.enable_events: bool = enable_events
         if default_text is not None: # compatibility with PySimpleGUI
@@ -1639,15 +1639,15 @@ class Input(Element):
     def create(self, win: Window, parent: tk.Widget) -> tk.Widget:
         """create Input widget"""
         # check props
-        if "height" in self.props:
-            self.props.pop("height") # no property
+        # if "height" in self.props:
+        #     self.props.pop("height") # no property
         # set default text
         self.text_var = tk.StringVar(value=self.default_text)
         # create
-        self.widget = ttk.Entry(
+        self.widget = tk.Entry(
             parent,
             textvariable=self.text_var,
-            style=self.style_name,
+            # style=self.style_name,
             **self.props)
         # set readonly
         if self.readonly:
