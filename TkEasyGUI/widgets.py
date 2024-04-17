@@ -7,6 +7,7 @@ import platform
 import sys
 import tkinter as tk
 import tkinter.font as tkfont
+from tkinter import font as tkinter_font
 from tkinter import scrolledtext
 from datetime import datetime
 from queue import Queue
@@ -221,6 +222,7 @@ class Window:
         self.alpha_channel: float = alpha_channel
         self.enable_key_events: bool = enable_key_events
         self.return_keyboard_events: bool = return_keyboard_events
+        self.font_size_average: tuple[int, int] = (12, 10)
         # Frame
         self.frame: ttk.Frame = ttk.Frame(self.window, padding=10)
         # set window properties
@@ -242,6 +244,8 @@ class Window:
             self.set_grab_anywhere(True)
         if alpha_channel < 1.0:
             self.set_alpha_channel(alpha_channel)
+        # font
+        self.calc_font_size(font)
         # bind events
         if self.enable_key_events:
             self.window.bind("<Key>", lambda e: self._event_handler(
@@ -380,6 +384,23 @@ class Window:
         if self.need_focus_widget is not None:
             self.need_focus_widget.focus_set()
 
+    def calc_font_size(self, font: FontType) -> None:
+        """Calculate font size."""
+        font_obj = tkinter_font.Font()
+        if font is not None:
+            if len(font) >= 2:
+                font_obj = tkinter_font.Font(family=font[0], size=font[1])
+            elif len(font) == 1:
+                font_obj = tkinter_font.Font(family=font[0])
+        # calc measure
+        # The letter 'M' is commonly used to represent the average width of a font in typography. This is because the 'M' is relatively wide, making it suitable for indicating width in comparison to other characters, especially in fixed-width (monospace) fonts.
+        m_size = font_obj.measure("M")
+        s_size = font_obj.measure("s")
+        a_size = font_obj.measure("A")
+        w = (m_size + s_size + a_size) // 3
+        h = font_obj.metrics("linespace")
+        self.font_size_average = (w, h)
+ 
     def move_to_center(self) -> None:
         """Move the window to the center of the screen."""
         if isinstance(self.window, tk.Tk):
@@ -2044,56 +2065,105 @@ class Slider(Element):
     """Slider element."""
     def __init__(
                 self,
-                key: Union[str, None] = None,
                 range: tuple[float, float] = (1, 10),
-                orientation: OrientationType = "horizontal",
-                resolution: Union[float, None] = None,
                 default_value: Union[float, None] = None,
-                enable_events: bool = False,
+                resolution: Union[float, None] = None,
+                orientation: OrientationType = "horizontal",
+                tick_interval: Union[float, None] = None, # tick marks interval on the scale
+                enable_events: bool = False, # enable changing events
+                enable_changed_events: bool = False, # enable changed event
+                disable_number_display: bool = False,
+                size: Union[tuple[int, int], None] = None, # horizontal: (bar_length, thumb_size), vertical: (thumb_size, bar_length)
+                key: Union[str, None] = None,
                 # other
+                default: Union[float, None] = None, # same as default_value
                 metadata: Union[dict[str, Any], None] = None,
                 **kw) -> None:
         style_name = "Horizontal.TScale" if (orientation == "h" or orientation == "horizontal") else "Vertical.TScale"
         super().__init__("Slider", style_name, key, True, metadata, **kw)
+        # common parameters
         self.has_value = True
         self.has_font_prop = False
+        # range and resolution
         self.range = range
         self.resolution = resolution # dummy @see Slider.create
+        if tick_interval is not None:
+            self.props["tickinterval"] = tick_interval
+        # set default_value or default
         self.default_value = default_value if default_value is not None else range[0]
+        if default is not None:
+            self.default_value = default
         # check orientation
-        self.orientation: OrientationType = orientation
         if orientation == "v":
-            self.props["orient"] = "vertical"
+            orientation = "vertical"
         elif orientation == "h":
-            self.props["orient"] = "horizontal"
-        elif orientation == "vertical" or orientation == "horizontal":
-            self.props["orient"] = orientation
-        # event
-        if enable_events:
+            orientation = "horizontal"
+        self.orientation: OrientationType = orientation
+        self.props["orient"] = orientation
+        # size
+        self.slider_size = size
+        # look
+        if disable_number_display:
+            self.props["showvalue"] = 0 # hide number
+        # events
+        self.enable_events = enable_events
+        if enable_changed_events:
             self.bind_events({
                 "<ButtonRelease-1>": "release"
             }, "system")
 
     def create(self, win: Window, parent: tk.Widget) -> tk.Widget:
+        """Create the widget."""
+        # bar size
+        if (self.slider_size is not None) and (len(self.slider_size) == 2):
+            print("@font_size_average=", win.font_size_average)
+            size = self.slider_size
+            if self.orientation == "horizontal":
+                length = size[0] * win.font_size_average[0]
+                width = size[1] * win.font_size_average[1]
+            else:
+                width = size[0] * win.font_size_average[0]
+                length = size[1] * win.font_size_average[1]
+            self.props["width"] = width
+            self.props["length"] = length
+            print("w,h=", width, length)
+        # var
         self.scale_var = tk.DoubleVar()
         self.scale_var.set(self.default_value)
-        self.widget = ttk.Scale(
+        # command
+        command = None
+        if self.enable_events:
+            command = lambda *event: self.disptach_event({"event_type": "change", "event": event})
+        # widget
+        self.widget = tk.Scale(
             parent,
+            from_=self.range[0],
+            to=self.range[1],
+            resolution=self.resolution,
+            command=command,
             variable=self.scale_var,
-            from_=self.range[0], to=self.range[1],
-            # resolution=self.resolution, # (memo) ttk.Scale does not support resolution
             **self.props)
         return self.widget
-    
+
     def get(self) -> Any:
         """Return Widget"""
+        print(f"@[{self.key}].get=", self.scale_var.get())
         return self.scale_var.get()
+    
+    def set(self, value: float) -> None:
+        """Set the value of the widget."""
+        self._value = value
+        self.widget.set(value)
 
-    def update(self, value: Union[float, None]=None, **kw) -> None:
+    def update(self,
+               value: Union[float, None]=None,
+               disable_number_display: Union[bool, None]=None,
+               **kw) -> None:
         """Update the widget."""
+        if disable_number_display is not None:
+            self.props["showvalue"] = 0 if disable_number_display else 1
         if value is not None:
-            self.scale_var.set(value)
-            self.disptach_event()
+            self.set(value)
         else:
             self.widget_update(**kw)
 
