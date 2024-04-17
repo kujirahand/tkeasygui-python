@@ -1,4 +1,8 @@
 # foramt documents script
+print("現在利用していません。")
+print("python -m inari")
+quit()
+
 import glob
 import os
 import re

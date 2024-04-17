@@ -420,7 +420,10 @@ def ask_retry_cancel(message: str, title: str="Question") -> bool:
     """Display a message in a popup window with Retry and Cancel buttons. Return True or False. (use Tkinter)"""
     return messagebox.askretrycancel(title, message)
 
-def show_message(message: str, title: str="Information") -> None:
+def show_message(
+        message: str,
+        title: str="Information"
+    ) -> None:
     """show message in a popup window"""
     messagebox.showinfo(title, message)
 
@@ -428,7 +431,10 @@ def show_info(message: str, title: str="Information") -> None:
     """show message in a popup window"""
     messagebox.showinfo(title, message)
 
-def msgbox(message: str, title: str="Message") -> None:
+def msgbox(
+        message: str, # message
+        title: str="Message" # dialog title
+    ) -> None:
     """show message in a popup window like VB"""
     messagebox.showinfo(title, message)
 

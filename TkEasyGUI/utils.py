@@ -1,3 +1,7 @@
+"""
+TkEasyGUI utilities functions
+"""
+
 from typing import Literal, Union, TypeVar
 import pyperclip
 
@@ -13,8 +17,6 @@ OrientationType = Literal["v", "h", "vertical", "horizontal"]
 ListboxSelectMode = Literal["multiple", "browse", "extended", "single"]
 PadType = Union[int, tuple[int, int], tuple[tuple[int, int], tuple[int, int]]]
 ReliefType = Literal["flat", "groove", "raised", "ridge", "solid", "sunken"]
-
-
 
 def set_clipboard(text):
     """copy text to clipboard"""
