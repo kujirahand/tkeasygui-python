@@ -8,21 +8,25 @@ In the event model, it is compatible with the well-known GUI library `PySimpleGU
 
 ## Widgets documents
 
-__ELEMENTS__
-
-### TkEasyGUI Original features
-
-- [Custom Events](/docs/custom_events.md)
-
 ### TkEasyGUI popup dialogs
 
-- [dialogs](/docs/TkEasyGUI/dialogs-py.md) ... popup / popup_get_file etc ...
+- [dialogs module](/docs/TkEasyGUI/dialogs-py.md) ... popup / popup_get_file etc ...
 
 ### TkEasyGUI Elements
 
-- [widgets](/docs/TkEasyGUI/widgets-py.md) ... Button / Input / Text etc ...
+- [widgets module](/docs/TkEasyGUI/widgets-py.md) ... Window / Button / Input / Text etc ...
+
+#### TkEasyGUI Elements list
+
+Here is a list of elements:
+
+- [Window](/docs/TkEasyGUI/widgets-py.md#Window)
+__ELEMENTS__
 
 ### TkEasyGUI Utilities
 
 - [utils](/docs/TkEasyGUI/utils-py.md) ... get_clipboard / set_clipboard
 
+### TkEasyGUI Original features
+
+- [Custom Events](/docs/custom_events.md)

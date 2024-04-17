@@ -13,7 +13,7 @@ class Button(
     key: Union[str, None] = None,
     disabled: bool = None,
     size: Union[tuple[int, int], None] = None,
-    use_ttk_buttons: bool = False,
+    use_ttk_buttons: Union[bool, None] = None,
     tooltip: Union[str, None] = None, # (TODO) tooltip
     button_color: Union[str, tuple[str, str], None] = None,
     # text props
@@ -1973,7 +1973,15 @@ Create the widget.
 def get(self) -> Any
 ```
 
-Return Widget
+Return slider value.
+
+------
+
+##### Slider.get_range
+
+```python
+def get_range(self) -> tuple[float, float]
+```
 
 ------
 
@@ -1983,7 +1991,17 @@ Return Widget
 def set(self, value: float) -> None
 ```
 
-Set the value of the widget.
+Set value of Slider
+
+------
+
+##### Slider.set_range
+
+```python
+def set_range(self, from_: float, to: float) -> None
+```
+
+Set the range of the slider.
 
 ------
 
@@ -1992,6 +2010,7 @@ Set the value of the widget.
 ```python
 def update(self,
        value: Union[float, None]=None,
+       range: Union[tuple[float, float], None]=None,
        disable_number_display: Union[bool, None]=None,
        **kw) -> None
 ```
@@ -2003,7 +2022,7 @@ Update the widget.
 ### Submit
 
 ```python
-class Submit(button_text: str = '', key: Optional[str] = None, disabled: bool = None, size: Optional[tuple[int, int]] = None, use_ttk_buttons: bool = False, tooltip: Optional[str] = None, button_color: Union[str, tuple[str, str], NoneType] = None, text_align: Optional[Literal['left', 'right', 'center']] = 'left', font: Union[tuple[str, int], tuple[str, int, str], NoneType] = None, color: Optional[str] = None, text_color: Optional[str] = None, background_color: Optional[str] = None, expand_x: bool = False, expand_y: bool = False, pad: Union[int, tuple[int, int], tuple[tuple[int, int], tuple[int, int]], NoneType] = None, metadata: Optional[dict[str, Any]] = None, **kw)
+class Submit(button_text: str = '', key: Optional[str] = None, disabled: bool = None, size: Optional[tuple[int, int]] = None, use_ttk_buttons: Optional[bool] = None, tooltip: Optional[str] = None, button_color: Union[str, tuple[str, str], NoneType] = None, text_align: Optional[Literal['left', 'right', 'center']] = 'left', font: Union[tuple[str, int], tuple[str, int, str], NoneType] = None, color: Optional[str] = None, text_color: Optional[str] = None, background_color: Optional[str] = None, expand_x: bool = False, expand_y: bool = False, pad: Union[int, tuple[int, int], tuple[tuple[int, int], tuple[int, int]], NoneType] = None, metadata: Optional[dict[str, Any]] = None, **kw)
 ```
 
 Subtmi element. (Alias of Button) : todo: add submit event
@@ -2264,17 +2283,18 @@ Create a widget.
 class Window(
     self,
     title: str,
-    layout: list[list[Element]],
-    size: Union[tuple[str, int], None] = None, 
+    layout: list[list[Element]], # set elements layout
+    size: Union[tuple[str, int], None] = None, # window size
     resizable:bool = False,
     font: Union[FontType, None] = None,
-    modal: bool = False, 
+    modal: bool = False, # modal window
     keep_on_top:bool = False, # keep on top
     no_titlebar: bool = False, # hide titlebar
     grab_anywhere: bool = False, # can move window by dragging anywhere
-    alpha_channel: float = 1.0,
+    alpha_channel: float = 1.0, # window alpha channel
     enable_key_events: bool = False, # enable keyboard events
     return_keyboard_events: bool = False, # enable keyboard events (for compatibility)
+    use_ttk: bool = False, # use ttk style (default=False) (experimental)
     **kw)
 ```
 
@@ -2667,7 +2687,10 @@ Get root window.
 def get_tnemes() -> list[str]
 ```
 
-Get themes
+Get theme list
+```py
+print(get_themes())
+```
 
 ------
 
@@ -2764,6 +2787,9 @@ def set_default_theme() -> None
 ```
 
 Set default theme
+```py
+print(get_themes())
+```
 
 ------
 

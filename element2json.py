@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 """
-Test all elements of tkeasygui
+make elements.json and elements_test.py
 """
 import json
 import os
@@ -8,7 +8,7 @@ import re
 
 TEST_FILENAME="elements_test.py"
 def read_file() -> str:
-    with open("tkeasygui/widgets.py", "r", encoding="utf-8") as f:
+    with open("TkEasyGUI/widgets.py", "r", encoding="utf-8") as f:
         lines = f.readlines()
     lines_org = lines.copy()
     # Element
@@ -101,7 +101,7 @@ def read_file() -> str:
 def make_json():
     elements, ex_elements, _ = read_file()
     print(elements)
-    with open("docs/elements.json", "w", encoding="utf-8") as f:
+    with open("docs/scripts/elements.json", "w", encoding="utf-8") as f:
         json.dump(elements + ex_elements, f, indent=4, ensure_ascii=False)
 
 def make_code():
