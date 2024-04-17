@@ -2143,18 +2143,28 @@ class Slider(Element):
         return self.widget
 
     def get(self) -> Any:
-        """Return Widget"""
+        """Return slider value."""
         return self.scale_var.get()
     
     def set(self, value: float) -> None:
-        """Set the value of the widget."""
+        """Set value of Slider"""
         self.widget.set(value)
+    
+    def set_range(self, from_: float, to: float) -> None:
+        """Set the range of the slider."""
+        self.widget.config(from_=from_, to=to)
+
+    def get_range(self) -> tuple[float, float]:
+        return (self.widget.cget("from"), self.widget.cget("to"))
 
     def update(self,
                value: Union[float, None]=None,
+               range: Union[tuple[float, float], None]=None,
                disable_number_display: Union[bool, None]=None,
                **kw) -> None:
         """Update the widget."""
+        if range is not None:
+            self.set_range(range[0], range[1])
         if disable_number_display is not None:
             self.props["showvalue"] = 0 if disable_number_display else 1
         if value is not None:

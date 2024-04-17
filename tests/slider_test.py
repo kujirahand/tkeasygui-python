@@ -4,7 +4,7 @@ import TkEasyGUI as eg
 # define layout
 layout = [
     [eg.Text("-slider1-")],
-    [eg.Slider(key="-slider1-", range=[0, 100], size=[30, 2], orientation="h", default_value=50, resolution=0.1)],
+    [eg.Slider(key="-slider1-", range=[0, 100], size=[30, 2], orientation="h", default_value=50, resolution=0.1, tick_interval=10)],
     [eg.HSeparator()],
     [eg.Text("-slider2- (disable_number_display=True)")],
     [
@@ -19,6 +19,7 @@ layout = [
         eg.VSeparator(),
         eg.Multiline("", key="-output-", size=[50, 20]),
     ],
+    [eg.Button("Change range(0,10)"), eg.Button("Change range(0,100)")],
     [eg.HSeparator()],
     [eg.Button("Exit")]
 ]
@@ -37,9 +38,14 @@ while True:
         window["-slider1-"].update(value=20)
         window["-slider2-"].update(value=20)
         window["-text2-"].update("20.0")
-    if event == "Check Value" or event == "-slider3-" or event == "-slider2-":
-        s = event + "\n"
-        s += f"-slider1-: {values['-slider1-']}\n"
-        s += f"-slider2-: {values['-slider2-']}\n"
-        s += f"-slider3-: {values['-slider3-']}\n"
-        window["-output-"].update(s)
+    if event == "Change range(0,10)":
+        window["-slider3-"].update(range=[0, 10])
+    elif event == "Change range(0,100)":
+        window["-slider3-"].update(range=[0, 100])
+    # check value
+    s = "[event=" + event + "]\n------\n"
+    s += f"-slider1-: {values['-slider1-']}\n"
+    s += f"-slider2-: {values['-slider2-']}\n"
+    s += f"-slider3-: {values['-slider3-']}\n"
+    s += f"range=[{window['-slider3-'].get_range()}]\n"
+    window["-output-"].update(s)
