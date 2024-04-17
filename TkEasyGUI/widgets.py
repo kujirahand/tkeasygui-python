@@ -2035,7 +2035,6 @@ class Multiline(Element):
         text.tag_add(tk.SEL, "1.0", tk.END)
         text.mark_set(tk.INSERT, '1.0')
         self.widget.see(tk.INSERT)
-        print("@select_all")
 
     def print(self, text: str, text_color: Union[str, None] = None, background_color: Union[str, None] = None, end:str="\n") -> None:
         """Print text."""
@@ -2065,15 +2064,15 @@ class Slider(Element):
     """Slider element."""
     def __init__(
                 self,
-                range: tuple[float, float] = (1, 10),
-                default_value: Union[float, None] = None,
-                resolution: Union[float, None] = None,
-                orientation: OrientationType = "horizontal",
+                range: tuple[float, float] = (1, 10), # value range (from, to)
+                default_value: Union[float, None] = None, # default value
+                resolution: Union[float, None] = None, # value resolution
+                orientation: OrientationType = "horizontal", # orientation (h|v|horizontal|vertical)
                 tick_interval: Union[float, None] = None, # tick marks interval on the scale
                 enable_events: bool = False, # enable changing events
                 enable_changed_events: bool = False, # enable changed event
-                disable_number_display: bool = False,
-                size: Union[tuple[int, int], None] = None, # horizontal: (bar_length, thumb_size), vertical: (thumb_size, bar_length)
+                disable_number_display: bool = False, # hide number display
+                size: Union[tuple[int, int], None] = None, # size (unit: character) / horizontal: (bar_length, thumb_size), vertical: (thumb_size, bar_length)
                 key: Union[str, None] = None,
                 # other
                 default: Union[float, None] = None, # same as default_value
@@ -2145,12 +2144,10 @@ class Slider(Element):
 
     def get(self) -> Any:
         """Return Widget"""
-        print(f"@[{self.key}].get=", self.scale_var.get())
         return self.scale_var.get()
     
     def set(self, value: float) -> None:
         """Set the value of the widget."""
-        self._value = value
         self.widget.set(value)
 
     def update(self,
