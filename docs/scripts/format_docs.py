@@ -3,13 +3,17 @@ import glob
 import os
 import re
 
+# path
 SCRIPT_DIR = os.path.dirname(__file__)
-DOCS_DIR = os.path.join(SCRIPT_DIR, "TkEasyGUI")
-print(DOCS_DIR)
+DOCS_DIR = os.path.dirname(SCRIPT_DIR)
+ROOT_DIR = os.path.dirname(DOCS_DIR)
+OUT_DIR = os.path.join(DOCS_DIR, "TkEasyGUI")
+print(f"output_dir: {OUT_DIR}")
+
 # 指定のディレクトリ以下のmdファイルを列挙
-files = glob.glob(os.path.join(DOCS_DIR, "*.md"), recursive=True)
+files = sorted(glob.glob(os.path.join(OUT_DIR, "*.md"), recursive=True))
 for f in files:
-    print("===", f, "===")
+    print("===", os.path.basename(f), "===")
     result = []
     with open(f, "r", encoding="utf-8") as fp:
         text = fp.read()
