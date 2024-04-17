@@ -211,7 +211,7 @@ class Window:
                 alpha_channel: float = 1.0, # window alpha channel
                 enable_key_events: bool = False, # enable keyboard events
                 return_keyboard_events: bool = False, # enable keyboard events (for compatibility)
-                use_ttk: bool = False, # use ttk style (default=False) (experimental)
+                location: Union[tuple[int, int], None] = None, # window location
                 **kw) -> None:
         """Create a window with a layout of widgets."""
         self.modal: bool = modal
@@ -247,7 +247,6 @@ class Window:
         self.enable_key_events: bool = enable_key_events
         self.return_keyboard_events: bool = return_keyboard_events
         self.font_size_average: tuple[int, int] = (12, 10)
-        self.use_ttk: bool = use_ttk
         # Frame
         self.frame: ttk.Frame = ttk.Frame(self.window, padding=10)
         self.frame.configure(style="TFrame")
@@ -271,7 +270,7 @@ class Window:
         if alpha_channel < 1.0:
             self.set_alpha_channel(alpha_channel)
         # font
-        self.calc_font_size(font)
+        self._calc_font_size(font)
         # bind events
         if self.enable_key_events:
             self.window.bind("<Key>", lambda e: self._event_handler(
@@ -284,7 +283,7 @@ class Window:
         if modal:
             # check position
             parent = active_win
-            if parent is not None:
+            if parent is not None and location is None:
                 self.window.geometry(f"+{parent.winfo_x()+20}+{parent.winfo_y()+20}")
             # set modal action
             self.window.attributes("-topmost", 1) # topmost
@@ -294,10 +293,16 @@ class Window:
         else:
             if isinstance(self.window, tk.Tk):
                 self.window.eval('tk::PlaceWindow . center')
+        if location is not None:
+            self.window.geometry(f"+{location[0]}+{location[1]}")
         # push window
         if not modal:
             _window_push(self)
     
+    def set_location(self, x: int, y: int) -> None:
+        """Set window location."""
+        self.window.geometry(f"+{x}+{y}")
+
     def __enter__(self):
         """Initialize resource"""
         return self
@@ -412,7 +417,7 @@ class Window:
         if self.need_focus_widget is not None:
             self.need_focus_widget.focus_set()
 
-    def calc_font_size(self, font: FontType) -> None:
+    def _calc_font_size(self, font: FontType) -> None:
         """Calculate font size."""
         font_obj = tkinter_font.Font()
         if font is not None:
@@ -428,6 +433,10 @@ class Window:
         w = (m_size + s_size + a_size) // 3
         h = font_obj.metrics("linespace")
         self.font_size_average = (w, h)
+    
+    def move(self, x: int, y: int) -> None:
+        """Move the window."""
+        self.window.geometry(f"+{x}+{y}")
  
     def move_to_center(self) -> None:
         """Move the window to the center of the screen."""
