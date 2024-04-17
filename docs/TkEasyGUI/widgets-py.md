@@ -57,11 +57,10 @@ class Button(
 - [set_disabled](#buttonset_disabled)
 - [set_text](#buttonset_text)
 - [update](#buttonupdate)
-- [widget_update](#buttonwidget_update)
 
 ### Button.bind
 
-Bind event. @see `Window.bind`
+Bind event. @see [Window.bind](#windowbind)
 
 ```py
 def bind(self, event_name: str, handle_name: str, propagate: bool=True, event_mode: EventMode = "user") -> None:
@@ -111,7 +110,7 @@ def get(self) -> Any:
 
 ### Button.get_name
 
-Get element name.
+Get key of element.
 
 ```py
 def get_name(self) -> str:
@@ -201,14 +200,6 @@ def update(self,
 
 - [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L1414)
 
-### Button.widget_update
-
-```py
-def widget_update(self, **kw) -> None:
-```
-
-- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L1007)
-
 ## Canvas
 
 Canvas element.
@@ -240,11 +231,10 @@ class Canvas(
 - [prepare_create](#canvasprepare_create)
 - [set_disabled](#canvasset_disabled)
 - [update](#canvasupdate)
-- [widget_update](#canvaswidget_update)
 
 ### Canvas.bind
 
-Bind event. @see `Window.bind`
+Bind event. @see [Window.bind](#windowbind)
 
 ```py
 def bind(self, event_name: str, handle_name: str, propagate: bool=True, event_mode: EventMode = "user") -> None:
@@ -292,7 +282,7 @@ def get(self) -> Any:
 
 ### Canvas.get_name
 
-Get element name.
+Get key of element.
 
 ```py
 def get_name(self) -> str:
@@ -348,14 +338,6 @@ def update(self, *args, **kw) -> None:
 
 - [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L2226)
 
-### Canvas.widget_update
-
-```py
-def widget_update(self, **kw) -> None:
-```
-
-- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L1007)
-
 ## Checkbox
 
 Checkbox element.
@@ -389,11 +371,10 @@ class Checkbox(
 - [set_text](#checkboxset_text)
 - [set_value](#checkboxset_value)
 - [update](#checkboxupdate)
-- [widget_update](#checkboxwidget_update)
 
 ### Checkbox.bind
 
-Bind event. @see `Window.bind`
+Bind event. @see [Window.bind](#windowbind)
 
 ```py
 def bind(self, event_name: str, handle_name: str, propagate: bool=True, event_mode: EventMode = "user") -> None:
@@ -441,7 +422,7 @@ def get(self) -> Any:
 
 ### Checkbox.get_name
 
-Get element name.
+Get key of element.
 
 ```py
 def get_name(self) -> str:
@@ -527,14 +508,6 @@ def update(self, *args, **kw) -> None:
 
 - [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L1487)
 
-### Checkbox.widget_update
-
-```py
-def widget_update(self, **kw) -> None:
-```
-
-- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L1007)
-
 ## ColorBrowse
 
 FolderBrowse element.
@@ -570,11 +543,10 @@ class ColorBrowse(
 - [set_text](#colorbrowseset_text)
 - [show_dialog](#colorbrowseshow_dialog)
 - [update](#colorbrowseupdate)
-- [widget_update](#colorbrowsewidget_update)
 
 ### ColorBrowse.bind
 
-Bind event. @see `Window.bind`
+Bind event. @see [Window.bind](#windowbind)
 
 ```py
 def bind(self, event_name: str, handle_name: str, propagate: bool=True, event_mode: EventMode = "user") -> None:
@@ -622,7 +594,7 @@ def get(self) -> Any:
 
 ### ColorBrowse.get_name
 
-Get element name.
+Get key of element.
 
 ```py
 def get_name(self) -> str:
@@ -698,14 +670,6 @@ def update(self, text: Union[str, None] = None, **kw) -> None:
 
 - [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L2825)
 
-### ColorBrowse.widget_update
-
-```py
-def widget_update(self, **kw) -> None:
-```
-
-- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L1007)
-
 ## Column
 
 Frame element.
@@ -744,11 +708,10 @@ class Column(
 - [prepare_create](#columnprepare_create)
 - [set_disabled](#columnset_disabled)
 - [update](#columnupdate)
-- [widget_update](#columnwidget_update)
 
 ### Column.bind
 
-Bind event. @see `Window.bind`
+Bind event. @see [Window.bind](#windowbind)
 
 ```py
 def bind(self, event_name: str, handle_name: str, propagate: bool=True, event_mode: EventMode = "user") -> None:
@@ -796,7 +759,7 @@ def get(self) -> Any:
 
 ### Column.get_name
 
-Get element name.
+Get key of element.
 
 ```py
 def get_name(self) -> str:
@@ -852,14 +815,6 @@ def update(self, *args, **kw) -> None:
 
 - [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L1154)
 
-### Column.widget_update
-
-```py
-def widget_update(self, **kw) -> None:
-```
-
-- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L1007)
-
 ## Combo
 
 Combo element.
@@ -893,11 +848,10 @@ class Combo(
 - [set_value](#comboset_value)
 - [set_values](#comboset_values)
 - [update](#comboupdate)
-- [widget_update](#combowidget_update)
 
 ### Combo.bind
 
-Bind event. @see `Window.bind`
+Bind event. @see [Window.bind](#windowbind)
 
 ```py
 def bind(self, event_name: str, handle_name: str, propagate: bool=True, event_mode: EventMode = "user") -> None:
@@ -947,7 +901,7 @@ def get(self) -> Any:
 
 ### Combo.get_name
 
-Get element name.
+Get key of element.
 
 ```py
 def get_name(self) -> str:
@@ -1023,14 +977,6 @@ def update(self, *args, **kw) -> None:
 
 - [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L2583)
 
-### Combo.widget_update
-
-```py
-def widget_update(self, **kw) -> None:
-```
-
-- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L1007)
-
 ## Element
 
 Element class.
@@ -1061,11 +1007,10 @@ class Element(
 - [prepare_create](#elementprepare_create)
 - [set_disabled](#elementset_disabled)
 - [update](#elementupdate)
-- [widget_update](#elementwidget_update)
 
 ### Element.bind
 
-Bind event. @see `Window.bind`
+Bind event. @see [Window.bind](#windowbind)
 
 ```py
 def bind(self, event_name: str, handle_name: str, propagate: bool=True, event_mode: EventMode = "user") -> None:
@@ -1115,7 +1060,7 @@ def get(self) -> Any:
 
 ### Element.get_name
 
-Get element name.
+Get key of element.
 
 ```py
 def get_name(self) -> str:
@@ -1171,14 +1116,6 @@ def update(self, *args, **kw) -> None:
 
 - [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L1003)
 
-### Element.widget_update
-
-```py
-def widget_update(self, **kw) -> None:
-```
-
-- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L1007)
-
 ## FileBrowse
 
 FileBrowse element.
@@ -1216,11 +1153,10 @@ class FileBrowse(
 - [set_text](#filebrowseset_text)
 - [show_dialog](#filebrowseshow_dialog)
 - [update](#filebrowseupdate)
-- [widget_update](#filebrowsewidget_update)
 
 ### FileBrowse.bind
 
-Bind event. @see `Window.bind`
+Bind event. @see [Window.bind](#windowbind)
 
 ```py
 def bind(self, event_name: str, handle_name: str, propagate: bool=True, event_mode: EventMode = "user") -> None:
@@ -1268,7 +1204,7 @@ def get(self) -> Any:
 
 ### FileBrowse.get_name
 
-Get element name.
+Get key of element.
 
 ```py
 def get_name(self) -> str:
@@ -1344,14 +1280,6 @@ def update(self, text: Union[str, None] = None, **kw) -> None:
 
 - [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L2825)
 
-### FileBrowse.widget_update
-
-```py
-def widget_update(self, **kw) -> None:
-```
-
-- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L1007)
-
 ## FileSaveAs
 
 FileSaveAs element. (alias of FileSaveAsBrowse)
@@ -1389,11 +1317,10 @@ class FileSaveAs(
 - [set_text](#filesaveasset_text)
 - [show_dialog](#filesaveasshow_dialog)
 - [update](#filesaveasupdate)
-- [widget_update](#filesaveaswidget_update)
 
 ### FileSaveAs.bind
 
-Bind event. @see `Window.bind`
+Bind event. @see [Window.bind](#windowbind)
 
 ```py
 def bind(self, event_name: str, handle_name: str, propagate: bool=True, event_mode: EventMode = "user") -> None:
@@ -1441,7 +1368,7 @@ def get(self) -> Any:
 
 ### FileSaveAs.get_name
 
-Get element name.
+Get key of element.
 
 ```py
 def get_name(self) -> str:
@@ -1517,14 +1444,6 @@ def update(self, text: Union[str, None] = None, **kw) -> None:
 
 - [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L2825)
 
-### FileSaveAs.widget_update
-
-```py
-def widget_update(self, **kw) -> None:
-```
-
-- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L1007)
-
 ## FileSaveAsBrowse
 
 FileSaveAsBrowse element.
@@ -1560,11 +1479,10 @@ class FileSaveAsBrowse(
 - [set_text](#filesaveasbrowseset_text)
 - [show_dialog](#filesaveasbrowseshow_dialog)
 - [update](#filesaveasbrowseupdate)
-- [widget_update](#filesaveasbrowsewidget_update)
 
 ### FileSaveAsBrowse.bind
 
-Bind event. @see `Window.bind`
+Bind event. @see [Window.bind](#windowbind)
 
 ```py
 def bind(self, event_name: str, handle_name: str, propagate: bool=True, event_mode: EventMode = "user") -> None:
@@ -1612,7 +1530,7 @@ def get(self) -> Any:
 
 ### FileSaveAsBrowse.get_name
 
-Get element name.
+Get key of element.
 
 ```py
 def get_name(self) -> str:
@@ -1688,14 +1606,6 @@ def update(self, text: Union[str, None] = None, **kw) -> None:
 
 - [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L2825)
 
-### FileSaveAsBrowse.widget_update
-
-```py
-def widget_update(self, **kw) -> None:
-```
-
-- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L1007)
-
 ## FilesBrowse
 
 FilesBrowse element.
@@ -1731,11 +1641,10 @@ class FilesBrowse(
 - [set_text](#filesbrowseset_text)
 - [show_dialog](#filesbrowseshow_dialog)
 - [update](#filesbrowseupdate)
-- [widget_update](#filesbrowsewidget_update)
 
 ### FilesBrowse.bind
 
-Bind event. @see `Window.bind`
+Bind event. @see [Window.bind](#windowbind)
 
 ```py
 def bind(self, event_name: str, handle_name: str, propagate: bool=True, event_mode: EventMode = "user") -> None:
@@ -1783,7 +1692,7 @@ def get(self) -> Any:
 
 ### FilesBrowse.get_name
 
-Get element name.
+Get key of element.
 
 ```py
 def get_name(self) -> str:
@@ -1859,14 +1768,6 @@ def update(self, text: Union[str, None] = None, **kw) -> None:
 
 - [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L2825)
 
-### FilesBrowse.widget_update
-
-```py
-def widget_update(self, **kw) -> None:
-```
-
-- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L1007)
-
 ## FolderBrowse
 
 FolderBrowse element.
@@ -1902,11 +1803,10 @@ class FolderBrowse(
 - [set_text](#folderbrowseset_text)
 - [show_dialog](#folderbrowseshow_dialog)
 - [update](#folderbrowseupdate)
-- [widget_update](#folderbrowsewidget_update)
 
 ### FolderBrowse.bind
 
-Bind event. @see `Window.bind`
+Bind event. @see [Window.bind](#windowbind)
 
 ```py
 def bind(self, event_name: str, handle_name: str, propagate: bool=True, event_mode: EventMode = "user") -> None:
@@ -1954,7 +1854,7 @@ def get(self) -> Any:
 
 ### FolderBrowse.get_name
 
-Get element name.
+Get key of element.
 
 ```py
 def get_name(self) -> str:
@@ -2030,14 +1930,6 @@ def update(self, text: Union[str, None] = None, **kw) -> None:
 
 - [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L2825)
 
-### FolderBrowse.widget_update
-
-```py
-def widget_update(self, **kw) -> None:
-```
-
-- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L1007)
-
 ## Frame
 
 Frame element.
@@ -2081,11 +1973,10 @@ class Frame(
 - [prepare_create](#frameprepare_create)
 - [set_disabled](#frameset_disabled)
 - [update](#frameupdate)
-- [widget_update](#framewidget_update)
 
 ### Frame.bind
 
-Bind event. @see `Window.bind`
+Bind event. @see [Window.bind](#windowbind)
 
 ```py
 def bind(self, event_name: str, handle_name: str, propagate: bool=True, event_mode: EventMode = "user") -> None:
@@ -2135,7 +2026,7 @@ def get(self) -> Any:
 
 ### Frame.get_name
 
-Get element name.
+Get key of element.
 
 ```py
 def get_name(self) -> str:
@@ -2191,14 +2082,6 @@ def update(self, *args, **kw) -> None:
 
 - [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L1104)
 
-### Frame.widget_update
-
-```py
-def widget_update(self, **kw) -> None:
-```
-
-- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L1007)
-
 ## Graph
 
 Graph element.
@@ -2242,11 +2125,10 @@ class Graph(
 - [prepare_create](#graphprepare_create)
 - [set_disabled](#graphset_disabled)
 - [update](#graphupdate)
-- [widget_update](#graphwidget_update)
 
 ### Graph.bind
 
-Bind event. @see `Window.bind`
+Bind event. @see [Window.bind](#windowbind)
 
 ```py
 def bind(self, event_name: str, handle_name: str, propagate: bool=True, event_mode: EventMode = "user") -> None:
@@ -2404,7 +2286,7 @@ def get(self) -> Any:
 
 ### Graph.get_name
 
-Get element name.
+Get key of element.
 
 ```py
 def get_name(self) -> str:
@@ -2460,14 +2342,6 @@ def update(self, *args, **kw) -> None:
 
 - [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L2272)
 
-### Graph.widget_update
-
-```py
-def widget_update(self, **kw) -> None:
-```
-
-- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L1007)
-
 ## HSeparator
 
 HSeparator element.
@@ -2499,11 +2373,10 @@ class HSeparator(
 - [prepare_create](#hseparatorprepare_create)
 - [set_disabled](#hseparatorset_disabled)
 - [update](#hseparatorupdate)
-- [widget_update](#hseparatorwidget_update)
 
 ### HSeparator.bind
 
-Bind event. @see `Window.bind`
+Bind event. @see [Window.bind](#windowbind)
 
 ```py
 def bind(self, event_name: str, handle_name: str, propagate: bool=True, event_mode: EventMode = "user") -> None:
@@ -2551,7 +2424,7 @@ def get(self) -> Any:
 
 ### HSeparator.get_name
 
-Get element name.
+Get key of element.
 
 ```py
 def get_name(self) -> str:
@@ -2607,14 +2480,6 @@ def update(self, *args, **kw) -> None:
 
 - [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L1003)
 
-### HSeparator.widget_update
-
-```py
-def widget_update(self, **kw) -> None:
-```
-
-- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L1007)
-
 ## Image
 
 Image element.
@@ -2650,11 +2515,10 @@ class Image(
 - [set_disabled](#imageset_disabled)
 - [set_image](#imageset_image)
 - [update](#imageupdate)
-- [widget_update](#imagewidget_update)
 
 ### Image.bind
 
-Bind event. @see `Window.bind`
+Bind event. @see [Window.bind](#windowbind)
 
 ```py
 def bind(self, event_name: str, handle_name: str, propagate: bool=True, event_mode: EventMode = "user") -> None:
@@ -2714,7 +2578,7 @@ def get(self) -> Any:
 
 ### Image.get_name
 
-Get element name.
+Get key of element.
 
 ```py
 def get_name(self) -> str:
@@ -2786,14 +2650,6 @@ def update(self,
 
 - [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L2394)
 
-### Image.widget_update
-
-```py
-def widget_update(self, **kw) -> None:
-```
-
-- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L1007)
-
 ## Input
 
 Text input element.
@@ -2857,11 +2713,10 @@ class Input(
 - [set_selection_start](#inputset_selection_start)
 - [set_text](#inputset_text)
 - [update](#inputupdate)
-- [widget_update](#inputwidget_update)
 
 ### Input.bind
 
-Bind event. @see `Window.bind`
+Bind event. @see [Window.bind](#windowbind)
 
 ```py
 def bind(self, event_name: str, handle_name: str, propagate: bool=True, event_mode: EventMode = "user") -> None:
@@ -2961,7 +2816,7 @@ def get_cursor_pos(self) -> int:
 
 ### Input.get_name
 
-Get element name.
+Get key of element.
 
 ```py
 def get_name(self) -> str:
@@ -3127,14 +2982,6 @@ def update(self, text: Union[str, None] = None, readonly: Union[bool, None] = No
 
 - [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L1690)
 
-### Input.widget_update
-
-```py
-def widget_update(self, **kw) -> None:
-```
-
-- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L1007)
-
 ## InputText
 
 InputText element. (alias of Input)
@@ -3198,11 +3045,10 @@ class InputText(
 - [set_selection_start](#inputtextset_selection_start)
 - [set_text](#inputtextset_text)
 - [update](#inputtextupdate)
-- [widget_update](#inputtextwidget_update)
 
 ### InputText.bind
 
-Bind event. @see `Window.bind`
+Bind event. @see [Window.bind](#windowbind)
 
 ```py
 def bind(self, event_name: str, handle_name: str, propagate: bool=True, event_mode: EventMode = "user") -> None:
@@ -3302,7 +3148,7 @@ def get_cursor_pos(self) -> int:
 
 ### InputText.get_name
 
-Get element name.
+Get key of element.
 
 ```py
 def get_name(self) -> str:
@@ -3468,14 +3314,6 @@ def update(self, text: Union[str, None] = None, readonly: Union[bool, None] = No
 
 - [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L1690)
 
-### InputText.widget_update
-
-```py
-def widget_update(self, **kw) -> None:
-```
-
-- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L1007)
-
 ## Label
 
 Label element (alias of Text)
@@ -3520,11 +3358,10 @@ class Label(
 - [set_disabled](#labelset_disabled)
 - [set_text](#labelset_text)
 - [update](#labelupdate)
-- [widget_update](#labelwidget_update)
 
 ### Label.bind
 
-Bind event. @see `Window.bind`
+Bind event. @see [Window.bind](#windowbind)
 
 ```py
 def bind(self, event_name: str, handle_name: str, propagate: bool=True, event_mode: EventMode = "user") -> None:
@@ -3574,7 +3411,7 @@ def get(self) -> Any:
 
 ### Label.get_name
 
-Get element name.
+Get key of element.
 
 ```py
 def get_name(self) -> str:
@@ -3648,14 +3485,6 @@ def update(self, text: Union[str, None] = None, *args, **kw) -> None:
 
 - [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L1218)
 
-### Label.widget_update
-
-```py
-def widget_update(self, **kw) -> None:
-```
-
-- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L1007)
-
 ## Listbox
 
 Listbox element.
@@ -3690,11 +3519,10 @@ class Listbox(
 - [set_disabled](#listboxset_disabled)
 - [set_values](#listboxset_values)
 - [update](#listboxupdate)
-- [widget_update](#listboxwidget_update)
 
 ### Listbox.bind
 
-Bind event. @see `Window.bind`
+Bind event. @see [Window.bind](#windowbind)
 
 ```py
 def bind(self, event_name: str, handle_name: str, propagate: bool=True, event_mode: EventMode = "user") -> None:
@@ -3744,7 +3572,7 @@ def get(self) -> Any:
 
 ### Listbox.get_name
 
-Get element name.
+Get key of element.
 
 ```py
 def get_name(self) -> str:
@@ -3820,14 +3648,6 @@ def update(self, *args, **kw) -> None:
 
 - [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L2528)
 
-### Listbox.widget_update
-
-```py
-def widget_update(self, **kw) -> None:
-```
-
-- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L1007)
-
 ## Menu
 
 Menu element.
@@ -3870,11 +3690,10 @@ class Menu(
 - [set_disabled](#menuset_disabled)
 - [set_text](#menuset_text)
 - [update](#menuupdate)
-- [widget_update](#menuwidget_update)
 
 ### Menu.bind
 
-Bind event. @see `Window.bind`
+Bind event. @see [Window.bind](#windowbind)
 
 ```py
 def bind(self, event_name: str, handle_name: str, propagate: bool=True, event_mode: EventMode = "user") -> None:
@@ -3924,7 +3743,7 @@ def get(self) -> Any:
 
 ### Menu.get_name
 
-Get element name.
+Get key of element.
 
 ```py
 def get_name(self) -> str:
@@ -3998,14 +3817,6 @@ def update(self, text: Union[str, None] = None, *args, **kw) -> None:
 
 - [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L1322)
 
-### Menu.widget_update
-
-```py
-def widget_update(self, **kw) -> None:
-```
-
-- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L1007)
-
 ## Multiline
 
 Multiline text input element.
@@ -4070,11 +3881,10 @@ class Multiline(
 - [set_selection_start](#multilineset_selection_start)
 - [set_text](#multilineset_text)
 - [update](#multilineupdate)
-- [widget_update](#multilinewidget_update)
 
 ### Multiline.bind
 
-Bind event. @see `Window.bind`
+Bind event. @see [Window.bind](#windowbind)
 
 ```py
 def bind(self, event_name: str, handle_name: str, propagate: bool=True, event_mode: EventMode = "user") -> None:
@@ -4154,7 +3964,7 @@ def get_cursor_pos(self) -> str:
 
 ### Multiline.get_name
 
-Get element name.
+Get key of element.
 
 ```py
 def get_name(self) -> str:
@@ -4360,14 +4170,6 @@ def update(self, text: Union[str, None] = None, readonly: Union[bool, None] = No
 
 - [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L1923)
 
-### Multiline.widget_update
-
-```py
-def widget_update(self, **kw) -> None:
-```
-
-- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L1007)
-
 ## Output
 
 Output element. (alias of Multiline) TODO: implement
@@ -4432,11 +4234,10 @@ class Output(
 - [set_selection_start](#outputset_selection_start)
 - [set_text](#outputset_text)
 - [update](#outputupdate)
-- [widget_update](#outputwidget_update)
 
 ### Output.bind
 
-Bind event. @see `Window.bind`
+Bind event. @see [Window.bind](#windowbind)
 
 ```py
 def bind(self, event_name: str, handle_name: str, propagate: bool=True, event_mode: EventMode = "user") -> None:
@@ -4516,7 +4317,7 @@ def get_cursor_pos(self) -> str:
 
 ### Output.get_name
 
-Get element name.
+Get key of element.
 
 ```py
 def get_name(self) -> str:
@@ -4722,14 +4523,6 @@ def update(self, text: Union[str, None] = None, readonly: Union[bool, None] = No
 
 - [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L1923)
 
-### Output.widget_update
-
-```py
-def widget_update(self, **kw) -> None:
-```
-
-- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L1007)
-
 ## Radio
 
 Checkbox element.
@@ -4765,11 +4558,10 @@ class Radio(
 - [set_disabled](#radioset_disabled)
 - [set_text](#radioset_text)
 - [update](#radioupdate)
-- [widget_update](#radiowidget_update)
 
 ### Radio.bind
 
-Bind event. @see `Window.bind`
+Bind event. @see [Window.bind](#windowbind)
 
 ```py
 def bind(self, event_name: str, handle_name: str, propagate: bool=True, event_mode: EventMode = "user") -> None:
@@ -4817,7 +4609,7 @@ def get(self) -> Any:
 
 ### Radio.get_name
 
-Get element name.
+Get key of element.
 
 ```py
 def get_name(self) -> str:
@@ -4913,14 +4705,6 @@ def update(self, text: Union[str, None] = None, **kw) -> None:
 
 - [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L1563)
 
-### Radio.widget_update
-
-```py
-def widget_update(self, **kw) -> None:
-```
-
-- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L1007)
-
 ## Slider
 
 Slider element.
@@ -4962,11 +4746,10 @@ class Slider(
 - [set_disabled](#sliderset_disabled)
 - [set_range](#sliderset_range)
 - [update](#sliderupdate)
-- [widget_update](#sliderwidget_update)
 
 ### Slider.bind
 
-Bind event. @see `Window.bind`
+Bind event. @see [Window.bind](#windowbind)
 
 ```py
 def bind(self, event_name: str, handle_name: str, propagate: bool=True, event_mode: EventMode = "user") -> None:
@@ -5016,7 +4799,7 @@ def get(self) -> Any:
 
 ### Slider.get_name
 
-Get element name.
+Get key of element.
 
 ```py
 def get_name(self) -> str:
@@ -5104,14 +4887,6 @@ def update(self,
 
 - [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L2180)
 
-### Slider.widget_update
-
-```py
-def widget_update(self, **kw) -> None:
-```
-
-- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L1007)
-
 ## Submit
 
 Subtmi element. (Alias of Button) : todo: add submit event
@@ -5160,11 +4935,10 @@ class Submit(
 - [set_disabled](#submitset_disabled)
 - [set_text](#submitset_text)
 - [update](#submitupdate)
-- [widget_update](#submitwidget_update)
 
 ### Submit.bind
 
-Bind event. @see `Window.bind`
+Bind event. @see [Window.bind](#windowbind)
 
 ```py
 def bind(self, event_name: str, handle_name: str, propagate: bool=True, event_mode: EventMode = "user") -> None:
@@ -5214,7 +4988,7 @@ def get(self) -> Any:
 
 ### Submit.get_name
 
-Get element name.
+Get key of element.
 
 ```py
 def get_name(self) -> str:
@@ -5304,14 +5078,6 @@ def update(self,
 
 - [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L1414)
 
-### Submit.widget_update
-
-```py
-def widget_update(self, **kw) -> None:
-```
-
-- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L1007)
-
 ## Table
 
 Table element.
@@ -5360,11 +5126,10 @@ class Table(
 - [set_disabled](#tableset_disabled)
 - [set_values](#tableset_values)
 - [update](#tableupdate)
-- [widget_update](#tablewidget_update)
 
 ### Table.bind
 
-Bind event. @see `Window.bind`
+Bind event. @see [Window.bind](#windowbind)
 
 ```py
 def bind(self, event_name: str, handle_name: str, propagate: bool=True, event_mode: EventMode = "user") -> None:
@@ -5414,7 +5179,7 @@ def get(self) -> Any:
 
 ### Table.get_name
 
-Get element name.
+Get key of element.
 
 ```py
 def get_name(self) -> str:
@@ -5480,14 +5245,6 @@ def update(self, *args, **kw) -> None:
 
 - [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L2732)
 
-### Table.widget_update
-
-```py
-def widget_update(self, **kw) -> None:
-```
-
-- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L1007)
-
 ## Text
 
 Text element.
@@ -5532,11 +5289,10 @@ class Text(
 - [set_disabled](#textset_disabled)
 - [set_text](#textset_text)
 - [update](#textupdate)
-- [widget_update](#textwidget_update)
 
 ### Text.bind
 
-Bind event. @see `Window.bind`
+Bind event. @see [Window.bind](#windowbind)
 
 ```py
 def bind(self, event_name: str, handle_name: str, propagate: bool=True, event_mode: EventMode = "user") -> None:
@@ -5586,7 +5342,7 @@ def get(self) -> Any:
 
 ### Text.get_name
 
-Get element name.
+Get key of element.
 
 ```py
 def get_name(self) -> str:
@@ -5660,14 +5416,6 @@ def update(self, text: Union[str, None] = None, *args, **kw) -> None:
 
 - [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L1218)
 
-### Text.widget_update
-
-```py
-def widget_update(self, **kw) -> None:
-```
-
-- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L1007)
-
 ## Textarea
 
 Textarea element. (alias of Multiline)
@@ -5732,11 +5480,10 @@ class Textarea(
 - [set_selection_start](#textareaset_selection_start)
 - [set_text](#textareaset_text)
 - [update](#textareaupdate)
-- [widget_update](#textareawidget_update)
 
 ### Textarea.bind
 
-Bind event. @see `Window.bind`
+Bind event. @see [Window.bind](#windowbind)
 
 ```py
 def bind(self, event_name: str, handle_name: str, propagate: bool=True, event_mode: EventMode = "user") -> None:
@@ -5816,7 +5563,7 @@ def get_cursor_pos(self) -> str:
 
 ### Textarea.get_name
 
-Get element name.
+Get key of element.
 
 ```py
 def get_name(self) -> str:
@@ -6022,14 +5769,6 @@ def update(self, text: Union[str, None] = None, readonly: Union[bool, None] = No
 
 - [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L1923)
 
-### Textarea.widget_update
-
-```py
-def widget_update(self, **kw) -> None:
-```
-
-- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L1007)
-
 ## TkEasyError
 
 
@@ -6082,11 +5821,10 @@ class VSeparator(
 - [prepare_create](#vseparatorprepare_create)
 - [set_disabled](#vseparatorset_disabled)
 - [update](#vseparatorupdate)
-- [widget_update](#vseparatorwidget_update)
 
 ### VSeparator.bind
 
-Bind event. @see `Window.bind`
+Bind event. @see [Window.bind](#windowbind)
 
 ```py
 def bind(self, event_name: str, handle_name: str, propagate: bool=True, event_mode: EventMode = "user") -> None:
@@ -6134,7 +5872,7 @@ def get(self) -> Any:
 
 ### VSeparator.get_name
 
-Get element name.
+Get key of element.
 
 ```py
 def get_name(self) -> str:
@@ -6189,14 +5927,6 @@ def update(self, *args, **kw) -> None:
 ```
 
 - [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L1003)
-
-### VSeparator.widget_update
-
-```py
-def widget_update(self, **kw) -> None:
-```
-
-- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L1007)
 
 ## Window
 

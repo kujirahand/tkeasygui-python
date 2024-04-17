@@ -783,14 +783,14 @@ class Element:
         self.row_no: int = -1
     
     def get_name(self) -> str:
-        """Get element name."""
+        """Get key of element."""
         if self.key is None:
             return "-unknown-"
         return str(self.key)
     
     def bind(self, event_name: str, handle_name: str, propagate: bool=True, event_mode: EventMode = "user") -> None:
         """
-        Bind event. @see `Window.bind`
+        Bind event. @see [Window.bind](#windowbind)
         """
         self._bind_dict[event_name] = (handle_name, propagate, event_mode)
         if self.window is not None:
@@ -921,7 +921,7 @@ class Element:
         """
         self.disabled = disabled
         state = tk.DISABLED if disabled else tk.NORMAL
-        self.widget_update(state=state)
+        self._widget_update(state=state)
 
     def bind_events(self, events: dict[str, str], event_mode: EventMode="user") -> Element:
         """
@@ -1004,7 +1004,7 @@ class Element:
         """update widget configuration."""
         pass
     
-    def widget_update(self, **kw) -> None:
+    def _widget_update(self, **kw) -> None:
         # update element's props
         for k, v in kw.items():
             self.props[k] = v
@@ -1013,7 +1013,7 @@ class Element:
             if (self.widget is not None)and(len(kw) > 0):
                 self.widget.configure(**kw)
         except Exception as e:
-            print(f"TkEasyGUI.Element.widget_update.Error: key='{self.key}', try to update {kw}, {e}", file=sys.stderr)
+            print(f"TkEasyGUI.Element._widget_update.Error: key='{self.key}', props={kw}. {e}", file=sys.stderr)
 
     def get_prev_widget(self, target_key: Union[str, None] = None) -> tk.Widget:
         """Get the previous widget."""
@@ -1103,7 +1103,7 @@ class Frame(Element):
 
     def update(self, *args, **kw) -> None:
         """Update the widget."""
-        self.widget_update(**kw)
+        self._widget_update(**kw)
     
     def __getattr__(self, name):
         """Get unknown attribute."""
@@ -1153,7 +1153,7 @@ class Column(Element):
 
     def update(self, *args, **kw) -> None:
         """Update the widget."""
-        self.widget_update(**kw)
+        self._widget_update(**kw)
     
     def __getattr__(self, name):
         """Get unknown attribute."""
@@ -1213,13 +1213,13 @@ class Text(Element):
     def set_text(self, text: str) -> None:
         """Set the text of the widget."""
         self.props["text"] = text
-        self.widget_update(text=text)
+        self._widget_update(text=text)
 
     def update(self, text: Union[str, None] = None, *args, **kw) -> None:
         """Update the widget."""
         if text is not None:
             self.set_text(text)
-        self.widget_update(**kw)
+        self._widget_update(**kw)
 
 class Label(Text):
     """
@@ -1317,13 +1317,13 @@ class Menu(Element):
     def set_text(self, text: str) -> None:
         """Set the text of the widget."""
         self.props["text"] = text
-        self.widget_update(text=text)
+        self._widget_update(text=text)
 
     def update(self, text: Union[str, None] = None, *args, **kw) -> None:
         """Update the widget."""
         if text is not None:
             self.set_text(text)
-        self.widget_update(**kw)
+        self._widget_update(**kw)
 
 class Button(Element):
     """Button element."""
@@ -1396,7 +1396,7 @@ class Button(Element):
         else:
             props["background_color"] = button_color
         if update:
-            self.widget_update(props)
+            self._widget_update(props)
 
     def get(self) -> Any:
         """Returns the text of the button.."""
@@ -1405,7 +1405,7 @@ class Button(Element):
     def set_text(self, text: str) -> None:
         """Set the text of the button."""
         self.props["text"] = text
-        self.widget_update(text=text)
+        self._widget_update(text=text)
     
     def get_text(self) -> str:
         """Get the text of the button."""
@@ -1419,13 +1419,13 @@ class Button(Element):
         """Update the widget."""
         if text is not None:
             self.props["text"] = text
-            self.widget_update(text=text)
+            self._widget_update(text=text)
         if disabled is not None:
             self.set_disabled(disabled)
         if button_color is not None:
             self.set_button_color(button_color, update=False)
         # other
-        self.widget_update(**kw)
+        self._widget_update(**kw)
     
     def __getattr__(self, name: str) -> Any:
         """Get unknown attribute. """
@@ -1482,7 +1482,7 @@ class Checkbox(Element):
     def set_text(self, text: str) -> None:
         """Set the text of the widget."""
         self.props["text"] = text
-        self.widget_update(text=text)
+        self._widget_update(text=text)
 
     def update(self, *args, **kw) -> None:
         """Update the widget."""
@@ -1494,7 +1494,7 @@ class Checkbox(Element):
             self.set_text(kw.pop("text"))
         if "value" in kw:
             self.set_value(kw.pop("value"))
-        self.widget_update(**kw)
+        self._widget_update(**kw)
 
 class Radio(Element):
     """Checkbox element."""
@@ -1558,13 +1558,13 @@ class Radio(Element):
     def set_text(self, text: str) -> None:
         """Set the text of the widget."""
         self.props["text"] = text
-        self.widget_update(text=text)
+        self._widget_update(text=text)
 
     def update(self, text: Union[str, None] = None, **kw) -> None:
         """Update the widget."""
         if text is not None:
             self.set_text(text)
-        self.widget_update(**kw)
+        self._widget_update(**kw)
 
 class Input(Element):
     """
@@ -1685,7 +1685,7 @@ class Input(Element):
         """set readonly"""
         self.readonly = readonly
         state = "readonly" if self.readonly else "normal"
-        self.widget_update(state=state)
+        self._widget_update(state=state)
 
     def update(self, text: Union[str, None] = None, readonly: Union[bool, None] = None, **kw) -> None:
         """Update the widget."""
@@ -1703,7 +1703,7 @@ class Input(Element):
             else:
                 self.set_text(text)
         # update others
-        self.widget_update(**kw)
+        self._widget_update(**kw)
     
     def select_all(self) -> None:
         """select_all"""
@@ -1926,25 +1926,25 @@ class Multiline(Element):
             self.set_text(text)
         if readonly is not None:
             self.set_readonly(readonly)
-        self.widget_update(**kw)
+        self._widget_update(**kw)
 
     def set_readonly(self, readonly: bool) -> None:
         """Set readonly"""
         self.readonly = readonly
         state = tk.DISABLED if readonly else tk.NORMAL
-        self.widget_update(state=state)
+        self._widget_update(state=state)
 
     def set_text(self, text: str) -> None:
         """Set text"""
         if self.widget is None:
             return
         if self.readonly:
-            self.widget_update(state=tk.NORMAL)
+            self._widget_update(state=tk.NORMAL)
         self.props["text"] = text
         self.widget.delete("1.0", "end") # clear text
         self.widget.insert("1.0", text) # set text
         if self.readonly:
-            self.widget_update(state=tk.DISABLED)
+            self._widget_update(state=tk.DISABLED)
     
     def get_selection_pos(self) -> tuple[str, str]:
         """Get selection position, returns (start_pos, end_pos)."""
@@ -2190,7 +2190,7 @@ class Slider(Element):
         if value is not None:
             self.set(value)
         else:
-            self.widget_update(**kw)
+            self._widget_update(**kw)
 
 class Canvas(Element):
     """Canvas element."""
@@ -2225,7 +2225,7 @@ class Canvas(Element):
 
     def update(self, *args, **kw) -> None:
         """Update the widget."""
-        self.widget_update(**kw)
+        self._widget_update(**kw)
     
     def __getattr__(self, name):
         """Get unknown attribute."""
@@ -2271,7 +2271,7 @@ class Graph(Element):
 
     def update(self, *args, **kw) -> None:
         """Update the widget."""
-        self.widget_update(**kw)
+        self._widget_update(**kw)
     
     def __getattr__(self, name):
         """Get unknown attribute."""
@@ -2403,7 +2403,7 @@ class Image(Element):
             self.widget.configure(width=size[0], height=size[1])
         if (source is not None) or (filename is not None) or (data is not None):
             self.set_image(source, filename, data)
-        self.widget_update(**kw)
+        self._widget_update(**kw)
     
     def __getattr__(self, name):
         """Get unknown attribute."""
@@ -2534,7 +2534,7 @@ class Listbox(Element):
             self.set_values(values)
         if "values" in kw:
             self.set_values(kw.pop("values"))
-        self.widget_update(**kw)
+        self._widget_update(**kw)
 
 class Combo(Element):
     """Combo element."""
@@ -2568,7 +2568,7 @@ class Combo(Element):
         """Set values to list"""
         self.values = values
         if self.widget is not None:
-            self.widget_update(values=self.values)
+            self._widget_update(values=self.values)
     
     def set_value(self, v: str) -> None:
         """Set the value of the widget."""
@@ -2590,7 +2590,7 @@ class Combo(Element):
             self.set_values(kw.pop("values"))
         if "value" in kw:
             self.set_value(kw.pop("value"))
-        self.widget_update(**kw)
+        self._widget_update(**kw)
 
 class Table(Element):
     """Table element."""
@@ -2744,7 +2744,7 @@ class Table(Element):
         self.set_values(self.values, self.headings)
         # 
         del kw["values"]
-        self.widget_update(**kw)
+        self._widget_update(**kw)
 
 #------------------------------------------------------------------------------
 # Browse elements
@@ -2820,13 +2820,13 @@ class FileBrowse(Element):
     def set_text(self, text: str) -> None:
         """Set the text of the button."""
         self.props["text"] = text
-        self.widget_update(text=text)
+        self._widget_update(text=text)
 
     def update(self, text: Union[str, None] = None, **kw) -> None:
         """Update the widget."""
         if text is not None:
             self.set_text(text)
-        self.widget_update(**kw)
+        self._widget_update(**kw)
 
 class FilesBrowse(FileBrowse):
     """FilesBrowse element."""
