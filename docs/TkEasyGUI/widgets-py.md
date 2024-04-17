@@ -1927,15 +1927,15 @@ Update the widget.
 ```python
 class Slider(
     self,
-    range: tuple[float, float] = (1, 10),
-    default_value: Union[float, None] = None,
-    resolution: Union[float, None] = None,
-    orientation: OrientationType = "horizontal",
+    range: tuple[float, float] = (1, 10), # value range (from, to)
+    default_value: Union[float, None] = None, # default value
+    resolution: Union[float, None] = None, # value resolution
+    orientation: OrientationType = "horizontal", # orientation (h|v|horizontal|vertical)
     tick_interval: Union[float, None] = None, # tick marks interval on the scale
     enable_events: bool = False, # enable changing events
     enable_changed_events: bool = False, # enable changed event
-    disable_number_display: bool = False,
-    size: Union[tuple[int, int], None] = None, # horizontal: (bar_length, thumb_size), vertical: (thumb_size, bar_length)
+    disable_number_display: bool = False, # hide number display
+    size: Union[tuple[int, int], None] = None, # size (unit: character) / horizontal: (bar_length, thumb_size), vertical: (thumb_size, bar_length)
     key: Union[str, None] = None,
     # other
     default: Union[float, None] = None, # same as default_value
