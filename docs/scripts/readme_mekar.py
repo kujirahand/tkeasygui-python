@@ -11,6 +11,8 @@ ROOT_DIR = os.path.dirname(DOCS_DIR)
 TEMPLATE_DIR = os.path.join(SCRIPT_DIR, "template")
 ELEMENTS_JSON = os.path.join(SCRIPT_DIR, "elements.json")
 
+REPO = "https://github.com/kujirahand/tkeasygui-python/blob/main"
+
 print("TEMPLATE_DIR=", TEMPLATE_DIR)
 print("DOCS_DIR=", DOCS_DIR)
 
@@ -23,7 +25,7 @@ with open(ELEMENTS_JSON, "r", encoding="utf-8") as fp:
     result = []
     for name in elements:
         name2 = name.replace(" ", "-").lower()
-        result.append(f"- [{name}](/docs/TkEasyGUI/widgets-py.md#{name2})")
+        result.append(f"- [{name}]({REPO}/docs/TkEasyGUI/widgets-py.md#{name2})")
     readme = readme.replace("__ELEMENTS__", "\n".join(result))
 
 # write
