@@ -4,7 +4,7 @@ TkEasyGUI utilities functions
 
 ---------------------------
 
-- [Functions](#functions-of-tkeasygui.utils)
+- [Functions](#functions-of-tkeasyguiutils)
 
 # Functions of TkEasyGUI.utils
 

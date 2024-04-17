@@ -4,7 +4,7 @@ TkEasyGUI dialogs
 
 ---------------------------
 
-- [Functions](#functions-of-tkeasygui.dialogs)
+- [Functions](#functions-of-tkeasyguidialogs)
 
 # Functions of TkEasyGUI.dialogs
 

@@ -97,7 +97,7 @@ def read_module(file: str, root_name: str):
                 method_doc += "```\n\n"
                 method_doc += f"- [source]({REPO}{fname}#L{code.co_firstlineno})\n"
                 method_doc += "\n"
-                method_link.append(f"- [{name}](#{class_name.lower()}.{name.lower()})")
+                method_link.append(f"- [{name}](#{class_name.lower()}{name.lower()})")
             if method_doc != "":
                 classes += f"### Methods of {class_name}\n\n"
                 classes += "\n".join(method_link) + "\n\n"
@@ -105,7 +105,7 @@ def read_module(file: str, root_name: str):
     if classes:
         result += f"# Classes of {root_name}.{module_name}\n\n"
         result += classes
-        head_link.append(f"- [Classes](#classes-of-{root_name.lower()}.{module_name.lower()})")
+        head_link.append(f"- [Classes](#classes-of-{root_name.lower()}{module_name.lower()})")
     # functions
     functions = ""
     function_link = []
@@ -131,7 +131,7 @@ def read_module(file: str, root_name: str):
         result += f"# Functions of {root_name}.{module_name}\n\n"
         result += "\n".join(function_link) + "\n\n"
         result += functions
-        head_link.append(f"- [Functions](#functions-of-{root_name.lower()}.{module_name.lower()})")
+        head_link.append(f"- [Functions](#functions-of-{root_name.lower()}{module_name.lower()})")
 
     print("---------------------------")
     result = head + "\n".join(head_link) + "\n\n" + result
