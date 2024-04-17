@@ -2116,7 +2116,6 @@ class Slider(Element):
         """Create the widget."""
         # bar size
         if (self.slider_size is not None) and (len(self.slider_size) == 2):
-            print("@font_size_average=", win.font_size_average)
             size = self.slider_size
             if self.orientation == "horizontal":
                 length = size[0] * win.font_size_average[0]
@@ -2126,7 +2125,6 @@ class Slider(Element):
                 length = size[1] * win.font_size_average[1]
             self.props["width"] = width
             self.props["length"] = length
-            print("w,h=", width, length)
         # var
         self.scale_var = tk.DoubleVar()
         self.scale_var.set(self.default_value)
