@@ -71,7 +71,12 @@ def set_theme(name: str) -> None:
     _tkeasygui_info["theme"] = name
 
 def get_tnemes() -> list[str]:
-    """Get themes"""
+    """
+    Get theme list
+    ```py
+    print(get_themes())
+    ```
+    """
     win = get_root_window()
     win.withdraw()
     return ttk.Style().theme_names()
@@ -81,11 +86,19 @@ def get_current_theme() -> str:
     return _tkeasygui_info.get("theme", "")
 
 def set_default_theme() -> None:
-    """Set default theme"""
+    """
+    Set default theme
+    ```py
+    print(get_themes())
+    ```
+    """
     if is_mac():
+        # ('aqua', 'clam', 'alt', 'default', 'classic')
         set_theme("aqua")
     elif is_win():
+        # ('winnative', 'clam', 'alt', 'default', 'classic', 'vista', 'xpnative')
         # set_theme("winnative")
+        # set_theme("default")
         set_theme("vista")
     else:
         set_theme("clam")
@@ -177,17 +190,18 @@ class Window:
     def __init__(
                 self,
                 title: str,
-                layout: list[list[Element]],
-                size: Union[tuple[str, int], None] = None, 
+                layout: list[list[Element]], # set elements layout
+                size: Union[tuple[str, int], None] = None, # window size
                 resizable:bool = False,
                 font: Union[FontType, None] = None,
-                modal: bool = False, 
+                modal: bool = False, # modal window
                 keep_on_top:bool = False, # keep on top
                 no_titlebar: bool = False, # hide titlebar
                 grab_anywhere: bool = False, # can move window by dragging anywhere
-                alpha_channel: float = 1.0,
+                alpha_channel: float = 1.0, # window alpha channel
                 enable_key_events: bool = False, # enable keyboard events
                 return_keyboard_events: bool = False, # enable keyboard events (for compatibility)
+                use_ttk: bool = False, # use ttk style (default=False) (experimental)
                 **kw) -> None:
         """Create a window with a layout of widgets."""
         self.modal: bool = modal
@@ -223,8 +237,10 @@ class Window:
         self.enable_key_events: bool = enable_key_events
         self.return_keyboard_events: bool = return_keyboard_events
         self.font_size_average: tuple[int, int] = (12, 10)
+        self.use_ttk: bool = use_ttk
         # Frame
         self.frame: ttk.Frame = ttk.Frame(self.window, padding=10)
+        self.frame.configure(style="TFrame")
         # set window properties
         self.window.title(title)
         self.window.protocol("WM_DELETE_WINDOW", lambda : self._close_handler())
@@ -743,7 +759,7 @@ class Element:
             self.key = generate_element_id()
         self.element_type: str = element_type
         self.ttk_style_name: str = ttk_style_name
-        self.use_ttk: bool = True if ttk_style_name != "" else False
+        self.use_ttk: bool = False # use ttk style
         self.metadata = metadata
         self.style_name: str = self._generate_style_name(key)
         self.props: dict[str, Any] = kw
@@ -928,6 +944,9 @@ class Element:
         if (win.font is not None) and (self.font is None) and self.has_font_prop:
             self.props["font"] = self.font = win.font
         self.props = self.convert_props(self.props)
+        # check ttk
+        if self.use_ttk is None:
+            self.use_ttk = win.use_ttk
         # check use ttk
         if not self.use_ttk:
             return
@@ -1318,7 +1337,7 @@ class Button(Element):
                 key: Union[str, None] = None,
                 disabled: bool = None,
                 size: Union[tuple[int, int], None] = None,
-                use_ttk_buttons: bool = False,
+                use_ttk_buttons: Union[bool, None] = None,
                 tooltip: Union[str, None] = None, # (TODO) tooltip
                 button_color: Union[str, tuple[str, str], None] = None,
                 # text props
@@ -1436,6 +1455,7 @@ class Checkbox(Element):
         if key is None or key == "":
             key = text
         super().__init__("Checkbox", "TCheckbutton", key, True, metadata, **kw)
+        self.use_ttk = True
         self.default_value = default
         self.props["text"] = text
         if enable_events:
@@ -1492,6 +1512,7 @@ class Radio(Element):
         if key is None or key == "":
             key = text
         super().__init__("Radio", "TRadiobutton", key, True, metadata, **kw)
+        self.use_ttk = True
         self.default_value = default
         self.value: int = 0
         self.props["text"] = text
@@ -1577,6 +1598,7 @@ class Input(Element):
                 **kw
                 ) -> None:
         super().__init__("Input", "TEntry", key, True, metadata, **kw)
+        self.use_ttk = True
         self.readonly: bool = readonly
         self.enable_events: bool = enable_events
         if default_text is not None: # compatibility with PySimpleGUI
@@ -2403,6 +2425,7 @@ class VSeparator(Element):
                 metadata: Union[dict[str, Any], None] = None,
                 **kw) -> None:
         super().__init__("VSeparator", "TSeparator", key, False, metadata, **kw)
+        self.use_ttk = True
         size = (pad, size[1])
         self.size = self.props["size"] = size
         self.props["padx"] = pad
@@ -2426,6 +2449,7 @@ class HSeparator(Element):
                 metadata: Union[dict[str, Any], None] = None,
                 **kw) -> None:
         super().__init__("HSeparator", "TSeparator", key, False, metadata, **kw)
+        self.use_ttk = True
         size = (size[1], pad)
         self.size = self.props["size"] = size
         self.props["pady"] = pad
@@ -2600,6 +2624,7 @@ class Table(Element):
         """Create a table."""
         # super().__init__("Table", "Treeview", key, metadata, **kw)
         super().__init__("Table", "", key, True, metadata, **kw)
+        self.ttk = True
         self.values = values
         self.headings = headings
         self.enable_events = enable_events
