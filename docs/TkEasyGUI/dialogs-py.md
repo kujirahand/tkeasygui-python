@@ -102,7 +102,7 @@ Display a message in a popup window with OK and Cancel buttons. Return "OK" or "
 ### popup_color
 
 ```python
-def popup_color(title: str="", default_color: str|None=None) -> (str|None)
+def popup_color(title: str="", default_color: Union[str, None]=None) -> (Union[str, None])
 ```
 
 Popup a color selection dialog. Return the color selected.
@@ -122,7 +122,12 @@ Display a message in a popup window with an error icon.
 ### popup_get_date
 
 ```python
-def popup_get_date(message: str = "", title: str = "", current_date:datetime|None=None, font: tuple[str, int]|None=None) -> datetime|None
+def popup_get_date(
+    message: str = "",
+    title: str = "",
+    current_date: Union[datetime, None] = None,
+    font: Union[tuple[str, int], None] = None
+    ) -> Union[datetime, None]
 ```
 
 Display a calendar in a popup window. Return the datetime entered or None.
@@ -132,7 +137,15 @@ Display a calendar in a popup window. Return the datetime entered or None.
 ### popup_get_file
 
 ```python
-def popup_get_file(message: str="", title: str|None=None, initial_folder: str="", save_as: bool=False, multiple_files: bool=False, file_types: tuple[tuple[str, str]]=(("All Files", "*.*"),), no_window: bool|None=None, **kw) -> (str|tuple[str]|None)
+def popup_get_file(
+    message: str="",
+    title: Union[str, None] = None,
+    initial_folder: str = "",
+    save_as: bool = False, # show `save as` dialog
+    multiple_files: bool = False, # can select multiple files
+    file_types: tuple[tuple[str, str]] = (("All Files", "*.*"),),
+    no_window: Union[bool, None] = None, # for compatibility
+    **kw) -> Union[str, tuple[str], None]
 ```
 
 Popup a file selection dialog. Return the file selected.
@@ -142,7 +155,13 @@ Popup a file selection dialog. Return the file selected.
 ### popup_get_folder
 
 ```python
-def popup_get_folder(message: str="", title: str|None=None, default_path: str="", no_window: bool|None=None, **kw) -> (str|None)
+def popup_get_folder(
+    message: str = "",
+    title: Union[str, None] = None,
+    default_path: str = "",
+    no_window: Union[bool, None] = None, # for compatibility
+    **kw
+    ) -> Union[str, None]
 ```
 
 Popup a folder selection dialog. Return the folder selected.
@@ -152,7 +171,7 @@ Popup a folder selection dialog. Return the folder selected.
 ### popup_get_text
 
 ```python
-def popup_get_text(message: str, title: str = "", default: str = "", font: tuple[Any]|None=None) -> (str|None)
+def popup_get_text(message: str, title: str = "", default: str = "", font: eg.FontType=None) -> Union[str, None]
 ```
 
 Display a message in a popup window with a text entry. Return the text entered.
@@ -172,7 +191,7 @@ Display a message in a popup window with an warning icon.
 ### popup_input
 
 ```python
-def popup_input(message: str, title: str = "", default: str = "", font: tuple[Any]|None=None) -> (str|None)
+def popup_input(message: str, title: str = "", default: str = "", font: eg.FontType=None) -> Union[str, None]
 ```
 
 Display a message in a popup window with a text entry. Return the text entered.
@@ -182,7 +201,14 @@ Display a message in a popup window with a text entry. Return the text entered.
 ### popup_listbox
 
 ```python
-def popup_listbox(items: list[str], message: str = "", title: str = "", size: tuple[int,int]=(20, 7), font: tuple[str, int]|None=None, multiple:bool = False) -> str|None
+def popup_listbox(
+    items: list[str], # list of items
+    message: str = "",
+    title: str = "",
+    size: tuple[int,int] = (20, 7),
+    font: Union[FontType, None] = None,
+    multiple:bool = False # multiple selection
+    ) -> Union[str, None]
 ```
 
 Display Listbox in a popup window
@@ -250,7 +276,13 @@ Display a message in a popup window with OK and Cancel buttons. Return "OK" or "
 ### popup_scrolled
 
 ```python
-def popup_scrolled(message: str, title: str = "", size: tuple[int,int]=[40, 5], readonly: bool=False, font: tuple[str, int]|None=None) -> str|None
+def popup_scrolled(
+    message: str,
+    title: str = "",
+    size: tuple[int,int] = [40, 5],
+    readonly: bool = False,
+    font: Union[FontType, None] = None
+    ) -> Union[str, None]
 ```
 
 Display a message in a popup window with a text entry. Return the text entered.

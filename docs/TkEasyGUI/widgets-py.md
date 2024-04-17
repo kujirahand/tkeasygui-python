@@ -9,25 +9,25 @@ TkEasyGUI Widgets
 ```python
 class Button(
     self,
-    button_text: str="",
-    key: str|None = None,
-    disabled: bool=None,
-    size: tuple[int, int]|None=None,
-    use_ttk_buttons: bool=False,
-    tooltip: str|None=None, # (TODO) tooltip
-    button_color: str|tuple[str, str]|None=None,
+    button_text: str = "",
+    key: Union[str, None] = None,
+    disabled: bool = None,
+    size: Union[tuple[int, int], None] = None,
+    use_ttk_buttons: bool = False,
+    tooltip: Union[str, None] = None, # (TODO) tooltip
+    button_color: Union[str, tuple[str, str], None] = None,
     # text props
-    text_align: TextAlign|None="left", # text align
-    font: FontType|None=None, # font
-    color: str|None=None, # text color
-    text_color: str|None=None, # same as color
-    background_color: str|None=None, # background color
+    text_align: Union[TextAlign, None] = "left", # text align
+    font: Union[FontType, None] = None, # font
+    color: Union[str, None] = None, # text color
+    text_color: Union[str, None] = None, # same as color
+    background_color: Union[str, None] = None, # background color
     # pack props
     expand_x: bool = False,
     expand_y: bool = False,
-    pad: PadType|None = None,
+    pad: Union[PadType, None] = None,
     # other
-    metadata: dict[str, Any]|None=None,
+    metadata: Union[dict[str, Any], None] = None,
     **kw)
 ```
 
@@ -76,7 +76,7 @@ def get_text(self) -> str
 ##### Button.set_button_color
 
 ```python
-def set_button_color(self, button_color: str|tuple[str,str], update: bool=True) -> None
+def set_button_color(self, button_color: Union[str, tuple[str,str]], update: bool = True) -> None
 ```
 
 Set the button color.
@@ -96,7 +96,11 @@ Set the text of the widget.
 ##### Button.update
 
 ```python
-def update(self, text: str|None=None, disabled: bool|None=None, button_color: str|tuple[str,str]|None=None, **kw) -> None
+def update(self,
+       text: Union[str, None] = None, 
+       disabled: Union[bool, None] = None,
+       button_color: Union[str, tuple[str,str], None] = None,
+       **kw) -> None
 ```
 
 Update the widget.
@@ -108,12 +112,12 @@ Update the widget.
 ```python
 class Canvas(
     self,
-    key: str|None = None,
+    key: Union[str, None] = None,
     enable_events: bool = False,
-    background_color: str|None = None,
+    background_color: Union[str, None] = None,
     size: tuple[int, int] = (300, 300),
     # other
-    metadata: dict[str, Any]|None = None,
+    metadata: Union[dict[str, Any], None] = None,
     **kw)
 ```
 
@@ -167,10 +171,10 @@ Update the widget.
 class Checkbox(
     self, text: str="",
     default: bool=False,
-    key: str|None = None,
+    key: Union[str, None] = None,
     enable_events: bool=False,
     # other
-    metadata: dict[str, Any]|None=None,
+    metadata: Union[dict[str, Any], None] = None,
     **kw)
 ```
 
@@ -254,12 +258,12 @@ Update the widget.
 class ColorBrowse(
     self,
     button_text: str="...",
-    key: str|None = None,
-    target_key: str|None = None,
-    default_color: str|None = None,
+    key: Union[str, None] = None,
+    target_key: Union[str, None] = None,
+    default_color: Union[str, None] = None,
     title: str="",
     # other
-    metadata: dict[str, Any]|None = None,
+    metadata: Union[dict[str, Any], None] = None,
     **kw)
 ```
 
@@ -280,7 +284,7 @@ Create an element.
 ##### ColorBrowse.show_dialog
 
 ```python
-def show_dialog(self, *args) -> str|None
+def show_dialog(self, *args) -> Union[str, None]
 ```
 
 Show file dialog
@@ -294,17 +298,17 @@ class Column(
     self,
     layout: list[list[Element]],
     key: str = "",
-    background_color: str|None=None,
+    background_color: Union[str, None] = None,
     vertical_alignment: TextVAlign="top",
-    size: tuple[int, int]|None=None,
+    size: Union[tuple[int, int], None] = None,
     # text props
-    text_align: TextAlign|None="left", # text align
+    text_align: Union[TextAlign, None]="left", # text align
     # pack props
     expand_x: bool = False,
     expand_y: bool = False,
-    pad: PadType|None = None,
+    pad: Union[PadType, None] = None,
     # other
-    metadata: dict[str, Any]|None=None,
+    metadata: Union[dict[str, Any], None] = None,
     **kw)
 ```
 
@@ -359,10 +363,10 @@ class Combo(
     self,
     values: list[str]=[],
     default_value: str="",
-    key: str|None = None,
+    key: Union[str, None] = None,
     enable_events: bool = False,
     # other
-    metadata: dict[str, Any]|None = None,
+    metadata: Union[dict[str, Any], None] = None,
     **kw)
 ```
 
@@ -437,9 +441,9 @@ class Element(
     self,
     element_type: str, # element type
     ttk_style_name: str, # tkinter widget type
-    key: str|None, # key
+    key: Union[str, None], # key
     has_value: bool, # has value
-    metadata: dict[str, Any]|None=None, # meta data
+    metadata: Union[dict[str, Any], None] = None, # meta data
     **kw)
 ```
 
@@ -464,7 +468,7 @@ Bind event. @see `Window.bind`
 ##### Element.bind_events
 
 ```python
-def bind_events(self, events: dict[str, str], event_mode: EventMode="user") -> ElementType
+def bind_events(self, events: dict[str, str], event_mode: EventMode="user") -> Element
 ```
 
 Bind user events
@@ -499,7 +503,7 @@ Create a widget.
 ##### Element.disptach_event
 
 ```python
-def disptach_event(self, values: dict[str, Any]|None=None) -> None
+def disptach_event(self, values: Union[dict[str, Any], None] = None) -> None
 ```
 
 Dispatch event
@@ -529,7 +533,7 @@ Get element name.
 ##### Element.get_prev_widget
 
 ```python
-def get_prev_widget(self, target_key: str|None=None) -> tk.Widget
+def get_prev_widget(self, target_key: Union[str, None] = None) -> tk.Widget
 ```
 
 Get the previous widget.
@@ -585,15 +589,15 @@ def widget_update(self, **kw) -> None
 ```python
 class FileBrowse(
     self, button_text: str="...",
-    key: str|None = None,
+    key: Union[str, None] = None,
     title: str = "",
-    target_key: str|None = None,
+    target_key: Union[str, None] = None,
     file_types: tuple[tuple[str, str]] = (("All Files", "*.*"),),
     multiple_files: bool = False,
-    initial_folder: str|None = None,
+    initial_folder: Union[str, None] = None,
     save_as: bool = False,
     # other
-    metadata: dict[str, Any]|None = None,
+    metadata: Union[dict[str, Any], None] = None,
     **kw)
 ```
 
@@ -634,7 +638,7 @@ Set the text of the button.
 ##### FileBrowse.show_dialog
 
 ```python
-def show_dialog(self, *args) -> str|None
+def show_dialog(self, *args) -> Union[str, None]
 ```
 
 Show file dialog
@@ -644,7 +648,7 @@ Show file dialog
 ##### FileBrowse.update
 
 ```python
-def update(self, text: str|None=None, **kw) -> None
+def update(self, text: Union[str, None] = None, **kw) -> None
 ```
 
 Update the widget.
@@ -654,7 +658,7 @@ Update the widget.
 ### FileSaveAs
 
 ```python
-class FileSaveAs(button_text: str = '...', key: str | None = None, title: str = '', target_key: str | None = None, file_types: tuple[tuple[str, str]] = (('All Files', '*.*'),), multiple_files: bool = False, initial_folder: str | None = None, save_as: bool = False, metadata: dict[str, typing.Any] | None = None, **kw)
+class FileSaveAs(button_text: str = '...', key: Optional[str] = None, title: str = '', target_key: Optional[str] = None, file_types: tuple = (('All Files', '*.*'),), multiple_files: bool = False, initial_folder: Optional[str] = None, save_as: bool = False, metadata: Optional[dict[str, Any]] = None, **kw)
 ```
 
 FileSaveAs element. (alias of FileSaveAsBrowse)
@@ -673,12 +677,12 @@ FileSaveAs element. (alias of FileSaveAsBrowse)
 class FileSaveAsBrowse(
     self,
     button_text: str="...",
-    key: str|None = None,
-    target_key: str|None = None,
+    key: Union[str, None] = None,
+    target_key: Union[str, None] = None,
     title: str = "",
     file_types: tuple[tuple[str, str]] = (("All Files", "*.*"),),
     # other
-    metadata: dict[str, Any]|None = None,
+    metadata: Union[dict[str, Any], None] = None,
     **kw)
 ```
 
@@ -700,12 +704,12 @@ Create an element.
 class FilesBrowse(
     self,
     button_text: str = "...",
-    key: str|None = None,
-    target_key: str|None = None,
+    key: Union[str, None] = None,
+    target_key: Union[str, None] = None,
     title: str="",
     file_types: tuple[tuple[str, str]] = (("All Files", "*.*"),),
     # other
-    metadata: dict[str, Any]|None = None,
+    metadata: Union[dict[str, Any], None] = None,
     **kw)
 ```
 
@@ -727,12 +731,12 @@ Create an element.
 class FolderBrowse(
     self,
     button_text: str="...",
-    key: str|None = None,
-    target_key: str|None = None,
-    default_path: str|None = None,
+    key: Union[str, None] = None,
+    target_key: Union[str, None] = None,
+    default_path: Union[str, None] = None,
     title: str = "",
     # other
-    metadata: dict[str, Any]|None = None,
+    metadata: Union[dict[str, Any], None] = None,
     **kw)
 ```
 
@@ -753,7 +757,7 @@ Create an element.
 ##### FolderBrowse.show_dialog
 
 ```python
-def show_dialog(self, *args) -> str|None
+def show_dialog(self, *args) -> Union[str, None]
 ```
 
 Show file dialog
@@ -768,20 +772,20 @@ class Frame(
     title: str,
     layout: list[list[Element]],
     key: str = "",
-    size: tuple[int, int]|None=None,
+    size: Union[tuple[int, int], None] = None,
     relief: ReliefType="groove",
     # text props
-    font: FontType|None=None, # font
-    color: str|None=None,
-    text_color: str|None=None,
-    background_color: str|None=None,
+    font: Union[FontType, None] = None, # font
+    color: Union[str, None] = None,
+    text_color: Union[str, None] = None,
+    background_color: Union[str, None] = None,
     label_outside: bool=False,
     # pack props
     expand_x: bool = False,
     expand_y: bool = False,
-    pad: PadType|None = None,
+    pad: Union[PadType, None] = None,
     # other
-    metadata: dict[str, Any]|None=None,
+    metadata: Union[dict[str, Any], None] = None,
     use_ttk: bool=False,
     **kw)
 ```
@@ -834,14 +838,14 @@ Update the widget.
 
 ```python
 class Graph(
-    self, key: str|None = None,
-    background_color: str|None = None,
+    self, key: Union[str, None] = None,
+    background_color: Union[str, None] = None,
     size: tuple[int, int]=(300, 300),
-    canvas_size: tuple[int, int]|None = None,
-    graph_bottom_left: tuple[int, int]|None = None,
-    graph_top_right: tuple[int, int]|None = None,
+    canvas_size: Union[tuple[int, int], None] = None,
+    graph_bottom_left: Union[tuple[int, int], None] = None,
+    graph_top_right: Union[tuple[int, int], None] = None,
     # other
-    metadata: dict[str, Any]|None = None,
+    metadata: Union[dict[str, Any], None] = None,
     **kw)
 ```
 
@@ -872,7 +876,7 @@ Create a widget.
 ##### Graph.draw_arc
 
 ```python
-def draw_arc(self, top_left: PointType, bottom_right: PointType, extent: int|None = None, start_angle: int|None = None, style: str|None = None, arc_color: str|None = 'black', line_width: int = 1, fill_color: str|None = None) -> int
+def draw_arc(self, top_left: PointType, bottom_right: PointType, extent: Union[int, None] = None, start_angle: Union[int, None] = None, style: Union[str, None] = None, arc_color: Union[str, None] = 'black', line_width: int = 1, fill_color: Union[str, None] = None) -> int
 ```
 
 Draw an arc.
@@ -882,7 +886,7 @@ Draw an arc.
 ##### Graph.draw_circle
 
 ```python
-def draw_circle(self, center_location: PointType, radius: int|float, fill_color: str|None = None, line_color: str|None = 'black', line_width: int = 1) -> int
+def draw_circle(self, center_location: PointType, radius: Union[int, float], fill_color: Union[str, None] = None, line_color: Union[str, None] = 'black', line_width: int = 1) -> int
 ```
 
 Draw a circle.
@@ -892,7 +896,7 @@ Draw a circle.
 ##### Graph.draw_image
 
 ```python
-def draw_image(self, filename: str|None=None, data: bytes|None=None, location: PointType|None=None) -> int
+def draw_image(self, filename: Union[str, None] = None, data: Union[bytes, None] = None, location: Union[PointType, None] = None) -> int
 ```
 
 Draw image
@@ -922,7 +926,7 @@ Draw lines.
 ##### Graph.draw_oval
 
 ```python
-def draw_oval(self, top_left: PointType, bottom_right: PointType, fill_color: str|None = None, line_color: str|None = None, line_width: int = 1)
+def draw_oval(self, top_left: PointType, bottom_right: PointType, fill_color: Union[str, None] = None, line_color: Union[str, None] = None, line_width: int = 1)
 ```
 
 Draw an oval.
@@ -942,7 +946,7 @@ Draw a point.
 ##### Graph.draw_polygon
 
 ```python
-def draw_polygon(self, points: list[PointType], fill_color: str|None=None, line_color: str|None=None, line_width: int|None=None) -> None
+def draw_polygon(self, points: list[PointType], fill_color: Union[str, None] = None, line_color: Union[str, None] = None, line_width: Union[int, None] = None) -> None
 ```
 
 Draw polygon
@@ -952,7 +956,7 @@ Draw polygon
 ##### Graph.draw_rectangle
 
 ```python
-def draw_rectangle(self, top_left: PointType, bottom_right: PointType, fill_color: str|None=None, line_color: str|None=None, line_width: int|None=None) -> int
+def draw_rectangle(self, top_left: PointType, bottom_right: PointType, fill_color: Union[str, None] = None, line_color: Union[str, None] = None, line_width: Union[int, None] = None) -> int
 ```
 
 Draw rectangle
@@ -962,7 +966,7 @@ Draw rectangle
 ##### Graph.draw_text
 
 ```python
-def draw_text(self, text: str, location: PointType, color: str|None='black', font: FontType=None, angle: float|str|None=0, text_location: TextAlign=tk.CENTER) -> int
+def draw_text(self, text: str, location: PointType, color: Union[str, None]='black', font: FontType = None, angle: Union[float, str, None] = 0, text_location: TextAlign = tk.CENTER) -> int
 ```
 
 Draw text
@@ -1004,12 +1008,12 @@ Update the widget.
 ```python
 class HSeparator(
     self,
-    key: str|None = None,
-    background_color: str|None = None,
+    key: Union[str, None] = None,
+    background_color: Union[str, None] = None,
     pad: PadType = 5,
     size: tuple[int, int] = (100, 5),
     # other
-    metadata: dict[str, Any]|None = None,
+    metadata: Union[dict[str, Any], None] = None,
     **kw)
 ```
 
@@ -1042,14 +1046,14 @@ Create a widget.
 ```python
 class Image(
     self,
-    source: bytes|str|None = None, # image source
+    source: Union[bytes, str, None] = None, # image source
     filename = None, # filen ame
     data: bytes = None, # image data
-    key: str|None = None,
-    background_color: str|None = None,
+    key: Union[str, None] = None,
+    background_color: Union[str, None] = None,
     size: tuple[int, int] = (300, 300),
     # other
-    metadata: dict[str, Any]|None = None,
+    metadata: Union[dict[str, Any], None] = None,
     **kw)
 ```
 
@@ -1100,7 +1104,10 @@ Return Widget
 ##### Image.set_image
 
 ```python
-def set_image(self, source: bytes|str=None, filename: str|None=None, data: bytes|None=None) -> None
+def set_image(self,
+    source: Union[bytes, str, None] = None,
+    filename: Union[str, None] = None,
+    data: Union[bytes, None]=None) -> None
 ```
 
 ------
@@ -1108,7 +1115,12 @@ def set_image(self, source: bytes|str=None, filename: str|None=None, data: bytes
 ##### Image.update
 
 ```python
-def update(self, source: bytes|str=None, filename: str|None=None, data: bytes|None=None, size: tuple[int,int]|None=None, **kw) -> None
+def update(self,
+       source: Union[bytes, str, None] = None,
+       filename: Union[str, None] = None,
+       data: Union[bytes, None] = None,
+       size: Union[tuple[int,int], None] = None,
+       **kw) -> None
 ```
 
 Update the widget.
@@ -1121,26 +1133,26 @@ Update the widget.
 class Input(
     self,
     text: str = "", # default text
-    key: str|None = None, # key
-    default_text: str|None = None, # same as text
+    key: Union[str, None] = None, # key
+    default_text: Union[str, None] = None, # same as text
     enable_events: bool = False, # enabled events ([enter] or [change])
     enable_key_events: bool = False,  # enabled key events
     enable_focus_events: bool = False, # enabled focus events
-    readonly_background_color: str|None = "silver",
-    password_char: str|None = None, # if you want to use it as a password input box, set "*"
+    readonly_background_color: Union[str, None] = "silver",
+    password_char: Union[str, None] = None, # if you want to use it as a password input box, set "*"
     readonly: bool = False, # read only box
     # text props
-    text_align: TextAlign|None = "left", # text align
-    font: FontType|None = None, # font
-    color: str|None = None, # text color
-    text_color: str|None = None, # same as color
-    background_color: str|None = None, # background color
+    text_align: Union[TextAlign, None] = "left", # text align
+    font: Union[FontType, None] = None, # font
+    color: Union[str, None] = None, # text color
+    text_color: Union[str, None] = None, # same as color
+    background_color: Union[str, None] = None, # background color
     # pack props
     expand_x: bool = False,
     expand_y: bool = False,
-    pad: PadType|None = None,
+    pad: Union[PadType, None] = None,
     # other
-    metadata: dict[str, Any]|None = None,
+    metadata: Union[dict[str, Any], None] = None,
     **kw)
 ```
 
@@ -1341,7 +1353,7 @@ set text
 ##### Input.update
 
 ```python
-def update(self, text: str|None=None, readonly: bool|None=None, **kw) -> None
+def update(self, text: Union[str, None] = None, readonly: Union[bool, None] = None, **kw) -> None
 ```
 
 Update the widget.
@@ -1351,7 +1363,7 @@ Update the widget.
 ### InputText
 
 ```python
-class InputText(text: str = '', key: str | None = None, default_text: str | None = None, enable_events: bool = False, enable_key_events: bool = False, enable_focus_events: bool = False, readonly_background_color: str | None = 'silver', password_char: str | None = None, readonly: bool = False, text_align: Optional[Literal['left', 'right', 'center']] = 'left', font: tuple[str, int] | tuple[str, int, str] | None = None, color: str | None = None, text_color: str | None = None, background_color: str | None = None, expand_x: bool = False, expand_y: bool = False, pad: int | tuple[int, int] | tuple[tuple[int, int], tuple[int, int]] | None = None, metadata: dict[str, typing.Any] | None = None, **kw)
+class InputText(text: str = '', key: Optional[str] = None, default_text: Optional[str] = None, enable_events: bool = False, enable_key_events: bool = False, enable_focus_events: bool = False, readonly_background_color: Optional[str] = 'silver', password_char: Optional[str] = None, readonly: bool = False, text_align: Optional[Literal['left', 'right', 'center']] = 'left', font: Union[tuple[str, int], tuple[str, int, str], NoneType] = None, color: Optional[str] = None, text_color: Optional[str] = None, background_color: Optional[str] = None, expand_x: bool = False, expand_y: bool = False, pad: Union[int, tuple[int, int], tuple[tuple[int, int], tuple[int, int]], NoneType] = None, metadata: Optional[dict[str, Any]] = None, **kw)
 ```
 
 InputText element. (alias of Input)
@@ -1367,7 +1379,7 @@ InputText element. (alias of Input)
 ### Label
 
 ```python
-class Label(text: str = '', key: str | None = None, enable_events: bool = False, wrap_length: int | None = None, text_align: Optional[Literal['left', 'right', 'center']] = 'left', font: tuple[str, int] | tuple[str, int, str] | None = None, color: str | None = None, text_color: str | None = None, background_color: str | None = None, expand_x: bool = False, expand_y: bool = False, pad: int | tuple[int, int] | tuple[tuple[int, int], tuple[int, int]] | None = None, metadata: dict[str, typing.Any] | None = None, **kw)
+class Label(text: str = '', key: Optional[str] = None, enable_events: bool = False, wrap_length: Optional[int] = None, text_align: Optional[Literal['left', 'right', 'center']] = 'left', font: Union[tuple[str, int], tuple[str, int, str], NoneType] = None, color: Optional[str] = None, text_color: Optional[str] = None, background_color: Optional[str] = None, expand_x: bool = False, expand_y: bool = False, pad: Union[int, tuple[int, int], tuple[tuple[int, int], tuple[int, int]], NoneType] = None, metadata: Optional[dict[str, Any]] = None, **kw)
 ```
 
 Label element (alias of Text)
@@ -1387,11 +1399,11 @@ class Listbox(
     self,
     values: list[str] = [],
     default_values: list[str] = [],
-    key: str|None = None,
+    key: Union[str, None] = None,
     enable_events: bool = False,
     select_mode: ListboxSelectMode = LISTBOX_SELECT_MODE_BROWSE,
     # other
-    metadata: dict[str, Any]|None = None,
+    metadata: Union[dict[str, Any], None] = None,
     **kw)
 ```
 
@@ -1464,10 +1476,10 @@ Update the widget.
 ```python
 class Menu(
     self,
-    items:Any|None=None,
-    menu_definition:list[list[str|list[Any]]]|None=None,
-    key: str|None=None,
-    metadata: dict[str, Any]|None=None,
+    items: Union[Any, None] = None,
+    menu_definition: Union[list[list[Union[str,list[Any]]]], None] = None,
+    key: Union[str, None] = None,
+    metadata: Union[dict[str, Any], None] = None,
     **kw)
 ```
 
@@ -1537,7 +1549,7 @@ Set the text of the widget.
 ##### Menu.update
 
 ```python
-def update(self, text: str|None=None, *args, **kw) -> None
+def update(self, text: Union[str, None] = None, *args, **kw) -> None
 ```
 
 Update the widget.
@@ -1550,25 +1562,25 @@ Update the widget.
 class Multiline(
     self,
     text: str = "", # default text
-    default_text: str|None = None, # same as text
-    key: str|None = None, # key
+    default_text: Union[str, None] = None, # same as text
+    key: Union[str, None] = None, # key
     readonly: bool = False,
     enable_events: bool = False, 
     enable_key_events: bool = False,
     enable_focus_events: bool = False,
     size: tuple[int, int] = (50, 10), # element size (unit=character)
     # text props
-    font: FontType|None = None, # font
-    color: str|None = None, # text color
-    text_color: str|None = None, # same as color
-    background_color: str|None = None, # background color
+    font: Union[FontType, None] = None, # font
+    color: Union[str, None] = None, # text color
+    text_color: Union[str, None] = None, # same as color
+    background_color: Union[str, None] = None, # background color
     # pack props
     expand_x: bool = False,
     expand_y: bool = False,
-    pad: PadType|None = None,
+    pad: Union[PadType, None] = None,
     # other
-    readonly_background_color: str|None = None,
-    metadata: dict[str, Any]|None = None,
+    readonly_background_color: Union[str, None] = None,
+    metadata: Union[dict[str, Any], None] = None,
     **kw)
 ```
 
@@ -1719,7 +1731,7 @@ Convert position to index.
 ##### Multiline.print
 
 ```python
-def print(self, text: str, text_color: str|None=None, background_color: str|None=None, end:str="\n") -> None
+def print(self, text: str, text_color: Union[str, None] = None, background_color: Union[str, None] = None, end:str="\n") -> None
 ```
 
 Print text.
@@ -1789,7 +1801,7 @@ Set text
 ##### Multiline.update
 
 ```python
-def update(self, text: str|None = None, readonly: bool|None = None, **kw) -> None
+def update(self, text: Union[str, None] = None, readonly: Union[bool, None] = None, **kw) -> None
 ```
 
 Update the widget.
@@ -1799,7 +1811,7 @@ Update the widget.
 ### Output
 
 ```python
-class Output(text: str = '', default_text: str | None = None, key: str | None = None, readonly: bool = False, enable_events: bool = False, enable_key_events: bool = False, enable_focus_events: bool = False, size: tuple[int, int] = (50, 10), font: tuple[str, int] | tuple[str, int, str] | None = None, color: str | None = None, text_color: str | None = None, background_color: str | None = None, expand_x: bool = False, expand_y: bool = False, pad: int | tuple[int, int] | tuple[tuple[int, int], tuple[int, int]] | None = None, readonly_background_color: str | None = None, metadata: dict[str, typing.Any] | None = None, **kw)
+class Output(text: str = '', default_text: Optional[str] = None, key: Optional[str] = None, readonly: bool = False, enable_events: bool = False, enable_key_events: bool = False, enable_focus_events: bool = False, size: tuple = (50, 10), font: Union[tuple[str, int], tuple[str, int, str], NoneType] = None, color: Optional[str] = None, text_color: Optional[str] = None, background_color: Optional[str] = None, expand_x: bool = False, expand_y: bool = False, pad: Union[int, tuple[int, int], tuple[tuple[int, int], tuple[int, int]], NoneType] = None, readonly_background_color: Optional[str] = None, metadata: Optional[dict[str, Any]] = None, **kw)
 ```
 
 Output element. (alias of Multiline) TODO: implement
@@ -1817,12 +1829,12 @@ Output element. (alias of Multiline) TODO: implement
 ```python
 class Radio(
     self, text: str="",
-    group_id: int|str="group",
-    default: bool=False,
-    key: str|None = None,
-    enable_events: bool=False,
+    group_id: Union[int, str] = "group",
+    default: bool = False,
+    key: Union[str, None] = None,
+    enable_events: bool = False,
     # other
-    metadata: dict[str, Any]|None=None,
+    metadata: Union[dict[str, Any], None] = None,
     **kw)
 ```
 
@@ -1903,7 +1915,7 @@ Set the text of the widget.
 ##### Radio.update
 
 ```python
-def update(self, text: str|None=None, **kw) -> None
+def update(self, text: Union[str, None] = None, **kw) -> None
 ```
 
 Update the widget.
@@ -1915,14 +1927,19 @@ Update the widget.
 ```python
 class Slider(
     self,
-    key: str|None = None,
     range: tuple[float, float] = (1, 10),
+    default_value: Union[float, None] = None,
+    resolution: Union[float, None] = None,
     orientation: OrientationType = "horizontal",
-    resolution: float|None = None,
-    default_value: float|None = None,
-    enable_events: bool = False,
+    tick_interval: Union[float, None] = None, # tick marks interval on the scale
+    enable_events: bool = False, # enable changing events
+    enable_changed_events: bool = False, # enable changed event
+    disable_number_display: bool = False,
+    size: Union[tuple[int, int], None] = None, # horizontal: (bar_length, thumb_size), vertical: (thumb_size, bar_length)
+    key: Union[str, None] = None,
     # other
-    metadata: dict[str, Any]|None = None,
+    default: Union[float, None] = None, # same as default_value
+    metadata: Union[dict[str, Any], None] = None,
     **kw)
 ```
 
@@ -1946,7 +1963,7 @@ Create an element.
 def create(self, win: Window, parent: tk.Widget) -> tk.Widget
 ```
 
-Create a widget.
+Create the widget.
 
 ------
 
@@ -1960,10 +1977,23 @@ Return Widget
 
 ------
 
+##### Slider.set
+
+```python
+def set(self, value: float) -> None
+```
+
+Set the value of the widget.
+
+------
+
 ##### Slider.update
 
 ```python
-def update(self, value: float|None=None, **kw) -> None
+def update(self,
+       value: Union[float, None]=None,
+       disable_number_display: Union[bool, None]=None,
+       **kw) -> None
 ```
 
 Update the widget.
@@ -1973,7 +2003,7 @@ Update the widget.
 ### Submit
 
 ```python
-class Submit(button_text: str = '', key: str | None = None, disabled: bool = None, size: tuple[int, int] | None = None, use_ttk_buttons: bool = False, tooltip: str | None = None, button_color: str | tuple[str, str] | None = None, text_align: Optional[Literal['left', 'right', 'center']] = 'left', font: tuple[str, int] | tuple[str, int, str] | None = None, color: str | None = None, text_color: str | None = None, background_color: str | None = None, expand_x: bool = False, expand_y: bool = False, pad: int | tuple[int, int] | tuple[tuple[int, int], tuple[int, int]] | None = None, metadata: dict[str, typing.Any] | None = None, **kw)
+class Submit(button_text: str = '', key: Optional[str] = None, disabled: bool = None, size: Optional[tuple[int, int]] = None, use_ttk_buttons: bool = False, tooltip: Optional[str] = None, button_color: Union[str, tuple[str, str], NoneType] = None, text_align: Optional[Literal['left', 'right', 'center']] = 'left', font: Union[tuple[str, int], tuple[str, int, str], NoneType] = None, color: Optional[str] = None, text_color: Optional[str] = None, background_color: Optional[str] = None, expand_x: bool = False, expand_y: bool = False, pad: Union[int, tuple[int, int], tuple[tuple[int, int], tuple[int, int]], NoneType] = None, metadata: Optional[dict[str, Any]] = None, **kw)
 ```
 
 Subtmi element. (Alias of Button) : todo: add submit event
@@ -1993,26 +2023,26 @@ class Table(
     self,
     values: list[list[str]] = [],
     headings: list[str] = [],
-    key: str|None = None,
+    key: Union[str, None] = None,
     justification: TextAlign = "center",
     auto_size_columns: bool = True,
     max_col_width: int = 0,
-    col_widths: list[int]|None = None,
+    col_widths: Union[list[int], None] = None,
     enable_events: bool = False,
-    event_returns_values: bool|None = None, # Returns the table value if set to True, otherwise returns the index.
+    event_returns_values: Union[bool, None] = None, # Returns the table value if set to True, otherwise returns the index.
     select_mode: str="browse",
     # text props
-    text_align: TextAlign|None = "left", # text align
-    font: FontType|None = None, # font
-    color: str|None = None, # text color
-    text_color: str|None = None, # same as color
-    background_color: str|None = None, # background color
+    text_align: Union[TextAlign, None] = "left", # text align
+    font: Union[FontType, None] = None, # font
+    color: Union[str, None] = None, # text color
+    text_color: Union[str, None] = None, # same as color
+    background_color: Union[str, None] = None, # background color
     # pack props
     expand_x: bool = False,
     expand_y: bool = False,
-    pad: PadType|None = None,
+    pad: Union[PadType, None] = None,
     # other
-    metadata: dict[str, Any]|None = None,
+    metadata: Union[dict[str, Any], None] = None,
     **kw)
 ```
 
@@ -2076,21 +2106,21 @@ Update the widget.
 class Text(
     self,
     text: str = "",
-    key: str|None=None,
+    key: Union[str, None] = None,
     enable_events: bool=False, # enabled events (click)
-    wrap_length: int|None=None, # wrap length(unit=pixel)
+    wrap_length: Union[int, None] = None, # wrap length(unit=pixel)
     # text props
-    text_align: TextAlign|None="left", # text align
-    font: FontType|None=None, # font
-    color: str|None=None, # text color
-    text_color: str|None=None, # same as color
-    background_color: str|None=None, # background color
+    text_align: Union[TextAlign, None]="left", # text align
+    font: Union[FontType, None] = None, # font
+    color: Union[str, None] = None, # text color
+    text_color: Union[str, None] = None, # same as color
+    background_color: Union[str, None] = None, # background color
     # pack props
     expand_x: bool = False,
     expand_y: bool = False,
-    pad: PadType|None = None,
+    pad: Union[PadType, None] = None,
     # other
-    metadata: dict[str, Any]|None=None, # user metadata
+    metadata: Union[dict[str, Any], None] = None, # user metadata
     **kw)
 ```
 
@@ -2149,7 +2179,7 @@ Set the text of the widget.
 ##### Text.update
 
 ```python
-def update(self, text: str|None=None, *args, **kw) -> None
+def update(self, text: Union[str, None] = None, *args, **kw) -> None
 ```
 
 Update the widget.
@@ -2159,7 +2189,7 @@ Update the widget.
 ### Textarea
 
 ```python
-class Textarea(text: str = '', default_text: str | None = None, key: str | None = None, readonly: bool = False, enable_events: bool = False, enable_key_events: bool = False, enable_focus_events: bool = False, size: tuple[int, int] = (50, 10), font: tuple[str, int] | tuple[str, int, str] | None = None, color: str | None = None, text_color: str | None = None, background_color: str | None = None, expand_x: bool = False, expand_y: bool = False, pad: int | tuple[int, int] | tuple[tuple[int, int], tuple[int, int]] | None = None, readonly_background_color: str | None = None, metadata: dict[str, typing.Any] | None = None, **kw)
+class Textarea(text: str = '', default_text: Optional[str] = None, key: Optional[str] = None, readonly: bool = False, enable_events: bool = False, enable_key_events: bool = False, enable_focus_events: bool = False, size: tuple = (50, 10), font: Union[tuple[str, int], tuple[str, int, str], NoneType] = None, color: Optional[str] = None, text_color: Optional[str] = None, background_color: Optional[str] = None, expand_x: bool = False, expand_y: bool = False, pad: Union[int, tuple[int, int], tuple[tuple[int, int], tuple[int, int]], NoneType] = None, readonly_background_color: Optional[str] = None, metadata: Optional[dict[str, Any]] = None, **kw)
 ```
 
 Textarea element. (alias of Multiline)
@@ -2195,12 +2225,12 @@ Initialize self.  See help(type(self)) for accurate signature.
 ```python
 class VSeparator(
     self,
-    key: str|None = None,
-    background_color: str|None = None,
+    key: Union[str, None] = None,
+    background_color: Union[str, None] = None,
     pad: PadType = 5,
     size: tuple[int, int]=(5, 100),
     # other
-    metadata: dict[str, Any]|None = None,
+    metadata: Union[dict[str, Any], None] = None,
     **kw)
 ```
 
@@ -2234,17 +2264,17 @@ Create a widget.
 class Window(
     self,
     title: str,
-    layout: list[list[ElementType]],
-    size: tuple[str, int]|None=None, 
-    resizable:bool=False,
-    font:FontType|None=None,
-    modal: bool=False, 
-    keep_on_top:bool=False, # keep on top
-    no_titlebar: bool=False, # hide titlebar
-    grab_anywhere: bool=False, # can move window by dragging anywhere
-    alpha_channel: float=1.0,
-    enable_key_events: bool=False, # enable keyboard events
-    return_keyboard_events: bool=False, # enable keyboard events (for compatibility)
+    layout: list[list[Element]],
+    size: Union[tuple[str, int], None] = None, 
+    resizable:bool = False,
+    font: Union[FontType, None] = None,
+    modal: bool = False, 
+    keep_on_top:bool = False, # keep on top
+    no_titlebar: bool = False, # hide titlebar
+    grab_anywhere: bool = False, # can move window by dragging anywhere
+    alpha_channel: float = 1.0,
+    enable_key_events: bool = False, # enable keyboard events
+    return_keyboard_events: bool = False, # enable keyboard events (for compatibility)
     **kw)
 ```
 
@@ -2263,6 +2293,16 @@ def bind(self, element: "Element", event_name: str, handle_name: str, propagate:
 ```
 
 [Window.bind] Bind element event and handler
+
+------
+
+##### Window.calc_font_size
+
+```python
+def calc_font_size(self, font: FontType) -> None
+```
+
+Calculate font size.
 
 ------
 
@@ -2289,7 +2329,7 @@ Close the window.
 ##### Window.event_iter
 
 ```python
-def event_iter(self, timeout: int|None=None, timeout_key: str=TIMEOUT_KEY) -> Any
+def event_iter(self, timeout: Union[int, None] = None, timeout_key: str=TIMEOUT_KEY) -> Any
 ```
 
 Return generator with event and values
@@ -2309,7 +2349,7 @@ with eg.Window("test", layout=[[eg.Button("Hello")]]) as window:
 ##### Window.get_element_by_key
 
 ```python
-def get_element_by_key(self, key: str) -> Union[ElementType, None]
+def get_element_by_key(self, key: str) -> Union[Element, None]
 ```
 
 Get an element by its key.
@@ -2319,7 +2359,7 @@ Get an element by its key.
 ##### Window.get_elements_by_type
 
 ```python
-def get_elements_by_type(self, element_type: str) -> list[ElementType]
+def get_elements_by_type(self, element_type: str) -> list[Element]
 ```
 
 Get elements by type.
@@ -2419,7 +2459,7 @@ set normal window.
 ##### Window.read
 
 ```python
-def read(self, timeout: int|None=None, timeout_key: str="-TIMEOUT-") -> tuple[str, dict[str, Any]]
+def read(self, timeout: Union[int, None] = None, timeout_key: str="-TIMEOUT-") -> tuple[str, dict[str, Any]]
 ```
 
 [Window.read] Read events from the window.
@@ -2590,7 +2630,11 @@ Get font list
 ### get_image_tk
 
 ```python
-def get_image_tk(source: bytes|str|None=None, filename: str|None = None, data: bytes|None = None, size: tuple[int, int]|None = None) -> tk.PhotoImage|None
+def get_image_tk(
+    source: Union[bytes, Union[str, None]] = None,
+    filename: Union[str, None] = None,
+    data: Union[bytes, None] = None,
+    size: Union[tuple[int, int], None] = None) -> Union[tk.PhotoImage, None]
 ```
 
 Get Image for tk
