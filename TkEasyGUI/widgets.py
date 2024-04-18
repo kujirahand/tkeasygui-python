@@ -183,6 +183,16 @@ def _get_active_window() -> Union[tk.Toplevel, None]:
         return None
     return _window_list[-1].window
 
+def _window_parent() -> Union[Window, None]:
+    """Get the parent window."""
+    if len(_window_list) == 0:
+        return None
+    return _window_list[-1]
+
+def _window_count() -> int:
+    """Get the number of windows."""
+    return len(_window_list)
+
 def _window_push(win: Window) -> None:
     """Push a window to the list."""
     _window_list.append(win)
@@ -212,6 +222,7 @@ class Window:
                 enable_key_events: bool = False, # enable keyboard events
                 return_keyboard_events: bool = False, # enable keyboard events (for compatibility)
                 location: Union[tuple[int, int], None] = None, # window location
+                center_window: bool = True, # move window to center
                 **kw) -> None:
         """Create a window with a layout of widgets."""
         self.modal: bool = modal
@@ -253,8 +264,9 @@ class Window:
         # set window properties
         self.window.title(title)
         self.window.protocol("WM_DELETE_WINDOW", lambda : self._close_handler())
+        self.size: Union[tuple[int, int], None] = size
         if size is not None:
-            self.window.geometry(f"{size[0]}x{size[1]}")
+            self.set_size(size)
         self.window.resizable(resizable, resizable)
         # create widgets
         self._create_widget(self.frame, layout)
@@ -281,27 +293,43 @@ class Window:
                 e.keysym if len(e.keysym) == 1 else f"{e.keysym}:{e.keycode}", {}))
         # check modal
         if modal:
-            # check position
-            parent = active_win
-            if parent is not None and location is None:
-                self.window.geometry(f"+{parent.winfo_x()+20}+{parent.winfo_y()+20}")
             # set modal action
             self.window.attributes("-topmost", 1) # topmost
             # self.window.transient(parent)
             self.window.grab_set()
             self.window.focus_force()
-        else:
-            if isinstance(self.window, tk.Tk):
-                self.window.eval('tk::PlaceWindow . center')
-        if location is not None:
-            self.window.geometry(f"+{location[0]}+{location[1]}")
         # push window
-        if not modal:
-            _window_push(self)
-    
-    def set_location(self, x: int, y: int) -> None:
+        self.parent_window: Union[Window, None] = _window_parent()
+        _window_push(self)
+        # position
+        if location is not None:
+            self.set_location(location)
+        else:
+            # could not get size with geometry() before window is shown
+            if center_window:
+                self.window.bind("<Map>", self._on_window_show)
+
+    def _on_window_show(self, *event) -> None:
+        """Handle window show event."""
+        if self.parent_window is None: # only this window
+            self.move_to_center()
+        else:
+            self.move_to_center(center_pos=self.parent_window.get_center_location())
+
+    def set_location(self, xy: tuple[int, int]) -> None:
         """Set window location."""
-        self.window.geometry(f"+{x}+{y}")
+        self.window.geometry(f"+{xy[0]}+{xy[1]}")
+    
+    def get_location(self) -> tuple[int, int]:
+        """Get window location."""
+        loc = self.window.geometry().split("+")
+        return (int(loc[1]), int(loc[2]))
+
+    def get_center_location(self) -> tuple[int, int]:
+        """Get center location."""
+        w, h = self.get_size()
+        x, y = self.get_location()
+        return (x + w // 2, y + h // 2)
 
     def __enter__(self):
         """Initialize resource"""
@@ -435,13 +463,42 @@ class Window:
         self.font_size_average = (w, h)
     
     def move(self, x: int, y: int) -> None:
-        """Move the window."""
-        self.window.geometry(f"+{x}+{y}")
+        """Move the window. (same as set_location)"""
+        self.set_location((x, y))
+
+    def get_screen_size(self) -> tuple[int, int]:
+        """Get the screen size."""
+        root = get_root_window()
+        return (root.winfo_screenwidth(), root.winfo_screenheight())
+    
+    def update_idle_tasks(self) -> None:
+        """Update idle tasks."""
+        self.window.update_idletasks()
  
-    def move_to_center(self) -> None:
+    def move_to_center(self, center_pos: Union[tuple[int, int], None] = None) -> None:
         """Move the window to the center of the screen."""
-        if isinstance(self.window, tk.Tk):
-            self.window.eval('tk::PlaceWindow . center')
+        if center_pos is None:
+            w, h = self.get_screen_size()
+            cx, cy = w // 2, h // 2
+        else:
+            cx, cy = center_pos
+        try:
+            if self.size is None:
+                win_x, win_y = self.get_size()
+                if win_x < 10 or win_y < 10:
+                    win_x = 600 # TODO: 適当なサイズ
+                    win_y = 400
+            else:
+                win_x, win_y = self.size
+            x = (cx - win_x // 2)
+            y = (cy - win_y // 2)
+            self.move(x, y)
+        except Exception as _:
+            pass
+    def get_size(self) -> tuple[int, int]:
+        """Get the window size."""
+        size = self.window.geometry().split("+")[0].split("x")
+        return (int(size[0]), int(size[1]))
 
     def get_element_by_key(self, key: str) -> Union[Element, None]:
         """Get an element by its key."""
@@ -519,6 +576,11 @@ class Window:
                     flag_stop = True
                     break
         return flag_stop
+    
+    def set_size(self, size: tuple[int, int]) -> None:
+        """Set the window size."""
+        self.window.geometry(f"{size[0]}x{size[1]}")
+        self.size = size
     
     def set_title(self, title: str) -> None:
         """Set the title of the window."""
@@ -961,9 +1023,6 @@ class Element:
         if (win.font is not None) and (self.font is None) and self.has_font_prop:
             self.props["font"] = self.font = win.font
         self.props = self._convert_props(self.props)
-        # check ttk
-        if self.use_ttk is None:
-            self.use_ttk = win.use_ttk
         # check use ttk
         if not self.use_ttk:
             return
