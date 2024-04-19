@@ -1,21 +1,21 @@
 # TkEasyGUI
 
-![TkEasyGUI logo](docs/image/logo-button.jpg)
-
 `TkEasyGUI` is a Python library that allows for the easy and simple creation of GUI applications.
-In the event model, it is compatible with the well-known GUI library `PySimpleGUI`.
 
-Python's standard UI library `Tkinter`, is often considered to have a high barrier to entry and to be difficult to use. By using this library, you can create GUI applications easily and intuitively.
+<img src="https://github.com/kujirahand/tkeasygui-python/raw/main/docs/image/tkeasygui-shot640.jpg" width="300" alt="TkEasyGUI">
 
-This project adopts the lenient MIT license. This license will not change in the future. Let's enjoy creating GUI programs.
+- Python's standard UI library `Tkinter`, is often considered to have a high barrier to entry and to be difficult to use. By using this library, you can create GUI applications easily and intuitively.
+- In the event model, it is compatible with the well-known GUI library `PySimpleGUI`.
+- This project adopts the lenient MIT license. This license will not change in the future. Let's enjoy creating GUI programs.
 
 - [👉日本語](https://github.com/kujirahand/tkeasygui-python/blob/main/README-ja.md) / [👉中文](https://github.com/kujirahand/tkeasygui-python/blob/main/README-zh.md)
+
 
 ## Platform
 
 - Windows / macOS / Linux (Tkinter required)
 
-
+<img src="https://github.com/kujirahand/tkeasygui-python/raw/main/docs/image/logo-button.jpg" width="180" alt="TkEasyGUI Logo">
 
 ## Install
 
