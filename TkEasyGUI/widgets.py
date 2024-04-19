@@ -231,7 +231,6 @@ class Window:
         self.timeout: Union[int, None] = None
         self.timeout_key: str = WINDOW_TIMEOUT
         self.timeout_id: Union[str, None] = None
-        self.focus_timer_id: Union[str, None] = None
         self.events: Queue = Queue()
         self.key_elements: dict[str, Element] = {}
         self.last_values: dict[str, Any] = {}
@@ -519,17 +518,20 @@ class Window:
         """ Read events from the window."""
         self.timeout = timeout
         self.timeout_key = timeout_key
-        time_id = time_checker_start()
+        timeout_chcker_id = time_checker_start()
+        # get root window
+        root = get_root_window()
+        # update window before mainloop
+        root.update() 
+        # set focus timer (once when window show)
+        self.window.after("idle", _focus_window, self)
+        # mainloop
         while True:
             # set timeout
             if self.timeout_id is not None:
                 self.window.after_cancel(self.timeout_id)
             self.timeout_id = self.window.after("idle", self._window_idle_handler)
-            # set focus timer (once when window show)
-            if self.focus_timer_id is None:
-                self.focus_timer_id = self.window.after("idle", _focus_window, self) # focus timer
             # mainloop - should be called only once
-            root = get_root_window()
             root.mainloop()
             # after mainloop, check events
             if not self.events.empty():
@@ -537,7 +539,7 @@ class Window:
             # check timeout
             if timeout is None:
                 continue # no timeout
-            interval = time_checker_end(time_id)
+            interval = time_checker_end(timeout_chcker_id)
             if interval > timeout:
                 return (self.timeout_key, {}) # return timeout event
         # return event
@@ -803,7 +805,7 @@ def _exit_mainloop() -> None:
     try:
         root.quit() # exit from mainloop
     except Exception:
-        # print("_exit_mainloop: failed to exit mainloop")
+        print("_exit_mainloop: failed to exit mainloop", file=sys.stderr)
         pass
 
 def _focus_window(self: Window) -> None:
