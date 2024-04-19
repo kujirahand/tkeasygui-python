@@ -1,5 +1,7 @@
 # TkEasyGUI
 
+![TkEasyGUI logo](docs/image/logo-button.jpg)
+
 `TkEasyGUI` is a Python library that allows for the easy and simple creation of GUI applications.
 In the event model, it is compatible with the well-known GUI library `PySimpleGUI`.
 
