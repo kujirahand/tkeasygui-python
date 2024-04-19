@@ -11,6 +11,7 @@ from typing import Union
 from . import widgets as eg
 from .utils import (
     FontType,
+    get_root_window,
 )
 
 #------------------------------------------------------------------------------
@@ -446,3 +447,6 @@ def msgbox(
     """show message in a popup window like VB"""
     messagebox.showinfo(title, message)
 
+#------------------------------------------------------------------------------
+# To prevent the display of an empty window
+_ = get_root_window()

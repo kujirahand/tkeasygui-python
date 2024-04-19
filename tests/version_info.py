@@ -1,14 +1,14 @@
 import subprocess
+
 import TkEasyGUI as eg
-import sys
 
 WEB_SITE = "https://github.com/kujirahand/tkeasygui-python/"
 # define layout
 layout=[
     [eg.Text(f"{eg.__doc__.strip()}", color="navy")],
-    [eg.Frame(f"Version", expand_x=True, layout=[
+    [eg.Frame("Version", expand_x=True, layout=[
         [
-            eg.Text(f"TkEasyGUI:"),
+            eg.Text("TkEasyGUI:"),
             eg.Button(f"v{eg.__version__}", key="-b1-"),
             eg.Button("Web")
         ],
@@ -37,12 +37,12 @@ with eg.Window("Version info", layout=layout, font=("", 14), row_padding=5) as w
         if event == "Copy":
             text = window["-sys-info-"].get_text()
             eg.set_clipboard(text)
-            eg.popup(f"Copied to clipboard.")
+            eg.popup("Copied to clipboard.")
         if event == "Copy as Markdown":
             text = window["-sys-info-"].get_text()
             text = f"```\n{text}\n```\n"
             eg.set_clipboard(text)
-            eg.popup(f"Copied markdown to clipboard.")
+            eg.popup("Copied markdown to clipboard.")
         if event == "Web":
             if eg.is_mac():
                 subprocess.call(f"open {WEB_SITE}", shell=True)

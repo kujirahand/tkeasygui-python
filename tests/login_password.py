@@ -15,7 +15,8 @@ window = sg.Window("Login dialog", layout=layout)
 while window.is_alive():
     event, values = window.read()
     print("#", event, values)
-    if event == "Cancel": break
+    if event == "Cancel":
+        break
     if event == "OK":
         print(window.get_location())
         sg.popup("OK, " + values["-userid-"])
