@@ -212,7 +212,7 @@ def popup_get_folder(
 Display a message in a popup window with a text entry. Return the text entered.
 
 ```py
-def popup_get_text(message: str, title: str = "", default: str = "", font: eg.FontType=None) -> Union[str, None]:
+def popup_get_text(message: str, title: str = "", default: str = "", font: FontType=None) -> Union[str, None]:
 ```
 
 - [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/dialogs.py#L121)
@@ -232,7 +232,7 @@ def popup_info(message: str, title: str="Warning") -> None:
 Display a message in a popup window with a text entry. Return the text entered.
 
 ```py
-def popup_input(message: str, title: str = "", default: str = "", font: eg.FontType=None) -> Union[str, None]:
+def popup_input(message: str, title: str = "", default: str = "", font: FontType=None) -> Union[str, None]:
 ```
 
 - [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/dialogs.py#L126)

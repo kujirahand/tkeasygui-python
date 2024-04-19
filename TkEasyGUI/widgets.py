@@ -691,13 +691,14 @@ class Window:
 
     def close(self) -> None:
         """Close the window."""
-        global active_window
         try:
             self.flag_alive = False
-            self.window.quit()
-            self.window.destroy()
             _window_pop(self)
-        except Exception as _:
+            self.window.destroy()
+            if _window_count() == 0:
+                self.window.quit()
+        except Exception as e:
+            print(f"Window.close.failed: {e}", file=sys.stderr)
             pass
 
     def is_alive(self) -> bool:

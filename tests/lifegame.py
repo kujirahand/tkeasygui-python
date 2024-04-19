@@ -48,7 +48,7 @@ def create_gui(board):
             row.append(sg.Text("", key=(i, j), size=(2, 1), pad=(0,0), enable_events=True))
         layout.append(row)
 
-    window = sg.Window('Life Game', layout, finalize=True)
+    window = sg.Window('Life Game', layout, row_padding=0, finalize=True)
     return window
 
 # GUI上の盤面を更新する関数
