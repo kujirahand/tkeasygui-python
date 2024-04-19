@@ -694,9 +694,9 @@ class Window:
         try:
             self.flag_alive = False
             _window_pop(self)
-            self.window.destroy()
+            self.window.destroy() # close window
             if _window_count() == 0:
-                self.window.quit()
+                self.window.quit() # quit app
         except Exception as e:
             print(f"Window.close.failed: {e}", file=sys.stderr)
             pass
@@ -1164,6 +1164,7 @@ class Frame(Element):
                 **kw) -> None:
         style_name = "TLabelframe" if use_ttk else ""
         super().__init__("Frame", style_name, key, False, metadata, **kw)
+        self.has_children = True
         self.layout = layout
         self.label_outside = label_outside
         self.props["text"] = title
@@ -1222,6 +1223,7 @@ class Column(Element):
                 metadata: Union[dict[str, Any], None] = None,
                 **kw) -> None:
         super().__init__("Column", "TFrame", key, False, metadata, **kw)
+        self.has_children = True
         self.layout = layout
         self.text_align = text_align
         self.vertical_alignment = vertical_alignment
@@ -3170,14 +3172,15 @@ def get_font_list() -> list[str]:
     return list(tkfont.families())
 
 def get_system_info():
+    # node={platform.node()}
+    py_ver = sys.version.replace('\n', '')
     return f"""
 tkeasygui={version.__version__}
-python={sys.version}
+python={py_ver}
 tcl_tk={get_tk_version()}
 os={platform.system()}
 os_version={platform.version()}
 os_release={platform.release()}
-node={platform.node()}
 architecture={platform.architecture()}
 processor={platform.processor()}
     """.strip()

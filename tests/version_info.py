@@ -8,14 +8,14 @@ layout=[
     [eg.Text(f"{eg.__doc__.strip()}", color="navy")],
     [eg.Frame(f"Version", expand_x=True, layout=[
         [
-            eg.Text(f"TkEasyGUI:",size=(10,1), text_align="right"),
+            eg.Text(f"TkEasyGUI:"),
             eg.Button(f"v{eg.__version__}", key="-b1-"),
             eg.Button("Web")
         ],
     ])],
     [eg.Frame("System info:", layout=[
-       [eg.Multiline(f"{eg.get_system_info()}", key="-sys-info-", size=(40, 5), expand_x=True)],
-        [eg.Button("Copy")],
+       [eg.Multiline(f"{eg.get_system_info()}", key="-sys-info-", size=(60, 5), expand_x=True)],
+        [eg.Button("Copy"), eg.Button("Copy as Markdown")],
     ])],
     [eg.Column(layout=[[eg.Button("OK"), eg.Button("Close")]], text_align="right", expand_x=True),],
 ]
@@ -38,6 +38,11 @@ with eg.Window("Version info", layout=layout, font=("", 14), row_padding=5) as w
             text = window["-sys-info-"].get_text()
             eg.set_clipboard(text)
             eg.popup(f"Copied to clipboard.")
+        if event == "Copy as Markdown":
+            text = window["-sys-info-"].get_text()
+            text = f"```\n{text}\n```\n"
+            eg.set_clipboard(text)
+            eg.popup(f"Copied markdown to clipboard.")
         if event == "Web":
             if eg.is_mac():
                 subprocess.call(f"open {WEB_SITE}", shell=True)
