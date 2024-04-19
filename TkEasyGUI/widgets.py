@@ -1918,6 +1918,7 @@ class Multiline(Element):
                 color: Union[str, None] = None, # text color
                 text_color: Union[str, None] = None, # same as color
                 background_color: Union[str, None] = None, # background color
+                text_align: Union[TextAlign, None] = None, # text align
                 # pack props
                 expand_x: bool = False,
                 expand_y: bool = False,
@@ -1934,6 +1935,7 @@ class Multiline(Element):
         self.props["size"] = size
         self._set_text_props(font=font, color=color, text_color=text_color, background_color=background_color)
         self._set_pack_props(expand_x=expand_x, expand_y=expand_y, pad=pad)
+        self.text_align = text_align
         if readonly_background_color is not None:
             self.readonly_background_color = readonly_background_color
         self.has_value = True
@@ -1960,9 +1962,14 @@ class Multiline(Element):
         # text
         text = self.props.pop("text", "")
         # create
-        self.widget = scrolledtext.ScrolledText(parent, **self.props)
-        # set text
-        self.widget.insert("1.0", text)
+        self.widget: scrolledtext.ScrolledText = scrolledtext.ScrolledText(parent, **self.props)
+        # text_align
+        if self.text_align is not None:
+            self.widget.tag_configure(self.text_align, justify=self.text_align)
+            self.widget.insert("1.0", text, self.text_align)
+        else:
+            # set text
+            self.widget.insert("1.0", text)
         # readonly
         if self.readonly:
             self.set_readonly(self.readonly)
@@ -2039,8 +2046,13 @@ class Multiline(Element):
         if self.readonly:
             self._widget_update(state=tk.NORMAL)
         self.props["text"] = text
+        # clear text
         self.widget.delete("1.0", "end") # clear text
-        self.widget.insert("1.0", text) # set text
+        # set text
+        if self.text_align is not None:
+           self.widget.insert("1.0", text, self.text_align)
+        else:
+            self.widget.insert("1.0", text)
         if self.readonly:
             self._widget_update(state=tk.DISABLED)
     
