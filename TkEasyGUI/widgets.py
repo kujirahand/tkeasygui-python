@@ -17,7 +17,7 @@ from typing import Any, Union
 from PIL import Image as PILImage
 from PIL import ImageTk
 
-from . import dialogs, utils
+from . import dialogs, utils, version
 from .utils import (
     Element,
     EventMode,
@@ -141,13 +141,15 @@ def set_PySimpleGUI_compatibility(flag: bool=True) -> None:
 # only one root element
 _root_window: Union[tk.Tk, None] = None
 _ttk_style: Union[ttk.Style, None] = None
+tkversion: str = "0.0.0"
 def get_root_window() -> tk.Tk:
     """Get root window."""
     global _root_window
+    global tkversion
     if _root_window is None:
-        _root_window = tk._get_default_root() # tk.Tk()
-        _root_window.eval('tk::PlaceWindow . center')
+        _root_window = tk.Tk()
         _root_window.attributes('-alpha', 0)
+        _root_window.eval('tk::PlaceWindow . center')
         _root_window.withdraw()
         # set theme
         try:
@@ -161,12 +163,6 @@ def get_root_window() -> tk.Tk:
             print(f"TkEasyGUI.theme: failed to set theme {name} {e}", file=sys.stderr)
             pass
     return _root_window
-
-def get_font_list() -> list[str]:
-    """Get font list"""
-    root = get_root_window()
-    root.withdraw()
-    return list(tkfont.families())
 
 def get_ttk_style() -> ttk.Style:
     """Get ttk style"""
@@ -223,6 +219,7 @@ class Window:
                 return_keyboard_events: bool = False, # enable keyboard events (for compatibility)
                 location: Union[tuple[int, int], None] = None, # window location
                 center_window: bool = True, # move window to center
+                row_padding: int = 2, # row padding
                 **kw) -> None:
         """Create a window with a layout of widgets."""
         self.modal: bool = modal
@@ -258,6 +255,7 @@ class Window:
         self.enable_key_events: bool = enable_key_events
         self.return_keyboard_events: bool = return_keyboard_events
         self.font_size_average: tuple[int, int] = (12, 10)
+        self.row_padding: int = row_padding
         # Frame
         self.frame: ttk.Frame = ttk.Frame(self.window, padding=10)
         self.frame.configure(style="TFrame")
@@ -364,7 +362,7 @@ class Window:
                     self._event_hooks[event_name] = []
                 self._event_hooks[event_name].append(handle)
     
-    def _create_widget(self, parent: tk.Widget, layout: list[list["Element"]]):
+    def _create_widget(self, parent: tk.Widget, layout: list[list["Element"]], align: TextAlign="left", valign: TextVAlign="top"):
         """create widget from layout"""
         # check layout
         if not (len(layout) > 0 and (isinstance(layout[0], list) or isinstance(layout[0], tuple))):
@@ -377,10 +375,13 @@ class Window:
         self.need_focus_widget: tk.Widget|None = None
         for row_no, widgets in enumerate(layout):
             # frame_row = ttk.Frame(parent, padding=5, name=f"tkeasygui_frame_row_{row_no}")
-            frame_row = ttk.Frame(parent, name=f"tkeasygui_frame_row_{row_no}")
+            frame_row = ttk.Frame(parent, padding=self.row_padding ,name=f"tkeasygui_frame_row_{row_no}")
             # columns
             prev_element: Element|None = None
-            row_prop: dict[str, Any] = {"expand": False, "fill": "x", "side": "top"}
+            row_prop: dict[str, Any] = {"expand": False, "fill": "x", "side": valign}
+            # reversed?
+            if align == "right":
+                widgets = reversed(widgets)
             for col_no, elemment in enumerate(widgets):
                 # create widget
                 elem: Element = elemment
@@ -416,10 +417,12 @@ class Window:
                 try:
                     # has children?
                     if elem.has_children:
-                        self._create_widget(widget, elem.layout)
+                        framelike: ElementHasChildren = elem
+                        self._create_widget(widget, framelike.layout, align=framelike.text_align, valign=framelike.vertical_alignment)
                 except Exception as e:
+                    print(e.__traceback__, file=sys.stderr)
                     raise TkEasyError(
-                        f"Window._create_widget.Failed_sub_widgets `{elem.element_type}` key=`{elem.key}` {elem.props} reason:{e}"
+                        f"Window._create_widget.Failed(children) `{elem.element_type}` key=`{elem.key}` {elem.props} reason:{e}"
                     ) from e
                 # post create
                 elem.post_create(self, frame_row)
@@ -430,7 +433,8 @@ class Window:
                 if isinstance(elem, Menu):
                     continue
                 # pack widget
-                fill_props = elem._get_pack_props()
+                fill_props = elem._get_pack_props(align, valign)
+                print("@@pack=", elem.key, fill_props)
                 widget.pack(**fill_props)
                 # expand_y?
                 if elem.expand_y:
@@ -932,9 +936,14 @@ class Element:
         if background_color is not None:
             self.props["bg"] = background_color
 
-    def _get_pack_props(self) -> dict[str, Any]:
+    def _get_pack_props(self, align: str="left", valign: str="top") -> dict[str, Any]:
         """Get the fill property in `pack` method."""
         props: dict[str, Any] = {"expand": False, "fill": "none", "side": "left"}
+        if align == "right":
+            props["side"] = "right"
+        elif align == "center":
+            props["fill"] = "both"
+            props["expand"] = True
         # check expand
         if self.expand_x and self.expand_y:
             props["expand"] = True
@@ -1128,7 +1137,23 @@ class Element:
                 return self.widget[name]
         return None
 
-class Frame(Element):
+class ElementHasChildren(Element):
+    """Element class that contains child elements."""
+    def __init__(
+            self,
+            element_type: str, # element type
+            ttk_style_name: str, # tkinter widget type
+            key: Union[str, None], # key
+            has_value: bool, # has value
+            metadata: Union[dict[str, Any], None] = None, # meta data
+            **kw) -> None:
+        super().__init__(element_type, ttk_style_name, key, has_value, metadata, **kw)
+        self.layout: list[list[Element]] = []
+        self.has_children: bool = True
+        self.text_align: TextAlign = "left"
+        self.vertical_alignment: TextVAlign = "center"
+
+class Frame(ElementHasChildren):
     """Frame element."""
     def __init__(
                 self,
@@ -1143,6 +1168,8 @@ class Frame(Element):
                 text_color: Union[str, None] = None,
                 background_color: Union[str, None] = None,
                 label_outside: bool=False,
+                vertical_alignment: TextVAlign="top", # vertical alignment
+                text_align: Union[TextAlign, None]="left", # text align
                 # pack props
                 expand_x: bool = False,
                 expand_y: bool = False,
@@ -1153,11 +1180,12 @@ class Frame(Element):
                 **kw) -> None:
         style_name = "TLabelframe" if use_ttk else ""
         super().__init__("Frame", style_name, key, False, metadata, **kw)
-        self.has_children = True
         self.layout = layout
         self.label_outside = label_outside
         self.props["text"] = title
         self.props["relief"] = relief
+        self.text_align = text_align
+        self.vertical_alignment = vertical_alignment
         self._set_text_props(color=color, text_color=text_color, background_color=background_color, font=font)
         self._set_pack_props(expand_x=expand_x, expand_y=expand_y, pad=pad)
         self.use_ttk: bool = use_ttk
@@ -1191,7 +1219,7 @@ class Frame(Element):
             return self.widget
         return super().__getattr__(name)
 
-class Column(Element):
+class Column(ElementHasChildren):
     """Frame element."""
     def __init__(
                 self,
@@ -1210,10 +1238,11 @@ class Column(Element):
                 metadata: Union[dict[str, Any], None] = None,
                 **kw) -> None:
         super().__init__("Column", "TFrame", key, False, metadata, **kw)
-        self.has_children = True
         self.layout = layout
+        self.text_align = text_align
         self.vertical_alignment = vertical_alignment
         self.has_font_prop = False
+        self.use_ttk = False
         self._set_pack_props(expand_x=expand_x, expand_y=expand_y, pad=pad)
         if size is not None:
             self.props["size"] = size
@@ -1223,8 +1252,9 @@ class Column(Element):
             self.props["anchor"] = self._justify_to_anchor(text_align)
 
     def create(self, win: Window, parent: tk.Widget) -> tk.Widget:
-        # self.widget = tk.Frame(parent, **self.props)
-        self.widget = ttk.Frame(parent, style=self.style_name, **self.props)
+        # if self.use_ttk:
+        #     self.widget = ttk.Frame(parent, style=self.style_name, **self.props)
+        self.widget = tk.Frame(parent, **self.props)
         return self.widget
 
     def get(self) -> Any:
@@ -3131,3 +3161,36 @@ def time_checker_end(start_time: datetime) -> int:
     elapsed_time = (datetime.now() - start_time).total_seconds()
     msec = int(elapsed_time * 1000)
     return msec
+
+# get system info
+
+def get_tk_version() -> str:
+    """Get tk version"""
+    root = get_root_window()
+    tkversion = root.tk.call("info", "patchlevel")
+    return tkversion
+
+def get_tcl_version() -> str:
+    """Get tcl version"""
+    root = get_root_window()
+    tclversion = root.tk.call("info", "tclversion")
+    return tclversion
+
+def get_font_list() -> list[str]:
+    """Get font list"""
+    root = get_root_window()
+    root.withdraw()
+    return list(tkfont.families())
+
+def get_system_info():
+    return f"""
+tkeasygui={version.__version__}
+python={sys.version}
+tcl_tk={get_tk_version()}
+os={platform.system()}
+os_version={platform.version()}
+os_release={platform.release()}
+node={platform.node()}
+architecture={platform.architecture()}
+processor={platform.processor()}
+    """.strip()

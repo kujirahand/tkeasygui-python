@@ -2,8 +2,9 @@
 TkEasyGUI utilities functions
 """
 
+import sys
 from typing import Literal, TypeVar, Union
-
+import tkinter
 import pyperclip
 
 # define TypeAlias
@@ -26,5 +27,3 @@ def set_clipboard(text):
 def get_clipboard():
     """get text from clipboard"""
     return pyperclip.paste()
-
-

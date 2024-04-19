@@ -118,12 +118,12 @@ def popup_cancel(message: str, title: str="") -> str:
     """Display a message in a popup window with OK and Cancel buttons. Return "OK" or "Cancel"."""
     return popup_buttons(message, title, buttons=["Cancel"])
 
-def popup_get_text(message: str, title: str = "", default: str = "", font: eg.FontType=None) -> Union[str, None]:
+def popup_get_text(message: str, title: str = "", default: str = "", font: FontType=None) -> Union[str, None]:
     """Display a message in a popup window with a text entry. Return the text entered."""
     # return simpledialog.askstring(title, message, initialvalue=default)
     return popup_input(message, title, default, font=font)
 
-def popup_input(message: str, title: str = "", default: str = "", font: eg.FontType=None) -> Union[str, None]:
+def popup_input(message: str, title: str = "", default: str = "", font: FontType=None) -> Union[str, None]:
     """Display a message in a popup window with a text entry. Return the text entered."""
     result = None
     win = eg.Window(title, layout=[

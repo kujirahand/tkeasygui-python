@@ -37,6 +37,15 @@ python -m pip install git+https://github.com/kujirahand/tkeasygui-python
 
 ## How to use
 
+Using TkEasyGUI is simple. If you only want to display a dialog, it requires just two lines of code.
+
+```py
+import TkEasyGUI as eg
+eg.popup("A joyful heart is good medicine.")
+```
+
+###
+
 To create a simple window with only labels and buttons, you would write as follows:
 
 ```py
