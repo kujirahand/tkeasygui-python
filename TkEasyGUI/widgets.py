@@ -417,8 +417,7 @@ class Window:
                 try:
                     # has children?
                     if elem.has_children:
-                        framelike: ElementHasChildren = elem
-                        self._create_widget(widget, framelike.layout, align=framelike.text_align, valign=framelike.vertical_alignment)
+                        self._create_widget(widget, elem.layout, align=elem.text_align, valign=elem.vertical_alignment)
                 except Exception as e:
                     print(e.__traceback__, file=sys.stderr)
                     raise TkEasyError(
@@ -434,7 +433,6 @@ class Window:
                     continue
                 # pack widget
                 fill_props = elem._get_pack_props(align, valign)
-                print("@@pack=", elem.key, fill_props)
                 widget.pack(**fill_props)
                 # expand_y?
                 if elem.expand_y:
@@ -862,6 +860,7 @@ class Element:
         self._bind_dict: dict[str, tuple[str, bool, EventMode]] = {}
         self.user_bind_event: tk.Event|None = None # when bind event fired then set this value
         self.vertical_alignment: TextVAlign = "center"
+        self.text_align: TextAlign = "left"
         self.padx: int|tuple[int,int]|None = 1
         self.pady: int|tuple[int,int]|None = None
         self.font: Union[FontType, None] = None
@@ -1137,23 +1136,7 @@ class Element:
                 return self.widget[name]
         return None
 
-class ElementHasChildren(Element):
-    """Element class that contains child elements."""
-    def __init__(
-            self,
-            element_type: str, # element type
-            ttk_style_name: str, # tkinter widget type
-            key: Union[str, None], # key
-            has_value: bool, # has value
-            metadata: Union[dict[str, Any], None] = None, # meta data
-            **kw) -> None:
-        super().__init__(element_type, ttk_style_name, key, has_value, metadata, **kw)
-        self.layout: list[list[Element]] = []
-        self.has_children: bool = True
-        self.text_align: TextAlign = "left"
-        self.vertical_alignment: TextVAlign = "center"
-
-class Frame(ElementHasChildren):
+class Frame(Element):
     """Frame element."""
     def __init__(
                 self,
@@ -1219,7 +1202,7 @@ class Frame(ElementHasChildren):
             return self.widget
         return super().__getattr__(name)
 
-class Column(ElementHasChildren):
+class Column(Element):
     """Frame element."""
     def __init__(
                 self,
@@ -2832,9 +2815,12 @@ class Table(Element):
         if self.event_returns_values:
             record_values = self.widget.item(record_ids, "values")
         else:
-            if isinstance(record_ids, str):
-                record_ids = [record_ids]
-            record_values = list(map(lambda id_s: int(id_s), record_ids))
+            if record_ids is None or record_ids == "":
+                record_values = []
+            else:
+                if isinstance(record_ids, str):
+                    record_ids = [record_ids]
+                record_values = list(map(lambda id_s: int(id_s), record_ids))
         return record_values
 
     def _table_events(self, _event: Any) -> None:

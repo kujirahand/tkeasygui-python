@@ -81,7 +81,7 @@ def read_file() -> str:
         if class_name == "Menu":
             init_args[class_name].append("menu_definition=[['File', ['Open', 'Save', 'Exit']], ['Edit', ['Copy', 'Paste']]]")
         if class_name == "Button":
-            init_args[class_name].append("button_text='OK'")
+            init_args[class_name].append("button_text='Button'")
         if class_name == "Table":
             init_args[class_name].append("values=[[1,2,3],[4,5,6],[7,8,9]]")
             init_args[class_name].append("headings=['aaa', 'bbb', 'ccc']")
