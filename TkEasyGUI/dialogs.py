@@ -13,6 +13,8 @@ from . import widgets as eg
 from .utils import (
     FontType,
     get_root_window,
+    is_mac,
+    is_win,
 )
 
 #------------------------------------------------------------------------------
@@ -468,9 +470,9 @@ def popup_get_date(
 #------------------------------------------------------------------------------
 def popup_notify(message: str, title: str="") -> None:
     """Popup a information"""
-    if eg.is_mac():
+    if is_mac():
         send_notification_mac(message, title)
-    elif eg.is_win():
+    elif is_win():
         send_notification_win(message, title)
     else:
         popup_buttons(message, title, buttons=["OK"], auto_close_duration=1)
