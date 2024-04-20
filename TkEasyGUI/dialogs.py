@@ -6,8 +6,9 @@ import tkinter.filedialog as filedialog
 import tkinter.messagebox as messagebox
 from datetime import datetime, timedelta
 from tkinter import colorchooser
-from typing import Union
+from typing import Union, Any
 
+from . import locale_easy as le
 from . import widgets as eg
 from . import utils
 from .utils import (
@@ -104,8 +105,8 @@ def popup_yes_no(
                 no_value: str = "No" # return value for no
                 ) -> str:
     """
-    Display a message in a popup window with Yes and No buttons. Return "Yes" or "No".
-    @see [tests/localize_test.py](../tests/localize_test.py)
+    Display a message in a popup window with Yes and No buttons. Return "Yes" or "No" (or eg.WINDOW_CLOSED).
+    @see [tests/localize_test.py](https://github.com/kujirahand/tkeasygui-python/blob/main/tests/localize_test.py)
     #### Example - simple:
     Ask user question, [Yes] or [No] buttons.
     ```py
@@ -123,9 +124,9 @@ def popup_yes_no(
     print(ans) # "can" or "no"
     """
     # get locale text
-    title = title if title is not None else utils.get_text("Question")
-    yes_label = yes_label if yes_label is not None else utils.get_text("Yes")
-    no_label = no_label if no_label is not None else utils.get_text("No")
+    title = title if title is not None else le.get_text("Question")
+    yes_label = yes_label if yes_label is not None else le.get_text("Yes")
+    no_label = no_label if no_label is not None else le.get_text("No")
     # ask yes or no
     result = popup_buttons(message, title, buttons=[yes_label, no_label])
     # get result
@@ -135,16 +136,43 @@ def popup_yes_no(
         return no_value
     return result # pushed close button
 
-def popup_yes_no_cancel(message: str, title: str = "Question") -> str:
+def popup_yes_no_cancel(
+        message: str,
+        title: Union[str, None] = None,
+        yes_label: Union[str, None] = None,
+        no_label: Union[str, None] = None,
+        cancel_label: Union[str, None] = None,
+        yes_value: str = "Yes",
+        no_value: str = "No",
+        cancel_value: str = "Cancel"
+        ) -> str:
     """Display a message in a popup window with Yes and No buttons. Return "Yes" or "No" or "Cancel"."""
-    return popup_buttons(message, title, buttons=["Yes", "No", "Cancel"])
+    # return popup_buttons(message, title, buttons=["Yes", "No", "Cancel"])
+    # get locale text
+    title = title if title is not None else le.get_text("Question")
+    yes_label = yes_label if yes_label is not None else le.get_text("Yes")
+    no_label = no_label if no_label is not None else le.get_text("No")
+    cancel_label = cancel_label if cancel_label is not None else le.get_text("Cancel")
+    # ask yes or no
+    result = popup_buttons(message, title, buttons=[yes_label, no_label, cancel_label])
+    # get result
+    if result == yes_label:
+        return yes_value
+    if result == no_label:
+        return no_value
+    if result == cancel_label:
+        return cancel_value
+    return cancel_label
 
 def popup_cancel(message: str, title: str="") -> str:
-    """Display a message in a popup window with OK and Cancel buttons. Return "OK" or "Cancel"."""
-    return popup_buttons(message, title, buttons=["Cancel"])
+    """Display a message in a popup window with OK and Cancel buttons. Return "Cancel" or eg.WINDOW_CLOSED."""
+    cancel_label = le.get_text("Cancel")
+    result = popup_buttons(message, title, buttons=["Cancel"])
+    return cancel_label if result == cancel_label else result
 
 def popup_get_text(
-        message: str, title: str = "",
+        message: str,
+        title: Union[str,None] = None,
         default: Union[str, None] = None,
         default_text: Union[str, None] = None, # same as default for compatibility
         font: FontType=None) -> Union[str, None]:
@@ -154,35 +182,56 @@ def popup_get_text(
         default = default_text
     return popup_input(message, title, default, font=font)
 
-def popup_input(message: str, title: str = "", default: str = "", font: FontType=None) -> Union[str, None]:
-    """Display a message in a popup window with a text entry. Return the text entered."""
-    result = None
+def popup_input(
+        message: str,
+        title: Union[str,None] = None,
+        default: str = "",
+        ok_label: Union[str, None] = None,
+        cancel_label: Union[str, None] = None,
+        cancel_value: Any = None,
+        font: FontType=None) -> Union[str, None]:
+    """Display a message in a popup window with a text entry. Return the text entered. if canceled, return cancel_value."""
+    result = cancel_value
+    if title is None:
+        title = le.get_text("Text input")
+    if ok_label is None:
+        ok_label = le.get_text("OK")
+    if cancel_label is None:
+        cancel_label = le.get_text("Cancel")
     win = eg.Window(title, layout=[
         [eg.Text(message)],
         [eg.Input(default, key="-user-", width=40)],
-        [eg.Button("OK", width=9), eg.Button("Cancel", width=9)]
+        [eg.Button(ok_label, width=11), eg.Button(cancel_label, width=9)]
     ], modal=True, font=font)
-    while win.is_alive():
+    while True:
         event, values = win.read()
-        if event == "OK":
+        if event == ok_label:
             result = values["-user-"]
             break
-        if event == "Cancel":
+        if event in [cancel_label, eg.WINDOW_CLOSED]:
+            # let result = cancel_value
             break
     win.close()
     return result
 
-def popup_error(message: str, title: str="Error") -> None:
+def popup_error(message: str, title: Union[str,None]=None) -> None:
     """Display a message in a popup window with an error icon."""
-    popup_buttons(message, title, buttons=["Error"])
+    if title is None:
+        title = le.get_text("Error")
+    error_label = le.get_text("Error")
+    popup_buttons(message, title, buttons=[error_label])
     # messagebox.showerror(title, message)
 
-def popup_warning(message: str, title: str="Warning") -> None:
+def popup_warning(message: str, title: Union[str,None]=None) -> None:
     """Display a message in a popup window with an warning icon."""
+    if title is None:
+        title = le.get_text("Warning")
     messagebox.showwarning(title, message)
 
-def popup_info(message: str, title: str="Warning") -> None:
+def popup_info(message: str, title: Union[str,None]=None) -> None:
     """Display a message in a popup window with an warning icon."""
+    if title is None:
+        title = le.get_text("Information")
     messagebox.showwarning(title, message)
 
 def popup_get_file(
@@ -458,20 +507,26 @@ def ask_retry_cancel(message: str, title: str="Question") -> bool:
 
 def show_message(
         message: str,
-        title: str="Information"
+        title: Union[str,None] = None
     ) -> None:
     """show message in a popup window"""
+    title = title if title is not None else utils.get_text("Information")
     messagebox.showinfo(title, message)
 
-def show_info(message: str, title: str="Information") -> None:
+def show_info(
+        message: str,
+        title: Union[str,None] = None
+    ) -> None:
     """show message in a popup window"""
+    title = title if title is not None else utils.get_text("Information")
     messagebox.showinfo(title, message)
 
 def msgbox(
         message: str, # message
-        title: str="Message" # dialog title
+        title: Union[str,None] = None
     ) -> None:
     """show message in a popup window like VB"""
+    title = title if title is not None else utils.get_text("Information")
     messagebox.showinfo(title, message)
 
 #------------------------------------------------------------------------------
