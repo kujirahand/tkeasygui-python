@@ -2470,11 +2470,19 @@ class Listbox(Element):
     def create(self, win: Window, parent: tk.Widget) -> tk.Widget:
         """[Listbox.create] create Listbox widget"""
         self.window: Window = win
-        self.widget = tk.Listbox(parent, selectmode=self.select_mode, **self.props)
+        # create frame
+        self.widget_frame: tk.Frame = tk.Frame(parent)
+        # create listbox and scrollbar
+        self.widget:tk.Listbox = tk.Listbox(self.widget_frame, selectmode=self.select_mode, **self.props)
+        self.widget_scrollbar = tk.Scrollbar(self.widget_frame,command=self.widget.yview)
+        self.widget.config(yscrollcommand=self.widget_scrollbar.set)
+        # pack
+        self.widget.pack(side="left", fill="both", expand=True)
+        self.widget_scrollbar.pack(side="right", fill="y")
         # insert values
         self.set_values(self.values)
         self.select_values(self.default_values)
-        return self.widget
+        return self.widget_frame
 
     def select_values(self, values: list[str]) -> None:
         """Select values"""
