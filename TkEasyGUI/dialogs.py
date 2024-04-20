@@ -9,6 +9,7 @@ from tkinter import colorchooser
 from typing import Union
 
 from . import widgets as eg
+from . import utils
 from .utils import (
     FontType,
     get_root_window,
@@ -45,8 +46,10 @@ def popup_buttons(message: str, title: str = "Question", buttons: list[str] = ["
     if non_blocking:
         # TODO: popup non blocking window
         pass
-    while win.is_alive():
+    while True:
         event, _ = win.read(timeout=100, timeout_key=eg.WINDOW_TIMEOUT)
+        if event is eg.WINDOW_CLOSED:
+            result = eg.WIN_CLOSED
         if event in buttons:
             result = event
             break
@@ -92,24 +95,45 @@ def popup_ok_cancel(message: str, title: str="") -> str:
     """Display a message in a popup window with OK and Cancel buttons. Return "OK" or "Cancel"."""
     return popup_buttons(message, title, buttons=["OK", "Cancel"])
 
-def popup_yes_no(message: str, title: str = "Question", yes_label: str="Yes", no_label: str="No") -> str:
+def popup_yes_no(
+                message: str, # question message
+                title: Union[str,None] = None, # window title
+                yes_label: Union[str,None]=None, # label for yes button
+                no_label: Union[str,None]=None, # label for no button
+                yes_value: str = "Yes", # return value for yes
+                no_value: str = "No" # return value for no
+                ) -> str:
     """
     Display a message in a popup window with Yes and No buttons. Return "Yes" or "No".
-
-    #### Example:
-    Ask user question, [Yes] or [No]
+    @see [tests/localize_test.py](../tests/localize_test.py)
+    #### Example - simple:
+    Ask user question, [Yes] or [No] buttons.
     ```py
-    a = eg.popup_yes_no("Do you like Sushi?", "Question")
-    print(a) # "Yes" or "No"
+    ans = eg.popup_yes_no("Do you like Sushi?", "Question")
+    print(ans) # "Yes" or "No"
     ```
-    Ask user question in Japanes [はい] or [いいえ]
+    #### Eample - custom label:
+    Ask user question in special button
     ```py
-    ja_a = eg.popup_yes_no("寿司は好き?", "質問", yes_label="はい", no_label="いいえ")
-    print(ja_a) # "はい" or "いいえ"
+    ans = eg.popup_yes_no("Do you eat Sushi?", yes_label="EAT", no_label="no")
+    print(ans) # "Yes" or "No"
     ```
+    #### Example - custom return value:
+    ans = eg.popup_yes_no("Can you speak Japanese?", yes_value="can", no_value="no")
+    print(ans) # "can" or "no"
     """
-    # return "Yes" if messagebox.askyesno(title, message) else "No"
-    return popup_buttons(message, title, buttons=[yes_label, no_label])
+    # get locale text
+    title = title if title is not None else utils.get_text("Question")
+    yes_label = yes_label if yes_label is not None else utils.get_text("Yes")
+    no_label = no_label if no_label is not None else utils.get_text("No")
+    # ask yes or no
+    result = popup_buttons(message, title, buttons=[yes_label, no_label])
+    # get result
+    if result == yes_label:
+        return yes_value
+    if result == no_label:
+        return no_value
+    return result # pushed close button
 
 def popup_yes_no_cancel(message: str, title: str = "Question") -> str:
     """Display a message in a popup window with Yes and No buttons. Return "Yes" or "No" or "Cancel"."""
@@ -337,6 +361,7 @@ def popup_get_date(
 
 #------------------------------------------------------------------------------
 # for notify
+#------------------------------------------------------------------------------
 def popup_notify(message: str, title: str="") -> None:
     """Popup a information"""
     if eg.is_mac():
@@ -375,6 +400,7 @@ $AppId = '{{1AC14E77-02E7-4E5D-B744-2EB1AE5198B7}}\WindowsPowerShell\v1.0\powers
 
 #------------------------------------------------------------------------------
 # TkEasyGUI original dialogs
+#------------------------------------------------------------------------------
 
 def popup_color(title: str="", default_color: Union[str, None]=None) -> (Union[str, None]):
     """Popup a color selection dialog. Return the color selected."""
@@ -416,7 +442,8 @@ def popup_listbox(
     return result
 
 #------------------------------------------------------------------------------
-# TKinter
+# TKinter alias
+#------------------------------------------------------------------------------
 def ask_yes_no(message: str, title: str="Question") -> bool:
     """Display a message in a popup window with Yes and No buttons. Return True or False. (use Tkinter)"""
     return messagebox.askyesno(title, message)
@@ -446,6 +473,24 @@ def msgbox(
     ) -> None:
     """show message in a popup window like VB"""
     messagebox.showinfo(title, message)
+
+#------------------------------------------------------------------------------
+# TkEasyGUI original dialogs
+#------------------------------------------------------------------------------
+def input(message: str, title: str="", default: str="") -> str:
+    """Display a message in a popup window with a text entry. Return the text entered."""
+    return popup_input(message, title, default)
+
+def print(*args, **kw) -> None:
+    """Print message to popup window."""
+    lines = " ".join([str(a) for a in args])
+    popup(lines)
+
+def confirm(question: str, title: Union[str,None]=None) -> bool:
+    """Display a message in a popup window with Yes and No buttons. Return True or False."""
+    if title is None:
+        title = utils.get_text("Question")
+    return popup_yes_no(question, title) == "Yes"
 
 #------------------------------------------------------------------------------
 # To prevent the display of an empty window
