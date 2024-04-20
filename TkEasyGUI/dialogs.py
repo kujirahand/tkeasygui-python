@@ -273,25 +273,56 @@ def popup_get_folder(
         title = message
     return filedialog.askdirectory(title=title, initialdir=default_path, **kw)
 
+def popup_memo(
+        message: str,
+        title: Union[str, None] = None,
+        size: tuple[int,int] = [60, 8],
+        readonly: bool = False,
+        ok_label: Union[str, None] = None,
+        cancel_label: Union[str, None] = None,
+        cancel_value: Union[str,None] = None,
+        font: Union[FontType, None] = None
+        ) -> Union[str, None]:
+    """Display a multiline message in a popup window. Return the text entered. if canceled, return cancel_value."""
+    return popup_scrolled(message, title, size, readonly, ok_label, cancel_label, cancel_value, font)
+
 def popup_scrolled(
             message: str,
-            title: str = "",
+            title: tuple[str, None] = None,
             size: tuple[int,int] = [40, 5],
             readonly: bool = False,
+            ok_label: Union[str, None] = None,
+            cancel_label: Union[str, None] = None,
+            cancel_value: Union[str,None] = None,
             font: Union[FontType, None] = None
             ) -> Union[str, None]:
-    """Display a message in a popup window with a text entry. Return the text entered."""
+    """
+    Display a multiline message in a popup window. Return the text entered. if canceled, return cancel_value.
+    #### Example:
+    ```py
+    import TkEasyGUI as eg
+    text = eg.popup_scrolled("This is a long text.", "Information")
+    eg.print(text)
+    ```
+    """
+    result = cancel_value
+    if cancel_label is None:
+        cancel_label = le.get_text("Cancel")
+    if ok_label is None:
+        ok_label = le.get_text("OK")
+    if title is None:
+        title = le.get_text("Information")
     win = eg.Window(title, layout=[
         [eg.Multiline(message, key="-text-", size=size, readonly=readonly, font=font)],
-        [eg.Button("OK", width=9), eg.Button("Cancel", width=5)]
+        [eg.Button(ok_label, width=9), eg.Button(cancel_label, width=5)]
     ], modal=True)
     result = None
     while win.is_alive():
         event, _ = win.read()
-        if event == "OK":
+        if event == ok_label:
             result = win["-text-"].get()
             break
-        if event == "Cancel":
+        if event == cancel_label:
             break
     win.close()
     return result
