@@ -6,11 +6,10 @@ import tkinter.filedialog as filedialog
 import tkinter.messagebox as messagebox
 from datetime import datetime, timedelta
 from tkinter import colorchooser
-from typing import Union, Any
+from typing import Any, Union
 
 from . import locale_easy as le
 from . import widgets as eg
-from . import utils
 from .utils import (
     FontType,
     get_root_window,

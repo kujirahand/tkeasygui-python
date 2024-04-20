@@ -2,7 +2,7 @@
 # TkEasyGUI locale
 #------------------------------------------------------------------------------
 import locale
-from typing import Any, Literal, TypeVar, Union
+from typing import Union
 
 _locale: str = ""
 # locale messages
