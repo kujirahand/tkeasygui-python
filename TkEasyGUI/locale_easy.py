@@ -17,6 +17,7 @@ _locale_messages: dict[str, dict[str, str]] = {
         "Warning": "警告",
         "Error": "エラー",
         "Question": "質問",
+        "Text Input": "テキスト入力",
     },
     "zh": {
         "OK": "好",
@@ -28,6 +29,7 @@ _locale_messages: dict[str, dict[str, str]] = {
         "Warning": "警告",
         "Error": "错误",
         "Question": "问题",
+        "Text Input": "文本输入",
     },
 }
 

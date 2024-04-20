@@ -21,8 +21,14 @@ from .utils import (
 #------------------------------------------------------------------------------
 # like PySimpleGUI
 
-def popup_buttons(message: str, title: str = "Question", buttons: list[str] = ["OK", "Cancel"], 
-        auto_close_duration: int = -1, timeout_key: str="-TIMEOUT-", non_blocking: bool = False) -> str:
+def popup_buttons(
+        message: str,
+        title: Union[str,None] = None,
+        buttons: list[str] = ["OK", "Cancel"], 
+        auto_close_duration: int = -1, # auto close duration (msec)
+        timeout_key: str="-TIMEOUT-", # timeout key
+        non_blocking: bool = False
+    ) -> str:
     """
     Popup window with user defined buttons. Return button's label.
 
@@ -35,6 +41,8 @@ def popup_buttons(message: str, title: str = "Question", buttons: list[str] = ["
     print(color)
     ```
     """
+    if title is None:
+        title = le.get_text("Question")
     result = buttons[-1] if len(buttons) > 0 else None
     # create window
     win = eg.Window(title, layout=[
@@ -78,6 +86,7 @@ def popup_non_blocking(message: str, title: str="", auto_close_duration: int = -
     return popup_buttons(message, title, buttons=["OK"], auto_close_duration=auto_close_duration, non_blocking=True)
 
 def popup_no_buttons(message: str, title: str="") -> None:
+    """Display a message in a popup window without buttons."""
     popup_buttons(message, title, buttons=[])
 
 def popup_auto_close(message: str, title: str="", auto_close_duration: int = 3, buttons: list[str] = ["OK", "Cancel"], timeout_key="-TIMEOUT-") -> str:
@@ -92,9 +101,25 @@ def popup_ok(message: str, title: str="") -> str:
     """Display a message in a popup window.(Alias popup)"""
     return popup_buttons(message, title, buttons=["OK"])
 
-def popup_ok_cancel(message: str, title: str="") -> str:
-    """Display a message in a popup window with OK and Cancel buttons. Return "OK" or "Cancel"."""
-    return popup_buttons(message, title, buttons=["OK", "Cancel"])
+def popup_ok_cancel(
+        message: str,
+        title: Union[str,None] = None,
+        ok_label: Union[str, None] = None,
+        cancel_label: Union[str, None] = None,
+        ok_value: str = "OK",
+        cancel_value: str = "Cancel",
+        ) -> str:
+    """Display a message in a popup window with OK and Cancel buttons. Return "OK" or "Cancel" or eg.WINDOW_CLOSED."""
+    if ok_label is None:
+        ok_label = le.get_text("OK")
+    if cancel_label is None:
+        cancel_label = le.get_text("Cancel")
+    result = popup_buttons(message, title, buttons=[ok_label, cancel_label])
+    if result == ok_label:
+        return ok_value
+    if result == cancel_label:
+        return cancel_value
+    return result # pushed close button
 
 def popup_yes_no(
                 message: str, # question message
@@ -521,6 +546,42 @@ def popup_listbox(
     win.close()
     return result
 
+def popup_image(
+        message: str,
+        title: Union[str,None] = None,
+        image_path: Union[str,None] = None,
+        image_data: Union[bytes,None] = None,
+        size: tuple[int,int] = (400, 300),
+        ok_label: Union[str, None] = None,
+        ok_value: str = "OK",
+        cancel_label: Union[str, None] = None,
+        cancel_value: str = "Cancel",
+        font: Union[FontType, None] = None,
+        ) -> str:
+    """Display an image in a popup window. Return the text entered."""
+    if title is None:
+        title = message
+    if ok_label is None:
+        ok_label = le.get_text("OK")
+    if cancel_label is None:
+        cancel_label = le.get_text("Cancel")
+    win = eg.Window(title, layout=[
+        [eg.Text(message)],
+        [eg.Image(image_path, image_data, size=size)],
+        [eg.Button(ok_label, width=9), eg.Button(cancel_label, width=5)]
+    ], modal=True, font=font)
+    result = cancel_value
+    while win.is_alive():
+        event, _ = win.read()
+        if event == ok_label:
+            result = ok_value
+            break
+        if event == cancel_label:
+            break
+    win.close()
+    return result
+
+
 #------------------------------------------------------------------------------
 # TKinter alias
 #------------------------------------------------------------------------------
@@ -541,7 +602,7 @@ def show_message(
         title: Union[str,None] = None
     ) -> None:
     """show message in a popup window"""
-    title = title if title is not None else utils.get_text("Information")
+    title = title if title is not None else le.get_text("Information")
     messagebox.showinfo(title, message)
 
 def show_info(
@@ -549,7 +610,7 @@ def show_info(
         title: Union[str,None] = None
     ) -> None:
     """show message in a popup window"""
-    title = title if title is not None else utils.get_text("Information")
+    title = title if title is not None else le.get_text("Information")
     messagebox.showinfo(title, message)
 
 def msgbox(
@@ -557,13 +618,17 @@ def msgbox(
         title: Union[str,None] = None
     ) -> None:
     """show message in a popup window like VB"""
-    title = title if title is not None else utils.get_text("Information")
+    title = title if title is not None else le.get_text("Information")
     messagebox.showinfo(title, message)
 
 #------------------------------------------------------------------------------
 # TkEasyGUI original dialogs
 #------------------------------------------------------------------------------
-def input(message: str, title: str="", default: str="") -> str:
+def input(
+        message: str,
+        title: Union[str,None] = None,
+        default: str = ""
+    ) -> str:
     """Display a message in a popup window with a text entry. Return the text entered."""
     return popup_input(message, title, default)
 
@@ -572,11 +637,12 @@ def print(*args, **kw) -> None:
     lines = " ".join([str(a) for a in args])
     popup(lines)
 
-def confirm(question: str, title: Union[str,None]=None) -> bool:
+def confirm(
+        question: str,
+        title: Union[str,None] = None
+    ) -> bool:
     """Display a message in a popup window with Yes and No buttons. Return True or False."""
-    if title is None:
-        title = utils.get_text("Question")
-    return popup_yes_no(question, title) == "Yes"
+    return popup_yes_no(question, title, yes_value="Yes") == "Yes"
 
 #------------------------------------------------------------------------------
 # To prevent the display of an empty window
