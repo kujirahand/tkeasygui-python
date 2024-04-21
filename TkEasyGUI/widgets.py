@@ -428,7 +428,7 @@ class Window:
             if key in self._event_hooks:
                 flag_stop = self._dispatch_event_hooks(key, values)
                 if flag_stop:
-                    key = f"{key}-stopped/hide" # change event name
+                    key = f"{key}-stopped" # change event name
                     values = self.get_values() # collect values again
             # If an event hidden from the user occurs, continue to use the mainloop.
             if key.endswith("/hide"):
@@ -2774,7 +2774,9 @@ class Table(Element):
 # Browse elements
 
 class FileBrowse(Element):
-    """FileBrowse element."""
+    """
+    FileBrowse element.
+    """
     def __init__(
                 self, button_text: str="...",
                 key: Union[str, None] = None,

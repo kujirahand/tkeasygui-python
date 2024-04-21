@@ -50,6 +50,8 @@ Here is a list of elements:
 - [FileSaveAs](https://github.com/kujirahand/tkeasygui-python/blob/main/docs/TkEasyGUI/widgets-py.md#filesaveas)
 - [FolderBrowse](https://github.com/kujirahand/tkeasygui-python/blob/main/docs/TkEasyGUI/widgets-py.md#folderbrowse)
 - [ColorBrowse](https://github.com/kujirahand/tkeasygui-python/blob/main/docs/TkEasyGUI/widgets-py.md#colorbrowse)
+- [ListBrowse](https://github.com/kujirahand/tkeasygui-python/blob/main/docs/TkEasyGUI/widgets-py.md#listbrowse)
+- [MultilineBrowse](https://github.com/kujirahand/tkeasygui-python/blob/main/docs/TkEasyGUI/widgets-py.md#multilinebrowse)
 
 ### TkEasyGUI Utilities
 

@@ -27,5 +27,7 @@
     "FileSaveAsBrowse",
     "FileSaveAs",
     "FolderBrowse",
-    "ColorBrowse"
+    "ColorBrowse",
+    "ListBrowse",
+    "MultilineBrowse"
 ]

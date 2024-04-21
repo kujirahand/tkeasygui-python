@@ -35,7 +35,7 @@ Convert RGB color(16bit tuple) to HTML color name.
 def convert_color_html(color_name: str) -> str:
 ```
 
-- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/utils.py#L176)
+- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/utils.py#L177)
 
 ## convert_color_rgb16
 
@@ -45,7 +45,7 @@ Convert color to RGB, return (r, g, b) tuple. range=0-65535
 def convert_color_rgb16(color_name: str) -> tuple[int, int, int]:
 ```
 
-- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/utils.py#L171)
+- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/utils.py#L172)
 
 ## generate_element_id
 
@@ -55,7 +55,7 @@ Generate a unique id for a value element.
 def generate_element_id() -> int:
 ```
 
-- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/utils.py#L211)
+- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/utils.py#L212)
 
 ## generate_element_style_key
 
@@ -65,7 +65,7 @@ Get a unique id for an element.
 def generate_element_style_key(element_type: str) -> int:
 ```
 
-- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/utils.py#L188)
+- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/utils.py#L189)
 
 ## get_clipboard
 
@@ -85,7 +85,7 @@ Get current theme
 def get_current_theme() -> str:
 ```
 
-- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/utils.py#L149)
+- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/utils.py#L150)
 
 ## get_platform
 
@@ -118,7 +118,7 @@ print(get_themes())
 def get_tnemes() -> list[str]:
 ```
 
-- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/utils.py#L138)
+- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/utils.py#L135)
 
 ## get_ttk_style
 
@@ -158,7 +158,7 @@ Register element key.
 def register_element_key(key: str) -> bool:
 ```
 
-- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/utils.py#L203)
+- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/utils.py#L204)
 
 ## set_PySimpleGUI_compatibility
 
@@ -191,25 +191,25 @@ print(get_themes())
 def set_default_theme() -> None:
 ```
 
-- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/utils.py#L153)
+- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/utils.py#L154)
 
 ## set_theme
 
-Change look and feel
+Change look and feel --- [TODO] Currently, the implementation is incomplete.
 
 ```py
 def set_theme(name: str) -> None:
 ```
 
-- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/utils.py#L130)
+- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/utils.py#L127)
 
 ## theme
 
-Set theme
+Set theme (alias of set_theme)
 
 ```py
 def theme(name: str) -> None:
 ```
 
-- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/utils.py#L126)
+- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/utils.py#L146)
 
