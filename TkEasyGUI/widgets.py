@@ -756,7 +756,8 @@ class Element:
         self.has_font_prop: bool = True
         self.col_no: int = -1
         self.row_no: int = -1
-    
+        self.disabled: bool = False
+
     def get_name(self) -> str:
         """Get key of element."""
         if self.key is None:
@@ -1314,28 +1315,28 @@ class Menu(Element):
 class Button(Element):
     """Button element."""
     def __init__(
-                self,
-                button_text: str = "",
-                key: Union[str, None] = None,
-                disabled: bool = None,
-                size: Union[tuple[int, int], None] = None,
-                use_ttk_buttons: Union[bool, None] = None,
-                tooltip: Union[str, None] = None, # (TODO) tooltip
-                button_color: Union[str, tuple[str, str], None] = None,
-                # text props
-                text_align: Union[TextAlign, None] = "left", # text align
-                font: Union[FontType, None] = None, # font
-                color: Union[str, None] = None, # text color
-                text_color: Union[str, None] = None, # same as color
-                background_color: Union[str, None] = None, # background color
-                # pack props
-                expand_x: bool = False,
-                expand_y: bool = False,
-                pad: Union[PadType, None] = None,
-                # other
-                metadata: Union[dict[str, Any], None] = None,
-                **kw
-                ) -> None:
+        self,
+        button_text: str = "",
+        key: Union[str, None] = None,
+        disabled: bool = None,
+        size: Union[tuple[int, int], None] = None,
+        tooltip: Union[str, None] = None,  # (TODO) tooltip
+        button_color: Union[str, tuple[str, str], None] = None,
+        # text props
+        text_align: Union[TextAlign, None] = "left",  # text align
+        font: Union[FontType, None] = None,  # font
+        color: Union[str, None] = None,  # text color
+        text_color: Union[str, None] = None,  # same as color
+        background_color: Union[str, None] = None,  # background color
+        # pack props
+        expand_x: bool = False,
+        expand_y: bool = False,
+        pad: Union[PadType, None] = None,
+        # other
+        use_ttk_buttons: bool = False,
+        metadata: Union[dict[str, Any], None] = None,
+        **kw,
+    ) -> None:
         key = button_text if (key is None) or (key == "") else key
         super().__init__("Button", "TButton", key, False, metadata, **kw)
         self.use_ttk = use_ttk_buttons # can select ttk or tk button
@@ -1345,8 +1346,7 @@ class Button(Element):
         if size is not None:
             self.props["size"] = size
         self.props["text"] = button_text
-        if tooltip is not None:
-            pass # self.props["tooltip"] = tooltip
+        self.tooltip: Union[str,None] = tooltip
         if button_color is not None:
             self.set_button_color(button_color, update=False)
         self._set_text_props(font=font, text_align=text_align, color=color, text_color=text_color, background_color=background_color)

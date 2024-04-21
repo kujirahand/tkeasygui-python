@@ -5,6 +5,7 @@ import subprocess
 import tkinter.filedialog as filedialog
 import tkinter.messagebox as messagebox
 from datetime import datetime, timedelta
+from pprint import pprint
 from tkinter import colorchooser
 from typing import Any, Union
 
@@ -359,14 +360,20 @@ def popup_get_date(
         message: str = "",
         title: str = "",
         current_date: Union[datetime, None] = None,
-        font: Union[tuple[str, int], None] = None
+        font: Union[tuple[str, int], None] = None,
+        sunday_first: bool = False, # Sunday is the first day of the week
         ) -> Union[datetime, None]:
     """Display a calendar in a popup window. Return the datetime entered or None."""
     if current_date is None:
         current_date = datetime.now()
     # week names
     week_names = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"]
-    week_colors = [None, None, None, None, None, "blue", "red"]
+    week_colors = ["black", "black", "black", "black", "black", "blue", "red"]
+    if sunday_first:
+        week_names = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"]
+        week_colors = ["red", "black", "black", "black", "black", "black", "blue"]
+    days_size = [4, 1]
+    head_size = [4, 1]
     # set
     result = None
     layout = []
@@ -376,32 +383,76 @@ def popup_get_date(
         layout.append([eg.HSeparator()])
     # select month
     month_button = [
-        eg.Button("←", key="-prev-"),
-        eg.Button(f"{current_date.year:04}-{current_date.month:02}-{current_date.day:02}", key="-ymd-", size=[10,1]),
-        eg.Button("→", key="-next-"),
-        eg.Button("▲", key="-today-"),
+        eg.Frame(
+            "",
+            layout=[
+                [
+                    eg.Button("◀", key="-prev-"),
+                    eg.Button(
+                        f"{current_date.year:04}-{current_date.month:02}-{current_date.day:02}",
+                        key="-ymd-",
+                        size=[10, 1],
+                    ),
+                    eg.Button("▶", key="-next-"),
+                    # eg.Button("○", key="-today-"),
+                ]
+            ],
+            expand_x=True,
+            text_align="center",
+            relief="flat",
+            pady=[2, 4],
+        )
     ]
     layout.append(month_button)
-    week_buttons = [
-        eg.Button(name, size=[2,1], disabled=True, text_color=week_colors[i])
-        for i, name in enumerate(week_names)]
-    layout.append(week_buttons)
+    week_labels = [
+        eg.Text(
+            name,
+            size=head_size,
+            # disabled=True,
+            text_color=week_colors[i],
+            text_align="center",
+            background_color="white",
+            padx=2,
+            pady=1,
+            color=week_colors[i],
+        )
+        for i, name in enumerate(week_names)
+    ]
+    layout.append(week_labels)
     # get top left day
     def get_top_date(current: datetime) -> datetime:
         # Return day of the week, where Monday == 0 ... Sunday == 6.
         first_day: datetime = datetime(year=current.year, month=current.month, day=1)
         week_i:int = first_day.weekday()
         top_date = first_day
-        if week_i >= 1:
-            top_date = first_day - timedelta(days=week_i)
+        if sunday_first:
+            # Sunday first
+            if week_i != 6:
+                top_date = first_day - timedelta(days=week_i + 1)
+        else:
+            # Monday first
+            if week_i >= 1:
+                top_date = first_day - timedelta(days=week_i)
         return top_date
+    # create calendar days buttons
     cols = []
     cur = get_top_date(current_date)
-    for i in range(35):
-        cols.append(eg.Button(
-            cur.day, size=[2,1], key=f"-b{i}-",
-            text_color=week_colors[i%7],
-            disabled=(current_date.month != cur.month)))
+    for i in range(42):
+        cols.append(
+            eg.Text(
+                cur.day,
+                size=days_size,
+                key=f"-b{i}-",
+                text_color=week_colors[i % 7],
+                background_color="white",
+                text_align="center",
+                enable_events=True,
+                disabled=(current_date.month != cur.month),
+                padx=2,
+                pady=1,
+                metadata={"date": datetime.fromtimestamp(cur.timestamp())}
+            )
+        )
         if i % 7 == 6:
             layout.append(cols)
             cols = []
@@ -414,17 +465,23 @@ def popup_get_date(
     # update label
     def update_date(top: datetime, current_date: datetime):
         cur = datetime(year=top.year, month=top.month, day=top.day)
-        for i in range(35):
-            btn: eg.Button = window[f"-b{i}-"]
+        for i in range(42):
+            btn: eg.Text = window[f"-b{i}-"]
+            fg = week_colors[i%7]
+            bg = "white"
             # selected
             selected = current_date.month == cur.month and current_date.day == cur.day
-            # todo: change color?
-            # fg = "green" if selected else week_colors[i%7]
-            # bg = "blue" if selected else "white"
+            if selected:
+                fg = "red"
+                bg = "#aaeeff"
+                if i % 7 == 6:
+                    fg = "black"
             # update
-            btn.set_text(cur.day if not selected else f"*{cur.day}*")
+            btn.set_text(cur.day)
             btn.set_disabled(current_date.month != cur.month)
-            # btn.update(text_color=fg, background_color=bg)
+            btn.update(text_color=fg, background_color=bg)
+            btn.metadata["date"] = datetime.fromtimestamp(cur.timestamp())
+            # next day
             cur = cur + timedelta(days=1)
         window["-ymd-"].update(f"{current_date.year:04}-{current_date.month:02}-{current_date.day:02}")
     # update result
@@ -432,7 +489,7 @@ def popup_get_date(
         top = get_top_date(datetime(year=current_date.year, month=current_date.month, day=1))
         update_date(top, current_date)
     # calendar window
-    window = eg.Window(title, layout, font=font, modal=True)
+    window = eg.Window(title, layout, font=font, modal=True, row_padding=0)
     result = None
     while window.is_alive():
         event, _ = window.read()
@@ -442,7 +499,7 @@ def popup_get_date(
         elif event == "Cancel":
             result = None
             break
-        elif event == "-today-":
+        elif event == "-today-" or event == "-ymd-":
             current_date = datetime.now()
             update_date(get_top_date(current_date), current_date)
         elif event == "-prev-":
@@ -460,10 +517,17 @@ def popup_get_date(
             current_date = datetime(year=y, month=m, day=1)
             update_date(get_top_date(current_date), current_date)
         elif event.startswith("-b"):
-            elm:eg.Button = window[event]
-            label = str(elm.get_text()).replace("*", "")
-            current_date = datetime(year=current_date.year, month=current_date.month, day=int(label))
-            update_result(current_date)
+            elm:eg.Text = window[event]
+            if elm is None:
+                continue
+            sel_date: datetime = elm.metadata["date"]
+            if sel_date.month == current_date.month:
+                current_date = sel_date
+                update_result(current_date)
+            else:
+                pprint("changed month")
+                current_date = sel_date
+                update_date(get_top_date(current_date), current_date)
     window.close()
     return result
 
