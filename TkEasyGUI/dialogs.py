@@ -358,14 +358,21 @@ def popup_scrolled(
 
 def popup_get_date(
         message: str = "",
-        title: str = "",
+        title: Union[str, None] = None,
         current_date: Union[datetime, None] = None,
         font: Union[tuple[str, int], None] = None,
+        ok_label: Union[str, None] = None,
+        cancel_label: Union[str, None] = None,
+        date_format: Union[str, None] = None,
         sunday_first: bool = False, # Sunday is the first day of the week
         ) -> Union[datetime, None]:
     """Display a calendar in a popup window. Return the datetime entered or None."""
     if current_date is None:
         current_date = datetime.now()
+    if date_format is None:
+        date_format = le.get_text("__date_format__", "%Y-%m-%d")
+    if title is None:
+        title = le.get_text("Select date")
     # week names
     week_names = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"]
     week_colors = ["black", "black", "black", "black", "black", "blue", "red"]
@@ -387,14 +394,11 @@ def popup_get_date(
             "",
             layout=[
                 [
-                    eg.Button("◀", key="-prev-"),
-                    eg.Button(
-                        f"{current_date.year:04}-{current_date.month:02}-{current_date.day:02}",
-                        key="-ymd-",
-                        size=[10, 1],
-                    ),
-                    eg.Button("▶", key="-next-"),
-                    # eg.Button("○", key="-today-"),
+                    eg.Button("ᐊ", key="-prev2-", padx=0, size=[1, 1]),
+                    eg.Button("◀", key="-prev-", padx=0, size=[1, 1]),
+                    eg.Button(current_date.strftime(date_format), key="-ymd-", size=[10, 1]),
+                    eg.Button("▶", key="-next-", padx=0, size=[1, 1]),
+                    eg.Button("ᐅ", key="-next2-", padx=0, size=[1, 1]),
                 ]
             ],
             expand_x=True,
@@ -408,10 +412,9 @@ def popup_get_date(
         eg.Text(
             name,
             size=head_size,
-            # disabled=True,
             text_color=week_colors[i],
             text_align="center",
-            background_color="white",
+            # background_color="white",
             padx=2,
             pady=1,
             color=week_colors[i],
@@ -458,10 +461,12 @@ def popup_get_date(
             cols = []
         cur = cur + timedelta(days=1)
     layout.append([eg.HSeparator()])
-    layout.append([
-        # eg.Text(f"{current_date.year}-{current_date.month}-{current_date.day}", key="-result-"), 
-        # eg.Text("|"),
-        eg.Button("OK"), eg.Button("Cancel")])
+    # ok, cancel buttons
+    if ok_label is None:
+        ok_label = le.get_text("OK")
+    if cancel_label is None:
+        cancel_label = le.get_text("Cancel")
+    layout.append([eg.Button(ok_label, size=(8, 1)), eg.Button(cancel_label, size=(5, 1))])
     # update label
     def update_date(top: datetime, current_date: datetime):
         cur = datetime(year=top.year, month=top.month, day=top.day)
@@ -483,52 +488,57 @@ def popup_get_date(
             btn.metadata["date"] = datetime.fromtimestamp(cur.timestamp())
             # next day
             cur = cur + timedelta(days=1)
-        window["-ymd-"].update(f"{current_date.year:04}-{current_date.month:02}-{current_date.day:02}")
+        window["-ymd-"].update(current_date.strftime(date_format))
     # update result
     def update_result(current_date):
         top = get_top_date(datetime(year=current_date.year, month=current_date.month, day=1))
         update_date(top, current_date)
-    # calendar window
-    window = eg.Window(title, layout, font=font, modal=True, row_padding=0)
     result = None
-    while window.is_alive():
-        event, _ = window.read()
-        if event == "OK":
-            result = current_date
-            break
-        elif event == "Cancel":
-            result = None
-            break
-        elif event == "-today-" or event == "-ymd-":
-            current_date = datetime.now()
-            update_date(get_top_date(current_date), current_date)
-        elif event == "-prev-":
-            y, m = current_date.year, current_date.month - 1
-            if m == 0:
-                y -= 1
-                m = 12
-            current_date = datetime(year=y, month=m, day=1)
-            update_date(get_top_date(current_date), current_date)
-        elif event == "-next-":
-            y, m = current_date.year, current_date.month + 1
-            if m == 13:
-                y += 1
-                m = 1
-            current_date = datetime(year=y, month=m, day=1)
-            update_date(get_top_date(current_date), current_date)
-        elif event.startswith("-b"):
-            elm:eg.Text = window[event]
-            if elm is None:
-                continue
-            sel_date: datetime = elm.metadata["date"]
-            if sel_date.month == current_date.month:
-                current_date = sel_date
-                update_result(current_date)
-            else:
-                pprint("changed month")
-                current_date = sel_date
+    # calendar window
+    with eg.Window(title, layout, font=font, modal=True, row_padding=0) as window:
+        for event, _ in window.event_iter():
+            if event == ok_label:
+                result = current_date
+                break
+            elif event == cancel_label:
+                result = None
+                break
+            elif event == "-today-" or event == "-ymd-":
+                current_date = datetime.now()
                 update_date(get_top_date(current_date), current_date)
-    window.close()
+            elif event == "-prev-":
+                y, m = current_date.year, current_date.month - 1
+                if m == 0:
+                    y -= 1
+                    m = 12
+                current_date = datetime(year=y, month=m, day=1)
+                update_date(get_top_date(current_date), current_date)
+            elif event == "-next-":
+                y, m = current_date.year, current_date.month + 1
+                if m == 13:
+                    y += 1
+                    m = 1
+                current_date = datetime(year=y, month=m, day=1)
+                update_date(get_top_date(current_date), current_date)
+            elif event == "-prev2-":
+                y, m  = current_date.year - 1, current_date.month
+                current_date = datetime(year=y, month=m, day=1)
+                update_date(get_top_date(current_date), current_date)
+            elif event == "-next2-":
+                y, m = current_date.year + 1, current_date.month
+                current_date = datetime(year=y, month=m, day=1)
+                update_date(get_top_date(current_date), current_date)
+            elif event.startswith("-b"):
+                elm:eg.Text = window[event]
+                if elm is None:
+                    continue
+                sel_date: datetime = elm.metadata["date"]
+                if sel_date.month == current_date.month:
+                    current_date = sel_date
+                    update_result(current_date)
+                else:
+                    current_date = sel_date
+                    update_date(get_top_date(current_date), current_date)
     return result
 
 #------------------------------------------------------------------------------

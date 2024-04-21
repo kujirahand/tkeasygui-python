@@ -17,7 +17,9 @@ _locale_messages: dict[str, dict[str, str]] = {
         "Warning": "警告",
         "Error": "エラー",
         "Question": "質問",
-        "Text input": "テキスト入力",
+        "Text Input": "テキスト入力",
+        "Select date": "日付の選択",
+        "__date_format__": "%Y-%m-%d",
     },
     "zh": {
         "OK": "好",
@@ -30,6 +32,8 @@ _locale_messages: dict[str, dict[str, str]] = {
         "Error": "错误",
         "Question": "问题",
         "Text input": "文本输入",
+        "Select date": "选择日期",
+        "__date_format__": "%Y年%m月%d日",
     },
 }
 
