@@ -19,15 +19,13 @@
 
 ## Install
 
-Install from pypi
-
+Install package from [PyPI](https://pypi.org/project/TkEasyGUI/).
 
 ```sh
 python -m pip install TkEasyGUI
 ```
 
-Install from GitHub Repository
-
+Install package from [GitHub Repository](https://github.com/kujirahand/tkeasygui-python).
 
 ```sh
 python -m pip install git+https://github.com/kujirahand/tkeasygui-python
@@ -35,16 +33,25 @@ python -m pip install git+https://github.com/kujirahand/tkeasygui-python
 
 - (memo) Updating from older versions (less than 0.2.24) will fail. ([See the solution](https://github.com/kujirahand/tkeasygui-python/blob/main/docs/installation_trouble.md))
 
-## How to use
+## How to use - popup dialogs
 
 Using TkEasyGUI is simple. If you only want to display a dialog, it requires just two lines of code.
 
 ```py
 import TkEasyGUI as eg
-eg.popup("A joyful heart is good medicine.")
+eg.print("A joyful heart is good medicine.") # popup message
+eg.popup("A joyful heart is good medicine.") # same as eg.print function
 ```
 
-###
+Ask the user for their name and display that name in the window.
+
+```py
+import TkEasyGUI as eg
+name = eg.input("What is your name?")
+eg.print(f"Hello, {name}.")
+```
+
+### How to use - widgets
 
 To create a simple window with only labels and buttons, you would write as follows:
 
@@ -81,7 +88,6 @@ while True:
 window.close()
 ```
 
-
 ## Samples
 
 We have prepared a selection of samples to demonstrate simple usage. Please check them out.
@@ -116,4 +122,3 @@ Below is a detailed list of classes and methods.
 
 - [pypi.org > TkEasyGUI](https://pypi.org/project/tkeasygui/)
 - [GitHub > TkEasyGUI](https://github.com/kujirahand/tkeasygui-python/)
-
