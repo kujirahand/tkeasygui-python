@@ -123,12 +123,9 @@ def _window_pop(win: Window) -> None:
 #------------------------------------------------------------------------------
 # theme
 _tkeasygui_info: dict[str, Any] = {}
-def theme(name: str) -> None:
-    """Set theme"""
-    set_theme(name)
 
 def set_theme(name: str) -> None:
-    """Change look and feel"""
+    """Change look and feel --- [TODO] Currently, the implementation is incomplete."""
     win = get_root_window()
     win.withdraw()
     style = get_ttk_style()
@@ -145,6 +142,10 @@ def get_tnemes() -> list[str]:
     win = get_root_window()
     win.withdraw()
     return ttk.Style().theme_names()
+
+def theme(name: str) -> None:
+    """Set theme (alias of set_theme)"""
+    set_theme(name)
 
 def get_current_theme() -> str:
     """Get current theme"""
