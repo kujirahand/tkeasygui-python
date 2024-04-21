@@ -3,7 +3,7 @@ import TkEasyGUI as sg
 # import PySimpleGUI as sg
 items = [f"Item{i}" for i in range(1, 30)]
 
-window = sg.Window("Inch to cm", layout=[
+window = sg.Window("Listbox test", layout=[
     [sg.Text("Please select item:")],
     [sg.Listbox(
         items,
