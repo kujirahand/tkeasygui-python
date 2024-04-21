@@ -2978,6 +2978,49 @@ class ColorBrowse(FileBrowse):
             self.window._event_handler(self.key, {"event": result, "event_type": "change"})
         return result
 
+class ListBrowse(FileBrowse):
+    """ListBrowse element."""
+
+    def __init__(
+        self,
+        items: list[str] = [],
+        button_text: str = "...",
+        message: str = "",
+        key: Union[str, None] = None,
+        target_key: Union[str, None] = None,
+        title: str = "",
+        font: Union[FontType, None] = None,
+        enable_events: bool = False,  # enable changing events
+        # other
+        metadata: Union[dict[str, Any], None] = None,
+        **kw,
+    ) -> None:
+        super().__init__("ListBrowse", "", key, False, metadata, **kw)
+        self.target_key = target_key
+        self.title = title
+        self.props["text"] = button_text
+        self.enable_events = enable_events
+        self.items = items
+        self.message = message
+        self.font = font
+
+    def show_dialog(self, *args) -> Union[str, None]:
+        """Show Listbox dialog"""
+        target: tk.Widget = self.get_prev_widget(self.target_key)
+        # popup
+        result = dialogs.popup_listbox(
+            items=self.items,
+            message=self.message,
+            title=self.title,
+            font=self.font,
+        )
+        if (target is not None) and (result is not None) and (result != ""):
+            target.update(result)
+            self.window._event_handler(
+                self.key, {"event": result, "event_type": "change"}
+            )
+        return result
+
 def rgb(r: int, g: int, b: int) -> str:
     """Convert RGB to Hex"""
     r = r & 0xFF
