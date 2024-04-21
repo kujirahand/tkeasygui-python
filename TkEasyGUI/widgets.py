@@ -398,32 +398,45 @@ class Window:
         root.update() 
         # set focus timer (once when window show)
         self.window.after("idle", _focus_window, self)
-        # mainloop
+        # mainloop for hook
+        key, values = (None, {}) # set default key and values
+        # mainloop - read a event
         while True:
             # set timeout
             if self.timeout_id is not None:
                 self.window.after_cancel(self.timeout_id)
             self.timeout_id = self.window.after("idle", self._window_idle_handler)
+            # -----------------------------------------------------
             # mainloop - should be called only once
+            # -----------------------------------------------------
             root.mainloop()
+            # -----------------------------------------------------
             # after mainloop, check events
-            if not self.events.empty():
-                break
-            # check timeout
-            if timeout is None:
-                continue # no timeout
-            interval = time_checker_end(timeout_chcker_id)
-            if interval > timeout:
-                return (self.timeout_key, {}) # return timeout event
-        # return event
-        key, values = self.events.get()
-        if key in self._event_hooks:
-            flag_stop = self._dispatch_event_hooks(key, values)
-            if flag_stop:
-                key = f"{key}-stopped" # change event name
-                values = self.get_values() # collect values again
+            # -----------------------------------------------------
+            # timeout ?
+            if timeout is not None:
+                # check interval
+                interval = time_checker_end(timeout_chcker_id)
+                if interval > timeout:
+                    key, values = (self.timeout_key, {}) # create timeout event
+                    return (key, values)
+            # get ui event
+            if self.events.empty():
+                continue
+            key, values = self.events.get()
+            # _event_hooks
+            if key in self._event_hooks:
+                flag_stop = self._dispatch_event_hooks(key, values)
+                if flag_stop:
+                    key = f"{key}-stopped/hide" # change event name
+                    values = self.get_values() # collect values again
+            # If an event hidden from the user occurs, continue to use the mainloop.
+            if key.endswith("/hide"):
+                continue # hide system events
+            # return a event
+            break
         return (key, values)
-    
+
     def event_iter(self, timeout: Union[int, None] = None, timeout_key: str=TIMEOUT_KEY) -> Any:
         """
         Return generator with event and values
@@ -893,6 +906,8 @@ class Element:
     def bind_events(self, events: dict[str, str], event_mode: EventMode="user") -> Element:
         """
         Bind user events. @see [custom events](/docs/custom_events.md)
+        The specification is such that if the suffix "/hide" is attached to an event key, that event key will not be returned to the user.
+        @see [Window.read](#windowread)
         """
         for event_name, handle_name in events.items():
             self.bind(event_name, handle_name, event_mode=event_mode)
@@ -1846,7 +1861,20 @@ class Multiline(Element):
         # readonly
         if self.readonly:
             self.set_readonly(self.readonly)
+        # event_hook
+        if (self.text_align is not None) and (self.text_align != "left"):
+            hook_event_key = "--text_align_return/hide"
+            self.bind_events({"<Return>": hook_event_key})
+            win.register_event_hooks({
+                f"{self.key}{hook_event_key}": [ self._hook_return_event_for_text_align ]
+            })
         return self.widget
+    
+    def _hook_return_event_for_text_align(self, event, values) -> None:
+        """Hook Return key event for text_align."""
+        if event == f"{self.key}--text_align_return/hide": # @see Multiline.create > event_hook
+            text = self.get_text()
+            self.set_text(text)
 
     def get(self) -> Any:
         """Get the value of the widget."""
@@ -2756,6 +2784,7 @@ class FileBrowse(Element):
                 multiple_files: bool = False,
                 initial_folder: Union[str, None] = None,
                 save_as: bool = False,
+                enable_events: bool = False, # enable changing events
                 # other
                 metadata: Union[dict[str, Any], None] = None,
                 **kw
@@ -2768,16 +2797,18 @@ class FileBrowse(Element):
         self.multiple_files = multiple_files
         self.initial_folder = initial_folder
         self.props["text"] = button_text
-        self.bind_events({
-            "<Button-1>": "click",
-            "<Return>": "return",
-        }, "system")
+        self.enable_events = enable_events
 
     def create(self, win: Window, parent: tk.Widget) -> tk.Widget:
         self.widget = tk.Button(parent, **self.props)
         # hook
+        event_name = "--browse_action/hide"
+        self.bind_events({
+            "<Button-1>": event_name,
+            "<Return>": event_name,
+        })
         win.register_event_hooks({
-            self.key: [self.show_dialog]
+            f"{self.key}{event_name}": [self.show_dialog]
         })
         return self.widget
     
@@ -2811,6 +2842,8 @@ class FileBrowse(Element):
             result = ";".join(result)
         if (target is not None) and (result is not None) and (result != ""):
             target.update(result)
+            if self.enable_events:
+                self.window._event_handler(self.key, {"event": result, "event_type": "change"})
         return result
     
     def set_text(self, text: str) -> None:
@@ -2833,6 +2866,7 @@ class FilesBrowse(FileBrowse):
                 target_key: Union[str, None] = None,
                 title: str="",
                 file_types: tuple[tuple[str, str]] = (("All Files", "*.*"),),
+                enable_events: bool = False, # enable changing events
                 # other
                 metadata: Union[dict[str, Any], None] = None,
                 **kw
@@ -2842,6 +2876,7 @@ class FilesBrowse(FileBrowse):
         self.title = title
         self.file_types = file_types
         self.props["text"] = button_text
+        self.enable_events = enable_events
         # force set params
         self.multiple_files = True
         self.save_as = False
@@ -2855,6 +2890,7 @@ class FileSaveAsBrowse(FileBrowse):
                 target_key: Union[str, None] = None,
                 title: str = "",
                 file_types: tuple[tuple[str, str]] = (("All Files", "*.*"),),
+                enable_events: bool = False, # enable changing events
                 # other
                 metadata: Union[dict[str, Any], None] = None,
                 **kw
@@ -2864,6 +2900,7 @@ class FileSaveAsBrowse(FileBrowse):
         self.title = title
         self.file_types = file_types
         self.props["text"] = button_text
+        self.enable_events = enable_events
         # force set params
         self.multiple_files = False
         self.save_as = True
@@ -2881,6 +2918,7 @@ class FolderBrowse(FileBrowse):
                 target_key: Union[str, None] = None,
                 default_path: Union[str, None] = None,
                 title: str = "",
+                enable_events: bool = False, # enable changing events
                 # other
                 metadata: Union[dict[str, Any], None] = None,
                 **kw
@@ -2890,6 +2928,7 @@ class FolderBrowse(FileBrowse):
         self.title = title
         self.default_path = default_path
         self.props["text"] = button_text
+        self.enable_events = enable_events
     
     def show_dialog(self, *args) -> Union[str, None]:
         """Show file dialog"""
@@ -2901,6 +2940,8 @@ class FolderBrowse(FileBrowse):
         )
         if (target is not None) and (result is not None) and (result != ""):
             target.update(result)
+            if self.enable_events:
+                self.window._event_handler(self.key, {"event": result, "event_type": "change"})
         return result
 
 class ColorBrowse(FileBrowse):
@@ -2912,6 +2953,7 @@ class ColorBrowse(FileBrowse):
                 target_key: Union[str, None] = None,
                 default_color: Union[str, None] = None,
                 title: str="",
+                enable_events: bool = False, # enable changing events
                 # other
                 metadata: Union[dict[str, Any], None] = None,
                 **kw
@@ -2921,6 +2963,7 @@ class ColorBrowse(FileBrowse):
         self.title = title
         self.default_color = default_color
         self.props["text"] = button_text
+        self.enable_events = enable_events
     
     def show_dialog(self, *args) -> Union[str, None]:
         """Show file dialog"""
@@ -2932,15 +2975,18 @@ class ColorBrowse(FileBrowse):
         )
         if (target is not None) and (result is not None) and (result != ""):
             target.update(result)
+            self.window._event_handler(self.key, {"event": result, "event_type": "change"})
         return result
 
 def rgb(r: int, g: int, b: int) -> str:
+    """Convert RGB to Hex"""
     r = r & 0xFF
     g = g & 0xFF
     b = b & 0xFF
     return f"#{r:02x}{g:02x}{b:02x}"
 
 def image_resize(img: PILImage, size: tuple[int, int]) -> PILImage:
+    """Resize image"""
     if size[0] < size[1]:
         r = size[0] / img.size[0]
     else:
@@ -3000,9 +3046,11 @@ def imagefile_to_bytes(filename: str) -> bytes:
     return img_bytes
 
 def time_checker_start() -> datetime:
+    """timer start"""
     return datetime.now()
 
 def time_checker_end(start_time: datetime) -> int:
+    """timer end"""
     elapsed_time = (datetime.now() - start_time).total_seconds()
     msec = int(elapsed_time * 1000)
     return msec
