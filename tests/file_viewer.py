@@ -32,7 +32,10 @@ def run_program(filename):
     subprocess.run([sys.executable, filename], cwd=file_dir)
 
 layout = [
-    [sg.Text("TkEasyGUI samples:")],
+    [
+        sg.Text("TkEasyGUI samples:"),
+        sg.Text(f"(TkEasyGUI v.{sg.__version__})")
+    ],
     [
         # left sizde listbox
         sg.Listbox( 

@@ -45,21 +45,23 @@ def popup_buttons(
     if title is None:
         title = le.get_text("Question")
     result = buttons[-1] if len(buttons) > 0 else None
+    
     # create window
     win = eg.Window(title, layout=[
         [eg.Text(message)],
         [eg.Button(s, width=9) for s in buttons],
     ], modal=True)
+    
     # event loop
     timer_id = eg.time_checker_start()
     autoclose_sec: int = auto_close_duration * 1000
     if non_blocking:
         # TODO: popup non blocking window
         pass
-    while True:
+    while win.is_alive():
         event, _ = win.read(timeout=100, timeout_key=eg.WINDOW_TIMEOUT)
-        if event is eg.WINDOW_CLOSED:
-            result = eg.WIN_CLOSED
+        if event == eg.WINDOW_CLOSED:
+            result = eg.WINDOW_CLOSED
         if event in buttons:
             result = event
             break
