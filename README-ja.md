@@ -31,25 +31,44 @@ python -m pip install git+https://github.com/kujirahand/tkeasygui-python
 
 - (memo) v0.2.24未満のバージョンからのインストールに失敗する場合があります。その場合、[こちら](docs/installation_trouble.md)を確認してください。
 
-## 簡単な使い方
+## 簡単な使い方 - ポップアップダイアログを使う
+
+TkEasyGUIの使い方は簡単です。もし、ダイアログにメッセージを表示したい場合、次のように記述します。
+
+```py
+import TkEasyGUI as eg
+eg.print("A joyful heart is good medicine.")
+```
+
+入力ボックス付きのダイアログで尋ねることもできます。次のコードは、名前を尋ねて、続くダイアログに名前を表示します。
+
+```py
+import TkEasyGUI as eg
+name = eg.input("What is your name?")
+eg.print(f"Hello, {name}.")
+```
+
+## 簡単な使い方 - カスタムウィンドウを定義して使う
 
 ラベルとボタンのみを持つシンプルなウィンドウを作成するには、以下のように記述します。
 
 ```py
 import TkEasyGUI as eg
-# define layout
-layout = [[eg.Text("Hello, World!")],
-          [eg.Button("Exit")]]
-# create a window
-with eg.Window("test", layout) as window:
-    # event loop
-    for event, values in window.event_iter():
-        if event == "Exit":
-            eg.popup("Thank you.")
-            break
+# 画面レイアウトの定義
+layout = [
+    [eg.Text("Hello, World!")],
+    [eg.Button("OK")]
+]
+# ウィンドウを表示する
+window = eg.Window("Hello App", layout)
+# イベントループを処理する
+for event, values in window.event_iter():
+    if event == "OK":
+        eg.print("Thank you.")
+        break # ループを抜ける
 ```
 
-PySimpleGUIと同じイベントモデルの使い勝手で記述できます。
+有名GUIライブラリの`PySimpleGUI`と同じイベントモデルの使い勝手で記述できます。（多くのGUI部品でPySimpleGUIと互換性を持たせています。）
 
 ```py
 import TkEasyGUI as eg
@@ -97,7 +116,6 @@ PySimpleGUIと完全な互換性は考えていません。
 - ImageはPNGだけでなくJPEGも読み込み可能
 - 便利なイベントフックや一括イベント登録機能 - [docs/custom_events](docs/custom_events.md)
 - テキストボックス(Muliline/Input)に便利なCopy/Paste/Cutなどのメソッドを追加
-- OSの配色をデフォルトで利用
 
 ## リンク
 

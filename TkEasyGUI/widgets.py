@@ -437,23 +437,27 @@ class Window:
             break
         return (key, values)
 
-    def event_iter(self, timeout: Union[int, None] = None, timeout_key: str=TIMEOUT_KEY) -> Any:
+    def event_iter(self, timeout: Union[int, None] = None, timeout_key: str=TIMEOUT_KEY, auto_close: bool=True) -> Any:
         """
         Return generator with event and values
         **Example**
         ```py
         import TkEasyGUI as eg
         # create a window
-        with eg.Window("test", layout=[[eg.Button("Hello")]]) as window:
-            # event loop
-            for event, values in window.event_iter():
-                if event == "Hello":
-                    eg.popup("Hello, World!")
+        window = eg.Window("test", layout=[[eg.Button("Hello")]])
+        # event loop
+        for event, values in window.event_iter():
+            if event == "Hello":
+                eg.popup("Hello, World!")
         ```
        """
+        # event loop
         while self.is_alive():
             event, values = self.read(timeout=timeout, timeout_key=timeout_key)
             yield (event, values)
+        # close window
+        if auto_close:
+            self.close()
     
     def _dispatch_event_hooks(self, key: str, values: dict[str, Any]) -> bool:
         """Dispatch event hooks."""
@@ -579,6 +583,10 @@ class Window:
 
     def close(self) -> None:
         """Close the window."""
+        # already closed?
+        if not self.flag_alive:
+            return
+        # close window
         try:
             self.flag_alive = False
             _window_pop(self)
@@ -606,8 +614,12 @@ class Window:
     
     def show(self) -> None:
         """ Show hidden window (hide -> show)"""
-        self.window.deiconify()
-    
+        # check status
+        if self.is_hidden:
+            self.un_hide()
+        if self.minimized:
+            self.normal()
+
     def refresh(self) -> "Window":
         """Refresh window"""
         try:

@@ -39,8 +39,8 @@ Using TkEasyGUI is simple. If you only want to display a dialog, it requires jus
 
 ```py
 import TkEasyGUI as eg
-eg.print("A joyful heart is good medicine.") # popup message
-eg.popup("A joyful heart is good medicine.") # same as eg.print function
+# Displays the message in a popup dialog.
+eg.print("A joyful heart is good medicine.")
 ```
 
 Ask the user for their name and display that name in the window.
@@ -58,30 +58,32 @@ To create a simple window with only labels and buttons, you would write as follo
 ```py
 import TkEasyGUI as eg
 # define layout
-layout = [[eg.Text("Hello, World!")],
-          [eg.Button("Exit")]]
+layout = [
+    [eg.Text("Hello, World!")],
+    [eg.Button("OK")]
+]
 # create a window
-with eg.Window("test", layout) as window:
-    # event loop
-    for event, values in window.event_iter():
-        if event == "Exit":
-            eg.popup("Thank you.")
-            break
+window = eg.Window("Hello App", layout)
+# event loop
+for event, values in window.event_iter():
+    if event == "OK":
+        eg.print("Thank you.")
+        break
 ```
 
 You can describe it using an event model similar to the famous GUI library, PySimpleGUI.
 
 ```py
 import TkEasyGUI as eg
+
 # define layout
-layout = [[eg.Text("Hello, World!")],
-          [eg.Button("Exit")]]
+layout = [[eg.Text("Hello, World!")], [eg.Button("OK")]]
 # create a window
-window = eg.Window("test", layout)
+window = eg.Window("Hello App", layout)
 # event loop
 while True:
     event, values = window.read()
-    if event in ["Exit", eg.WINDOW_CLOSED]:
+    if event in ["OK", eg.WINDOW_CLOSED]:
         eg.popup("Thank you.")
         break
 # close window
