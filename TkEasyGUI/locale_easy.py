@@ -8,6 +8,7 @@ _locale: str = ""
 # locale messages
 _locale_messages: dict[str, dict[str, str]] = {
     "ja": {
+        "__date_format__": "%Y-%m-%d",
         "OK": "OK",
         "Cancel": "キャンセル",
         "Yes": "はい",
@@ -19,9 +20,16 @@ _locale_messages: dict[str, dict[str, str]] = {
         "Question": "質問",
         "Text Input": "テキスト入力",
         "Select date": "日付の選択",
-        "__date_format__": "%Y-%m-%d",
+        "Copy": "コピー",
+        "Paste": "貼り付け",
+        "Cut": "切り取り",
+        "File": "ファイル",
+        "Open": "開く",
+        "Save": "保存",
+        "Thank you.": "ありがとうございます。",
     },
     "zh": {
+        "__date_format__": "%Y年%m月%d日",
         "OK": "好",
         "Cancel": "取消",
         "Yes": "是",
@@ -33,7 +41,13 @@ _locale_messages: dict[str, dict[str, str]] = {
         "Question": "问题",
         "Text input": "文本输入",
         "Select date": "选择日期",
-        "__date_format__": "%Y年%m月%d日",
+        "Copy": "复制",
+        "Paste": "粘贴",
+        "Cut": "剪切",
+        "File": "文件",
+        "Open": "打开",
+        "Save": "保存",
+        "Thank you.": "谢谢。",
     },
 }
 

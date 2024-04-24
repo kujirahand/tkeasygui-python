@@ -15,12 +15,12 @@ layout=[
     ])],
     [eg.Frame("System info:", layout=[
        [eg.Multiline(f"{eg.get_system_info()}", key="-sys-info-", size=(60, 5), expand_x=True)],
-        [eg.Button("Copy"), eg.Button("Copy as Markdown")],
+        [eg.Button(eg.get_text("Copy")), eg.Button("Copy as Markdown")],
     ])],
-    [eg.Column(layout=[[eg.Button("OK"), eg.Button("Close")]], text_align="right", expand_x=True),],
+    [eg.Column(layout=[[eg.Button("OK"), eg.Button(eg.get_text("Close"))]], text_align="right", expand_x=True),],
 ]
 # window create
-window = eg.Window("Version info", layout=layout, font=("", 14), row_padding=5)
+window = eg.Window("Version info", layout=layout, font=("", 14 if eg.is_mac() else 9), row_padding=5)
 # event loop
 for event, values in window.event_iter():
     print("#", event, values)
