@@ -431,7 +431,7 @@ class Window:
                     key = f"{key}-stopped" # change event name
                     values = self.get_values() # collect values again
             # If an event hidden from the user occurs, continue to use the mainloop.
-            if key.endswith("/hide"):
+            if isinstance(key, str) and key.endswith("/hide"):
                 continue # hide system events
             # return a event
             break

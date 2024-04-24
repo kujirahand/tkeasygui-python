@@ -65,7 +65,7 @@ def main():
     window = create_gui(board)
     paused = False
     while True:
-        event, _ = window.read(timeout=200 if not paused else None)
+        event, _ = window.read(timeout=100 if not paused else None)
         if event == sg.WINDOW_CLOSED:
             break
         elif event != sg.TIMEOUT_KEY:

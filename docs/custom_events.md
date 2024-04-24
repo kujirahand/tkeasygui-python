@@ -9,6 +9,7 @@ After creating the element, bind the event with the bind method.
 The event name will be in the format of "f{key}{handle_name}".
 
 ```py
+import TkEasyGUI as sg
 # (1) create Element
 canvas = sg.Canvas(size=(400, 400), key="-canvas-")
 window = sg.Window("Canvas", layout=[[canvas]], finalize=True)
@@ -19,9 +20,13 @@ canvas.bind("<ButtonRelease>", "release")
 canvas.bind("<Motion>", "motion")
 
 # (3) event loop
-while window.is_alive():
+while True:
+    event, values = window.read()
     if event == "-canvas-press":
-        pass
+        print(canvas.user_bind_event) # get event data
+        print("x=", canvas.user_bind_event.x)
+        print("y=", canvas.user_bind_event.y)
+        break
     elif event == "-canvas-relase":
         pass
     elif event == "-canvas-motion":

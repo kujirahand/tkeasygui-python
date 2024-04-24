@@ -14,6 +14,7 @@ canvas = window["-canvas-"]
 painted = False
 while True:
     event, _ = window.read(timeout=10)
+    print(event)
     if event == sg.WINDOW_CLOSED:
         break
     # get Widget from Canvas
@@ -23,4 +24,5 @@ while True:
         widget.create_rectangle(10, 10, 300, 300, fill="yellow")
         widget.create_oval(50, 50, 350, 350, fill="blue")
         widget.create_line(10, 10, 390, 390, fill="red", width=5)
+        painted = True
 window.close()
