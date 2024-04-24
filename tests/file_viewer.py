@@ -50,8 +50,8 @@ layout = [
     ],
     [sg.HSeparator(pad=5)],
     [
-        sg.Button("Run Program"),
-        sg.Button("Close"),
+        sg.Button(sg.get_text("Run"), key="-run-", size=(10, 1)),
+        sg.Button(sg.get_text("Close"), key="-close-"),
     ],
 ]
 window = sg.Window("Python Viewer", layout, font=font)
@@ -59,9 +59,9 @@ window = sg.Window("Python Viewer", layout, font=font)
 while True:
     event, values = window.read()
     print("#", event, values)
-    if event in [sg.WINDOW_CLOSED, "Close"]:
+    if event in [sg.WINDOW_CLOSED, "-close-"]:
         break
-    if event == "Run Program":
+    if event == "-run-":
         files = values["-files-"]
         if len(files) > 0:
             filename = values["-files-"][0]

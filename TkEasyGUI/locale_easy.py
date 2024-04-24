@@ -26,6 +26,8 @@ _locale_messages: dict[str, dict[str, str]] = {
         "File": "ファイル",
         "Open": "開く",
         "Save": "保存",
+        "Run": "実行",
+        "Quit": "終了",
         "Thank you.": "ありがとうございます。",
     },
     "zh": {
@@ -47,6 +49,8 @@ _locale_messages: dict[str, dict[str, str]] = {
         "File": "文件",
         "Open": "打开",
         "Save": "保存",
+        "Run": "运行",
+        "Quit": "退出",
         "Thank you.": "谢谢。",
     },
 }
