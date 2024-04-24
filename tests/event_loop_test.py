@@ -4,9 +4,9 @@ import TkEasyGUI as eg
 layout = [[eg.Text("Hello, World!")],
           [eg.Button("Exit")]]
 # create a window
-with eg.Window("test", layout) as window:
-    # event loop
-    for event, values in window.event_iter():
-        if event == "Exit":
-            eg.popup("Thank you.")
-            break
+window = eg.Window("test", layout)
+# event loop
+for event, values in window.event_iter():
+    if event == "Exit":
+        eg.popup("Thank you.")
+        break

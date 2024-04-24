@@ -2991,7 +2991,8 @@ class ColorBrowse(FileBrowse):
         )
         if (target is not None) and (result is not None) and (result != ""):
             target.update(result)
-            self.window._event_handler(self.key, {"event": result, "event_type": "change"})
+            if self.enable_events:
+                self.window._event_handler(self.key, {"event": result, "event_type": "change"})
         return result
 
 class ListBrowse(FileBrowse):
@@ -3032,9 +3033,8 @@ class ListBrowse(FileBrowse):
         )
         if (target is not None) and (result is not None) and (result != ""):
             target.update(result)
-            self.window._event_handler(
-                self.key, {"event": result, "event_type": "change"}
-            )
+            if self.enable_events:
+                self.window._event_handler(self.key, {"event": result, "event_type": "change"})
         return result
 
 class MultilineBrowse(FileBrowse):
@@ -3074,9 +3074,10 @@ class MultilineBrowse(FileBrowse):
             result = result.replace("\r", "")
             result = result.replace("\n", "\\n")
             target.update(result)
-            self.window._event_handler(
-                self.key, {"event": result, "event_type": "change"}
-            )
+            if self.enable_events:
+                self.window._event_handler(
+                    self.key, {"event": result, "event_type": "change"}
+                )
         return result
 
 

@@ -1,7 +1,8 @@
 import json
+
 import TkEasyGUI as eg
 
-with eg.Window(
+window = eg.Window(
     "hoge",
     layout=[
         [eg.Text("FileBrowse:")],
@@ -19,13 +20,13 @@ with eg.Window(
         [eg.HSeparator()],
         [eg.Button("OK"), eg.Button("Cancel")],
     ],
-) as window:
-    for event, values in window.event_iter():
-        print("#", event, values)
-        if event == "OK":
-            json_str = json.dumps(values, indent=4, ensure_ascii=False)
-            eg.print(json_str)
-            break
-        elif event == "Cancel":
-            break
+)
+for event, values in window.event_iter():
+    print("#", event, values)
+    if event == "OK":
+        json_str = json.dumps(values, indent=4, ensure_ascii=False)
+        eg.print(json_str)
+        break
+    elif event == "Cancel":
+        break
 
