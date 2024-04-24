@@ -77,23 +77,26 @@ class Window:
     Main window object in TkEasyGUI
     """
     def __init__(
-                self,
-                title: str,
-                layout: list[list[Element]], # set elements layout
-                size: Union[tuple[str, int], None] = None, # window size
-                resizable:bool = False,
-                font: Union[FontType, None] = None,
-                modal: bool = False, # modal window
-                keep_on_top:bool = False, # keep on top
-                no_titlebar: bool = False, # hide titlebar
-                grab_anywhere: bool = False, # can move window by dragging anywhere
-                alpha_channel: float = 1.0, # window alpha channel
-                enable_key_events: bool = False, # enable keyboard events
-                return_keyboard_events: bool = False, # enable keyboard events (for compatibility)
-                location: Union[tuple[int, int], None] = None, # window location
-                center_window: bool = True, # move window to center
-                row_padding: int = 2, # row padding
-                **kw) -> None:
+        self,
+        title: str,
+        layout: list[list[Element]],  # set elements layout
+        size: Union[tuple[str, int], None] = None,  # window size
+        resizable: bool = False,
+        font: Union[FontType, None] = None,
+        modal: bool = False,  # modal window
+        keep_on_top: bool = False,  # keep on top
+        no_titlebar: bool = False,  # hide titlebar
+        grab_anywhere: bool = False,  # can move window by dragging anywhere
+        alpha_channel: float = 1.0,  # window alpha channel
+        enable_key_events: bool = False,  # enable keyboard events
+        return_keyboard_events: bool = False,  # enable keyboard events (for compatibility)
+        location: Union[tuple[int, int], None] = None,  # window location
+        center_window: bool = True,  # move window to center
+        row_padding: int = 2, # row padding
+        padding_x: int = 8, # x padding around the window
+        padding_y: int = 8, # y padding around the window 
+        **kw,
+    ) -> None:
         """Create a window with a layout of widgets."""
         self.modal: bool = modal
         # check active window
@@ -130,8 +133,8 @@ class Window:
         self.row_padding: int = row_padding
         self.center_window: bool = center_window
         # Frame
-        self.frame: ttk.Frame = ttk.Frame(self.window, padding=10)
-        self.frame.configure(style="TFrame")
+        self.frame: tk.Frame = tk.Frame(self.window)
+        # self.frame.configure(style="TFrame")
         # set window properties
         self.window.title(title)
         self.window.protocol("WM_DELETE_WINDOW", lambda : self._close_handler())
@@ -142,7 +145,7 @@ class Window:
         # create widgets
         self._create_widget(self.frame, layout)
         # pack frame
-        self.frame.pack(expand=True, fill="both")
+        self.frame.pack(expand=True, fill="both", padx=padding_x, pady=padding_y)
         self.frame.rowconfigure(0, weight=1)
         if keep_on_top:
             self.window.attributes("-topmost", True)
@@ -250,11 +253,22 @@ class Window:
         # create widgets
         self.need_focus_widget: tk.Widget|None = None
         for row_no, widgets in enumerate(layout):
-            # frame_row = ttk.Frame(parent, padding=5, name=f"tkeasygui_frame_row_{row_no}")
-            frame_row = ttk.Frame(parent, padding=self.row_padding ,name=f"tkeasygui_frame_row_{row_no}")
+            bgcolor = None
+            if parent is not None:
+                bgcolor = parent.cget("background")
+            frame_prop = {
+                "name": f"tkeasygui_frame_row_{row_no}",
+                "background": bgcolor
+            }
+            frame_row = tk.Frame(parent, **frame_prop)
             # columns
             prev_element: Element|None = None
-            row_prop: dict[str, Any] = {"expand": False, "fill": "x", "side": valign}
+            row_pack_prop: dict[str, Any] = {
+                "expand": False,
+                "fill": "x",
+                "side": valign,
+                "pady": self.row_padding,
+            }
             # reversed?
             if align == "right":
                 widgets = reversed(widgets)
@@ -312,13 +326,13 @@ class Window:
                 widget.pack(**fill_props)
                 # expand_y?
                 if elem.expand_y:
-                    row_prop["expand"] = True
-                    row_prop["fill"] = "both"
+                    row_pack_prop["expand"] = True
+                    row_pack_prop["fill"] = "both"
                 # pady
                 if elem.pady is not None:
-                    row_prop["pady"] = elem.pady
+                    row_pack_prop["pady"] = elem.pady
             # add row
-            frame_row.pack(**row_prop)
+            frame_row.pack(**row_pack_prop)
         # end of create
         if self.need_focus_widget is not None:
             self.need_focus_widget.focus_set()
@@ -1026,6 +1040,10 @@ class Element:
         """Get unknown attribute."""
         # Method called when the attribute is not found in the object's instance dictionary
         if self.widget is not None:
+            # Widget
+            if name == "Widget": # for compatibility with PySimpleGUI
+                return self.widget
+            # prop
             if hasattr(self.widget, name):
                 return self.widget.__getattribute__(name)
         return self.__getitem__(name)
@@ -1047,28 +1065,30 @@ class Element:
 class Frame(Element):
     """Frame element."""
     def __init__(
-                self,
-                title: str,
-                layout: list[list[Element]],
-                key: str = "",
-                size: Union[tuple[int, int], None] = None,
-                relief: ReliefType="groove",
-                # text props
-                font: Union[FontType, None] = None, # font
-                color: Union[str, None] = None,
-                text_color: Union[str, None] = None,
-                background_color: Union[str, None] = None,
-                label_outside: bool=False,
-                vertical_alignment: TextVAlign="top", # vertical alignment
-                text_align: Union[TextAlign, None]="left", # text align
-                # pack props
-                expand_x: bool = False,
-                expand_y: bool = False,
-                pad: Union[PadType, None] = None,
-                # other
-                metadata: Union[dict[str, Any], None] = None,
-                use_ttk: bool=False,
-                **kw) -> None:
+        self,
+        title: str,
+        layout: list[list[Element]],
+        key: str = "",
+        size: Union[tuple[int, int], None] = None,
+        relief: ReliefType = "groove",
+        # text props
+        font: Union[FontType, None] = None,  # font
+        color: Union[str, None] = None,
+        text_color: Union[str, None] = None,
+        background_color: Union[str, None] = None,  # background_color
+        # pack props
+        label_outside: bool = False,
+        vertical_alignment: TextVAlign = "top",  # vertical alignment
+        text_align: Union[TextAlign, None] = "left",  # text align
+        # pack props
+        expand_x: bool = False,
+        expand_y: bool = False,
+        pad: Union[PadType, None] = None,
+        # other
+        metadata: Union[dict[str, Any], None] = None,
+        use_ttk: bool = False,
+        **kw,
+    ) -> None:
         style_name = "TLabelframe" if use_ttk else ""
         super().__init__("Frame", style_name, key, False, metadata, **kw)
         self.has_children = True
@@ -1081,7 +1101,6 @@ class Frame(Element):
         self._set_text_props(color=color, text_color=text_color, background_color=background_color, font=font)
         self._set_pack_props(expand_x=expand_x, expand_y=expand_y, pad=pad)
         self.use_ttk: bool = use_ttk
-
         if size is not None:
             self.props["size"] = size
 
@@ -1094,6 +1113,7 @@ class Frame(Element):
                 style=self.style_name,
                 **self.props)
         else:
+            # dfault
             self.widget = tk.LabelFrame(parent, **self.props)
         return self.widget
 
@@ -1343,7 +1363,7 @@ class Button(Element):
         font: Union[FontType, None] = None,  # font
         color: Union[str, None] = None,  # text color
         text_color: Union[str, None] = None,  # same as color
-        background_color: Union[str, None] = None,  # background color
+        background_color: Union[str, None] = None,  # background color (not supported on macOS)
         # pack props
         expand_x: bool = False,
         expand_y: bool = False,

@@ -16,30 +16,28 @@ font = ("Helvetica", 20)
 layout = [
     [sg.Input("0",
              key="-output-", 
-             font=font,
              background_color="white",
              color="black",
              readonly_background_color="white",
              readonly=True,
              expand_x=True)],
 ]
+# create many buttons
 for row in calc_buttons:
     buttons = []
     for ch in row:
         btn = sg.Button(
             ch, # label
             key=f"-btn{ch}",
-            size=(3, 1),
-            font=font,
+            size=(4, 1),
         )
         buttons.append(btn)
     layout.append(buttons)
-window = sg.Window("Calc", layout)
+window = sg.Window("Calc", layout, font=font)
 
 # event loop
 output = "0"
-while True:
-    event, _ = window.read()
+for event, values in window.event_iter():
     if event == sg.WINDOW_CLOSED:
         break
     # when a button is pressed
@@ -64,4 +62,3 @@ while True:
             output += ch
         # update display
         window["-output-"].update(output)
-window.close()

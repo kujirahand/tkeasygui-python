@@ -12,7 +12,7 @@ ROOT_DIR = os.path.dirname(os.path.abspath(__file__))
 #TARGET_DIR = os.path.join(ROOT_DIR, "tests")
 TARGET_DIR = ROOT_DIR
 # get font
-font = ("Arial", 20)
+font = ("Arial", 20 if sg.is_mac() else 12)
 
 def get_program_files():
     # files = os.listdir(ROOT_DIR)
