@@ -128,6 +128,7 @@ class Window:
         self.return_keyboard_events: bool = return_keyboard_events
         self.font_size_average: tuple[int, int] = (12, 10)
         self.row_padding: int = row_padding
+        self.center_window: bool = center_window
         # Frame
         self.frame: ttk.Frame = ttk.Frame(self.window, padding=10)
         self.frame.configure(style="TFrame")
@@ -146,7 +147,7 @@ class Window:
         if keep_on_top:
             self.window.attributes("-topmost", True)
         if no_titlebar:
-            self.hide_titlebar(True)
+            self.window.after_idle(self.hide_titlebar, True)
         if grab_anywhere:
             self.set_grab_anywhere(True)
         if alpha_channel < 1.0:
@@ -171,20 +172,23 @@ class Window:
         # push window
         self.parent_window: Union[Window, None] = _window_parent()
         _window_push(self)
+        # set show event
+        self.window.bind("<Map>", self._on_window_show)
         # position
         if location is not None:
             self.set_location(location)
         else:
             # could not get size with geometry() before window is shown
-            if center_window:
-                self.window.bind("<Map>", self._on_window_show)
+            # so, move window to center after window is shown `_on_window_show`
+            pass
 
     def _on_window_show(self, *event) -> None:
         """Handle window show event."""
-        if self.parent_window is None: # only this window
-            self.move_to_center()
-        else:
-            self.move_to_center(center_pos=self.parent_window.get_center_location())
+        if self.center_window:
+            if self.parent_window is None: # only this window
+                self.move_to_center()
+            else:
+                self.move_to_center(center_pos=self.parent_window.get_center_location())
 
     def set_location(self, xy: tuple[int, int]) -> None:
         """Set window location."""
