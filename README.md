@@ -63,12 +63,12 @@ layout = [
     [eg.Button("OK")]
 ]
 # create a window
-window = eg.Window("Hello App", layout)
-# event loop
-for event, values in window.event_iter():
-    if event == "OK":
-        eg.print("Thank you.")
-        break
+with eg.Window("Hello App", layout) as window:
+    # event loop
+    for event, values in window.event_iter():
+        if event == "OK":
+            eg.print("Thank you.")
+            break
 ```
 
 You can describe it using an event model similar to the famous GUI library, PySimpleGUI.

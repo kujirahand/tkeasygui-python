@@ -29,7 +29,7 @@ GitHubリポジトリからインストールします。
 python -m pip install git+https://github.com/kujirahand/tkeasygui-python
 ```
 
-- (memo) v0.2.24未満のバージョンからのインストールに失敗する場合があります。その場合、[こちら](docs/installation_trouble.md)を確認してください。
+- (memo) v0.2.24未満のバージョンからのアップデートに失敗する場合があります。その場合、[こちら](docs/installation_trouble.md)を確認してください。
 
 ## 簡単な使い方 - ポップアップダイアログを使う
 
@@ -50,7 +50,7 @@ eg.print(f"Hello, {name}.")
 
 ## 簡単な使い方 - カスタムウィンドウを定義して使う
 
-ラベルとボタンのみを持つシンプルなウィンドウを作成するには、以下のように記述します。
+ラベルとボタンのみを持つシンプルなウィンドウを作成するには、以下のように記述します。`with`文を使うことで、イベントループを抜けると自動的にウィンドウが閉じるように指定できます。
 
 ```py
 import TkEasyGUI as eg
@@ -60,12 +60,12 @@ layout = [
     [eg.Button("OK")]
 ]
 # ウィンドウを表示する
-window = eg.Window("Hello App", layout)
-# イベントループを処理する
-for event, values in window.event_iter():
-    if event == "OK":
-        eg.print("Thank you.")
-        break # ループを抜ける
+with eg.Window("Hello App", layout) as window:
+    # イベントループを処理する
+    for event, values in window.event_iter():
+        if event == "OK":
+            eg.print("Thank you.")
+            break # ループを抜ける
 ```
 
 有名GUIライブラリの`PySimpleGUI`と同じイベントモデルの使い勝手で記述できます。（多くのGUI部品でPySimpleGUIと互換性を持たせています。）
@@ -112,7 +112,7 @@ PySimpleGUIと完全な互換性は考えていません。
 ### TkEasyGUI独自の機能
 
 - for文と `window.event_iter()` を使って気軽にイベント処理が可能
-- 色選択ダイアログ(eg.popup_color)など、独自のポップアップダイアログを用意
+- 任意のボタンを持つダイアログ(eg.popup_buttons)や色選択ダイアログ(eg.popup_color)など、独自のポップアップダイアログを用意
 - ImageはPNGだけでなくJPEGも読み込み可能
 - 便利なイベントフックや一括イベント登録機能 - [docs/custom_events](docs/custom_events.md)
 - テキストボックス(Muliline/Input)に便利なCopy/Paste/Cutなどのメソッドを追加
