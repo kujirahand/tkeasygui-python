@@ -1,5 +1,5 @@
-# clock
-
+# Text widget can be created with background color,
+#   and text color and can be clicked. 
 import TkEasyGUI as sg
 
 # create window
@@ -17,14 +17,16 @@ layout = [
                 enable_events=True,
                 text_color="black", background_color="#FF99FF",
                 font=("Arial", 20, "underline")),
+        sg.Text("Close",
+                enable_events=True,
+                text_color="black", background_color="#99FFFF",
+                font=("Arial", 20, "underline")),
     ],
 ]
 window = sg.Window("text/color", layout, font=("Arial", 12))
 # event loop
-while True:
-    event, _ = window.read()
-    print(event)
-    if event == sg.WINDOW_CLOSED:
+for event, values in window.event_iter():
+    if event == "Close":
         break
     if event == "click me":
         window["-info-"].update("clicked")
@@ -32,4 +34,3 @@ while True:
     if event == "Thank you.":
         sg.popup("Thank you for using TkEasyGUI!")
         continue
-window.close()
