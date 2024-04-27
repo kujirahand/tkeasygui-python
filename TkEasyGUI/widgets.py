@@ -2640,6 +2640,27 @@ class Listbox(Element):
             for i, v in enumerate(self.values):
                 self.widget.insert(i, v)
 
+    def get_cursor_index(self) -> int:
+        """Get cursor index (return -1 if not selected)"""
+        if self.widget is None:
+            return None
+        wg: tk.Listbox = self.widget
+        selections = wg.curselection()
+        if selections is None or len(selections) == 0:
+            return -1
+        return selections[0]
+    
+    def set_cursor_index(self, index: int) -> None:
+        """Set cursor index"""
+        if self.widget is None:
+            return
+        try:
+            self.widget.select_clear(0, "end")
+            self.widget.selection_set(index)
+            self.widget.see(index)
+        except Exception as _:
+            pass
+
     def get(self) -> Any:
         """Get the value of the widget."""
         if self.widget is None:
