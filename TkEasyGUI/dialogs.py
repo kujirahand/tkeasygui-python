@@ -17,6 +17,8 @@ from .utils import (
     is_mac,
     is_win,
 )
+# save original print
+_print = print
 
 #------------------------------------------------------------------------------
 # Dialogs
@@ -59,10 +61,11 @@ def popup_buttons(
     if non_blocking:
         # TODO: popup non blocking window
         pass
-    while win.is_alive():
+    while True:
         event, _ = win.read(timeout=100, timeout_key=eg.WINDOW_TIMEOUT)
         if event == eg.WINDOW_CLOSED:
             result = eg.WINDOW_CLOSED
+            break
         if event in buttons:
             result = event
             break
@@ -717,7 +720,10 @@ def input(
     return popup_input(message, title, default)
 
 def print(*args, **kw) -> None:
-    """Print message to popup window."""
+    """Print message to popup window.(call default print function if no_window is True)"""
+    if "no_window" in kw and kw["no_window"]:
+        _print(*args)
+        return
     lines = " ".join([str(a) for a in args])
     popup(lines)
 

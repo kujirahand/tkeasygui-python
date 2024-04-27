@@ -6,7 +6,7 @@ def main():
     while True:
         # select buttons
         group = sg.popup_listbox(
-            items=[
+            values=[
                 "Basic",
                 "Notify",
                 "Input Text",

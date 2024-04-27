@@ -39,7 +39,7 @@ class Button(
     ) 
 ```
 
-- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L1409)
+- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L1396)
 
 ### Methods of Button
 
@@ -66,7 +66,7 @@ Bind event. @see [Window.bind](#windowbind)
 def bind(self, event_name: str, handle_name: str, propagate: bool=True, event_mode: EventMode = "user") -> None:
 ```
 
-- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L853)
+- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L840)
 
 ### Button.bind_events
 
@@ -78,7 +78,7 @@ The specification is such that if the suffix "/hide" is attached to an event key
 def bind_events(self, events: dict[str, str], event_mode: EventMode="user") -> Element:
 ```
 
-- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L993)
+- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L980)
 
 ### Button.create
 
@@ -88,7 +88,7 @@ Create a Button widget.
 def create(self, win: Window, parent: tk.Widget) -> tk.Widget:
 ```
 
-- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L1451)
+- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L1438)
 
 ### Button.disptach_event
 
@@ -98,7 +98,7 @@ Dispatch event
 def disptach_event(self, values: Union[dict[str, Any], None] = None) -> None:
 ```
 
-- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L861)
+- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L848)
 
 ### Button.get
 
@@ -108,7 +108,7 @@ Returns the text of the button..
 def get(self) -> Any:
 ```
 
-- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L1479)
+- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L1466)
 
 ### Button.get_name
 
@@ -118,7 +118,7 @@ Get key of element.
 def get_name(self) -> str:
 ```
 
-- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L847)
+- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L834)
 
 ### Button.get_prev_widget
 
@@ -128,7 +128,7 @@ Get the previous widget.
 def get_prev_widget(self, target_key: Union[str, None] = None) -> tk.Widget:
 ```
 
-- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L1084)
+- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L1071)
 
 ### Button.get_text
 
@@ -138,7 +138,7 @@ Get the text of the button.
 def get_text(self) -> str:
 ```
 
-- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L1488)
+- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L1475)
 
 ### Button.post_create
 
@@ -148,7 +148,7 @@ Post create widget.
 def post_create(self, win: Window, parent: tk.Widget) -> None:
 ```
 
-- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L1061)
+- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L1048)
 
 ### Button.prepare_create
 
@@ -156,7 +156,7 @@ def post_create(self, win: Window, parent: tk.Widget) -> None:
 def prepare_create(self, win: Window) -> None:
 ```
 
-- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L1007)
+- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L994)
 
 ### Button.set_button_color
 
@@ -166,7 +166,7 @@ Set the button color.
 def set_button_color(self, button_color: Union[str, tuple[str,str]], update: bool = True) -> None:
 ```
 
-- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L1465)
+- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L1452)
 
 ### Button.set_disabled
 
@@ -176,7 +176,7 @@ Set disabled widgets state
 def set_disabled(self, disabled: bool) -> None:
 ```
 
-- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L985)
+- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L972)
 
 ### Button.set_text
 
@@ -186,7 +186,7 @@ Set the text of the button.
 def set_text(self, text: str) -> None:
 ```
 
-- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L1483)
+- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L1470)
 
 ### Button.update
 
@@ -200,7 +200,7 @@ def update(self,
     **kw) -> None:
 ```
 
-- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L1492)
+- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L1479)
 
 ## Canvas
 
@@ -220,7 +220,7 @@ class Canvas(
     **kw) 
 ```
 
-- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L2306)
+- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L2293)
 
 ### Methods of Canvas
 
@@ -245,7 +245,7 @@ Bind event. @see [Window.bind](#windowbind)
 def bind(self, event_name: str, handle_name: str, propagate: bool=True, event_mode: EventMode = "user") -> None:
 ```
 
-- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L853)
+- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L840)
 
 ### Canvas.bind_events
 
@@ -257,7 +257,7 @@ The specification is such that if the suffix "/hide" is attached to an event key
 def bind_events(self, events: dict[str, str], event_mode: EventMode="user") -> Element:
 ```
 
-- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L993)
+- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L980)
 
 ### Canvas.clear
 
@@ -267,7 +267,7 @@ Clear the canvas.
 def clear(self) -> None:
 ```
 
-- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L2331)
+- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L2318)
 
 ### Canvas.create
 
@@ -275,7 +275,7 @@ def clear(self) -> None:
 def create(self, win: Window, parent: tk.Widget) -> tk.Widget:
 ```
 
-- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L2327)
+- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L2314)
 
 ### Canvas.disptach_event
 
@@ -285,7 +285,7 @@ Dispatch event
 def disptach_event(self, values: Union[dict[str, Any], None] = None) -> None:
 ```
 
-- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L861)
+- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L848)
 
 ### Canvas.get
 
@@ -295,7 +295,7 @@ Return Widget
 def get(self) -> Any:
 ```
 
-- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L2335)
+- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L2322)
 
 ### Canvas.get_name
 
@@ -305,7 +305,7 @@ Get key of element.
 def get_name(self) -> str:
 ```
 
-- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L847)
+- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L834)
 
 ### Canvas.get_prev_widget
 
@@ -315,7 +315,7 @@ Get the previous widget.
 def get_prev_widget(self, target_key: Union[str, None] = None) -> tk.Widget:
 ```
 
-- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L1084)
+- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L1071)
 
 ### Canvas.post_create
 
@@ -325,7 +325,7 @@ Post create widget.
 def post_create(self, win: Window, parent: tk.Widget) -> None:
 ```
 
-- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L1061)
+- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L1048)
 
 ### Canvas.prepare_create
 
@@ -333,7 +333,7 @@ def post_create(self, win: Window, parent: tk.Widget) -> None:
 def prepare_create(self, win: Window) -> None:
 ```
 
-- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L1007)
+- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L994)
 
 ### Canvas.set_disabled
 
@@ -343,7 +343,7 @@ Set disabled widgets state
 def set_disabled(self, disabled: bool) -> None:
 ```
 
-- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L985)
+- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L972)
 
 ### Canvas.update
 
@@ -353,7 +353,7 @@ Update the widget.
 def update(self, *args, **kw) -> None:
 ```
 
-- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L2339)
+- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L2326)
 
 ## Checkbox
 
@@ -370,7 +370,7 @@ class Checkbox(
     **kw) 
 ```
 
-- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L1523)
+- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L1510)
 
 ### Methods of Checkbox
 
@@ -397,7 +397,7 @@ Bind event. @see [Window.bind](#windowbind)
 def bind(self, event_name: str, handle_name: str, propagate: bool=True, event_mode: EventMode = "user") -> None:
 ```
 
-- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L853)
+- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L840)
 
 ### Checkbox.bind_events
 
@@ -409,7 +409,7 @@ The specification is such that if the suffix "/hide" is attached to an event key
 def bind_events(self, events: dict[str, str], event_mode: EventMode="user") -> Element:
 ```
 
-- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L993)
+- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L980)
 
 ### Checkbox.create
 
@@ -417,7 +417,7 @@ def bind_events(self, events: dict[str, str], event_mode: EventMode="user") -> E
 def create(self, win: Window, parent: tk.Widget) -> tk.Widget:
 ```
 
-- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L1542)
+- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L1529)
 
 ### Checkbox.disptach_event
 
@@ -427,7 +427,7 @@ Dispatch event
 def disptach_event(self, values: Union[dict[str, Any], None] = None) -> None:
 ```
 
-- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L861)
+- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L848)
 
 ### Checkbox.get
 
@@ -437,7 +437,7 @@ Get the value of the widget.
 def get(self) -> Any:
 ```
 
-- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L1556)
+- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L1543)
 
 ### Checkbox.get_name
 
@@ -447,7 +447,7 @@ Get key of element.
 def get_name(self) -> str:
 ```
 
-- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L847)
+- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L834)
 
 ### Checkbox.get_prev_widget
 
@@ -457,7 +457,7 @@ Get the previous widget.
 def get_prev_widget(self, target_key: Union[str, None] = None) -> tk.Widget:
 ```
 
-- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L1084)
+- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L1071)
 
 ### Checkbox.get_value
 
@@ -467,7 +467,7 @@ Get the value of the widget.
 def get_value(self) -> Any:
 ```
 
-- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L1548)
+- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L1535)
 
 ### Checkbox.post_create
 
@@ -477,7 +477,7 @@ Post create widget.
 def post_create(self, win: Window, parent: tk.Widget) -> None:
 ```
 
-- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L1061)
+- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L1048)
 
 ### Checkbox.prepare_create
 
@@ -485,7 +485,7 @@ def post_create(self, win: Window, parent: tk.Widget) -> None:
 def prepare_create(self, win: Window) -> None:
 ```
 
-- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L1007)
+- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L994)
 
 ### Checkbox.set_disabled
 
@@ -495,7 +495,7 @@ Set disabled widgets state
 def set_disabled(self, disabled: bool) -> None:
 ```
 
-- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L985)
+- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L972)
 
 ### Checkbox.set_text
 
@@ -505,7 +505,7 @@ Set the text of the widget.
 def set_text(self, text: str) -> None:
 ```
 
-- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L1560)
+- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L1547)
 
 ### Checkbox.set_value
 
@@ -515,7 +515,7 @@ Set the value of the widget.
 def set_value(self, b: bool) -> None:
 ```
 
-- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L1552)
+- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L1539)
 
 ### Checkbox.update
 
@@ -525,7 +525,7 @@ Update the widget.
 def update(self, *args, **kw) -> None:
 ```
 
-- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L1565)
+- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L1552)
 
 ## ColorBrowse
 
@@ -546,7 +546,7 @@ class ColorBrowse(
     ) 
 ```
 
-- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L3081)
+- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L3070)
 
 ### Methods of ColorBrowse
 
@@ -572,7 +572,7 @@ Bind event. @see [Window.bind](#windowbind)
 def bind(self, event_name: str, handle_name: str, propagate: bool=True, event_mode: EventMode = "user") -> None:
 ```
 
-- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L853)
+- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L840)
 
 ### ColorBrowse.bind_events
 
@@ -584,7 +584,7 @@ The specification is such that if the suffix "/hide" is attached to an event key
 def bind_events(self, events: dict[str, str], event_mode: EventMode="user") -> Element:
 ```
 
-- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L993)
+- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L980)
 
 ### ColorBrowse.create
 
@@ -592,7 +592,7 @@ def bind_events(self, events: dict[str, str], event_mode: EventMode="user") -> E
 def create(self, win: Window, parent: tk.Widget) -> tk.Widget:
 ```
 
-- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L2934)
+- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L2923)
 
 ### ColorBrowse.disptach_event
 
@@ -602,7 +602,7 @@ Dispatch event
 def disptach_event(self, values: Union[dict[str, Any], None] = None) -> None:
 ```
 
-- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L861)
+- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L848)
 
 ### ColorBrowse.get
 
@@ -612,7 +612,7 @@ Get the value of the widget.
 def get(self) -> Any:
 ```
 
-- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L1065)
+- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L1052)
 
 ### ColorBrowse.get_name
 
@@ -622,7 +622,7 @@ Get key of element.
 def get_name(self) -> str:
 ```
 
-- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L847)
+- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L834)
 
 ### ColorBrowse.get_prev_widget
 
@@ -632,7 +632,7 @@ Get the previous widget.
 def get_prev_widget(self, target_key: Union[str, None] = None) -> tk.Widget:
 ```
 
-- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L1084)
+- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L1071)
 
 ### ColorBrowse.post_create
 
@@ -642,7 +642,7 @@ Post create widget.
 def post_create(self, win: Window, parent: tk.Widget) -> None:
 ```
 
-- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L1061)
+- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L1048)
 
 ### ColorBrowse.prepare_create
 
@@ -650,7 +650,7 @@ def post_create(self, win: Window, parent: tk.Widget) -> None:
 def prepare_create(self, win: Window) -> None:
 ```
 
-- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L1007)
+- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L994)
 
 ### ColorBrowse.set_disabled
 
@@ -660,7 +660,7 @@ Set disabled widgets state
 def set_disabled(self, disabled: bool) -> None:
 ```
 
-- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L985)
+- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L972)
 
 ### ColorBrowse.set_text
 
@@ -670,7 +670,7 @@ Set the text of the button.
 def set_text(self, text: str) -> None:
 ```
 
-- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L2981)
+- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L2970)
 
 ### ColorBrowse.show_dialog
 
@@ -680,7 +680,7 @@ Show file dialog
 def show_dialog(self, *args) -> Union[str, None]:
 ```
 
-- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L3100)
+- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L3089)
 
 ### ColorBrowse.update
 
@@ -690,7 +690,7 @@ Update the widget.
 def update(self, text: Union[str, None] = None, **kw) -> None:
 ```
 
-- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L2986)
+- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L2975)
 
 ## Column
 
@@ -715,7 +715,7 @@ class Column(
     **kw) 
 ```
 
-- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L1192)
+- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L1179)
 
 ### Methods of Column
 
@@ -739,7 +739,7 @@ Bind event. @see [Window.bind](#windowbind)
 def bind(self, event_name: str, handle_name: str, propagate: bool=True, event_mode: EventMode = "user") -> None:
 ```
 
-- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L853)
+- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L840)
 
 ### Column.bind_events
 
@@ -751,7 +751,7 @@ The specification is such that if the suffix "/hide" is attached to an event key
 def bind_events(self, events: dict[str, str], event_mode: EventMode="user") -> Element:
 ```
 
-- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L993)
+- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L980)
 
 ### Column.create
 
@@ -759,7 +759,7 @@ def bind_events(self, events: dict[str, str], event_mode: EventMode="user") -> E
 def create(self, win: Window, parent: tk.Widget) -> tk.Widget:
 ```
 
-- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L1223)
+- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L1210)
 
 ### Column.disptach_event
 
@@ -769,7 +769,7 @@ Dispatch event
 def disptach_event(self, values: Union[dict[str, Any], None] = None) -> None:
 ```
 
-- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L861)
+- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L848)
 
 ### Column.get
 
@@ -779,7 +779,7 @@ Return Widget
 def get(self) -> Any:
 ```
 
-- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L1229)
+- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L1216)
 
 ### Column.get_name
 
@@ -789,7 +789,7 @@ Get key of element.
 def get_name(self) -> str:
 ```
 
-- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L847)
+- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L834)
 
 ### Column.get_prev_widget
 
@@ -799,7 +799,7 @@ Get the previous widget.
 def get_prev_widget(self, target_key: Union[str, None] = None) -> tk.Widget:
 ```
 
-- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L1084)
+- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L1071)
 
 ### Column.post_create
 
@@ -809,7 +809,7 @@ Post create widget.
 def post_create(self, win: Window, parent: tk.Widget) -> None:
 ```
 
-- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L1061)
+- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L1048)
 
 ### Column.prepare_create
 
@@ -817,7 +817,7 @@ def post_create(self, win: Window, parent: tk.Widget) -> None:
 def prepare_create(self, win: Window) -> None:
 ```
 
-- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L1007)
+- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L994)
 
 ### Column.set_disabled
 
@@ -827,7 +827,7 @@ Set disabled widgets state
 def set_disabled(self, disabled: bool) -> None:
 ```
 
-- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L985)
+- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L972)
 
 ### Column.update
 
@@ -837,7 +837,7 @@ Update the widget.
 def update(self, *args, **kw) -> None:
 ```
 
-- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L1233)
+- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L1220)
 
 ## Combo
 
@@ -855,7 +855,7 @@ class Combo(
     **kw) 
 ```
 
-- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L2690)
+- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L2679)
 
 ### Methods of Combo
 
@@ -881,7 +881,7 @@ Bind event. @see [Window.bind](#windowbind)
 def bind(self, event_name: str, handle_name: str, propagate: bool=True, event_mode: EventMode = "user") -> None:
 ```
 
-- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L853)
+- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L840)
 
 ### Combo.bind_events
 
@@ -893,7 +893,7 @@ The specification is such that if the suffix "/hide" is attached to an event key
 def bind_events(self, events: dict[str, str], event_mode: EventMode="user") -> Element:
 ```
 
-- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L993)
+- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L980)
 
 ### Combo.create
 
@@ -903,7 +903,7 @@ def bind_events(self, events: dict[str, str], event_mode: EventMode="user") -> E
 def create(self, win: Window, parent: tk.Widget) -> tk.Widget:
 ```
 
-- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L2709)
+- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L2698)
 
 ### Combo.disptach_event
 
@@ -913,7 +913,7 @@ Dispatch event
 def disptach_event(self, values: Union[dict[str, Any], None] = None) -> None:
 ```
 
-- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L861)
+- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L848)
 
 ### Combo.get
 
@@ -923,7 +923,7 @@ Get the value of the widget.
 def get(self) -> Any:
 ```
 
-- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L2726)
+- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L2715)
 
 ### Combo.get_name
 
@@ -933,7 +933,7 @@ Get key of element.
 def get_name(self) -> str:
 ```
 
-- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L847)
+- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L834)
 
 ### Combo.get_prev_widget
 
@@ -943,7 +943,7 @@ Get the previous widget.
 def get_prev_widget(self, target_key: Union[str, None] = None) -> tk.Widget:
 ```
 
-- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L1084)
+- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L1071)
 
 ### Combo.post_create
 
@@ -953,7 +953,7 @@ Post create widget.
 def post_create(self, win: Window, parent: tk.Widget) -> None:
 ```
 
-- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L1061)
+- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L1048)
 
 ### Combo.prepare_create
 
@@ -961,7 +961,7 @@ def post_create(self, win: Window, parent: tk.Widget) -> None:
 def prepare_create(self, win: Window) -> None:
 ```
 
-- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L1007)
+- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L994)
 
 ### Combo.set_disabled
 
@@ -971,7 +971,7 @@ Set disabled widgets state
 def set_disabled(self, disabled: bool) -> None:
 ```
 
-- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L985)
+- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L972)
 
 ### Combo.set_value
 
@@ -981,7 +981,7 @@ Set the value of the widget.
 def set_value(self, v: str) -> None:
 ```
 
-- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L2722)
+- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L2711)
 
 ### Combo.set_values
 
@@ -991,7 +991,7 @@ Set values to list
 def set_values(self, values: list[str]) -> None:
 ```
 
-- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L2716)
+- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L2705)
 
 ### Combo.update
 
@@ -1001,7 +1001,7 @@ Update the widget.
 def update(self, *args, **kw) -> None:
 ```
 
-- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L2732)
+- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L2721)
 
 ## Element
 
@@ -1018,7 +1018,7 @@ class Element(
     **kw) 
 ```
 
-- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L804)
+- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L791)
 
 ### Methods of Element
 
@@ -1042,7 +1042,7 @@ Bind event. @see [Window.bind](#windowbind)
 def bind(self, event_name: str, handle_name: str, propagate: bool=True, event_mode: EventMode = "user") -> None:
 ```
 
-- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L853)
+- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L840)
 
 ### Element.bind_events
 
@@ -1054,7 +1054,7 @@ The specification is such that if the suffix "/hide" is attached to an event key
 def bind_events(self, events: dict[str, str], event_mode: EventMode="user") -> Element:
 ```
 
-- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L993)
+- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L980)
 
 ### Element.create
 
@@ -1064,7 +1064,7 @@ Create a widget.
 def create(self, win: Window, parent: tk.Widget) -> Any:
 ```
 
-- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L1003)
+- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L990)
 
 ### Element.disptach_event
 
@@ -1074,7 +1074,7 @@ Dispatch event
 def disptach_event(self, values: Union[dict[str, Any], None] = None) -> None:
 ```
 
-- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L861)
+- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L848)
 
 ### Element.get
 
@@ -1084,7 +1084,7 @@ Get the value of the widget.
 def get(self) -> Any:
 ```
 
-- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L1065)
+- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L1052)
 
 ### Element.get_name
 
@@ -1094,7 +1094,7 @@ Get key of element.
 def get_name(self) -> str:
 ```
 
-- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L847)
+- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L834)
 
 ### Element.get_prev_widget
 
@@ -1104,7 +1104,7 @@ Get the previous widget.
 def get_prev_widget(self, target_key: Union[str, None] = None) -> tk.Widget:
 ```
 
-- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L1084)
+- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L1071)
 
 ### Element.post_create
 
@@ -1114,7 +1114,7 @@ Post create widget.
 def post_create(self, win: Window, parent: tk.Widget) -> None:
 ```
 
-- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L1061)
+- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L1048)
 
 ### Element.prepare_create
 
@@ -1122,7 +1122,7 @@ def post_create(self, win: Window, parent: tk.Widget) -> None:
 def prepare_create(self, win: Window) -> None:
 ```
 
-- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L1007)
+- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L994)
 
 ### Element.set_disabled
 
@@ -1132,7 +1132,7 @@ Set disabled widgets state
 def set_disabled(self, disabled: bool) -> None:
 ```
 
-- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L985)
+- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L972)
 
 ### Element.update
 
@@ -1142,7 +1142,7 @@ update widget configuration.
 def update(self, *args, **kw) -> None:
 ```
 
-- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L1069)
+- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L1056)
 
 ## FileBrowse
 
@@ -1165,7 +1165,7 @@ class FileBrowse(
     ) 
 ```
 
-- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L2908)
+- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L2897)
 
 ### Methods of FileBrowse
 
@@ -1191,7 +1191,7 @@ Bind event. @see [Window.bind](#windowbind)
 def bind(self, event_name: str, handle_name: str, propagate: bool=True, event_mode: EventMode = "user") -> None:
 ```
 
-- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L853)
+- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L840)
 
 ### FileBrowse.bind_events
 
@@ -1203,7 +1203,7 @@ The specification is such that if the suffix "/hide" is attached to an event key
 def bind_events(self, events: dict[str, str], event_mode: EventMode="user") -> Element:
 ```
 
-- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L993)
+- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L980)
 
 ### FileBrowse.create
 
@@ -1211,7 +1211,7 @@ def bind_events(self, events: dict[str, str], event_mode: EventMode="user") -> E
 def create(self, win: Window, parent: tk.Widget) -> tk.Widget:
 ```
 
-- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L2934)
+- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L2923)
 
 ### FileBrowse.disptach_event
 
@@ -1221,7 +1221,7 @@ Dispatch event
 def disptach_event(self, values: Union[dict[str, Any], None] = None) -> None:
 ```
 
-- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L861)
+- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L848)
 
 ### FileBrowse.get
 
@@ -1231,7 +1231,7 @@ Get the value of the widget.
 def get(self) -> Any:
 ```
 
-- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L1065)
+- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L1052)
 
 ### FileBrowse.get_name
 
@@ -1241,7 +1241,7 @@ Get key of element.
 def get_name(self) -> str:
 ```
 
-- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L847)
+- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L834)
 
 ### FileBrowse.get_prev_widget
 
@@ -1251,7 +1251,7 @@ Get the previous widget.
 def get_prev_widget(self, target_key: Union[str, None] = None) -> tk.Widget:
 ```
 
-- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L1084)
+- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L1071)
 
 ### FileBrowse.post_create
 
@@ -1261,7 +1261,7 @@ Post create widget.
 def post_create(self, win: Window, parent: tk.Widget) -> None:
 ```
 
-- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L1061)
+- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L1048)
 
 ### FileBrowse.prepare_create
 
@@ -1269,7 +1269,7 @@ def post_create(self, win: Window, parent: tk.Widget) -> None:
 def prepare_create(self, win: Window) -> None:
 ```
 
-- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L1007)
+- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L994)
 
 ### FileBrowse.set_disabled
 
@@ -1279,7 +1279,7 @@ Set disabled widgets state
 def set_disabled(self, disabled: bool) -> None:
 ```
 
-- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L985)
+- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L972)
 
 ### FileBrowse.set_text
 
@@ -1289,7 +1289,7 @@ Set the text of the button.
 def set_text(self, text: str) -> None:
 ```
 
-- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L2981)
+- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L2970)
 
 ### FileBrowse.show_dialog
 
@@ -1299,7 +1299,7 @@ Show file dialog
 def show_dialog(self, *args) -> Union[str, None]:
 ```
 
-- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L2960)
+- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L2949)
 
 ### FileBrowse.update
 
@@ -1309,7 +1309,7 @@ Update the widget.
 def update(self, text: Union[str, None] = None, **kw) -> None:
 ```
 
-- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L2986)
+- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L2975)
 
 ## FileSaveAs
 
@@ -1332,7 +1332,7 @@ class FileSaveAs(
     ) 
 ```
 
-- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L2908)
+- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L2897)
 
 ### Methods of FileSaveAs
 
@@ -1358,7 +1358,7 @@ Bind event. @see [Window.bind](#windowbind)
 def bind(self, event_name: str, handle_name: str, propagate: bool=True, event_mode: EventMode = "user") -> None:
 ```
 
-- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L853)
+- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L840)
 
 ### FileSaveAs.bind_events
 
@@ -1370,7 +1370,7 @@ The specification is such that if the suffix "/hide" is attached to an event key
 def bind_events(self, events: dict[str, str], event_mode: EventMode="user") -> Element:
 ```
 
-- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L993)
+- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L980)
 
 ### FileSaveAs.create
 
@@ -1378,7 +1378,7 @@ def bind_events(self, events: dict[str, str], event_mode: EventMode="user") -> E
 def create(self, win: Window, parent: tk.Widget) -> tk.Widget:
 ```
 
-- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L2934)
+- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L2923)
 
 ### FileSaveAs.disptach_event
 
@@ -1388,7 +1388,7 @@ Dispatch event
 def disptach_event(self, values: Union[dict[str, Any], None] = None) -> None:
 ```
 
-- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L861)
+- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L848)
 
 ### FileSaveAs.get
 
@@ -1398,7 +1398,7 @@ Get the value of the widget.
 def get(self) -> Any:
 ```
 
-- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L1065)
+- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L1052)
 
 ### FileSaveAs.get_name
 
@@ -1408,7 +1408,7 @@ Get key of element.
 def get_name(self) -> str:
 ```
 
-- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L847)
+- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L834)
 
 ### FileSaveAs.get_prev_widget
 
@@ -1418,7 +1418,7 @@ Get the previous widget.
 def get_prev_widget(self, target_key: Union[str, None] = None) -> tk.Widget:
 ```
 
-- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L1084)
+- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L1071)
 
 ### FileSaveAs.post_create
 
@@ -1428,7 +1428,7 @@ Post create widget.
 def post_create(self, win: Window, parent: tk.Widget) -> None:
 ```
 
-- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L1061)
+- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L1048)
 
 ### FileSaveAs.prepare_create
 
@@ -1436,7 +1436,7 @@ def post_create(self, win: Window, parent: tk.Widget) -> None:
 def prepare_create(self, win: Window) -> None:
 ```
 
-- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L1007)
+- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L994)
 
 ### FileSaveAs.set_disabled
 
@@ -1446,7 +1446,7 @@ Set disabled widgets state
 def set_disabled(self, disabled: bool) -> None:
 ```
 
-- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L985)
+- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L972)
 
 ### FileSaveAs.set_text
 
@@ -1456,7 +1456,7 @@ Set the text of the button.
 def set_text(self, text: str) -> None:
 ```
 
-- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L2981)
+- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L2970)
 
 ### FileSaveAs.show_dialog
 
@@ -1466,7 +1466,7 @@ Show file dialog
 def show_dialog(self, *args) -> Union[str, None]:
 ```
 
-- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L2960)
+- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L2949)
 
 ### FileSaveAs.update
 
@@ -1476,7 +1476,7 @@ Update the widget.
 def update(self, text: Union[str, None] = None, **kw) -> None:
 ```
 
-- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L2986)
+- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L2975)
 
 ## FileSaveAsBrowse
 
@@ -1497,7 +1497,7 @@ class FileSaveAsBrowse(
     ) 
 ```
 
-- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L3018)
+- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L3007)
 
 ### Methods of FileSaveAsBrowse
 
@@ -1523,7 +1523,7 @@ Bind event. @see [Window.bind](#windowbind)
 def bind(self, event_name: str, handle_name: str, propagate: bool=True, event_mode: EventMode = "user") -> None:
 ```
 
-- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L853)
+- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L840)
 
 ### FileSaveAsBrowse.bind_events
 
@@ -1535,7 +1535,7 @@ The specification is such that if the suffix "/hide" is attached to an event key
 def bind_events(self, events: dict[str, str], event_mode: EventMode="user") -> Element:
 ```
 
-- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L993)
+- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L980)
 
 ### FileSaveAsBrowse.create
 
@@ -1543,7 +1543,7 @@ def bind_events(self, events: dict[str, str], event_mode: EventMode="user") -> E
 def create(self, win: Window, parent: tk.Widget) -> tk.Widget:
 ```
 
-- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L2934)
+- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L2923)
 
 ### FileSaveAsBrowse.disptach_event
 
@@ -1553,7 +1553,7 @@ Dispatch event
 def disptach_event(self, values: Union[dict[str, Any], None] = None) -> None:
 ```
 
-- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L861)
+- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L848)
 
 ### FileSaveAsBrowse.get
 
@@ -1563,7 +1563,7 @@ Get the value of the widget.
 def get(self) -> Any:
 ```
 
-- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L1065)
+- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L1052)
 
 ### FileSaveAsBrowse.get_name
 
@@ -1573,7 +1573,7 @@ Get key of element.
 def get_name(self) -> str:
 ```
 
-- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L847)
+- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L834)
 
 ### FileSaveAsBrowse.get_prev_widget
 
@@ -1583,7 +1583,7 @@ Get the previous widget.
 def get_prev_widget(self, target_key: Union[str, None] = None) -> tk.Widget:
 ```
 
-- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L1084)
+- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L1071)
 
 ### FileSaveAsBrowse.post_create
 
@@ -1593,7 +1593,7 @@ Post create widget.
 def post_create(self, win: Window, parent: tk.Widget) -> None:
 ```
 
-- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L1061)
+- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L1048)
 
 ### FileSaveAsBrowse.prepare_create
 
@@ -1601,7 +1601,7 @@ def post_create(self, win: Window, parent: tk.Widget) -> None:
 def prepare_create(self, win: Window) -> None:
 ```
 
-- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L1007)
+- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L994)
 
 ### FileSaveAsBrowse.set_disabled
 
@@ -1611,7 +1611,7 @@ Set disabled widgets state
 def set_disabled(self, disabled: bool) -> None:
 ```
 
-- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L985)
+- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L972)
 
 ### FileSaveAsBrowse.set_text
 
@@ -1621,7 +1621,7 @@ Set the text of the button.
 def set_text(self, text: str) -> None:
 ```
 
-- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L2981)
+- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L2970)
 
 ### FileSaveAsBrowse.show_dialog
 
@@ -1631,7 +1631,7 @@ Show file dialog
 def show_dialog(self, *args) -> Union[str, None]:
 ```
 
-- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L2960)
+- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L2949)
 
 ### FileSaveAsBrowse.update
 
@@ -1641,7 +1641,7 @@ Update the widget.
 def update(self, text: Union[str, None] = None, **kw) -> None:
 ```
 
-- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L2986)
+- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L2975)
 
 ## FilesBrowse
 
@@ -1662,7 +1662,7 @@ class FilesBrowse(
     ) 
 ```
 
-- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L2994)
+- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L2983)
 
 ### Methods of FilesBrowse
 
@@ -1688,7 +1688,7 @@ Bind event. @see [Window.bind](#windowbind)
 def bind(self, event_name: str, handle_name: str, propagate: bool=True, event_mode: EventMode = "user") -> None:
 ```
 
-- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L853)
+- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L840)
 
 ### FilesBrowse.bind_events
 
@@ -1700,7 +1700,7 @@ The specification is such that if the suffix "/hide" is attached to an event key
 def bind_events(self, events: dict[str, str], event_mode: EventMode="user") -> Element:
 ```
 
-- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L993)
+- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L980)
 
 ### FilesBrowse.create
 
@@ -1708,7 +1708,7 @@ def bind_events(self, events: dict[str, str], event_mode: EventMode="user") -> E
 def create(self, win: Window, parent: tk.Widget) -> tk.Widget:
 ```
 
-- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L2934)
+- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L2923)
 
 ### FilesBrowse.disptach_event
 
@@ -1718,7 +1718,7 @@ Dispatch event
 def disptach_event(self, values: Union[dict[str, Any], None] = None) -> None:
 ```
 
-- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L861)
+- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L848)
 
 ### FilesBrowse.get
 
@@ -1728,7 +1728,7 @@ Get the value of the widget.
 def get(self) -> Any:
 ```
 
-- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L1065)
+- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L1052)
 
 ### FilesBrowse.get_name
 
@@ -1738,7 +1738,7 @@ Get key of element.
 def get_name(self) -> str:
 ```
 
-- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L847)
+- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L834)
 
 ### FilesBrowse.get_prev_widget
 
@@ -1748,7 +1748,7 @@ Get the previous widget.
 def get_prev_widget(self, target_key: Union[str, None] = None) -> tk.Widget:
 ```
 
-- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L1084)
+- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L1071)
 
 ### FilesBrowse.post_create
 
@@ -1758,7 +1758,7 @@ Post create widget.
 def post_create(self, win: Window, parent: tk.Widget) -> None:
 ```
 
-- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L1061)
+- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L1048)
 
 ### FilesBrowse.prepare_create
 
@@ -1766,7 +1766,7 @@ def post_create(self, win: Window, parent: tk.Widget) -> None:
 def prepare_create(self, win: Window) -> None:
 ```
 
-- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L1007)
+- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L994)
 
 ### FilesBrowse.set_disabled
 
@@ -1776,7 +1776,7 @@ Set disabled widgets state
 def set_disabled(self, disabled: bool) -> None:
 ```
 
-- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L985)
+- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L972)
 
 ### FilesBrowse.set_text
 
@@ -1786,7 +1786,7 @@ Set the text of the button.
 def set_text(self, text: str) -> None:
 ```
 
-- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L2981)
+- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L2970)
 
 ### FilesBrowse.show_dialog
 
@@ -1796,7 +1796,7 @@ Show file dialog
 def show_dialog(self, *args) -> Union[str, None]:
 ```
 
-- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L2960)
+- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L2949)
 
 ### FilesBrowse.update
 
@@ -1806,7 +1806,7 @@ Update the widget.
 def update(self, text: Union[str, None] = None, **kw) -> None:
 ```
 
-- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L2986)
+- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L2975)
 
 ## FolderBrowse
 
@@ -1827,7 +1827,7 @@ class FolderBrowse(
     ) 
 ```
 
-- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L3046)
+- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L3035)
 
 ### Methods of FolderBrowse
 
@@ -1853,7 +1853,7 @@ Bind event. @see [Window.bind](#windowbind)
 def bind(self, event_name: str, handle_name: str, propagate: bool=True, event_mode: EventMode = "user") -> None:
 ```
 
-- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L853)
+- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L840)
 
 ### FolderBrowse.bind_events
 
@@ -1865,7 +1865,7 @@ The specification is such that if the suffix "/hide" is attached to an event key
 def bind_events(self, events: dict[str, str], event_mode: EventMode="user") -> Element:
 ```
 
-- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L993)
+- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L980)
 
 ### FolderBrowse.create
 
@@ -1873,7 +1873,7 @@ def bind_events(self, events: dict[str, str], event_mode: EventMode="user") -> E
 def create(self, win: Window, parent: tk.Widget) -> tk.Widget:
 ```
 
-- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L2934)
+- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L2923)
 
 ### FolderBrowse.disptach_event
 
@@ -1883,7 +1883,7 @@ Dispatch event
 def disptach_event(self, values: Union[dict[str, Any], None] = None) -> None:
 ```
 
-- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L861)
+- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L848)
 
 ### FolderBrowse.get
 
@@ -1893,7 +1893,7 @@ Get the value of the widget.
 def get(self) -> Any:
 ```
 
-- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L1065)
+- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L1052)
 
 ### FolderBrowse.get_name
 
@@ -1903,7 +1903,7 @@ Get key of element.
 def get_name(self) -> str:
 ```
 
-- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L847)
+- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L834)
 
 ### FolderBrowse.get_prev_widget
 
@@ -1913,7 +1913,7 @@ Get the previous widget.
 def get_prev_widget(self, target_key: Union[str, None] = None) -> tk.Widget:
 ```
 
-- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L1084)
+- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L1071)
 
 ### FolderBrowse.post_create
 
@@ -1923,7 +1923,7 @@ Post create widget.
 def post_create(self, win: Window, parent: tk.Widget) -> None:
 ```
 
-- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L1061)
+- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L1048)
 
 ### FolderBrowse.prepare_create
 
@@ -1931,7 +1931,7 @@ def post_create(self, win: Window, parent: tk.Widget) -> None:
 def prepare_create(self, win: Window) -> None:
 ```
 
-- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L1007)
+- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L994)
 
 ### FolderBrowse.set_disabled
 
@@ -1941,7 +1941,7 @@ Set disabled widgets state
 def set_disabled(self, disabled: bool) -> None:
 ```
 
-- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L985)
+- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L972)
 
 ### FolderBrowse.set_text
 
@@ -1951,7 +1951,7 @@ Set the text of the button.
 def set_text(self, text: str) -> None:
 ```
 
-- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L2981)
+- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L2970)
 
 ### FolderBrowse.show_dialog
 
@@ -1961,7 +1961,7 @@ Show file dialog
 def show_dialog(self, *args) -> Union[str, None]:
 ```
 
-- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L3065)
+- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L3054)
 
 ### FolderBrowse.update
 
@@ -1971,7 +1971,7 @@ Update the widget.
 def update(self, text: Union[str, None] = None, **kw) -> None:
 ```
 
-- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L2986)
+- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L2975)
 
 ## Frame
 
@@ -2005,7 +2005,7 @@ class Frame(
     ) 
 ```
 
-- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L1123)
+- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L1110)
 
 ### Methods of Frame
 
@@ -2029,7 +2029,7 @@ Bind event. @see [Window.bind](#windowbind)
 def bind(self, event_name: str, handle_name: str, propagate: bool=True, event_mode: EventMode = "user") -> None:
 ```
 
-- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L853)
+- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L840)
 
 ### Frame.bind_events
 
@@ -2041,7 +2041,7 @@ The specification is such that if the suffix "/hide" is attached to an event key
 def bind_events(self, events: dict[str, str], event_mode: EventMode="user") -> Element:
 ```
 
-- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L993)
+- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L980)
 
 ### Frame.create
 
@@ -2051,7 +2051,7 @@ Create a Frame widget.
 def create(self, win: Window, parent: tk.Widget) -> tk.Widget:
 ```
 
-- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L1163)
+- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L1150)
 
 ### Frame.disptach_event
 
@@ -2061,7 +2061,7 @@ Dispatch event
 def disptach_event(self, values: Union[dict[str, Any], None] = None) -> None:
 ```
 
-- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L861)
+- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L848)
 
 ### Frame.get
 
@@ -2071,7 +2071,7 @@ Return Widget
 def get(self) -> Any:
 ```
 
-- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L1176)
+- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L1163)
 
 ### Frame.get_name
 
@@ -2081,7 +2081,7 @@ Get key of element.
 def get_name(self) -> str:
 ```
 
-- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L847)
+- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L834)
 
 ### Frame.get_prev_widget
 
@@ -2091,7 +2091,7 @@ Get the previous widget.
 def get_prev_widget(self, target_key: Union[str, None] = None) -> tk.Widget:
 ```
 
-- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L1084)
+- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L1071)
 
 ### Frame.post_create
 
@@ -2101,7 +2101,7 @@ Post create widget.
 def post_create(self, win: Window, parent: tk.Widget) -> None:
 ```
 
-- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L1061)
+- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L1048)
 
 ### Frame.prepare_create
 
@@ -2109,7 +2109,7 @@ def post_create(self, win: Window, parent: tk.Widget) -> None:
 def prepare_create(self, win: Window) -> None:
 ```
 
-- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L1007)
+- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L994)
 
 ### Frame.set_disabled
 
@@ -2119,7 +2119,7 @@ Set disabled widgets state
 def set_disabled(self, disabled: bool) -> None:
 ```
 
-- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L985)
+- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L972)
 
 ### Frame.update
 
@@ -2129,7 +2129,7 @@ Update the widget.
 def update(self, *args, **kw) -> None:
 ```
 
-- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L1180)
+- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L1167)
 
 ## Graph
 
@@ -2148,7 +2148,7 @@ class Graph(
     **kw) 
 ```
 
-- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L2351)
+- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L2338)
 
 ### Methods of Graph
 
@@ -2183,7 +2183,7 @@ Bind event. @see [Window.bind](#windowbind)
 def bind(self, event_name: str, handle_name: str, propagate: bool=True, event_mode: EventMode = "user") -> None:
 ```
 
-- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L853)
+- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L840)
 
 ### Graph.bind_events
 
@@ -2195,7 +2195,7 @@ The specification is such that if the suffix "/hide" is attached to an event key
 def bind_events(self, events: dict[str, str], event_mode: EventMode="user") -> Element:
 ```
 
-- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L993)
+- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L980)
 
 ### Graph.create
 
@@ -2203,7 +2203,7 @@ def bind_events(self, events: dict[str, str], event_mode: EventMode="user") -> E
 def create(self, win: Window, parent: tk.Widget) -> tk.Widget:
 ```
 
-- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L2376)
+- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L2363)
 
 ### Graph.disptach_event
 
@@ -2213,7 +2213,7 @@ Dispatch event
 def disptach_event(self, values: Union[dict[str, Any], None] = None) -> None:
 ```
 
-- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L861)
+- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L848)
 
 ### Graph.draw_arc
 
@@ -2223,7 +2223,7 @@ Draw an arc.
 def draw_arc(self, top_left: PointType, bottom_right: PointType, extent: Union[int, None] = None, start_angle: Union[int, None] = None, style: Union[str, None] = None, arc_color: Union[str, None] = 'black', line_width: int = 1, fill_color: Union[str, None] = None) -> int:
 ```
 
-- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L2418)
+- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L2405)
 
 ### Graph.draw_circle
 
@@ -2233,7 +2233,7 @@ Draw a circle.
 def draw_circle(self, center_location: PointType, radius: Union[int, float], fill_color: Union[str, None] = None, line_color: Union[str, None] = 'black', line_width: int = 1) -> int:
 ```
 
-- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L2409)
+- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L2396)
 
 ### Graph.draw_image
 
@@ -2243,7 +2243,7 @@ Draw image
 def draw_image(self, filename: Union[str, None] = None, data: Union[bytes, None] = None, location: Union[PointType, None] = None) -> int:
 ```
 
-- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L2440)
+- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L2427)
 
 ### Graph.draw_line
 
@@ -2253,7 +2253,7 @@ Draw a line.
 def draw_line(self, point_from: PointType, point_to: PointType, color: str = 'black', width: int = 1) -> int:
 ```
 
-- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L2395)
+- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L2382)
 
 ### Graph.draw_lines
 
@@ -2263,7 +2263,7 @@ Draw lines.
 def draw_lines(self, points: list[PointType], color='black', width=1) -> int:
 ```
 
-- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L2399)
+- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L2386)
 
 ### Graph.draw_oval
 
@@ -2273,7 +2273,7 @@ Draw an oval.
 def draw_oval(self, top_left: PointType, bottom_right: PointType, fill_color: Union[str, None] = None, line_color: Union[str, None] = None, line_width: int = 1):
 ```
 
-- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L2414)
+- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L2401)
 
 ### Graph.draw_point
 
@@ -2283,7 +2283,7 @@ Draw a point.
 def draw_point(self, point: PointType, size: int = 2, color: str = 'black') -> int:
 ```
 
-- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L2403)
+- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L2390)
 
 ### Graph.draw_polygon
 
@@ -2293,7 +2293,7 @@ Draw polygon
 def draw_polygon(self, points: list[PointType], fill_color: Union[str, None] = None, line_color: Union[str, None] = None, line_width: Union[int, None] = None) -> None:
 ```
 
-- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L2430)
+- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L2417)
 
 ### Graph.draw_rectangle
 
@@ -2303,7 +2303,7 @@ Draw rectangle
 def draw_rectangle(self, top_left: PointType, bottom_right: PointType, fill_color: Union[str, None] = None, line_color: Union[str, None] = None, line_width: Union[int, None] = None) -> int:
 ```
 
-- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L2426)
+- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L2413)
 
 ### Graph.draw_text
 
@@ -2313,7 +2313,7 @@ Draw text
 def draw_text(self, text: str, location: PointType, color: Union[str, None]='black', font: FontType = None, angle: Union[float, str, None] = 0, text_location: TextAlign = tk.CENTER) -> int:
 ```
 
-- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L2434)
+- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L2421)
 
 ### Graph.erase
 
@@ -2323,7 +2323,7 @@ Delete all
 def erase(self) -> None:
 ```
 
-- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L2422)
+- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L2409)
 
 ### Graph.get
 
@@ -2333,7 +2333,7 @@ Return Widget
 def get(self) -> Any:
 ```
 
-- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L2381)
+- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L2368)
 
 ### Graph.get_name
 
@@ -2343,7 +2343,7 @@ Get key of element.
 def get_name(self) -> str:
 ```
 
-- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L847)
+- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L834)
 
 ### Graph.get_prev_widget
 
@@ -2353,7 +2353,7 @@ Get the previous widget.
 def get_prev_widget(self, target_key: Union[str, None] = None) -> tk.Widget:
 ```
 
-- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L1084)
+- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L1071)
 
 ### Graph.post_create
 
@@ -2363,7 +2363,7 @@ Post create widget.
 def post_create(self, win: Window, parent: tk.Widget) -> None:
 ```
 
-- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L1061)
+- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L1048)
 
 ### Graph.prepare_create
 
@@ -2371,7 +2371,7 @@ def post_create(self, win: Window, parent: tk.Widget) -> None:
 def prepare_create(self, win: Window) -> None:
 ```
 
-- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L1007)
+- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L994)
 
 ### Graph.set_disabled
 
@@ -2381,7 +2381,7 @@ Set disabled widgets state
 def set_disabled(self, disabled: bool) -> None:
 ```
 
-- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L985)
+- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L972)
 
 ### Graph.update
 
@@ -2391,7 +2391,7 @@ Update the widget.
 def update(self, *args, **kw) -> None:
 ```
 
-- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L2385)
+- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L2372)
 
 ## HSeparator
 
@@ -2409,7 +2409,7 @@ class HSeparator(
     **kw) 
 ```
 
-- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L2553)
+- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L2540)
 
 ### Methods of HSeparator
 
@@ -2433,7 +2433,7 @@ Bind event. @see [Window.bind](#windowbind)
 def bind(self, event_name: str, handle_name: str, propagate: bool=True, event_mode: EventMode = "user") -> None:
 ```
 
-- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L853)
+- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L840)
 
 ### HSeparator.bind_events
 
@@ -2445,7 +2445,7 @@ The specification is such that if the suffix "/hide" is attached to an event key
 def bind_events(self, events: dict[str, str], event_mode: EventMode="user") -> Element:
 ```
 
-- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L993)
+- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L980)
 
 ### HSeparator.create
 
@@ -2453,7 +2453,7 @@ def bind_events(self, events: dict[str, str], event_mode: EventMode="user") -> E
 def create(self, win: Window, parent: tk.Widget) -> Any:
 ```
 
-- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L2571)
+- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L2558)
 
 ### HSeparator.disptach_event
 
@@ -2463,7 +2463,7 @@ Dispatch event
 def disptach_event(self, values: Union[dict[str, Any], None] = None) -> None:
 ```
 
-- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L861)
+- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L848)
 
 ### HSeparator.get
 
@@ -2473,7 +2473,7 @@ Get the value of the widget.
 def get(self) -> Any:
 ```
 
-- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L1065)
+- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L1052)
 
 ### HSeparator.get_name
 
@@ -2483,7 +2483,7 @@ Get key of element.
 def get_name(self) -> str:
 ```
 
-- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L847)
+- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L834)
 
 ### HSeparator.get_prev_widget
 
@@ -2493,7 +2493,7 @@ Get the previous widget.
 def get_prev_widget(self, target_key: Union[str, None] = None) -> tk.Widget:
 ```
 
-- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L1084)
+- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L1071)
 
 ### HSeparator.post_create
 
@@ -2503,7 +2503,7 @@ Post create widget.
 def post_create(self, win: Window, parent: tk.Widget) -> None:
 ```
 
-- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L1061)
+- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L1048)
 
 ### HSeparator.prepare_create
 
@@ -2511,7 +2511,7 @@ def post_create(self, win: Window, parent: tk.Widget) -> None:
 def prepare_create(self, win: Window) -> None:
 ```
 
-- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L1007)
+- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L994)
 
 ### HSeparator.set_disabled
 
@@ -2521,7 +2521,7 @@ Set disabled widgets state
 def set_disabled(self, disabled: bool) -> None:
 ```
 
-- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L985)
+- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L972)
 
 ### HSeparator.update
 
@@ -2531,7 +2531,7 @@ update widget configuration.
 def update(self, *args, **kw) -> None:
 ```
 
-- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L1069)
+- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L1056)
 
 ## Image
 
@@ -2551,7 +2551,7 @@ class Image(
     **kw) 
 ```
 
-- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L2453)
+- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L2440)
 
 ### Methods of Image
 
@@ -2577,7 +2577,7 @@ Bind event. @see [Window.bind](#windowbind)
 def bind(self, event_name: str, handle_name: str, propagate: bool=True, event_mode: EventMode = "user") -> None:
 ```
 
-- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L853)
+- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L840)
 
 ### Image.bind_events
 
@@ -2589,7 +2589,7 @@ The specification is such that if the suffix "/hide" is attached to an event key
 def bind_events(self, events: dict[str, str], event_mode: EventMode="user") -> Element:
 ```
 
-- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L993)
+- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L980)
 
 ### Image.create
 
@@ -2599,7 +2599,7 @@ Create a Image widget.
 def create(self, win: Window, parent: tk.Widget) -> tk.Widget:
 ```
 
-- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L2473)
+- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L2460)
 
 ### Image.disptach_event
 
@@ -2609,7 +2609,7 @@ Dispatch event
 def disptach_event(self, values: Union[dict[str, Any], None] = None) -> None:
 ```
 
-- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L861)
+- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L848)
 
 ### Image.erase
 
@@ -2619,7 +2619,7 @@ Erase image
 def erase(self) -> None:
 ```
 
-- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L2486)
+- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L2473)
 
 ### Image.get
 
@@ -2629,7 +2629,7 @@ Return Widget
 def get(self) -> Any:
 ```
 
-- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L2482)
+- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L2469)
 
 ### Image.get_name
 
@@ -2639,7 +2639,7 @@ Get key of element.
 def get_name(self) -> str:
 ```
 
-- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L847)
+- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L834)
 
 ### Image.get_prev_widget
 
@@ -2649,7 +2649,7 @@ Get the previous widget.
 def get_prev_widget(self, target_key: Union[str, None] = None) -> tk.Widget:
 ```
 
-- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L1084)
+- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L1071)
 
 ### Image.post_create
 
@@ -2659,7 +2659,7 @@ Post create widget.
 def post_create(self, win: Window, parent: tk.Widget) -> None:
 ```
 
-- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L1061)
+- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L1048)
 
 ### Image.prepare_create
 
@@ -2667,7 +2667,7 @@ def post_create(self, win: Window, parent: tk.Widget) -> None:
 def prepare_create(self, win: Window) -> None:
 ```
 
-- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L1007)
+- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L994)
 
 ### Image.set_disabled
 
@@ -2677,7 +2677,7 @@ Set disabled widgets state
 def set_disabled(self, disabled: bool) -> None:
 ```
 
-- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L985)
+- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L972)
 
 ### Image.set_image
 
@@ -2688,7 +2688,7 @@ def set_image(self,
     data: Union[bytes, None]=None) -> None:
 ```
 
-- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L2490)
+- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L2477)
 
 ### Image.update
 
@@ -2703,7 +2703,7 @@ def update(self,
     **kw) -> None:
 ```
 
-- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L2507)
+- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L2494)
 
 ## Input
 
@@ -2737,7 +2737,7 @@ class Input(
     ) 
 ```
 
-- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L1651)
+- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L1638)
 
 ### Methods of Input
 
@@ -2777,7 +2777,7 @@ Bind event. @see [Window.bind](#windowbind)
 def bind(self, event_name: str, handle_name: str, propagate: bool=True, event_mode: EventMode = "user") -> None:
 ```
 
-- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L853)
+- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L840)
 
 ### Input.bind_events
 
@@ -2789,7 +2789,7 @@ The specification is such that if the suffix "/hide" is attached to an event key
 def bind_events(self, events: dict[str, str], event_mode: EventMode="user") -> Element:
 ```
 
-- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L993)
+- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L980)
 
 ### Input.copy
 
@@ -2799,7 +2799,7 @@ copy to clipboard
 def copy(self) -> str:
 ```
 
-- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L1794)
+- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L1781)
 
 ### Input.copy_selected_text
 
@@ -2809,7 +2809,7 @@ Copy selected text
 def copy_selected_text(self) -> None:
 ```
 
-- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L1757)
+- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L1744)
 
 ### Input.create
 
@@ -2819,7 +2819,7 @@ create Input widget
 def create(self, win: Window, parent: tk.Widget) -> tk.Widget:
 ```
 
-- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L1707)
+- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L1694)
 
 ### Input.cut
 
@@ -2829,7 +2829,7 @@ cut to clipboard
 def cut(self) -> str:
 ```
 
-- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L1802)
+- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L1789)
 
 ### Input.delete_selected
 
@@ -2839,7 +2839,7 @@ delete selected text
 def delete_selected(self) -> str:
 ```
 
-- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L1809)
+- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L1796)
 
 ### Input.disptach_event
 
@@ -2849,7 +2849,7 @@ Dispatch event
 def disptach_event(self, values: Union[dict[str, Any], None] = None) -> None:
 ```
 
-- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L861)
+- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L848)
 
 ### Input.get
 
@@ -2859,7 +2859,7 @@ Get the value of the widget.
 def get(self) -> Any:
 ```
 
-- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L1729)
+- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L1716)
 
 ### Input.get_cursor_pos
 
@@ -2869,7 +2869,7 @@ get cursor position
 def get_cursor_pos(self) -> int:
 ```
 
-- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L1843)
+- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L1830)
 
 ### Input.get_name
 
@@ -2879,7 +2879,7 @@ Get key of element.
 def get_name(self) -> str:
 ```
 
-- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L847)
+- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L834)
 
 ### Input.get_prev_widget
 
@@ -2889,7 +2889,7 @@ Get the previous widget.
 def get_prev_widget(self, target_key: Union[str, None] = None) -> tk.Widget:
 ```
 
-- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L1084)
+- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L1071)
 
 ### Input.get_selected_text
 
@@ -2899,7 +2899,7 @@ get selected text
 def get_selected_text(self) -> str:
 ```
 
-- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L1748)
+- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L1735)
 
 ### Input.get_selection_length
 
@@ -2909,7 +2909,7 @@ get selection length
 def get_selection_length(self) -> tuple[int, int]:
 ```
 
-- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L1861)
+- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L1848)
 
 ### Input.get_selection_pos
 
@@ -2919,7 +2919,7 @@ get selection positions
 def get_selection_pos(self) -> tuple[int, int]:
 ```
 
-- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L1832)
+- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L1819)
 
 ### Input.get_selection_start
 
@@ -2929,7 +2929,7 @@ get selection start
 def get_selection_start(self) -> int:
 ```
 
-- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L1852)
+- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L1839)
 
 ### Input.get_text
 
@@ -2939,7 +2939,7 @@ get text
 def get_text(self) -> str:
 ```
 
-- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L1744)
+- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L1731)
 
 ### Input.paste
 
@@ -2949,7 +2949,7 @@ paste from clipboard
 def paste(self):
 ```
 
-- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L1820)
+- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L1807)
 
 ### Input.post_create
 
@@ -2959,7 +2959,7 @@ Post create widget.
 def post_create(self, win: Window, parent: tk.Widget) -> None:
 ```
 
-- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L1061)
+- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L1048)
 
 ### Input.prepare_create
 
@@ -2967,7 +2967,7 @@ def post_create(self, win: Window, parent: tk.Widget) -> None:
 def prepare_create(self, win: Window) -> None:
 ```
 
-- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L1007)
+- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L994)
 
 ### Input.select_all
 
@@ -2977,7 +2977,7 @@ select_all
 def select_all(self) -> None:
 ```
 
-- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L1786)
+- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L1773)
 
 ### Input.set_cursor_pos
 
@@ -2987,7 +2987,7 @@ set cursor position
 def set_cursor_pos(self, index: int) -> None:
 ```
 
-- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L1848)
+- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L1835)
 
 ### Input.set_disabled
 
@@ -2997,7 +2997,7 @@ Set disabled widgets state
 def set_disabled(self, disabled: bool) -> None:
 ```
 
-- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L985)
+- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L972)
 
 ### Input.set_readonly
 
@@ -3007,7 +3007,7 @@ set readonly
 def set_readonly(self, readonly: bool) -> None:
 ```
 
-- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L1762)
+- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L1749)
 
 ### Input.set_selection_start
 
@@ -3017,7 +3017,7 @@ set selection start and length
 def set_selection_start(self, sel_start: int, sel_length: int=0) -> None:
 ```
 
-- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L1871)
+- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L1858)
 
 ### Input.set_text
 
@@ -3027,7 +3027,7 @@ set text
 def set_text(self, text: str) -> None:
 ```
 
-- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L1733)
+- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L1720)
 
 ### Input.update
 
@@ -3037,7 +3037,7 @@ Update the widget.
 def update(self, text: Union[str, None] = None, readonly: Union[bool, None] = None, **kw) -> None:
 ```
 
-- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L1768)
+- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L1755)
 
 ## InputText
 
@@ -3071,7 +3071,7 @@ class InputText(
     ) 
 ```
 
-- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L1651)
+- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L1638)
 
 ### Methods of InputText
 
@@ -3111,7 +3111,7 @@ Bind event. @see [Window.bind](#windowbind)
 def bind(self, event_name: str, handle_name: str, propagate: bool=True, event_mode: EventMode = "user") -> None:
 ```
 
-- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L853)
+- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L840)
 
 ### InputText.bind_events
 
@@ -3123,7 +3123,7 @@ The specification is such that if the suffix "/hide" is attached to an event key
 def bind_events(self, events: dict[str, str], event_mode: EventMode="user") -> Element:
 ```
 
-- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L993)
+- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L980)
 
 ### InputText.copy
 
@@ -3133,7 +3133,7 @@ copy to clipboard
 def copy(self) -> str:
 ```
 
-- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L1794)
+- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L1781)
 
 ### InputText.copy_selected_text
 
@@ -3143,7 +3143,7 @@ Copy selected text
 def copy_selected_text(self) -> None:
 ```
 
-- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L1757)
+- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L1744)
 
 ### InputText.create
 
@@ -3153,7 +3153,7 @@ create Input widget
 def create(self, win: Window, parent: tk.Widget) -> tk.Widget:
 ```
 
-- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L1707)
+- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L1694)
 
 ### InputText.cut
 
@@ -3163,7 +3163,7 @@ cut to clipboard
 def cut(self) -> str:
 ```
 
-- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L1802)
+- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L1789)
 
 ### InputText.delete_selected
 
@@ -3173,7 +3173,7 @@ delete selected text
 def delete_selected(self) -> str:
 ```
 
-- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L1809)
+- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L1796)
 
 ### InputText.disptach_event
 
@@ -3183,7 +3183,7 @@ Dispatch event
 def disptach_event(self, values: Union[dict[str, Any], None] = None) -> None:
 ```
 
-- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L861)
+- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L848)
 
 ### InputText.get
 
@@ -3193,7 +3193,7 @@ Get the value of the widget.
 def get(self) -> Any:
 ```
 
-- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L1729)
+- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L1716)
 
 ### InputText.get_cursor_pos
 
@@ -3203,7 +3203,7 @@ get cursor position
 def get_cursor_pos(self) -> int:
 ```
 
-- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L1843)
+- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L1830)
 
 ### InputText.get_name
 
@@ -3213,7 +3213,7 @@ Get key of element.
 def get_name(self) -> str:
 ```
 
-- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L847)
+- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L834)
 
 ### InputText.get_prev_widget
 
@@ -3223,7 +3223,7 @@ Get the previous widget.
 def get_prev_widget(self, target_key: Union[str, None] = None) -> tk.Widget:
 ```
 
-- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L1084)
+- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L1071)
 
 ### InputText.get_selected_text
 
@@ -3233,7 +3233,7 @@ get selected text
 def get_selected_text(self) -> str:
 ```
 
-- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L1748)
+- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L1735)
 
 ### InputText.get_selection_length
 
@@ -3243,7 +3243,7 @@ get selection length
 def get_selection_length(self) -> tuple[int, int]:
 ```
 
-- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L1861)
+- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L1848)
 
 ### InputText.get_selection_pos
 
@@ -3253,7 +3253,7 @@ get selection positions
 def get_selection_pos(self) -> tuple[int, int]:
 ```
 
-- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L1832)
+- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L1819)
 
 ### InputText.get_selection_start
 
@@ -3263,7 +3263,7 @@ get selection start
 def get_selection_start(self) -> int:
 ```
 
-- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L1852)
+- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L1839)
 
 ### InputText.get_text
 
@@ -3273,7 +3273,7 @@ get text
 def get_text(self) -> str:
 ```
 
-- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L1744)
+- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L1731)
 
 ### InputText.paste
 
@@ -3283,7 +3283,7 @@ paste from clipboard
 def paste(self):
 ```
 
-- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L1820)
+- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L1807)
 
 ### InputText.post_create
 
@@ -3293,7 +3293,7 @@ Post create widget.
 def post_create(self, win: Window, parent: tk.Widget) -> None:
 ```
 
-- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L1061)
+- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L1048)
 
 ### InputText.prepare_create
 
@@ -3301,7 +3301,7 @@ def post_create(self, win: Window, parent: tk.Widget) -> None:
 def prepare_create(self, win: Window) -> None:
 ```
 
-- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L1007)
+- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L994)
 
 ### InputText.select_all
 
@@ -3311,7 +3311,7 @@ select_all
 def select_all(self) -> None:
 ```
 
-- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L1786)
+- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L1773)
 
 ### InputText.set_cursor_pos
 
@@ -3321,7 +3321,7 @@ set cursor position
 def set_cursor_pos(self, index: int) -> None:
 ```
 
-- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L1848)
+- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L1835)
 
 ### InputText.set_disabled
 
@@ -3331,7 +3331,7 @@ Set disabled widgets state
 def set_disabled(self, disabled: bool) -> None:
 ```
 
-- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L985)
+- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L972)
 
 ### InputText.set_readonly
 
@@ -3341,7 +3341,7 @@ set readonly
 def set_readonly(self, readonly: bool) -> None:
 ```
 
-- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L1762)
+- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L1749)
 
 ### InputText.set_selection_start
 
@@ -3351,7 +3351,7 @@ set selection start and length
 def set_selection_start(self, sel_start: int, sel_length: int=0) -> None:
 ```
 
-- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L1871)
+- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L1858)
 
 ### InputText.set_text
 
@@ -3361,7 +3361,7 @@ set text
 def set_text(self, text: str) -> None:
 ```
 
-- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L1733)
+- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L1720)
 
 ### InputText.update
 
@@ -3371,7 +3371,7 @@ Update the widget.
 def update(self, text: Union[str, None] = None, readonly: Union[bool, None] = None, **kw) -> None:
 ```
 
-- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L1768)
+- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L1755)
 
 ## Label
 
@@ -3400,7 +3400,7 @@ class Label(
     ) 
 ```
 
-- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L1245)
+- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L1232)
 
 ### Methods of Label
 
@@ -3426,7 +3426,7 @@ Bind event. @see [Window.bind](#windowbind)
 def bind(self, event_name: str, handle_name: str, propagate: bool=True, event_mode: EventMode = "user") -> None:
 ```
 
-- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L853)
+- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L840)
 
 ### Label.bind_events
 
@@ -3438,7 +3438,7 @@ The specification is such that if the suffix "/hide" is attached to an event key
 def bind_events(self, events: dict[str, str], event_mode: EventMode="user") -> Element:
 ```
 
-- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L993)
+- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L980)
 
 ### Label.create
 
@@ -3448,7 +3448,7 @@ Create a Text widget.
 def create(self, win: Window, parent: tk.Widget) -> tk.Widget:
 ```
 
-- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L1274)
+- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L1261)
 
 ### Label.disptach_event
 
@@ -3458,7 +3458,7 @@ Dispatch event
 def disptach_event(self, values: Union[dict[str, Any], None] = None) -> None:
 ```
 
-- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L861)
+- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L848)
 
 ### Label.get
 
@@ -3468,7 +3468,7 @@ Get the value of the widget.
 def get(self) -> Any:
 ```
 
-- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L1285)
+- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L1272)
 
 ### Label.get_name
 
@@ -3478,7 +3478,7 @@ Get key of element.
 def get_name(self) -> str:
 ```
 
-- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L847)
+- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L834)
 
 ### Label.get_prev_widget
 
@@ -3488,7 +3488,7 @@ Get the previous widget.
 def get_prev_widget(self, target_key: Union[str, None] = None) -> tk.Widget:
 ```
 
-- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L1084)
+- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L1071)
 
 ### Label.get_text
 
@@ -3496,7 +3496,7 @@ def get_prev_widget(self, target_key: Union[str, None] = None) -> tk.Widget:
 def get_text(self) -> str:
 ```
 
-- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L1289)
+- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L1276)
 
 ### Label.post_create
 
@@ -3506,7 +3506,7 @@ Post create widget.
 def post_create(self, win: Window, parent: tk.Widget) -> None:
 ```
 
-- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L1061)
+- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L1048)
 
 ### Label.prepare_create
 
@@ -3514,7 +3514,7 @@ def post_create(self, win: Window, parent: tk.Widget) -> None:
 def prepare_create(self, win: Window) -> None:
 ```
 
-- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L1007)
+- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L994)
 
 ### Label.set_disabled
 
@@ -3524,7 +3524,7 @@ Set disabled widgets state
 def set_disabled(self, disabled: bool) -> None:
 ```
 
-- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L985)
+- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L972)
 
 ### Label.set_text
 
@@ -3534,7 +3534,7 @@ Set the text of the widget.
 def set_text(self, text: str) -> None:
 ```
 
-- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L1292)
+- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L1279)
 
 ### Label.update
 
@@ -3544,7 +3544,7 @@ Update the widget.
 def update(self, text: Union[str, None] = None, *args, **kw) -> None:
 ```
 
-- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L1297)
+- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L1284)
 
 ## ListBrowse
 
@@ -3568,7 +3568,7 @@ class ListBrowse(
     ) 
 ```
 
-- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L3117)
+- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L3106)
 
 ### Methods of ListBrowse
 
@@ -3594,7 +3594,7 @@ Bind event. @see [Window.bind](#windowbind)
 def bind(self, event_name: str, handle_name: str, propagate: bool=True, event_mode: EventMode = "user") -> None:
 ```
 
-- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L853)
+- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L840)
 
 ### ListBrowse.bind_events
 
@@ -3606,7 +3606,7 @@ The specification is such that if the suffix "/hide" is attached to an event key
 def bind_events(self, events: dict[str, str], event_mode: EventMode="user") -> Element:
 ```
 
-- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L993)
+- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L980)
 
 ### ListBrowse.create
 
@@ -3614,7 +3614,7 @@ def bind_events(self, events: dict[str, str], event_mode: EventMode="user") -> E
 def create(self, win: Window, parent: tk.Widget) -> tk.Widget:
 ```
 
-- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L2934)
+- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L2923)
 
 ### ListBrowse.disptach_event
 
@@ -3624,7 +3624,7 @@ Dispatch event
 def disptach_event(self, values: Union[dict[str, Any], None] = None) -> None:
 ```
 
-- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L861)
+- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L848)
 
 ### ListBrowse.get
 
@@ -3634,7 +3634,7 @@ Get the value of the widget.
 def get(self) -> Any:
 ```
 
-- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L1065)
+- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L1052)
 
 ### ListBrowse.get_name
 
@@ -3644,7 +3644,7 @@ Get key of element.
 def get_name(self) -> str:
 ```
 
-- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L847)
+- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L834)
 
 ### ListBrowse.get_prev_widget
 
@@ -3654,7 +3654,7 @@ Get the previous widget.
 def get_prev_widget(self, target_key: Union[str, None] = None) -> tk.Widget:
 ```
 
-- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L1084)
+- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L1071)
 
 ### ListBrowse.post_create
 
@@ -3664,7 +3664,7 @@ Post create widget.
 def post_create(self, win: Window, parent: tk.Widget) -> None:
 ```
 
-- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L1061)
+- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L1048)
 
 ### ListBrowse.prepare_create
 
@@ -3672,7 +3672,7 @@ def post_create(self, win: Window, parent: tk.Widget) -> None:
 def prepare_create(self, win: Window) -> None:
 ```
 
-- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L1007)
+- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L994)
 
 ### ListBrowse.set_disabled
 
@@ -3682,7 +3682,7 @@ Set disabled widgets state
 def set_disabled(self, disabled: bool) -> None:
 ```
 
-- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L985)
+- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L972)
 
 ### ListBrowse.set_text
 
@@ -3692,7 +3692,7 @@ Set the text of the button.
 def set_text(self, text: str) -> None:
 ```
 
-- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L2981)
+- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L2970)
 
 ### ListBrowse.show_dialog
 
@@ -3702,7 +3702,7 @@ Show Listbox dialog
 def show_dialog(self, *args) -> Union[str, None]:
 ```
 
-- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L3142)
+- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L3131)
 
 ### ListBrowse.update
 
@@ -3712,7 +3712,7 @@ Update the widget.
 def update(self, text: Union[str, None] = None, **kw) -> None:
 ```
 
-- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L2986)
+- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L2975)
 
 ## Listbox
 
@@ -3734,7 +3734,7 @@ class Listbox(
     ) 
 ```
 
-- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L2578)
+- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L2565)
 
 ### Methods of Listbox
 
@@ -3762,7 +3762,7 @@ Bind event. @see [Window.bind](#windowbind)
 def bind(self, event_name: str, handle_name: str, propagate: bool=True, event_mode: EventMode = "user") -> None:
 ```
 
-- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L853)
+- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L840)
 
 ### Listbox.bind_events
 
@@ -3774,7 +3774,7 @@ The specification is such that if the suffix "/hide" is attached to an event key
 def bind_events(self, events: dict[str, str], event_mode: EventMode="user") -> Element:
 ```
 
-- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L993)
+- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L980)
 
 ### Listbox.create
 
@@ -3784,7 +3784,7 @@ def bind_events(self, events: dict[str, str], event_mode: EventMode="user") -> E
 def create(self, win: Window, parent: tk.Widget) -> tk.Widget:
 ```
 
-- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L2605)
+- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L2592)
 
 ### Listbox.disptach_event
 
@@ -3794,7 +3794,7 @@ Dispatch event
 def disptach_event(self, values: Union[dict[str, Any], None] = None) -> None:
 ```
 
-- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L861)
+- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L848)
 
 ### Listbox.get
 
@@ -3804,7 +3804,7 @@ Get the value of the widget.
 def get(self) -> Any:
 ```
 
-- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L2664)
+- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L2653)
 
 ### Listbox.get_cursor_index
 
@@ -3814,7 +3814,7 @@ Get cursor index (return -1 if not selected)
 def get_cursor_index(self) -> int:
 ```
 
-- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L2643)
+- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L2632)
 
 ### Listbox.get_name
 
@@ -3824,7 +3824,7 @@ Get key of element.
 def get_name(self) -> str:
 ```
 
-- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L847)
+- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L834)
 
 ### Listbox.get_prev_widget
 
@@ -3834,7 +3834,7 @@ Get the previous widget.
 def get_prev_widget(self, target_key: Union[str, None] = None) -> tk.Widget:
 ```
 
-- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L1084)
+- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L1071)
 
 ### Listbox.post_create
 
@@ -3844,7 +3844,7 @@ Post create widget.
 def post_create(self, win: Window, parent: tk.Widget) -> None:
 ```
 
-- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L1061)
+- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L1048)
 
 ### Listbox.prepare_create
 
@@ -3852,17 +3852,17 @@ def post_create(self, win: Window, parent: tk.Widget) -> None:
 def prepare_create(self, win: Window) -> None:
 ```
 
-- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L1007)
+- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L994)
 
 ### Listbox.select_values
 
 Select values
 
 ```py
-def select_values(self, values: list[str]) -> None:
+def select_values(self, values: tuple[list[str], None]) -> None:
 ```
 
-- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L2622)
+- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L2609)
 
 ### Listbox.set_cursor_index
 
@@ -3872,7 +3872,7 @@ Set cursor index
 def set_cursor_index(self, index: int) -> None:
 ```
 
-- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L2653)
+- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L2642)
 
 ### Listbox.set_disabled
 
@@ -3882,7 +3882,7 @@ Set disabled widgets state
 def set_disabled(self, disabled: bool) -> None:
 ```
 
-- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L985)
+- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L972)
 
 ### Listbox.set_values
 
@@ -3892,7 +3892,7 @@ Set values to list
 def set_values(self, values: list[str]) -> None:
 ```
 
-- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L2633)
+- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L2622)
 
 ### Listbox.update
 
@@ -3902,7 +3902,7 @@ Update the widget.
 def update(self, *args, **kw) -> None:
 ```
 
-- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L2677)
+- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L2666)
 
 ## Menu
 
@@ -3929,7 +3929,7 @@ class Menu(
     **kw) 
 ```
 
-- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L1324)
+- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L1311)
 
 ### Methods of Menu
 
@@ -3955,7 +3955,7 @@ Bind event. @see [Window.bind](#windowbind)
 def bind(self, event_name: str, handle_name: str, propagate: bool=True, event_mode: EventMode = "user") -> None:
 ```
 
-- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L853)
+- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L840)
 
 ### Menu.bind_events
 
@@ -3967,7 +3967,7 @@ The specification is such that if the suffix "/hide" is attached to an event key
 def bind_events(self, events: dict[str, str], event_mode: EventMode="user") -> Element:
 ```
 
-- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L993)
+- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L980)
 
 ### Menu.create
 
@@ -3977,7 +3977,7 @@ Create a Text widget.
 def create(self, win: Window, parent: tk.Widget) -> tk.Widget:
 ```
 
-- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L1336)
+- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L1323)
 
 ### Menu.disptach_event
 
@@ -3987,7 +3987,7 @@ Dispatch event
 def disptach_event(self, values: Union[dict[str, Any], None] = None) -> None:
 ```
 
-- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L861)
+- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L848)
 
 ### Menu.get
 
@@ -3997,7 +3997,7 @@ Get the value of the widget.
 def get(self) -> Any:
 ```
 
-- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L1389)
+- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L1376)
 
 ### Menu.get_name
 
@@ -4007,7 +4007,7 @@ Get key of element.
 def get_name(self) -> str:
 ```
 
-- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L847)
+- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L834)
 
 ### Menu.get_prev_widget
 
@@ -4017,7 +4017,7 @@ Get the previous widget.
 def get_prev_widget(self, target_key: Union[str, None] = None) -> tk.Widget:
 ```
 
-- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L1084)
+- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L1071)
 
 ### Menu.get_text
 
@@ -4025,7 +4025,7 @@ def get_prev_widget(self, target_key: Union[str, None] = None) -> tk.Widget:
 def get_text(self) -> str:
 ```
 
-- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L1393)
+- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L1380)
 
 ### Menu.post_create
 
@@ -4035,7 +4035,7 @@ Post create widget.
 def post_create(self, win: Window, parent: tk.Widget) -> None:
 ```
 
-- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L1061)
+- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L1048)
 
 ### Menu.prepare_create
 
@@ -4043,7 +4043,7 @@ def post_create(self, win: Window, parent: tk.Widget) -> None:
 def prepare_create(self, win: Window) -> None:
 ```
 
-- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L1007)
+- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L994)
 
 ### Menu.set_disabled
 
@@ -4053,7 +4053,7 @@ Set disabled widgets state
 def set_disabled(self, disabled: bool) -> None:
 ```
 
-- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L985)
+- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L972)
 
 ### Menu.set_text
 
@@ -4063,7 +4063,7 @@ Set the text of the widget.
 def set_text(self, text: str) -> None:
 ```
 
-- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L1396)
+- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L1383)
 
 ### Menu.update
 
@@ -4073,7 +4073,7 @@ Update the widget.
 def update(self, text: Union[str, None] = None, *args, **kw) -> None:
 ```
 
-- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L1401)
+- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L1388)
 
 ## Multiline
 
@@ -4107,7 +4107,7 @@ class Multiline(
     ) 
 ```
 
-- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L1886)
+- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L1873)
 
 ### Methods of Multiline
 
@@ -4149,7 +4149,7 @@ Bind event. @see [Window.bind](#windowbind)
 def bind(self, event_name: str, handle_name: str, propagate: bool=True, event_mode: EventMode = "user") -> None:
 ```
 
-- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L853)
+- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L840)
 
 ### Multiline.bind_events
 
@@ -4161,7 +4161,7 @@ The specification is such that if the suffix "/hide" is attached to an event key
 def bind_events(self, events: dict[str, str], event_mode: EventMode="user") -> Element:
 ```
 
-- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L993)
+- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L980)
 
 ### Multiline.copy
 
@@ -4171,7 +4171,7 @@ Copy the selected text.
 def copy(self) -> str:
 ```
 
-- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L1994)
+- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L1981)
 
 ### Multiline.create
 
@@ -4181,7 +4181,7 @@ Create a Multiline widget.
 def create(self, win: Window, parent: tk.Widget) -> tk.Widget:
 ```
 
-- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L1940)
+- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L1927)
 
 ### Multiline.cut
 
@@ -4191,7 +4191,7 @@ Cut the selected text.
 def cut(self) -> str:
 ```
 
-- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L2011)
+- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L1998)
 
 ### Multiline.disptach_event
 
@@ -4201,7 +4201,7 @@ Dispatch event
 def disptach_event(self, values: Union[dict[str, Any], None] = None) -> None:
 ```
 
-- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L861)
+- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L848)
 
 ### Multiline.get
 
@@ -4211,7 +4211,7 @@ Get the value of the widget.
 def get(self) -> Any:
 ```
 
-- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L1971)
+- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L1958)
 
 ### Multiline.get_cursor_pos
 
@@ -4221,7 +4221,7 @@ Get Cursor position. liek `3.0` row=3, col=0
 def get_cursor_pos(self) -> str:
 ```
 
-- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L2107)
+- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L2094)
 
 ### Multiline.get_name
 
@@ -4231,7 +4231,7 @@ Get key of element.
 def get_name(self) -> str:
 ```
 
-- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L847)
+- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L834)
 
 ### Multiline.get_prev_widget
 
@@ -4241,7 +4241,7 @@ Get the previous widget.
 def get_prev_widget(self, target_key: Union[str, None] = None) -> tk.Widget:
 ```
 
-- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L1084)
+- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L1071)
 
 ### Multiline.get_selected_text
 
@@ -4251,7 +4251,7 @@ Get the selected text.
 def get_selected_text(self) -> str:
 ```
 
-- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L1984)
+- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L1971)
 
 ### Multiline.get_selection_length
 
@@ -4261,7 +4261,7 @@ get selection length
 def get_selection_length(self) -> int:
 ```
 
-- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L2143)
+- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L2130)
 
 ### Multiline.get_selection_pos
 
@@ -4271,7 +4271,7 @@ Get selection position, returns (start_pos, end_pos).
 def get_selection_pos(self) -> tuple[str, str]:
 ```
 
-- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L2052)
+- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L2039)
 
 ### Multiline.get_selection_start
 
@@ -4281,7 +4281,7 @@ get selection start
 def get_selection_start(self) -> int:
 ```
 
-- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L2123)
+- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L2110)
 
 ### Multiline.get_text
 
@@ -4291,7 +4291,7 @@ Get the text of the widget.
 def get_text(self) -> str:
 ```
 
-- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L1977)
+- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L1964)
 
 ### Multiline.index_to_pos
 
@@ -4301,7 +4301,7 @@ Convert index to postion.
 def index_to_pos(self, index: int) -> str:
 ```
 
-- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L2089)
+- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L2076)
 
 ### Multiline.paste
 
@@ -4311,7 +4311,7 @@ Paste the text.
 def paste(self) -> None:
 ```
 
-- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L2002)
+- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L1989)
 
 ### Multiline.pos_to_index
 
@@ -4321,7 +4321,7 @@ Convert position to index.
 def pos_to_index(self, pos: str) -> str:
 ```
 
-- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L2074)
+- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L2061)
 
 ### Multiline.post_create
 
@@ -4331,7 +4331,7 @@ Post create widget.
 def post_create(self, win: Window, parent: tk.Widget) -> None:
 ```
 
-- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L1061)
+- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L1048)
 
 ### Multiline.prepare_create
 
@@ -4339,7 +4339,7 @@ def post_create(self, win: Window, parent: tk.Widget) -> None:
 def prepare_create(self, win: Window) -> None:
 ```
 
-- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L1007)
+- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L994)
 
 ### Multiline.print
 
@@ -4349,7 +4349,7 @@ Print text.
 def print(self, text: str, text_color: Union[str, None] = None, background_color: Union[str, None] = None, end:str="\n") -> None:
 ```
 
-- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L2162)
+- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L2149)
 
 ### Multiline.select_all
 
@@ -4359,7 +4359,7 @@ select all text
 def select_all(self) -> None:
 ```
 
-- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L2153)
+- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L2140)
 
 ### Multiline.set_cursor_pos
 
@@ -4369,7 +4369,7 @@ Set cursor position. (like `3.0`, row=3, col=0)
 def set_cursor_pos(self, pos: str) -> None:
 ```
 
-- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L2117)
+- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L2104)
 
 ### Multiline.set_disabled
 
@@ -4379,7 +4379,7 @@ Set disabled widgets state
 def set_disabled(self, disabled: bool) -> None:
 ```
 
-- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L985)
+- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L972)
 
 ### Multiline.set_readonly
 
@@ -4389,7 +4389,7 @@ Set readonly
 def set_readonly(self, readonly: bool) -> None:
 ```
 
-- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L2029)
+- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L2016)
 
 ### Multiline.set_selection_pos
 
@@ -4399,7 +4399,7 @@ Set selection position.
 def set_selection_pos(self, start_pos: str, end_pos: str) -> None:
 ```
 
-- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L2063)
+- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L2050)
 
 ### Multiline.set_selection_start
 
@@ -4409,7 +4409,7 @@ set selection start
 def set_selection_start(self, index: int, sel_length: int=0) -> None:
 ```
 
-- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L2134)
+- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L2121)
 
 ### Multiline.set_text
 
@@ -4419,7 +4419,7 @@ Set text
 def set_text(self, text: str) -> None:
 ```
 
-- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L2035)
+- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L2022)
 
 ### Multiline.update
 
@@ -4429,7 +4429,7 @@ Update the widget.
 def update(self, text: Union[str, None] = None, readonly: Union[bool, None] = None, **kw) -> None:
 ```
 
-- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L2021)
+- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L2008)
 
 ## MultilineBrowse
 
@@ -4451,7 +4451,7 @@ class MultilineBrowse(
     ) 
 ```
 
-- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L3166)
+- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L3155)
 
 ### Methods of MultilineBrowse
 
@@ -4477,7 +4477,7 @@ Bind event. @see [Window.bind](#windowbind)
 def bind(self, event_name: str, handle_name: str, propagate: bool=True, event_mode: EventMode = "user") -> None:
 ```
 
-- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L853)
+- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L840)
 
 ### MultilineBrowse.bind_events
 
@@ -4489,7 +4489,7 @@ The specification is such that if the suffix "/hide" is attached to an event key
 def bind_events(self, events: dict[str, str], event_mode: EventMode="user") -> Element:
 ```
 
-- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L993)
+- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L980)
 
 ### MultilineBrowse.create
 
@@ -4497,7 +4497,7 @@ def bind_events(self, events: dict[str, str], event_mode: EventMode="user") -> E
 def create(self, win: Window, parent: tk.Widget) -> tk.Widget:
 ```
 
-- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L2934)
+- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L2923)
 
 ### MultilineBrowse.disptach_event
 
@@ -4507,7 +4507,7 @@ Dispatch event
 def disptach_event(self, values: Union[dict[str, Any], None] = None) -> None:
 ```
 
-- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L861)
+- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L848)
 
 ### MultilineBrowse.get
 
@@ -4517,7 +4517,7 @@ Get the value of the widget.
 def get(self) -> Any:
 ```
 
-- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L1065)
+- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L1052)
 
 ### MultilineBrowse.get_name
 
@@ -4527,7 +4527,7 @@ Get key of element.
 def get_name(self) -> str:
 ```
 
-- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L847)
+- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L834)
 
 ### MultilineBrowse.get_prev_widget
 
@@ -4537,7 +4537,7 @@ Get the previous widget.
 def get_prev_widget(self, target_key: Union[str, None] = None) -> tk.Widget:
 ```
 
-- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L1084)
+- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L1071)
 
 ### MultilineBrowse.post_create
 
@@ -4547,7 +4547,7 @@ Post create widget.
 def post_create(self, win: Window, parent: tk.Widget) -> None:
 ```
 
-- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L1061)
+- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L1048)
 
 ### MultilineBrowse.prepare_create
 
@@ -4555,7 +4555,7 @@ def post_create(self, win: Window, parent: tk.Widget) -> None:
 def prepare_create(self, win: Window) -> None:
 ```
 
-- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L1007)
+- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L994)
 
 ### MultilineBrowse.set_disabled
 
@@ -4565,7 +4565,7 @@ Set disabled widgets state
 def set_disabled(self, disabled: bool) -> None:
 ```
 
-- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L985)
+- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L972)
 
 ### MultilineBrowse.set_text
 
@@ -4575,7 +4575,7 @@ Set the text of the button.
 def set_text(self, text: str) -> None:
 ```
 
-- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L2981)
+- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L2970)
 
 ### MultilineBrowse.show_dialog
 
@@ -4585,7 +4585,7 @@ Show Listbox dialog
 def show_dialog(self, *args) -> Union[str, None]:
 ```
 
-- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L3187)
+- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L3176)
 
 ### MultilineBrowse.update
 
@@ -4595,7 +4595,7 @@ Update the widget.
 def update(self, text: Union[str, None] = None, **kw) -> None:
 ```
 
-- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L2986)
+- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L2975)
 
 ## Output
 
@@ -4629,7 +4629,7 @@ class Output(
     ) 
 ```
 
-- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L1886)
+- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L1873)
 
 ### Methods of Output
 
@@ -4671,7 +4671,7 @@ Bind event. @see [Window.bind](#windowbind)
 def bind(self, event_name: str, handle_name: str, propagate: bool=True, event_mode: EventMode = "user") -> None:
 ```
 
-- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L853)
+- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L840)
 
 ### Output.bind_events
 
@@ -4683,7 +4683,7 @@ The specification is such that if the suffix "/hide" is attached to an event key
 def bind_events(self, events: dict[str, str], event_mode: EventMode="user") -> Element:
 ```
 
-- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L993)
+- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L980)
 
 ### Output.copy
 
@@ -4693,7 +4693,7 @@ Copy the selected text.
 def copy(self) -> str:
 ```
 
-- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L1994)
+- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L1981)
 
 ### Output.create
 
@@ -4703,7 +4703,7 @@ Create a Multiline widget.
 def create(self, win: Window, parent: tk.Widget) -> tk.Widget:
 ```
 
-- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L1940)
+- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L1927)
 
 ### Output.cut
 
@@ -4713,7 +4713,7 @@ Cut the selected text.
 def cut(self) -> str:
 ```
 
-- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L2011)
+- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L1998)
 
 ### Output.disptach_event
 
@@ -4723,7 +4723,7 @@ Dispatch event
 def disptach_event(self, values: Union[dict[str, Any], None] = None) -> None:
 ```
 
-- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L861)
+- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L848)
 
 ### Output.get
 
@@ -4733,7 +4733,7 @@ Get the value of the widget.
 def get(self) -> Any:
 ```
 
-- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L1971)
+- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L1958)
 
 ### Output.get_cursor_pos
 
@@ -4743,7 +4743,7 @@ Get Cursor position. liek `3.0` row=3, col=0
 def get_cursor_pos(self) -> str:
 ```
 
-- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L2107)
+- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L2094)
 
 ### Output.get_name
 
@@ -4753,7 +4753,7 @@ Get key of element.
 def get_name(self) -> str:
 ```
 
-- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L847)
+- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L834)
 
 ### Output.get_prev_widget
 
@@ -4763,7 +4763,7 @@ Get the previous widget.
 def get_prev_widget(self, target_key: Union[str, None] = None) -> tk.Widget:
 ```
 
-- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L1084)
+- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L1071)
 
 ### Output.get_selected_text
 
@@ -4773,7 +4773,7 @@ Get the selected text.
 def get_selected_text(self) -> str:
 ```
 
-- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L1984)
+- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L1971)
 
 ### Output.get_selection_length
 
@@ -4783,7 +4783,7 @@ get selection length
 def get_selection_length(self) -> int:
 ```
 
-- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L2143)
+- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L2130)
 
 ### Output.get_selection_pos
 
@@ -4793,7 +4793,7 @@ Get selection position, returns (start_pos, end_pos).
 def get_selection_pos(self) -> tuple[str, str]:
 ```
 
-- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L2052)
+- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L2039)
 
 ### Output.get_selection_start
 
@@ -4803,7 +4803,7 @@ get selection start
 def get_selection_start(self) -> int:
 ```
 
-- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L2123)
+- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L2110)
 
 ### Output.get_text
 
@@ -4813,7 +4813,7 @@ Get the text of the widget.
 def get_text(self) -> str:
 ```
 
-- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L1977)
+- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L1964)
 
 ### Output.index_to_pos
 
@@ -4823,7 +4823,7 @@ Convert index to postion.
 def index_to_pos(self, index: int) -> str:
 ```
 
-- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L2089)
+- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L2076)
 
 ### Output.paste
 
@@ -4833,7 +4833,7 @@ Paste the text.
 def paste(self) -> None:
 ```
 
-- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L2002)
+- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L1989)
 
 ### Output.pos_to_index
 
@@ -4843,7 +4843,7 @@ Convert position to index.
 def pos_to_index(self, pos: str) -> str:
 ```
 
-- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L2074)
+- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L2061)
 
 ### Output.post_create
 
@@ -4853,7 +4853,7 @@ Post create widget.
 def post_create(self, win: Window, parent: tk.Widget) -> None:
 ```
 
-- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L1061)
+- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L1048)
 
 ### Output.prepare_create
 
@@ -4861,7 +4861,7 @@ def post_create(self, win: Window, parent: tk.Widget) -> None:
 def prepare_create(self, win: Window) -> None:
 ```
 
-- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L1007)
+- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L994)
 
 ### Output.print
 
@@ -4871,7 +4871,7 @@ Print text.
 def print(self, text: str, text_color: Union[str, None] = None, background_color: Union[str, None] = None, end:str="\n") -> None:
 ```
 
-- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L2162)
+- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L2149)
 
 ### Output.select_all
 
@@ -4881,7 +4881,7 @@ select all text
 def select_all(self) -> None:
 ```
 
-- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L2153)
+- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L2140)
 
 ### Output.set_cursor_pos
 
@@ -4891,7 +4891,7 @@ Set cursor position. (like `3.0`, row=3, col=0)
 def set_cursor_pos(self, pos: str) -> None:
 ```
 
-- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L2117)
+- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L2104)
 
 ### Output.set_disabled
 
@@ -4901,7 +4901,7 @@ Set disabled widgets state
 def set_disabled(self, disabled: bool) -> None:
 ```
 
-- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L985)
+- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L972)
 
 ### Output.set_readonly
 
@@ -4911,7 +4911,7 @@ Set readonly
 def set_readonly(self, readonly: bool) -> None:
 ```
 
-- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L2029)
+- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L2016)
 
 ### Output.set_selection_pos
 
@@ -4921,7 +4921,7 @@ Set selection position.
 def set_selection_pos(self, start_pos: str, end_pos: str) -> None:
 ```
 
-- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L2063)
+- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L2050)
 
 ### Output.set_selection_start
 
@@ -4931,7 +4931,7 @@ set selection start
 def set_selection_start(self, index: int, sel_length: int=0) -> None:
 ```
 
-- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L2134)
+- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L2121)
 
 ### Output.set_text
 
@@ -4941,7 +4941,7 @@ Set text
 def set_text(self, text: str) -> None:
 ```
 
-- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L2035)
+- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L2022)
 
 ### Output.update
 
@@ -4951,7 +4951,7 @@ Update the widget.
 def update(self, text: Union[str, None] = None, readonly: Union[bool, None] = None, **kw) -> None:
 ```
 
-- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L2021)
+- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L2008)
 
 ## Radio
 
@@ -4969,7 +4969,7 @@ class Radio(
     **kw) 
 ```
 
-- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L1579)
+- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L1566)
 
 ### Methods of Radio
 
@@ -4997,7 +4997,7 @@ Bind event. @see [Window.bind](#windowbind)
 def bind(self, event_name: str, handle_name: str, propagate: bool=True, event_mode: EventMode = "user") -> None:
 ```
 
-- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L853)
+- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L840)
 
 ### Radio.bind_events
 
@@ -5009,7 +5009,7 @@ The specification is such that if the suffix "/hide" is attached to an event key
 def bind_events(self, events: dict[str, str], event_mode: EventMode="user") -> Element:
 ```
 
-- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L993)
+- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L980)
 
 ### Radio.create
 
@@ -5017,7 +5017,7 @@ def bind_events(self, events: dict[str, str], event_mode: EventMode="user") -> E
 def create(self, win: Window, parent: tk.Widget) -> tk.Widget:
 ```
 
-- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L1601)
+- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L1588)
 
 ### Radio.disptach_event
 
@@ -5027,7 +5027,7 @@ Dispatch event
 def disptach_event(self, values: Union[dict[str, Any], None] = None) -> None:
 ```
 
-- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L861)
+- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L848)
 
 ### Radio.get
 
@@ -5037,7 +5037,7 @@ Get the value of the widget.
 def get(self) -> Any:
 ```
 
-- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L1632)
+- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L1619)
 
 ### Radio.get_name
 
@@ -5047,7 +5047,7 @@ Get key of element.
 def get_name(self) -> str:
 ```
 
-- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L847)
+- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L834)
 
 ### Radio.get_prev_widget
 
@@ -5057,7 +5057,7 @@ Get the previous widget.
 def get_prev_widget(self, target_key: Union[str, None] = None) -> tk.Widget:
 ```
 
-- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L1084)
+- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L1071)
 
 ### Radio.get_value
 
@@ -5067,7 +5067,7 @@ Get the value of the widget.
 def get_value(self) -> bool:
 ```
 
-- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L1628)
+- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L1615)
 
 ### Radio.is_selected
 
@@ -5077,7 +5077,7 @@ Check if the radio button is selected.
 def is_selected(self) -> bool:
 ```
 
-- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L1624)
+- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L1611)
 
 ### Radio.post_create
 
@@ -5087,7 +5087,7 @@ Post create widget.
 def post_create(self, win: Window, parent: tk.Widget) -> None:
 ```
 
-- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L1061)
+- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L1048)
 
 ### Radio.prepare_create
 
@@ -5095,7 +5095,7 @@ def post_create(self, win: Window, parent: tk.Widget) -> None:
 def prepare_create(self, win: Window) -> None:
 ```
 
-- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L1007)
+- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L994)
 
 ### Radio.select
 
@@ -5105,7 +5105,7 @@ Select the radio button.
 def select(self) -> None:
 ```
 
-- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L1620)
+- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L1607)
 
 ### Radio.set_disabled
 
@@ -5115,7 +5115,7 @@ Set disabled widgets state
 def set_disabled(self, disabled: bool) -> None:
 ```
 
-- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L985)
+- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L972)
 
 ### Radio.set_text
 
@@ -5125,7 +5125,7 @@ Set the text of the widget.
 def set_text(self, text: str) -> None:
 ```
 
-- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L1636)
+- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L1623)
 
 ### Radio.update
 
@@ -5135,7 +5135,7 @@ Update the widget.
 def update(self, text: Union[str, None] = None, **kw) -> None:
 ```
 
-- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L1641)
+- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L1628)
 
 ## Slider
 
@@ -5160,7 +5160,7 @@ class Slider(
     **kw) 
 ```
 
-- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L2188)
+- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L2175)
 
 ### Methods of Slider
 
@@ -5187,7 +5187,7 @@ Bind event. @see [Window.bind](#windowbind)
 def bind(self, event_name: str, handle_name: str, propagate: bool=True, event_mode: EventMode = "user") -> None:
 ```
 
-- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L853)
+- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L840)
 
 ### Slider.bind_events
 
@@ -5199,7 +5199,7 @@ The specification is such that if the suffix "/hide" is attached to an event key
 def bind_events(self, events: dict[str, str], event_mode: EventMode="user") -> Element:
 ```
 
-- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L993)
+- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L980)
 
 ### Slider.create
 
@@ -5209,7 +5209,7 @@ Create the widget.
 def create(self, win: Window, parent: tk.Widget) -> tk.Widget:
 ```
 
-- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L2237)
+- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L2224)
 
 ### Slider.disptach_event
 
@@ -5219,7 +5219,7 @@ Dispatch event
 def disptach_event(self, values: Union[dict[str, Any], None] = None) -> None:
 ```
 
-- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L861)
+- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L848)
 
 ### Slider.get
 
@@ -5229,7 +5229,7 @@ Return slider value.
 def get(self) -> Any:
 ```
 
-- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L2270)
+- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L2257)
 
 ### Slider.get_name
 
@@ -5239,7 +5239,7 @@ Get key of element.
 def get_name(self) -> str:
 ```
 
-- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L847)
+- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L834)
 
 ### Slider.get_prev_widget
 
@@ -5249,7 +5249,7 @@ Get the previous widget.
 def get_prev_widget(self, target_key: Union[str, None] = None) -> tk.Widget:
 ```
 
-- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L1084)
+- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L1071)
 
 ### Slider.get_range
 
@@ -5257,7 +5257,7 @@ def get_prev_widget(self, target_key: Union[str, None] = None) -> tk.Widget:
 def get_range(self) -> tuple[float, float]:
 ```
 
-- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L2282)
+- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L2269)
 
 ### Slider.post_create
 
@@ -5267,7 +5267,7 @@ Post create widget.
 def post_create(self, win: Window, parent: tk.Widget) -> None:
 ```
 
-- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L1061)
+- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L1048)
 
 ### Slider.prepare_create
 
@@ -5275,7 +5275,7 @@ def post_create(self, win: Window, parent: tk.Widget) -> None:
 def prepare_create(self, win: Window) -> None:
 ```
 
-- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L1007)
+- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L994)
 
 ### Slider.set
 
@@ -5285,7 +5285,7 @@ Set value of Slider
 def set(self, value: float) -> None:
 ```
 
-- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L2274)
+- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L2261)
 
 ### Slider.set_disabled
 
@@ -5295,7 +5295,7 @@ Set disabled widgets state
 def set_disabled(self, disabled: bool) -> None:
 ```
 
-- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L985)
+- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L972)
 
 ### Slider.set_range
 
@@ -5305,7 +5305,7 @@ Set the range of the slider.
 def set_range(self, from_: float, to: float) -> None:
 ```
 
-- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L2278)
+- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L2265)
 
 ### Slider.update
 
@@ -5319,7 +5319,7 @@ def update(self,
     **kw) -> None:
 ```
 
-- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L2285)
+- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L2272)
 
 ## Submit
 
@@ -5351,7 +5351,7 @@ class Submit(
     ) 
 ```
 
-- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L1409)
+- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L1396)
 
 ### Methods of Submit
 
@@ -5378,7 +5378,7 @@ Bind event. @see [Window.bind](#windowbind)
 def bind(self, event_name: str, handle_name: str, propagate: bool=True, event_mode: EventMode = "user") -> None:
 ```
 
-- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L853)
+- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L840)
 
 ### Submit.bind_events
 
@@ -5390,7 +5390,7 @@ The specification is such that if the suffix "/hide" is attached to an event key
 def bind_events(self, events: dict[str, str], event_mode: EventMode="user") -> Element:
 ```
 
-- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L993)
+- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L980)
 
 ### Submit.create
 
@@ -5400,7 +5400,7 @@ Create a Button widget.
 def create(self, win: Window, parent: tk.Widget) -> tk.Widget:
 ```
 
-- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L1451)
+- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L1438)
 
 ### Submit.disptach_event
 
@@ -5410,7 +5410,7 @@ Dispatch event
 def disptach_event(self, values: Union[dict[str, Any], None] = None) -> None:
 ```
 
-- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L861)
+- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L848)
 
 ### Submit.get
 
@@ -5420,7 +5420,7 @@ Returns the text of the button..
 def get(self) -> Any:
 ```
 
-- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L1479)
+- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L1466)
 
 ### Submit.get_name
 
@@ -5430,7 +5430,7 @@ Get key of element.
 def get_name(self) -> str:
 ```
 
-- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L847)
+- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L834)
 
 ### Submit.get_prev_widget
 
@@ -5440,7 +5440,7 @@ Get the previous widget.
 def get_prev_widget(self, target_key: Union[str, None] = None) -> tk.Widget:
 ```
 
-- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L1084)
+- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L1071)
 
 ### Submit.get_text
 
@@ -5450,7 +5450,7 @@ Get the text of the button.
 def get_text(self) -> str:
 ```
 
-- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L1488)
+- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L1475)
 
 ### Submit.post_create
 
@@ -5460,7 +5460,7 @@ Post create widget.
 def post_create(self, win: Window, parent: tk.Widget) -> None:
 ```
 
-- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L1061)
+- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L1048)
 
 ### Submit.prepare_create
 
@@ -5468,7 +5468,7 @@ def post_create(self, win: Window, parent: tk.Widget) -> None:
 def prepare_create(self, win: Window) -> None:
 ```
 
-- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L1007)
+- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L994)
 
 ### Submit.set_button_color
 
@@ -5478,7 +5478,7 @@ Set the button color.
 def set_button_color(self, button_color: Union[str, tuple[str,str]], update: bool = True) -> None:
 ```
 
-- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L1465)
+- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L1452)
 
 ### Submit.set_disabled
 
@@ -5488,7 +5488,7 @@ Set disabled widgets state
 def set_disabled(self, disabled: bool) -> None:
 ```
 
-- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L985)
+- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L972)
 
 ### Submit.set_text
 
@@ -5498,7 +5498,7 @@ Set the text of the button.
 def set_text(self, text: str) -> None:
 ```
 
-- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L1483)
+- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L1470)
 
 ### Submit.update
 
@@ -5512,7 +5512,7 @@ def update(self,
     **kw) -> None:
 ```
 
-- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L1492)
+- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L1479)
 
 ## Table
 
@@ -5546,7 +5546,7 @@ class Table(
     **kw) 
 ```
 
-- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L2746)
+- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L2735)
 
 ### Methods of Table
 
@@ -5571,7 +5571,7 @@ Bind event. @see [Window.bind](#windowbind)
 def bind(self, event_name: str, handle_name: str, propagate: bool=True, event_mode: EventMode = "user") -> None:
 ```
 
-- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L853)
+- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L840)
 
 ### Table.bind_events
 
@@ -5583,7 +5583,7 @@ The specification is such that if the suffix "/hide" is attached to an event key
 def bind_events(self, events: dict[str, str], event_mode: EventMode="user") -> Element:
 ```
 
-- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L993)
+- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L980)
 
 ### Table.create
 
@@ -5593,7 +5593,7 @@ Create a Table widget.
 def create(self, win: Window, parent: tk.Widget) -> tk.Widget:
 ```
 
-- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L2805)
+- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L2794)
 
 ### Table.disptach_event
 
@@ -5603,7 +5603,7 @@ Dispatch event
 def disptach_event(self, values: Union[dict[str, Any], None] = None) -> None:
 ```
 
-- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L861)
+- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L848)
 
 ### Table.get
 
@@ -5613,7 +5613,7 @@ Get the value of the widget.
 def get(self) -> Any:
 ```
 
-- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L2864)
+- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L2853)
 
 ### Table.get_name
 
@@ -5623,7 +5623,7 @@ Get key of element.
 def get_name(self) -> str:
 ```
 
-- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L847)
+- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L834)
 
 ### Table.get_prev_widget
 
@@ -5633,7 +5633,7 @@ Get the previous widget.
 def get_prev_widget(self, target_key: Union[str, None] = None) -> tk.Widget:
 ```
 
-- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L1084)
+- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L1071)
 
 ### Table.post_create
 
@@ -5643,7 +5643,7 @@ Post create widget.
 def post_create(self, win: Window, parent: tk.Widget) -> None:
 ```
 
-- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L1061)
+- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L1048)
 
 ### Table.prepare_create
 
@@ -5651,7 +5651,7 @@ def post_create(self, win: Window, parent: tk.Widget) -> None:
 def prepare_create(self, win: Window) -> None:
 ```
 
-- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L1007)
+- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L994)
 
 ### Table.set_disabled
 
@@ -5661,7 +5661,7 @@ Set disabled widgets state
 def set_disabled(self, disabled: bool) -> None:
 ```
 
-- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L985)
+- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L972)
 
 ### Table.set_values
 
@@ -5671,7 +5671,7 @@ Set values to the table.
 def set_values(self, values: list[list[str]], headings: list[str]) -> None:
 ```
 
-- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L2849)
+- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L2838)
 
 ### Table.update
 
@@ -5681,7 +5681,7 @@ Update the widget.
 def update(self, *args, **kw) -> None:
 ```
 
-- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L2884)
+- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L2873)
 
 ## Text
 
@@ -5710,7 +5710,7 @@ class Text(
     ) 
 ```
 
-- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L1245)
+- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L1232)
 
 ### Methods of Text
 
@@ -5736,7 +5736,7 @@ Bind event. @see [Window.bind](#windowbind)
 def bind(self, event_name: str, handle_name: str, propagate: bool=True, event_mode: EventMode = "user") -> None:
 ```
 
-- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L853)
+- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L840)
 
 ### Text.bind_events
 
@@ -5748,7 +5748,7 @@ The specification is such that if the suffix "/hide" is attached to an event key
 def bind_events(self, events: dict[str, str], event_mode: EventMode="user") -> Element:
 ```
 
-- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L993)
+- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L980)
 
 ### Text.create
 
@@ -5758,7 +5758,7 @@ Create a Text widget.
 def create(self, win: Window, parent: tk.Widget) -> tk.Widget:
 ```
 
-- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L1274)
+- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L1261)
 
 ### Text.disptach_event
 
@@ -5768,7 +5768,7 @@ Dispatch event
 def disptach_event(self, values: Union[dict[str, Any], None] = None) -> None:
 ```
 
-- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L861)
+- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L848)
 
 ### Text.get
 
@@ -5778,7 +5778,7 @@ Get the value of the widget.
 def get(self) -> Any:
 ```
 
-- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L1285)
+- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L1272)
 
 ### Text.get_name
 
@@ -5788,7 +5788,7 @@ Get key of element.
 def get_name(self) -> str:
 ```
 
-- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L847)
+- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L834)
 
 ### Text.get_prev_widget
 
@@ -5798,7 +5798,7 @@ Get the previous widget.
 def get_prev_widget(self, target_key: Union[str, None] = None) -> tk.Widget:
 ```
 
-- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L1084)
+- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L1071)
 
 ### Text.get_text
 
@@ -5806,7 +5806,7 @@ def get_prev_widget(self, target_key: Union[str, None] = None) -> tk.Widget:
 def get_text(self) -> str:
 ```
 
-- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L1289)
+- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L1276)
 
 ### Text.post_create
 
@@ -5816,7 +5816,7 @@ Post create widget.
 def post_create(self, win: Window, parent: tk.Widget) -> None:
 ```
 
-- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L1061)
+- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L1048)
 
 ### Text.prepare_create
 
@@ -5824,7 +5824,7 @@ def post_create(self, win: Window, parent: tk.Widget) -> None:
 def prepare_create(self, win: Window) -> None:
 ```
 
-- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L1007)
+- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L994)
 
 ### Text.set_disabled
 
@@ -5834,7 +5834,7 @@ Set disabled widgets state
 def set_disabled(self, disabled: bool) -> None:
 ```
 
-- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L985)
+- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L972)
 
 ### Text.set_text
 
@@ -5844,7 +5844,7 @@ Set the text of the widget.
 def set_text(self, text: str) -> None:
 ```
 
-- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L1292)
+- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L1279)
 
 ### Text.update
 
@@ -5854,7 +5854,7 @@ Update the widget.
 def update(self, text: Union[str, None] = None, *args, **kw) -> None:
 ```
 
-- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L1297)
+- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L1284)
 
 ## Textarea
 
@@ -5888,7 +5888,7 @@ class Textarea(
     ) 
 ```
 
-- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L1886)
+- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L1873)
 
 ### Methods of Textarea
 
@@ -5930,7 +5930,7 @@ Bind event. @see [Window.bind](#windowbind)
 def bind(self, event_name: str, handle_name: str, propagate: bool=True, event_mode: EventMode = "user") -> None:
 ```
 
-- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L853)
+- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L840)
 
 ### Textarea.bind_events
 
@@ -5942,7 +5942,7 @@ The specification is such that if the suffix "/hide" is attached to an event key
 def bind_events(self, events: dict[str, str], event_mode: EventMode="user") -> Element:
 ```
 
-- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L993)
+- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L980)
 
 ### Textarea.copy
 
@@ -5952,7 +5952,7 @@ Copy the selected text.
 def copy(self) -> str:
 ```
 
-- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L1994)
+- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L1981)
 
 ### Textarea.create
 
@@ -5962,7 +5962,7 @@ Create a Multiline widget.
 def create(self, win: Window, parent: tk.Widget) -> tk.Widget:
 ```
 
-- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L1940)
+- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L1927)
 
 ### Textarea.cut
 
@@ -5972,7 +5972,7 @@ Cut the selected text.
 def cut(self) -> str:
 ```
 
-- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L2011)
+- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L1998)
 
 ### Textarea.disptach_event
 
@@ -5982,7 +5982,7 @@ Dispatch event
 def disptach_event(self, values: Union[dict[str, Any], None] = None) -> None:
 ```
 
-- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L861)
+- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L848)
 
 ### Textarea.get
 
@@ -5992,7 +5992,7 @@ Get the value of the widget.
 def get(self) -> Any:
 ```
 
-- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L1971)
+- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L1958)
 
 ### Textarea.get_cursor_pos
 
@@ -6002,7 +6002,7 @@ Get Cursor position. liek `3.0` row=3, col=0
 def get_cursor_pos(self) -> str:
 ```
 
-- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L2107)
+- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L2094)
 
 ### Textarea.get_name
 
@@ -6012,7 +6012,7 @@ Get key of element.
 def get_name(self) -> str:
 ```
 
-- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L847)
+- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L834)
 
 ### Textarea.get_prev_widget
 
@@ -6022,7 +6022,7 @@ Get the previous widget.
 def get_prev_widget(self, target_key: Union[str, None] = None) -> tk.Widget:
 ```
 
-- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L1084)
+- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L1071)
 
 ### Textarea.get_selected_text
 
@@ -6032,7 +6032,7 @@ Get the selected text.
 def get_selected_text(self) -> str:
 ```
 
-- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L1984)
+- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L1971)
 
 ### Textarea.get_selection_length
 
@@ -6042,7 +6042,7 @@ get selection length
 def get_selection_length(self) -> int:
 ```
 
-- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L2143)
+- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L2130)
 
 ### Textarea.get_selection_pos
 
@@ -6052,7 +6052,7 @@ Get selection position, returns (start_pos, end_pos).
 def get_selection_pos(self) -> tuple[str, str]:
 ```
 
-- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L2052)
+- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L2039)
 
 ### Textarea.get_selection_start
 
@@ -6062,7 +6062,7 @@ get selection start
 def get_selection_start(self) -> int:
 ```
 
-- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L2123)
+- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L2110)
 
 ### Textarea.get_text
 
@@ -6072,7 +6072,7 @@ Get the text of the widget.
 def get_text(self) -> str:
 ```
 
-- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L1977)
+- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L1964)
 
 ### Textarea.index_to_pos
 
@@ -6082,7 +6082,7 @@ Convert index to postion.
 def index_to_pos(self, index: int) -> str:
 ```
 
-- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L2089)
+- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L2076)
 
 ### Textarea.paste
 
@@ -6092,7 +6092,7 @@ Paste the text.
 def paste(self) -> None:
 ```
 
-- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L2002)
+- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L1989)
 
 ### Textarea.pos_to_index
 
@@ -6102,7 +6102,7 @@ Convert position to index.
 def pos_to_index(self, pos: str) -> str:
 ```
 
-- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L2074)
+- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L2061)
 
 ### Textarea.post_create
 
@@ -6112,7 +6112,7 @@ Post create widget.
 def post_create(self, win: Window, parent: tk.Widget) -> None:
 ```
 
-- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L1061)
+- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L1048)
 
 ### Textarea.prepare_create
 
@@ -6120,7 +6120,7 @@ def post_create(self, win: Window, parent: tk.Widget) -> None:
 def prepare_create(self, win: Window) -> None:
 ```
 
-- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L1007)
+- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L994)
 
 ### Textarea.print
 
@@ -6130,7 +6130,7 @@ Print text.
 def print(self, text: str, text_color: Union[str, None] = None, background_color: Union[str, None] = None, end:str="\n") -> None:
 ```
 
-- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L2162)
+- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L2149)
 
 ### Textarea.select_all
 
@@ -6140,7 +6140,7 @@ select all text
 def select_all(self) -> None:
 ```
 
-- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L2153)
+- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L2140)
 
 ### Textarea.set_cursor_pos
 
@@ -6150,7 +6150,7 @@ Set cursor position. (like `3.0`, row=3, col=0)
 def set_cursor_pos(self, pos: str) -> None:
 ```
 
-- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L2117)
+- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L2104)
 
 ### Textarea.set_disabled
 
@@ -6160,7 +6160,7 @@ Set disabled widgets state
 def set_disabled(self, disabled: bool) -> None:
 ```
 
-- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L985)
+- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L972)
 
 ### Textarea.set_readonly
 
@@ -6170,7 +6170,7 @@ Set readonly
 def set_readonly(self, readonly: bool) -> None:
 ```
 
-- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L2029)
+- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L2016)
 
 ### Textarea.set_selection_pos
 
@@ -6180,7 +6180,7 @@ Set selection position.
 def set_selection_pos(self, start_pos: str, end_pos: str) -> None:
 ```
 
-- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L2063)
+- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L2050)
 
 ### Textarea.set_selection_start
 
@@ -6190,7 +6190,7 @@ set selection start
 def set_selection_start(self, index: int, sel_length: int=0) -> None:
 ```
 
-- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L2134)
+- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L2121)
 
 ### Textarea.set_text
 
@@ -6200,7 +6200,7 @@ Set text
 def set_text(self, text: str) -> None:
 ```
 
-- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L2035)
+- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L2022)
 
 ### Textarea.update
 
@@ -6210,7 +6210,7 @@ Update the widget.
 def update(self, text: Union[str, None] = None, readonly: Union[bool, None] = None, **kw) -> None:
 ```
 
-- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L2021)
+- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L2008)
 
 ## TkEasyError
 
@@ -6249,7 +6249,7 @@ class VSeparator(
     **kw) 
 ```
 
-- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L2529)
+- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L2516)
 
 ### Methods of VSeparator
 
@@ -6273,7 +6273,7 @@ Bind event. @see [Window.bind](#windowbind)
 def bind(self, event_name: str, handle_name: str, propagate: bool=True, event_mode: EventMode = "user") -> None:
 ```
 
-- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L853)
+- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L840)
 
 ### VSeparator.bind_events
 
@@ -6285,7 +6285,7 @@ The specification is such that if the suffix "/hide" is attached to an event key
 def bind_events(self, events: dict[str, str], event_mode: EventMode="user") -> Element:
 ```
 
-- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L993)
+- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L980)
 
 ### VSeparator.create
 
@@ -6293,7 +6293,7 @@ def bind_events(self, events: dict[str, str], event_mode: EventMode="user") -> E
 def create(self, win: Window, parent: tk.Widget) -> Any:
 ```
 
-- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L2547)
+- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L2534)
 
 ### VSeparator.disptach_event
 
@@ -6303,7 +6303,7 @@ Dispatch event
 def disptach_event(self, values: Union[dict[str, Any], None] = None) -> None:
 ```
 
-- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L861)
+- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L848)
 
 ### VSeparator.get
 
@@ -6313,7 +6313,7 @@ Get the value of the widget.
 def get(self) -> Any:
 ```
 
-- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L1065)
+- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L1052)
 
 ### VSeparator.get_name
 
@@ -6323,7 +6323,7 @@ Get key of element.
 def get_name(self) -> str:
 ```
 
-- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L847)
+- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L834)
 
 ### VSeparator.get_prev_widget
 
@@ -6333,7 +6333,7 @@ Get the previous widget.
 def get_prev_widget(self, target_key: Union[str, None] = None) -> tk.Widget:
 ```
 
-- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L1084)
+- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L1071)
 
 ### VSeparator.post_create
 
@@ -6343,7 +6343,7 @@ Post create widget.
 def post_create(self, win: Window, parent: tk.Widget) -> None:
 ```
 
-- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L1061)
+- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L1048)
 
 ### VSeparator.prepare_create
 
@@ -6351,7 +6351,7 @@ def post_create(self, win: Window, parent: tk.Widget) -> None:
 def prepare_create(self, win: Window) -> None:
 ```
 
-- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L1007)
+- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L994)
 
 ### VSeparator.set_disabled
 
@@ -6361,7 +6361,7 @@ Set disabled widgets state
 def set_disabled(self, disabled: bool) -> None:
 ```
 
-- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L985)
+- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L972)
 
 ### VSeparator.update
 
@@ -6371,7 +6371,7 @@ update widget configuration.
 def update(self, *args, **kw) -> None:
 ```
 
-- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L1069)
+- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L1056)
 
 ## Window
 
@@ -6448,7 +6448,7 @@ class Window(
 def bind(self, element: "Element", event_name: str, handle_name: str, propagate: bool=True, event_mode: EventMode = "user") -> None:
 ```
 
-- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L742)
+- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L729)
 
 ### Window.cancel_close
 
@@ -6458,7 +6458,7 @@ Cancel the close event.
 def cancel_close(self) -> None:
 ```
 
-- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L678)
+- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L665)
 
 ### Window.close
 
@@ -6468,7 +6468,7 @@ Close the window.
 def close(self) -> None:
 ```
 
-- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L658)
+- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L645)
 
 ### Window.event_iter
 
@@ -6488,7 +6488,7 @@ with eg.Window("test", layout=[[eg.Button("Hello")]]) as window:
 def event_iter(self, timeout: Union[int, None] = None, timeout_key: str=TIMEOUT_KEY) -> Any:
 ```
 
-- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L517)
+- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L504)
 
 ### Window.get_center_location
 
@@ -6498,7 +6498,7 @@ Get center location.
 def get_center_location(self) -> tuple[int, int]:
 ```
 
-- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L264)
+- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L251)
 
 ### Window.get_element_by_key
 
@@ -6508,7 +6508,7 @@ Get an element by its key.
 def get_element_by_key(self, key: str) -> Union[Element, None]:
 ```
 
-- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L454)
+- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L441)
 
 ### Window.get_elements_by_type
 
@@ -6518,7 +6518,7 @@ Get elements by type.
 def get_elements_by_type(self, element_type: str) -> list[Element]:
 ```
 
-- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L458)
+- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L445)
 
 ### Window.get_location
 
@@ -6528,7 +6528,7 @@ Get window location.
 def get_location(self) -> tuple[int, int]:
 ```
 
-- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L259)
+- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L246)
 
 ### Window.get_screen_size
 
@@ -6538,7 +6538,7 @@ Get the screen size.
 def get_screen_size(self) -> tuple[int, int]:
 ```
 
-- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L420)
+- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L407)
 
 ### Window.get_size
 
@@ -6548,7 +6548,7 @@ Get the window size.
 def get_size(self) -> tuple[int, int]:
 ```
 
-- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L449)
+- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L436)
 
 ### Window.get_values
 
@@ -6558,7 +6558,7 @@ Get values from the window.
 def get_values(self) -> dict[str, Any]:
 ```
 
-- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L592)
+- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L579)
 
 ### Window.hide
 
@@ -6568,7 +6568,7 @@ Hide the window.
 def hide(self) -> None:
 ```
 
-- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L571)
+- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L558)
 
 ### Window.hide_titlebar
 
@@ -6578,7 +6578,7 @@ Hide the titlebar.
 def hide_titlebar(self, flag: bool) -> None:
 ```
 
-- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L650)
+- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L637)
 
 ### Window.is_alive
 
@@ -6588,7 +6588,7 @@ Check if the window is alive.
 def is_alive(self) -> bool:
 ```
 
-- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L674)
+- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L661)
 
 ### Window.keep_on_top
 
@@ -6598,7 +6598,7 @@ Set the window to keep on top.
 def keep_on_top(self, flag: bool) -> None:
 ```
 
-- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L639)
+- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L626)
 
 ### Window.maximize
 
@@ -6608,7 +6608,7 @@ Maximize the window. (`resizable` should be set to True)
 def maximize(self) -> None:
 ```
 
-- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L582)
+- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L569)
 
 ### Window.minimize
 
@@ -6618,7 +6618,7 @@ Minimize the window.
 def minimize(self) -> None:
 ```
 
-- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L557)
+- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L544)
 
 ### Window.move
 
@@ -6628,7 +6628,7 @@ Move the window. (same as set_location)
 def move(self, x: int, y: int) -> None:
 ```
 
-- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L416)
+- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L403)
 
 ### Window.move_to_center
 
@@ -6638,7 +6638,7 @@ Move the window to the center of the screen.
 def move_to_center(self, center_pos: Union[tuple[int, int], None] = None) -> None:
 ```
 
-- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L429)
+- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L416)
 
 ### Window.normal
 
@@ -6648,7 +6648,7 @@ set normal window.
 def normal(self) -> None:
 ```
 
-- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L562)
+- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L549)
 
 ### Window.read
 
@@ -6658,7 +6658,7 @@ Read events from the window.
 def read(self, timeout: Union[int, None] = None, timeout_key: str="-TIMEOUT-") -> tuple[str, dict[str, Any]]:
 ```
 
-- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L467)
+- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L454)
 
 ### Window.refresh
 
@@ -6668,7 +6668,7 @@ Refresh window
 def refresh(self) -> "Window":
 ```
 
-- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L697)
+- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L684)
 
 ### Window.register_event_hooks
 
@@ -6693,7 +6693,7 @@ window.register_event_hooks({
 def register_event_hooks(self, hooks: dict[str, list[callable]]) -> None:
 ```
 
-- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L278)
+- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L265)
 
 ### Window.send_to_back
 
@@ -6703,7 +6703,7 @@ Send the window to the back, and make it not keep on top.
 def send_to_back(self) -> None:
 ```
 
-- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L644)
+- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L631)
 
 ### Window.set_alpha_channel
 
@@ -6713,7 +6713,7 @@ Set the alpha channel of the window.
 def set_alpha_channel(self, alpha: float) -> None:
 ```
 
-- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L587)
+- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L574)
 
 ### Window.set_grab_anywhere
 
@@ -6723,7 +6723,7 @@ Set grab anywhere
 def set_grab_anywhere(self, flag: bool) -> None:
 ```
 
-- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L705)
+- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L692)
 
 ### Window.set_location
 
@@ -6733,7 +6733,7 @@ Set window location.
 def set_location(self, xy: tuple[int, int]) -> None:
 ```
 
-- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L255)
+- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L242)
 
 ### Window.set_size
 
@@ -6743,7 +6743,7 @@ Set the window size.
 def set_size(self, size: tuple[int, int]) -> None:
 ```
 
-- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L548)
+- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L535)
 
 ### Window.set_title
 
@@ -6753,7 +6753,7 @@ Set the title of the window.
 def set_title(self, title: str) -> None:
 ```
 
-- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L553)
+- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L540)
 
 ### Window.show
 
@@ -6763,7 +6763,7 @@ Show hidden window (hide -> show)
 def show(self) -> None:
 ```
 
-- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L689)
+- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L676)
 
 ### Window.un_hide
 
@@ -6773,7 +6773,7 @@ Un hide the window.
 def un_hide(self) -> None:
 ```
 
-- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L576)
+- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L563)
 
 ### Window.update_idle_tasks
 
@@ -6783,7 +6783,7 @@ Update idle tasks.
 def update_idle_tasks(self) -> None:
 ```
 
-- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L425)
+- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L412)
 
 ### Window.write_event_value
 
@@ -6791,7 +6791,7 @@ def update_idle_tasks(self) -> None:
 def write_event_value(self, key: str, values: dict[str, Any]) -> None:
 ```
 
-- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L682)
+- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L669)
 
 # Functions of TkEasyGUI.widgets
 
@@ -6851,7 +6851,7 @@ Get font list
 def get_font_list() -> list[str]:
 ```
 
-- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L3303)
+- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L3292)
 
 ## get_image_tk
 
@@ -6865,7 +6865,7 @@ def get_image_tk(
     size: Union[tuple[int, int], None] = None) -> Union[tk.PhotoImage, None]:
 ```
 
-- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L3228)
+- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L3217)
 
 ## get_root_window
 
@@ -6885,7 +6885,7 @@ def get_root_window() -> tk.Tk:
 def get_system_info():
 ```
 
-- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L3309)
+- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L3298)
 
 ## get_tcl_version
 
@@ -6895,7 +6895,7 @@ Get tcl version
 def get_tcl_version() -> str:
 ```
 
-- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L3297)
+- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L3286)
 
 ## get_tk_version
 
@@ -6905,7 +6905,7 @@ Get tk version
 def get_tk_version() -> str:
 ```
 
-- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L3291)
+- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L3280)
 
 ## get_ttk_style
 
@@ -6925,7 +6925,7 @@ Resize image
 def image_resize(img: PILImage, size: tuple[int, int]) -> PILImage:
 ```
 
-- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L3219)
+- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L3208)
 
 ## imagedata_to_bytes
 
@@ -6935,7 +6935,7 @@ Convert JPEG to PNG
 def imagedata_to_bytes(image_data: PILImage) -> bytes:
 ```
 
-- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L3264)
+- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L3253)
 
 ## imagefile_to_bytes
 
@@ -6945,7 +6945,7 @@ Read image file and convert to bytes
 def imagefile_to_bytes(filename: str) -> bytes:
 ```
 
-- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L3271)
+- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L3260)
 
 ## register_element_key
 
@@ -6965,7 +6965,7 @@ Convert RGB to Hex
 def rgb(r: int, g: int, b: int) -> str:
 ```
 
-- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L3212)
+- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L3201)
 
 ## time_checker_end
 
@@ -6975,7 +6975,7 @@ timer end
 def time_checker_end(start_time: datetime) -> int:
 ```
 
-- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L3283)
+- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L3272)
 
 ## time_checker_start
 
@@ -6985,5 +6985,5 @@ timer start
 def time_checker_start() -> datetime:
 ```
 
-- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L3279)
+- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L3268)
 

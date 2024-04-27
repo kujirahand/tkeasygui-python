@@ -222,26 +222,13 @@ class Window:
         sw, sh = self.get_screen_size()
         pad_x = self.padding_x * 2
         pad_y = self.padding_y * 2
-        b_scroll = False
         if (pre_size is None):
             if w > sw:
                 w = sw - pad_x
             if h > sh:
                 h = sh - pad_y
-                b_scroll = True
             self.set_size((w + pad_x, h + pad_y))
             self.size = pre_size
-            print("size=", w, h)
-        else:
-            win_size = self.get_size()
-            if win_size[1] > h:
-                b_scroll = True
-        # scrollbar
-        if b_scroll:
-            self.frame_bar.pack(side=tk.RIGHT, fill=tk.Y)
-        else:
-            self.frame_bar.pack_forget()
-            
 
     def _on_window_show(self, *event) -> None:
         """Handle window show event."""
@@ -657,6 +644,9 @@ class Window:
 
     def close(self) -> None:
         """Close the window."""
+        # The phenomenon where a closed window remains visible is occurring, so forcibly making it transparent.
+        self.set_alpha_channel(0.0) # force hide
+        self.hide()
         # already closed?
         if not self.flag_alive:
             return

@@ -20,7 +20,7 @@ def read_file() -> str:
     args = {}
     for e in elements:
         args[e] = []
-        if e in ["Button", "Text", "Input", "Frame", "Checkbox", "Label", "InputText"]:
+        if e in ["Button", "Text", "Input", "Frame", "Checkbox", "Label", "InputText", "Multiline"]:
             args[e].append(f"'{e}'")
         if e in ["Column", "Frame"]:
             args[e].append("layout=[[eg.Button('OK')]]")
@@ -65,9 +65,10 @@ layout = [
     src += "    ],\n"
     src += "]\n"
     src += """
-window = eg.Window(f"all element v.{eg.__version__}", layout=layout, font=("Arial", 12))
-while window.is_alive():
-    event, values = window.read()
+window = eg.Window(f"all element v.{eg.__version__}", layout=layout, size=(800, 600), font=("Arial", 12), resizable=True, show_scrollbar=True)
+for event, values in window.event_iter():
+    if event == "OK":
+        break
 """
     print(f"==={TEST_FILENAME}===")
     print(src)
