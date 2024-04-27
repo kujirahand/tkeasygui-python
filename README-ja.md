@@ -87,6 +87,11 @@ while True:
 window.close()
 ```
 
+## 日本語チュートリアル
+
+- [TkEasyGUI - Pythonで最も素早くデスクトップアプリを創るライブラリ](https://note.com/kujirahand/n/n33a2df3aa3e5)
+- [マイナビニュースPython連載116回目 - 金額合計ツールでExcel要らず - 合計/整形/コピーのツールを作ろう](https://news.mynavi.jp/techplus/article/zeropython-116/)
+
 ## サンプル
 
 簡単な使い方を示すサンプルを揃えました。確認してみてください。

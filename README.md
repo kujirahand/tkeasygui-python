@@ -104,6 +104,13 @@ Below is a detailed list of classes and methods.
 
 - [docs](https://github.com/kujirahand/tkeasygui-python/tree/main/docs)
 
+## Tutorial
+
+Sorry, we only provide Japanese tutorials at the moment.
+
+- [TkEasyGUI - Pythonで最も素早くデスクトップアプリを創るライブラリ](https://note.com/kujirahand/n/n33a2df3aa3e5)
+- [マイナビニュースPython連載116回目 - 金額合計ツールでExcel要らず - 合計/整形/コピーのツールを作ろう](https://news.mynavi.jp/techplus/article/zeropython-116/)
+
 ## About the relationship with PySimpleGUI
 
 - When utilizing basic features, it is compatible with PySimpleGUI. You can write programs using the same event model as PySimpleGUI.
