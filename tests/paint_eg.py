@@ -26,15 +26,16 @@ canvas = sg.Canvas(
 
 # window create
 window = sg.Window("Paint tool", layout=[
-    [sg.Button("Exit")],
+    [sg.Button("Exit"), sg.Button("Clear")],
     [canvas]])
 flag_on = False
 # event loop
-while True:
-    event, values = window.read()
+for event, values in window.event_iter():
     print("#", event, values)
     if event in (None, "Exit"):
         break
+    if event == "Clear":
+        canvas.clear()
     if event == "-canvas-":
         # check event type
         event = values["event"]

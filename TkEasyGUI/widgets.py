@@ -2242,7 +2242,11 @@ class Slider(Element):
             self._widget_update(**kw)
 
 class Canvas(Element):
-    """Canvas element."""
+    """
+    Canvas element.
+    This widget provides the same drawing methods as [tk.Canvas](https://tkdocs.com/tutorial/canvas.html).
+    methods: create_line/create_rectangle/create_oval/create_polygon/create_arc/create_image/delete etc...
+    """
     def __init__(
                 self,
                 key: Union[str, None] = None,
@@ -2268,6 +2272,10 @@ class Canvas(Element):
         self.widget = tk.Canvas(parent, **self.props)
         return self.widget
     
+    def clear(self) -> None:
+        """Clear the canvas."""
+        self.widget.delete("all")
+
     def get(self) -> Any:
         """Return Widget"""
         return self.widget

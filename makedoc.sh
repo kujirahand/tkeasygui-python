@@ -5,6 +5,6 @@ echo "--- makedoc.py ---"
 python makedoc.py
 
 echo "--- make docs/README.md ---"
-python $SCRIPT_DIR/docs/scripts/readme_mekar.py
+python $SCRIPT_DIR/docs/scripts/readme_maker.py
 
 echo "ok"
