@@ -5,7 +5,6 @@ import subprocess
 import tkinter.filedialog as filedialog
 import tkinter.messagebox as messagebox
 from datetime import datetime, timedelta
-from pprint import pprint
 from tkinter import colorchooser
 from typing import Any, Union
 
@@ -17,6 +16,7 @@ from .utils import (
     is_mac,
     is_win,
 )
+
 # save original print
 _print = print
 
