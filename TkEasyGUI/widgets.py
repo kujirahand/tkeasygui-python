@@ -2619,9 +2619,11 @@ class Listbox(Element):
         self.select_values(self.default_values)
         return self.widget_frame
 
-    def select_values(self, values: list[str]) -> None:
+    def select_values(self, values: tuple[list[str], None]) -> None:
         """Select values"""
         if self.widget is None:
+            return
+        if values is None:
             return
         for v in values:
             try:
