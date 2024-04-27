@@ -592,35 +592,42 @@ def popup_color(title: str="", default_color: Union[str, None]=None) -> (Union[s
     return f"{col[1]}".upper()
 
 def popup_listbox(
-        items: list[str], # list of items
-        message: str = "",
-        title: str = "",
-        size: tuple[int,int] = (20, 7),
-        font: Union[FontType, None] = None,
-        multiple:bool = False # multiple selection
-        ) -> Union[str, None]:
+    values: list[str],  # list of items
+    message: str = "",
+    title: str = "",
+    size: tuple[int, int] = (20, 7),
+    font: Union[FontType, None] = None,
+    default_value: Union[str, None] = None,  # default value
+    multiple: bool = False,  # multiple selection
+) -> Union[str, None]:
     """Display Listbox in a popup window"""
     select_mode = eg.LISTBOX_SELECT_MODE_BROWSE if multiple is False else eg.LISTBOX_SELECT_MODE_MULTIPLE
-    win = eg.Window(title, layout=[
-        [eg.Text(message)],
-        [eg.Listbox(values=items, key="-list-", size=size, font=font, select_mode=select_mode)],
-        [eg.Button("OK", width=9), eg.Button("Cancel", width=5)]
-    ], modal=True)
-    result = None
-    while win.is_alive():
-        event, _ = win.read()
-        if event == "Cancel":
-            result = None
-            break
-        if event == "OK":
-            selected = win["-list-"].get()
-            if multiple:
-                result = selected
-            else:
-                if len(selected) == 1:
-                    result = selected[0]
-            break
-    win.close()
+    # create window
+    layout = []
+    if message != "":
+        layout.append([eg.Text(message)])
+    layout.append([
+        eg.Listbox(
+            values=values, key="-list-",
+            default_value=default_value, size=size,
+            font=font, select_mode=select_mode
+        )])
+    layout.append([eg.Button("OK", width=9), eg.Button("Cancel", width=5)])
+    with eg.Window(title, layout=layout, modal=True) as win:
+        # event loop
+        result = None
+        for event, values in win.event_iter():
+            if event == "Cancel":
+                result = None
+                break
+            if event == "OK":
+                selected = win["-list-"].get()
+                if multiple:
+                    result = selected
+                else:
+                    if len(selected) == 1:
+                        result = selected[0]
+                break
     return result
 
 def popup_image(

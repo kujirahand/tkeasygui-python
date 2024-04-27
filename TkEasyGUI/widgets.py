@@ -92,9 +92,10 @@ class Window:
         return_keyboard_events: bool = False,  # enable keyboard events (for compatibility)
         location: Union[tuple[int, int], None] = None,  # window location
         center_window: bool = True,  # move window to center
-        row_padding: int = 2, # row padding
-        padding_x: int = 8, # x padding around the window
-        padding_y: int = 8, # y padding around the window 
+        row_padding: int = 2,  # row padding
+        padding_x: int = 8,  # x padding around the window
+        padding_y: int = 8,  # y padding around the window
+        show_scrollbar: bool = False,  # show scrollbar (Experimental)
         **kw,
     ) -> None:
         """Create a window with a layout of widgets."""
@@ -132,8 +133,31 @@ class Window:
         self.font_size_average: tuple[int, int] = (12, 10)
         self.row_padding: int = row_padding
         self.center_window: bool = center_window
-        # Frame
-        self.frame: tk.Frame = tk.Frame(self.window)
+        self.padding_x: int = padding_x
+        self.padding_y: int = padding_y
+        self.show_scrollbar = show_scrollbar
+        # Canvas
+        self.canvas: Union[tk.Canvas, None] = None
+        if show_scrollbar:
+            self.canvas = tk.Canvas(self.window)
+            self.canvas.pack(
+                side=tk.LEFT, fill=tk.BOTH, expand=True,
+                padx=padding_x, pady=padding_y
+            )
+            # scrollbar
+            self.frame_bar = tk.Scrollbar(
+                self.window,
+                orient=tk.VERTICAL, 
+                command=self.canvas.yview
+            )
+            self.frame_bar.pack(side=tk.RIGHT, fill=tk.Y)
+            self.canvas.configure(yscrollcommand=self.frame_bar.set)
+            # Frame
+            self.frame: tk.Frame = tk.Frame(self.canvas)
+            self.canvas.create_window((0, 0), window=self.frame, anchor=tk.NW)
+        else:
+            self.frame: tk.Frame = tk.Frame(self.window)
+            self.frame.pack(expand=True, fill="both", padx=padding_x, pady=padding_y)
         # self.frame.configure(style="TFrame")
         # set window properties
         self.window.title(title)
@@ -145,7 +169,6 @@ class Window:
         # create widgets
         self._create_widget(self.frame, layout)
         # pack frame
-        self.frame.pack(expand=True, fill="both", padx=padding_x, pady=padding_y)
         self.frame.rowconfigure(0, weight=1)
         if keep_on_top:
             self.window.attributes("-topmost", True)
@@ -177,6 +200,8 @@ class Window:
         _window_push(self)
         # set show event
         self.window.bind("<Map>", self._on_window_show)
+        # set window size
+        self.frame.bind("<Configure>", self._on_frame_configure)
         # position
         if location is not None:
             self.set_location(location)
@@ -185,6 +210,39 @@ class Window:
             # so, move window to center after window is shown `_on_window_show`
             pass
 
+    def _on_frame_configure(self, _event):
+        """Handle frame configure event."""
+        if self.canvas is None:
+            return
+        region = self.canvas.bbox("all")
+        self.canvas.configure(scrollregion=region)
+        # set size
+        pre_size = self.size
+        w, h = region[2], region[3]
+        sw, sh = self.get_screen_size()
+        pad_x = self.padding_x * 2
+        pad_y = self.padding_y * 2
+        b_scroll = False
+        if (pre_size is None):
+            if w > sw:
+                w = sw - pad_x
+            if h > sh:
+                h = sh - pad_y
+                b_scroll = True
+            self.set_size((w + pad_x, h + pad_y))
+            self.size = pre_size
+            print("size=", w, h)
+        else:
+            win_size = self.get_size()
+            if win_size[1] > h:
+                b_scroll = True
+        # scrollbar
+        if b_scroll:
+            self.frame_bar.pack(side=tk.RIGHT, fill=tk.Y)
+        else:
+            self.frame_bar.pack_forget()
+            
+
     def _on_window_show(self, *event) -> None:
         """Handle window show event."""
         if self.center_window:
@@ -192,6 +250,7 @@ class Window:
                 self.move_to_center()
             else:
                 self.move_to_center(center_pos=self.parent_window.get_center_location())
+        self.update_idle_tasks()
 
     def set_location(self, xy: tuple[int, int]) -> None:
         """Set window location."""
@@ -455,27 +514,24 @@ class Window:
             break
         return (key, values)
 
-    def event_iter(self, timeout: Union[int, None] = None, timeout_key: str=TIMEOUT_KEY, auto_close: bool=True) -> Any:
+    def event_iter(self, timeout: Union[int, None] = None, timeout_key: str=TIMEOUT_KEY) -> Any:
         """
         Return generator with event and values
         **Example**
         ```py
         import TkEasyGUI as eg
         # create a window
-        window = eg.Window("test", layout=[[eg.Button("Hello")]])
-        # event loop
-        for event, values in window.event_iter():
-            if event == "Hello":
-                eg.popup("Hello, World!")
+        with eg.Window("test", layout=[[eg.Button("Hello")]]) as window:
+            # event loop
+            for event, values in window.event_iter():
+                if event == "Hello":
+                    eg.popup("Hello, World!")
         ```
        """
         # event loop
         while self.is_alive():
             event, values = self.read(timeout=timeout, timeout_key=timeout_key)
             yield (event, values)
-        # close window
-        if auto_close:
-            self.close()
     
     def _dispatch_event_hooks(self, key: str, values: dict[str, Any]) -> bool:
         """Dispatch event hooks."""
@@ -2520,18 +2576,25 @@ class HSeparator(Element):
 class Listbox(Element):
     """Listbox element."""
     def __init__(
-                self,
-                values: list[str] = [],
-                default_values: list[str] = [],
-                key: Union[str, None] = None,
-                enable_events: bool = False,
-                select_mode: ListboxSelectMode = LISTBOX_SELECT_MODE_BROWSE,
-                # other
-                metadata: Union[dict[str, Any], None] = None,
-                **kw) -> None:
+        self,
+        values: list[str] = [],
+        default_values: Union[list[str], None] = None,  # selected values
+        default_value: Union[str, None] = None,  # a default value
+        key: Union[str, None] = None,
+        enable_events: bool = False,
+        select_mode: ListboxSelectMode = LISTBOX_SELECT_MODE_BROWSE,
+        # other
+        metadata: Union[dict[str, Any], None] = None,
+        items: Union[list[str], None] = None,  # same as values (alias values)
+        **kw,
+    ) -> None:
         super().__init__("Listbox", "", key, True, metadata, **kw)
         self.values = values
+        if items is not None: # alias
+            self.values = items
         self.select_mode = select_mode
+        if default_value is not None:
+            default_values = [default_value]
         self.default_values = default_values
         # event
         if enable_events:
@@ -3032,9 +3095,10 @@ class ListBrowse(FileBrowse):
 
     def __init__(
         self,
-        items: list[str] = [],
+        values: list[str] = [],
         message: str = "",
         button_text: str = "...",
+        default_value: Union[str, None] = None,  # default value
         key: Union[str, None] = None,
         target_key: Union[str, None] = None,
         title: str = "",
@@ -3049,16 +3113,22 @@ class ListBrowse(FileBrowse):
         self.title = title
         self.props["text"] = button_text
         self.enable_events = enable_events
-        self.items = items
+        self.values = values
         self.message = message
         self.font = font
+        self.default_value = default_value
 
     def show_dialog(self, *args) -> Union[str, None]:
         """Show Listbox dialog"""
         target: tk.Widget = self.get_prev_widget(self.target_key)
+        if target is not None:
+            val = target.get()
+            if (val != "") and (val in self.values):
+                self.default_value = val
         # popup
         result = dialogs.popup_listbox(
-            items=self.items,
+            values=self.values,
+            default_value=self.default_value,
             message=self.message,
             title=self.title,
             font=self.font,
@@ -3096,6 +3166,11 @@ class MultilineBrowse(FileBrowse):
     def show_dialog(self, *args) -> Union[str, None]:
         """Show Listbox dialog"""
         target: tk.Widget = self.get_prev_widget(self.target_key)
+        if target is not None:
+            val = target.get()
+            if (val != ""):
+                val = val.replace("\\n", "\n")
+                self.message = val
         # popup
         result = dialogs.popup_scrolled(
             message=self.message,

@@ -13,7 +13,7 @@ window = eg.Window(
         [eg.Text("ListBrowse:")],
         [
             eg.Input("", expand_x=True, key="-list-result-"),
-            eg.ListBrowse(items=["red", "green", "blue"]),
+            eg.ListBrowse(values=["red", "green", "blue"]),
         ],
         [eg.Text("MultilineBrowse:")],
         [eg.Input("", expand_x=True, key="-text-result-"), eg.MultilineBrowse("This is a pen.")],

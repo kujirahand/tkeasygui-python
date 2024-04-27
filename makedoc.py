@@ -2,11 +2,13 @@ import glob
 import inspect
 import os
 import re
+import json
 
 import TkEasyGUI as eg
 
 SCRIPT_DIR = os.path.dirname(__file__)
 OUTPUT_DIR = os.path.join(SCRIPT_DIR, "docs", "TkEasyGUI")
+DOCS_SCRIPTS_DIR = os.path.join(SCRIPT_DIR, "docs", "scripts")
 REPO = "https://github.com/kujirahand/tkeasygui-python/blob/main"
 def main():
     package_path = eg.__path__[0]
@@ -34,6 +36,7 @@ def read_module(file: str, root_name: str):
     print(head)
     head_link = []
     # classes
+    elements = []
     classes = ""
     for prop in dir(mod):
         if prop.startswith("__"):
@@ -48,6 +51,7 @@ def read_module(file: str, root_name: str):
             doc = trim_docstring(p.__doc__)
             classes += f"## {prop}\n\n"
             classes += doc + "\n\n"
+            elements.append(class_name)
             # get init code
             if p.__init__ is not None:
                 print("@@@", prop)
@@ -97,6 +101,20 @@ def read_module(file: str, root_name: str):
         result += f"# Classes of {root_name}.{module_name}\n\n"
         result += classes
         head_link.append(f"- [Classes](#classes-of-{root_name.lower()}{module_name.lower()})")
+    # elements
+    if len(elements) > 0 and os.path.basename(file) == "widgets.py":
+        print("* elements:\n", elements)
+        if "Window" in elements:
+            elements.remove("Window")
+        if "Element" in elements:
+            elements.remove("Element")
+        if "TkEasyError" in elements:
+            elements.remove("TkEasyError")
+        file_elements = os.path.join(DOCS_SCRIPTS_DIR, "elements.json")
+        with open(file_elements, "w", encoding="utf-8") as fp:
+            elements = list(sorted(elements))
+            json.dump(elements, fp, ensure_ascii=False, indent=2)
+
     # functions
     functions = ""
     function_link = []
