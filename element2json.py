@@ -4,7 +4,6 @@ make elements.json and elements_test.py
 """
 import json
 import os
-import re
 
 SCRIPT_DIR = os.path.dirname(__file__)
 
