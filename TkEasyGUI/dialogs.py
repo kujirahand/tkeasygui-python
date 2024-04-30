@@ -7,6 +7,8 @@ import tkinter.messagebox as messagebox
 from datetime import datetime, timedelta
 from tkinter import colorchooser
 from typing import Any, Union
+from typing import Union, List
+from typing import Tuple, Union
 
 from . import locale_easy as le
 from . import widgets as eg
@@ -25,12 +27,23 @@ _print = print
 #------------------------------------------------------------------------------
 # like PySimpleGUI
 
+
+'''
 def popup_buttons(
         message: str,
         title: Union[str,None] = None,
         buttons: list[str] = ["OK", "Cancel"], 
         auto_close_duration: int = -1, # auto close duration (msec)
         timeout_key: str="-TIMEOUT-", # timeout key
+        non_blocking: bool = False
+    ) -> str:
+'''
+def popup_buttons(
+        message: str,
+        title: Union[str, None] = None,
+        buttons: List[str] = ["OK", "Cancel"], 
+        auto_close_duration: int = -1,  # auto close duration (msec)
+        timeout_key: str = "-TIMEOUT-",  # timeout key
         non_blocking: bool = False
     ) -> str:
     """
@@ -96,9 +109,25 @@ def popup_no_buttons(message: str, title: str="") -> None:
     """Display a message in a popup window without buttons."""
     popup_buttons(message, title, buttons=[])
 
+'''
 def popup_auto_close(message: str, title: str="", auto_close_duration: int = 3, buttons: list[str] = ["OK", "Cancel"], timeout_key="-TIMEOUT-") -> str:
     """Display a message in a popup window that closes automatically after a specified time."""
     return popup_buttons(message, title, buttons=buttons, auto_close_duration=auto_close_duration, timeout_key=timeout_key)
+'''
+
+def popup_auto_close(
+        message: str, 
+        title: str = "", 
+        auto_close_duration: int = 3, 
+        buttons: List[str] = ["OK", "Cancel"], 
+        timeout_key: str = "-TIMEOUT-"
+    ) -> str:
+    """Display a message in a popup window that closes automatically after a specified time."""
+    return popup_buttons(message, title, buttons=buttons, auto_close_duration=auto_close_duration, timeout_key=timeout_key)
+
+
+
+
 
 def popup_no_wait(message: str, title: str="", **kw) -> str:
     """Display a message in a popup window without waiting."""
@@ -266,6 +295,7 @@ def popup_info(message: str, title: Union[str,None]=None) -> None:
         title = le.get_text("Information")
     messagebox.showwarning(title, message)
 
+'''
 def popup_get_file(
         message: str="",
         title: Union[str, None] = None,
@@ -275,6 +305,17 @@ def popup_get_file(
         file_types: tuple[tuple[str, str]] = (("All Files", "*.*"),),
         no_window: Union[bool, None] = None, # for compatibility
         **kw) -> Union[str, tuple[str], None]:
+'''
+def popup_get_file(
+        message: str = "",
+        title: Union[str, None] = None,
+        initial_folder: str = "",
+        save_as: bool = False,  # show `save as` dialog
+        multiple_files: bool = False,  # can select multiple files
+        file_types: Tuple[Tuple[str, str], ...] = (("All Files", "*.*"),),
+        no_window: Union[bool, None] = None,  # for compatibility
+        **kw) -> Union[str, Tuple[str, ...], None]:
+
     """Popup a file selection dialog. Return the file selected."""
     if title is None:
         title = message
@@ -305,6 +346,7 @@ def popup_get_folder(
         title = message
     return filedialog.askdirectory(title=title, initialdir=default_path, **kw)
 
+'''
 def popup_memo(
         message: str,
         title: Union[str, None] = None,
@@ -315,9 +357,22 @@ def popup_memo(
         cancel_value: Union[str,None] = None,
         font: Union[FontType, None] = None
         ) -> Union[str, None]:
+'''
+def popup_memo(
+        message: str,
+        title: Union[str, None] = None,
+        size: Tuple[int, int] = (60, 8),  # リストからタプルに変更
+        readonly: bool = False,
+        ok_label: Union[str, None] = None,
+        cancel_label: Union[str, None] = None,
+        cancel_value: Union[str, None] = None,
+        font: Union[FontType, None] = None
+        ) -> Union[str, None]:
+    
     """Display a multiline message in a popup window. Return the text entered. if canceled, return cancel_value."""
     return popup_scrolled(message, title, size, readonly, ok_label, cancel_label, cancel_value, font)
 
+'''
 def popup_scrolled(
             message: str,
             title: tuple[str, None] = None,
@@ -328,6 +383,19 @@ def popup_scrolled(
             cancel_value: Union[str,None] = None,
             font: Union[FontType, None] = None
             ) -> Union[str, None]:
+'''
+
+def popup_scrolled(
+            message: str,
+            title: Union[str, None] = None,  # titleの型を修正
+            size: Tuple[int, int] = (40, 5),  # リストからタプルに変更
+            readonly: bool = False,
+            ok_label: Union[str, None] = None,
+            cancel_label: Union[str, None] = None,
+            cancel_value: Union[str, None] = None,
+            font: Union[FontType, None] = None
+            ) -> Union[str, None]:
+
     """
     Display a multiline message in a popup window. Return the text entered. if canceled, return cancel_value.
     #### Example:
@@ -359,6 +427,7 @@ def popup_scrolled(
     win.close()
     return result
 
+'''
 def popup_get_date(
         message: str = "",
         title: Union[str, None] = None,
@@ -369,6 +438,19 @@ def popup_get_date(
         date_format: Union[str, None] = None,
         sunday_first: bool = False, # Sunday is the first day of the week
         ) -> Union[datetime, None]:
+'''
+def popup_get_date(
+        message: str = "",
+        title: Union[str, None] = None,
+        current_date: Union[datetime, None] = None,
+        font: Union[Tuple[str, int], None] = None,
+        ok_label: Union[str, None] = None,
+        cancel_label: Union[str, None] = None,
+        date_format: Union[str, None] = None,
+        sunday_first: bool = False  # Sunday is the first day of the week
+        ) -> Union[datetime, None]:
+
+
     """Display a calendar in a popup window. Return the datetime entered or None."""
     if current_date is None:
         current_date = datetime.now()
@@ -594,6 +676,7 @@ def popup_color(title: str="", default_color: Union[str, None]=None) -> (Union[s
         return default_color
     return f"{col[1]}".upper()
 
+'''
 def popup_listbox(
     values: list[str],  # list of items
     message: str = "",
@@ -603,6 +686,19 @@ def popup_listbox(
     default_value: Union[str, None] = None,  # default value
     multiple: bool = False,  # multiple selection
 ) -> Union[str, None]:
+'''
+
+def popup_listbox(
+    values: List[str],  # list of items
+    message: str = "",
+    title: str = "",
+    size: Tuple[int, int] = (20, 7),
+    font: Union[FontType, None] = None,
+    default_value: Union[str, None] = None,  # default value
+    multiple: bool = False,  # multiple selection
+    ) -> Union[str, None]:
+
+
     """Display Listbox in a popup window"""
     select_mode = eg.LISTBOX_SELECT_MODE_BROWSE if multiple is False else eg.LISTBOX_SELECT_MODE_MULTIPLE
     # create window
@@ -633,6 +729,7 @@ def popup_listbox(
                 break
     return result
 
+'''
 def popup_image(
         message: str,
         title: Union[str,None] = None,
@@ -645,6 +742,21 @@ def popup_image(
         cancel_value: str = "Cancel",
         font: Union[FontType, None] = None,
         ) -> str:
+''' 
+
+def popup_image(
+        message: str,
+        title: Union[str, None] = None,
+        image_path: Union[str, None] = None,
+        image_data: Union[bytes, None] = None,
+        size: Tuple[int, int] = (400, 300),
+        ok_label: Union[str, None] = None,
+        ok_value: str = "OK",
+        cancel_label: Union[str, None] = None,
+        cancel_value: str = "Cancel",
+        font: Union[FontType, None] = None,
+        ) -> str:
+
     """Display an image in a popup window. Return the text entered."""
     if title is None:
         title = message

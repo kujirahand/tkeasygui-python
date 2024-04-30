@@ -6,7 +6,9 @@ from typing import Union
 
 _locale: str = ""
 # locale messages
-_locale_messages: dict[str, dict[str, str]] = {
+from typing import Dict
+
+_locale_messages: Dict[str, Dict[str, str]] = {
     "ja": {
         "__date_format__": "%Y-%m-%d",
         "OK": "OK",

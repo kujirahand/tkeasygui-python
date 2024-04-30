@@ -15,13 +15,21 @@ Window = TypeVar("Window")
 Element = TypeVar("Element")
 TextAlign = Literal["left", "right", "center"]
 TextVAlign = Literal["top", "bottom", "center"]
+from typing import Tuple, Union, List, Dict
+
+
+FontType = Union[Tuple[str, int], Tuple[str, int, str]]
+PointType = Union[Tuple[int, int], Tuple[float, float]]
+PadType = Union[int, Tuple[int, int], Tuple[Tuple[int, int], Tuple[int, int]]]
+'''
 FontType = Union[tuple[str, int], tuple[str, int, str]]
 PointType = Union[tuple[int, int], tuple[float, float]]
+PadType = Union[int, tuple[int, int], tuple[tuple[int, int], tuple[int, int]]]
+'''
+ReliefType = Literal["flat", "groove", "raised", "ridge", "solid", "sunken"]
 EventMode = Literal["user", "system"]
 OrientationType = Literal["v", "h", "vertical", "horizontal"]
 ListboxSelectMode = Literal["multiple", "browse", "extended", "single"]
-PadType = Union[int, tuple[int, int], tuple[tuple[int, int], tuple[int, int]]]
-ReliefType = Literal["flat", "groove", "raised", "ridge", "solid", "sunken"]
 
 # -------------------------------------------------------------------
 # clipboard
@@ -93,7 +101,11 @@ def get_ttk_style() -> ttk.Style:
     return _ttk_style
 
 # active window
+
+_window_list: List[Window] = []
+'''
 _window_list: list[Window] = []
+'''
 def _get_active_window() -> Union[tk.Toplevel, None]:
     """Get the active window."""
     if len(_window_list) == 0:
@@ -122,8 +134,10 @@ def _window_pop(win: Window) -> None:
 
 #------------------------------------------------------------------------------
 # theme
+'''
 _tkeasygui_info: dict[str, Any] = {}
-
+'''
+_tkeasygui_info: Dict[str, Any] = {}
 def set_theme(name: str) -> None:
     """Change look and feel --- [TODO] Currently, the implementation is incomplete."""
     win = get_root_window()
@@ -131,8 +145,10 @@ def set_theme(name: str) -> None:
     style = get_ttk_style()
     style.theme_use(name)
     _tkeasygui_info["theme"] = name
-
+'''
 def get_tnemes() -> list[str]:
+'''
+def get_tnemes() -> List[str]:
     """
     Get theme list
     ```py
@@ -169,7 +185,7 @@ def set_default_theme() -> None:
     else:
         set_theme("clam")
 
-def convert_color_rgb16(color_name: str) -> tuple[int, int, int]:
+def convert_color_rgb16(color_name: str) -> Tuple[int, int, int]:
     """Convert color to RGB, return (r, g, b) tuple. range=0-65535"""
     root = get_root_window()
     return root.winfo_rgb(color_name)
@@ -184,8 +200,8 @@ def convert_color_html(color_name: str) -> str:
 #------------------------------------------------------------------------------
 # global variables
 # auto generate element key id
-_element_style_key_ids: dict[str, int] = {}
-_element_key_names: dict[str, bool] = {}
+_element_style_key_ids: Dict[str, int] = {}
+_element_key_names: Dict[str, bool] = {}
 def generate_element_style_key(element_type: str) -> int:
     """Get a unique id for an element."""
     element_type = element_type.lower()
