@@ -104,6 +104,7 @@ class Window:
         active_win = utils._get_active_window()
         if active_win is None:
             active_win = get_root_window()
+        self.title: str = title
         self.window: tk.Toplevel = tk.Toplevel(master=active_win)
         self.timeout: Union[int, None] = None
         self.timeout_key: str = WINDOW_TIMEOUT
@@ -160,7 +161,7 @@ class Window:
             self.frame.pack(expand=True, fill="both", padx=padding_x, pady=padding_y)
         # self.frame.configure(style="TFrame")
         # set window properties
-        self.window.title(title)
+        self.set_title(title)
         self.window.protocol("WM_DELETE_WINDOW", lambda : self._close_handler())
         self.size: Union[tuple[int, int], None] = size
         if size is not None:
@@ -430,6 +431,12 @@ class Window:
                 win_x, win_y = self.size
             x = (cx - win_x // 2)
             y = (cy - win_y // 2)
+            # It will be out of range, so move it to the center.
+            if x < 0 or y < 0:
+                w, h = self.get_screen_size()
+                cx, cy = w // 2, h // 2
+                x = cx - win_x // 2
+                y = cy - win_y // 2
             self.move(x, y)
         except Exception as _:
             pass
@@ -469,6 +476,7 @@ class Window:
             # set timeout
             if self.timeout_id is not None:
                 self.window.after_cancel(self.timeout_id)
+            self.window.update_idletasks()
             self.timeout_id = self.window.after("idle", self._window_idle_handler)
             # -----------------------------------------------------
             # mainloop - should be called only once
@@ -540,6 +548,7 @@ class Window:
     def set_title(self, title: str) -> None:
         """Set the title of the window."""
         self.window.title(title)
+        self.title = title
 
     def minimize(self) -> None:
         """Minimize the window."""
