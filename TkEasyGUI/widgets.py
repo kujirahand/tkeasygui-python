@@ -1404,7 +1404,21 @@ class Menu(Element):
         self._widget_update(**kw)
 
 class Button(Element):
-    """Button element."""
+    """
+    Button element
+
+    **Example**
+    The program below changes the button's label to "Pushed" when the button is pressed.
+    ```python
+    import TkEasyGUI as eg
+    button:eg.Button = eg.Button("Push me")
+    with eg.Window("Title", layout=[[button]]) as window:
+        for event, values in window.event_iter():
+            if event == "OK":
+                button.set_text("Pushed")
+                break
+    ```
+    """
     def __init__(
         self,
         button_text: str = "",

@@ -1,8 +1,8 @@
 import glob
 import inspect
+import json
 import os
 import re
-import json
 
 import TkEasyGUI as eg
 

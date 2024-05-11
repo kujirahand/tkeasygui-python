@@ -37,6 +37,7 @@ Homepage = "https://github.com/kujirahand/tkeasygui-python"
 Documentation = "https://github.com/kujirahand/tkeasygui-python/blob/main/README.md"
 Repository = "https://github.com/kujirahand/tkeasygui-python/"
 Issues = "https://github.com/kujirahand/tkeasygui-python/issues"
+Changelog = "https://github.com/kujirahand/tkeasygui-python/releases"
 
 [tool.ruff.lint]
 select = ["E", "F", "I"]

@@ -8,8 +8,8 @@ pip install opencv-contrib-python
 """
 
 import cv2 as cv
+
 import TkEasyGUI as sg
-# import PySimpleGUI as sg
 
 # camera
 vc = cv.VideoCapture(0)
@@ -21,7 +21,8 @@ layout = [
 # event loop
 window = sg.Window("Camera Test", layout)
 while True:
-    event, values = window.read(timeout=1)
+    event, values = window.read(timeout=100)
+    print('#', event, values)
     if event in (sg.WIN_CLOSED, "Exit"):
         break
     # capture
