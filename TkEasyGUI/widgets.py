@@ -3038,7 +3038,7 @@ class FileSaveAsBrowse(FileBrowse):
         self.multiple_files = False
         self.save_as = True
 
-class FileSaveAs(FileBrowse):
+class FileSaveAs(FileSaveAsBrowse):
     """FileSaveAs element. (alias of FileSaveAsBrowse)"""
     pass
 
