@@ -20,7 +20,7 @@ import TkEasyGUI as eg
 button:eg.Button = eg.Button("Push me")
 with eg.Window("Title", layout=[[button]]) as window:
     for event, values in window.event_iter():
-        if event == "OK":
+        if event == button.get_text():
             button.set_text("Pushed")
             break
 ```
