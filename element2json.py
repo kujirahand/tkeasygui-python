@@ -40,6 +40,11 @@ def read_file() -> str:
             args[e].append("default_value='combo1'")
         if e in ["Listbox", "ListBrowse"]:
             args[e].append("values=['item1', 'item2', 'item3']")
+        if e in ["Tab"]:
+            args[e].append("title='tab'")
+            args[e].append("layout=[[eg.Button('OK')]]")
+        if e in ["TabGroup"]:
+            args[e].append("layout=[[ eg.Tab('tab1', layout=[[eg.Button('OK')]]) ]]")
     return elements, args
 
 def make_code():

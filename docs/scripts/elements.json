@@ -26,6 +26,8 @@
   "Radio",
   "Slider",
   "Submit",
+  "Tab",
+  "TabGroup",
   "Table",
   "Text",
   "Textarea",

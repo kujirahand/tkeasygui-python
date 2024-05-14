@@ -302,11 +302,13 @@ class Window:
         for row_no, widgets in enumerate(layout):
             bgcolor = None
             if parent is not None:
-                bgcolor = parent.cget("background")
-            frame_prop = {
-                "name": f"tkeasygui_frame_row_{row_no}",
-                "background": bgcolor
-            }
+                try:
+                    bgcolor = parent.cget("background")
+                except Exception:
+                    pass
+            frame_prop = {"name": f"tkeasygui_frame_row_{row_no}"}
+            if bgcolor is not None:
+                frame_prop["background"] = bgcolor
             frame_row = tk.Frame(parent, **frame_prop)
             # columns
             prev_element: Element|None = None
@@ -334,7 +336,10 @@ class Window:
                 prev_element = elem
                 # create widget
                 try:
-                    widget: tk.Widget = elem.create(self, frame_row)
+                    elem_parent = frame_row
+                    if type(parent) == ttk.Notebook:
+                        elem_parent = parent
+                    widget: tk.Widget = elem.create(self, elem_parent)
                     widget.__tkeasygui = elem # type : ignore
                 except Exception as e:
                     print(e.__traceback__, file=sys.stderr)
@@ -367,6 +372,18 @@ class Window:
                     self.bind(elem, event_name, handle_t[0], handle_t[1], handle_t[2])
                 # menu ?
                 if isinstance(elem, Menu):
+                    continue
+                # Tab?
+                if isinstance(parent, ttk.Notebook):
+                    # print("@@@@ TabGroup", type(parent), type(elem.widget), elem.get())
+                    parent.add(elem.widget, text=elem.get())
+                    if isinstance(elem, Tab):
+                        group:TabGroup = parent.__tkeasygui
+                        tab: Tab = elem
+                        if group.max_rows > tab.rows:
+                            tab.rows = group.max_rows
+                        if group.max_cols > tab.cols:
+                            tab.cols = group.max_cols
                     continue
                 # pack widget
                 fill_props = elem._get_pack_props(align, valign)
@@ -1238,6 +1255,123 @@ class Column(Element):
         if name in ["Widget"]:
             return self.widget
         return super().__getattr__(name)
+
+class Tab(Element):
+    """(experimental) Tab element - Tab is used together with TabGroup."""
+    def __init__(
+        self,
+        title: str,
+        layout: list[list[Element]],
+        key: str = "",
+        background_color: Union[str, None] = None,
+        vertical_alignment: TextVAlign = "top",
+        size: Union[tuple[int, int], None] = None,
+        # text props
+        text_align: Union[TextAlign, None] = "left",  # text align
+        # pack props
+        expand_x: bool = False,
+        expand_y: bool = False,
+        pad: Union[PadType, None] = None,
+        # other
+        metadata: Union[dict[str, Any], None] = None,
+        **kw,
+    ) -> None:
+        super().__init__("Tab", "Frame", key, False, metadata, **kw)
+        self.has_children = True
+        self.title = title
+        self.layout = layout
+        self.text_align = text_align
+        self.vertical_alignment = vertical_alignment
+        self.has_font_prop = False
+        self.use_ttk = False
+        self.rows = 3
+        self.cols = 3
+        self._set_pack_props(expand_x=expand_x, expand_y=expand_y, pad=pad)
+        if size is not None:
+            self.props["size"] = size
+        if background_color is not None:
+            self.props["background_color"] = background_color
+        if text_align is not None:
+            self.props["anchor"] = self._justify_to_anchor(text_align)
+
+    def create(self, win: Window, parent: tk.Widget) -> tk.Widget:
+        self.widget = tk.Frame(parent, **self.props)
+        return self.widget
+
+    def get(self) -> Any:
+        """Return Widget title"""
+        return self.title
+
+    def update(self, *args, **kw) -> None:
+        """Update the widget."""
+        self._widget_update(**kw)
+
+    def __getattr__(self, name):
+        """Get unknown attribute."""
+        if name in ["Widget"]:
+            return self.widget
+        return super().__getattr__(name)
+
+
+class TabGroup(Element):
+    """(experimental) TabGroup element - Specify the Tab element for the child elements."""
+    def __init__(
+        self,
+        layout: list[list[Element]],
+        key: str = "",
+        background_color: Union[str, None] = None,
+        vertical_alignment: TextVAlign = "top",
+        size: Union[tuple[int, int], None] = None,
+        # text props
+        text_align: Union[TextAlign, None] = "left",  # text align
+        # pack props
+        expand_x: bool = True,
+        expand_y: bool = True,
+        pad: Union[PadType, None] = None,
+        # other
+        metadata: Union[dict[str, Any], None] = None,
+        **kw,
+    ) -> None:
+        super().__init__("TabGroup", "Notebook", key, False, metadata, **kw)
+        self.has_children = True
+        self.layout = layout
+        self.text_align = text_align
+        self.vertical_alignment = vertical_alignment
+        self.has_font_prop = False
+        self.use_ttk = True
+        self.background_color = background_color
+        self.max_rows = 3
+        self.max_cols = 3
+        self.window = None
+        self._set_pack_props(expand_x=expand_x, expand_y=expand_y, pad=pad)
+        if text_align is not None:
+            self.props["anchor"] = self._justify_to_anchor(text_align)
+
+    def create(self, win: Window, parent: tk.Widget) -> tk.Widget:
+        self.window = win
+        self.widget = ttk.Notebook(parent, **self.props)
+        return self.widget
+    
+    def post_create(self, win: Window, parent: tk.Widget) -> None:
+        if win.size is None:
+            win.set_size((600, 400))
+        return super().post_create(win, parent)
+
+    def get(self) -> Any:
+        """Return Widget"""
+        return self.widget
+
+    def update(self, *args, **kw) -> None:
+        """Update the widget."""
+        self._widget_update(**kw)
+
+    def __getattr__(self, name):
+        """Get unknown attribute."""
+        if name in ["Widget"]:
+            return self.widget
+        return super().__getattr__(name)
+
+
 
 class Text(Element):
     """Text element."""
