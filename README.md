@@ -1,6 +1,6 @@
-# TkEasyGUI - The easiest library for creating GUIs in Python
+# TkEasyGUI
 
-`TkEasyGUI` is a Python library that allows for the easy and simple creation of GUI applications.
+`TkEasyGUI` is the easiest library for creating GUIs in Python.
 
 <img src="https://github.com/kujirahand/tkeasygui-python/raw/main/docs/image/logo-button.jpg" width="180" alt="TkEasyGUI Logo">
 

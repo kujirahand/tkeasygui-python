@@ -278,6 +278,23 @@ def popup_get_file(
     """Popup a file selection dialog. Return the file selected."""
     if title is None:
         title = message
+    if file_types is not None:
+        # check file types
+        new_types = []
+        for ft in file_types:
+            if len(ft) != 2:
+                ft = (ft, ft)
+            # fix file types for mac (#52)
+            # like ("Image Files", *.jpg;*.jpeg;*.jpe;*.heic")
+            if is_mac():
+                if ";" in ft[1]:
+                    desc = ft[0]
+                    exts = ft[1].split(";")
+                    for ext in exts:
+                        new_types.append((desc, ext))
+                    continue
+            new_types.append(ft)
+        file_types = tuple(new_types)
     if save_as:
         result = filedialog.asksaveasfilename(
             title=title,

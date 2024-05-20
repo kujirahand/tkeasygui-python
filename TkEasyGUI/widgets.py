@@ -1284,8 +1284,10 @@ class Tab(Element):
         self.vertical_alignment = vertical_alignment
         self.has_font_prop = False
         self.use_ttk = False
-        self.rows = 3
-        self.cols = 3
+        self.rows = len(layout)
+        self.cols = 0
+        for row in layout:
+            self.cols = max(self.cols, len(row))
         self._set_pack_props(expand_x=expand_x, expand_y=expand_y, pad=pad)
         if size is not None:
             self.props["size"] = size
