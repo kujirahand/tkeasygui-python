@@ -31,7 +31,7 @@ from .utils import (
     TextAlign,
     TextVAlign,
     # Window,
-        _window_count,
+    _window_count,
     _window_parent,
     _window_pop,
     _window_push,
@@ -136,7 +136,7 @@ class Window:
         self.center_window: bool = center_window
         self.padding_x: int = padding_x
         self.padding_y: int = padding_y
-        self.show_scrollbar = show_scrollbar
+        self.show_scrollbar = show_scrollbar  # (experimental)
         # Canvas
         self.canvas: Union[tk.Canvas, None] = None
         if show_scrollbar:
