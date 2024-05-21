@@ -1257,7 +1257,27 @@ class Column(Element):
         return super().__getattr__(name)
 
 class Tab(Element):
-    """(experimental) Tab element - Tab is used together with TabGroup."""
+    """
+    (experimental) Tab element - Tab is used together with TabGroup.
+    **Example:**
+    ```py
+    import TkEasyGUI as sg
+    # Tab's Layout
+    tab1_layout = [[sg.Text("Tab1")], [sg.Input(key="input1")], [sg.Button("Read1")]]
+    tab2_layout = [[sg.Text("Tab2")], [sg.Input(key="input2")], [sg.Button("Read2")]]
+    # Main Layout
+    layout = [[
+        sg.TabGroup([[
+            sg.Tab("Tab title1", tab1_layout),
+            sg.Tab("Tab title2", tab2_layout),
+        ]])],
+        [sg.Button("Quit")]]
+    # create window and event loop
+    with sg.Window("Tab Demo", layout) as window:
+        for event, values in window:
+            pass
+    ```
+    """
     def __init__(
         self,
         title: str,
@@ -1316,10 +1336,31 @@ class Tab(Element):
 
 
 class TabGroup(Element):
-    """(experimental) TabGroup element - Specify the Tab element for the child elements."""
+    """
+    (experimental) TabGroup element - Specify the Tab element for the child elements.
+
+    **Example:**
+    ```py
+    import TkEasyGUI as sg
+    # Tab's Layout
+    tab1_layout = [[sg.Text("Tab1")], [sg.Input(key="input1")], [sg.Button("Read1")]]
+    tab2_layout = [[sg.Text("Tab2")], [sg.Input(key="input2")], [sg.Button("Read2")]]
+    # Main Layout
+    layout = [[
+        sg.TabGroup([[
+            sg.Tab("Tab title1", tab1_layout),
+            sg.Tab("Tab title2", tab2_layout),
+        ]])],
+        [sg.Button("Quit")]]
+    # create window and event loop
+    with sg.Window("Tab Demo", layout) as window:
+        for event, values in window:
+            pass
+    ```
+    """
     def __init__(
         self,
-        layout: list[list[Element]],
+        layout: Union[list[list["TabGroup"]], list["TabGroup"]],
         key: str = "",
         background_color: Union[str, None] = None,
         vertical_alignment: TextVAlign = "top",
@@ -1336,6 +1377,14 @@ class TabGroup(Element):
     ) -> None:
         super().__init__("TabGroup", "Notebook", key, False, metadata, **kw)
         self.has_children = True
+        # check layout type
+        if layout is None:
+            layout = []
+        if len(layout) > 0:
+            if not isinstance(layout[0], list):
+                layout = [layout]
+            if not isinstance(layout[0][0], Tab):
+                raise ValueError("TabGroup layout should be list of Tab")
         self.layout = layout
         self.text_align = text_align
         self.vertical_alignment = vertical_alignment
