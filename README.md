@@ -6,6 +6,7 @@
 
 - Python's standard UI library `Tkinter`, is often considered to have a high barrier to entry and to be difficult to use. By using this library, you can create GUI applications easily and intuitively.
 - In the event model, it is compatible with the well-known GUI library `PySimpleGUI`.
+- This package supports type hints, allowing property selection via code completion. `Python 3.9 or later` is required.
 - This project adopts the lenient MIT license. This license will not change in the future. Let's enjoy creating GUI programs.
 
 - [👉日本語](https://github.com/kujirahand/tkeasygui-python/blob/main/README-ja.md) / [👉中文](https://github.com/kujirahand/tkeasygui-python/blob/main/README-zh.md)
