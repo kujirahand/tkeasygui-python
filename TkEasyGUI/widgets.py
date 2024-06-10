@@ -2980,6 +2980,10 @@ class Table(Element):
         self.max_col_width = max_col_width
         self.col_widths = col_widths
         self.has_font_prop = False # has, but not widget root
+        # check headings
+        if len(self.headings) < 10:
+            for i in range(10 - len(self.headings)):
+                self.headings.append("") # add dummy
         # event_returns_values ?
         self.event_returns_values: bool = not _compatibility
         if event_returns_values is not None:
@@ -3038,7 +3042,10 @@ class Table(Element):
                 font_w = 12
                 if (self.font is not None) and (len(self.font) >= 2):
                     font_w = self.font[1]
-                kw["width"] = self.col_widths[i % len(self.col_widths)] * font_w
+                if h == "":
+                    kw["width"] = 0 # hidden column
+                else:
+                    kw["width"] = self.col_widths[i % len(self.col_widths)] * font_w
             self.widget.column(i+1, **kw)
         # add data
         self.set_values(self.values, self.headings)
@@ -3057,6 +3064,8 @@ class Table(Element):
         # update heading
         for i, h in enumerate(self.headings):
             self.widget.heading(i+1, text=h, anchor="center")
+            if h == "":
+                self.widget.column(i+1, width=0, stretch=tk.NO)
         # add data
         for row_no, row in enumerate(self.values):
             self.widget.insert(parent="", iid=row_no, index="end", values=row)
@@ -3086,16 +3095,33 @@ class Table(Element):
         if len(args) >= 1:
             values = args[0]
             kw["values"] = values
-        self.values = kw["values"]
-        # update list
-        if self.widget is not None:
-            tree = self.widget
-            for i in tree.get_children(): # clear all
-                tree.delete(i)
-        # set values
-        self.set_values(self.values, self.headings)
-        # 
-        del kw["values"]
+        if "headings" in kw:
+            new_heading = kw["headings"]
+            del kw["headings"]
+            # ヘッダ更新処理 #54
+            # 旧ヘッダを処理
+            for i, _h in enumerate(self.headings):
+                h2 = new_heading[i] if len(new_heading) > i else ""
+                self.widget.heading(i+1, text=h2, anchor="center")
+                if h2 == "":
+                    self.widget.column(i+1, width=0)
+            # 新ヘッダを処理
+            for i, h in enumerate(new_heading):
+                self.widget.heading(i+1, text=h, anchor="center")
+                self.widget.column(i+1, width=100, stretch=tk.YES)
+            self.headings = new_heading
+
+        if "values" in kw:
+            self.values = kw["values"]
+            # update list
+            if self.widget is not None:
+                tree = self.widget
+                for i in tree.get_children(): # clear all
+                    tree.delete(i)
+            # set values
+            self.set_values(self.values, self.headings)
+            del kw["values"]
+        # update
         self._widget_update(**kw)
 
 #------------------------------------------------------------------------------
