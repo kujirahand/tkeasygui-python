@@ -2955,6 +2955,7 @@ class Table(Element):
                 enable_events: bool = False,
                 event_returns_values: Union[bool, None] = None, # Returns the table value if set to True, otherwise returns the index.
                 select_mode: str="browse",
+                max_columns: int = 20,
                 # text props
                 text_align: Union[TextAlign, None] = "left", # text align
                 font: Union[FontType, None] = None, # font
@@ -2981,8 +2982,8 @@ class Table(Element):
         self.col_widths = col_widths
         self.has_font_prop = False # has, but not widget root
         # check headings
-        if len(self.headings) < 10:
-            for i in range(10 - len(self.headings)):
+        if len(self.headings) < max_columns:
+            for i in range(max_columns - len(self.headings)):
                 self.headings.append("") # add dummy
         # event_returns_values ?
         self.event_returns_values: bool = not _compatibility
@@ -3095,6 +3096,8 @@ class Table(Element):
         if len(args) >= 1:
             values = args[0]
             kw["values"] = values
+        if "max_columns" in kw:
+            raise TkEasyError("Table.max_columns cannot be changed; it can only be set in the constructor.")
         if "headings" in kw:
             new_heading = kw["headings"]
             del kw["headings"]
