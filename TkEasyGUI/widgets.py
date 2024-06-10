@@ -2945,8 +2945,8 @@ class Table(Element):
     """Table element."""
     def __init__(
                 self,
-                values: list[list[str]] = [],
-                headings: list[str] = [],
+                values: list[list[str]] = [], # Specify the table values as 2D list.
+                headings: list[str] = [], # Specify the table header as a list.
                 key: Union[str, None] = None,
                 justification: TextAlign = "center",
                 auto_size_columns: bool = True,
@@ -2955,7 +2955,7 @@ class Table(Element):
                 enable_events: bool = False,
                 event_returns_values: Union[bool, None] = None, # Returns the table value if set to True, otherwise returns the index.
                 select_mode: str="browse",
-                max_columns: int = 20,
+                max_columns: int = 20, # This property cannot be changed later. It is advisable to set a larger value.
                 # text props
                 text_align: Union[TextAlign, None] = "left", # text align
                 font: Union[FontType, None] = None, # font
