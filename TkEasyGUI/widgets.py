@@ -544,7 +544,7 @@ class Window:
         while self.is_alive():
             event, values = self.read(timeout=timeout, timeout_key=timeout_key)
             yield (event, values)
-    
+
     def _dispatch_event_hooks(self, key: str, values: dict[str, Any]) -> bool:
         """Dispatch event hooks."""
         # execute _event_hooks
@@ -689,6 +689,10 @@ class Window:
 
     def is_alive(self) -> bool:
         """Check if the window is alive."""
+        return self.flag_alive
+    
+    def is_running(self) -> bool:
+        """Check if the window is running. (alias as is_alive)"""
         return self.flag_alive
     
     def cancel_close(self) -> None:
@@ -865,6 +869,18 @@ class Element:
         if self.key is None:
             return "-unknown-"
         return str(self.key)
+    
+    def get_width(self) -> int:
+        """Get width of element."""
+        if self.widget is None:
+            return 0
+        return self.widget.winfo_width()
+    
+    def get_height(self) -> int:
+        """Get height of element."""
+        if self.widget is None:
+            return 0
+        return self.widget.winfo_height()
     
     def bind(self, event_name: str, handle_name: str, propagate: bool=True, event_mode: EventMode = "user") -> None:
         """
@@ -1211,7 +1227,8 @@ class Column(Element):
                 key: str = "",
                 background_color: Union[str, None] = None,
                 vertical_alignment: TextVAlign="top",
-                size: Union[tuple[int, int], None] = None,
+                size: Union[tuple[int, int], None] = None, # set (width, height) pixel size
+                width: Union[int, None] = None, # set pixel width
                 # text props
                 text_align: Union[TextAlign, None]="left", # text align
                 # pack props
@@ -1229,8 +1246,11 @@ class Column(Element):
         self.has_font_prop = False
         self.use_ttk = False
         self._set_pack_props(expand_x=expand_x, expand_y=expand_y, pad=pad)
-        if size is not None:
-            self.props["size"] = size
+        self.size = size
+        if width is not None:
+            self.size = (width, 400)
+        if self.size is not None:
+            self.props["size"] = self.size
         if background_color is not None:
             self.props["background_color"] = background_color
         if text_align is not None:
@@ -1239,7 +1259,9 @@ class Column(Element):
     def create(self, win: Window, parent: tk.Widget) -> tk.Widget:
         # if self.use_ttk:
         #     self.widget = ttk.Frame(parent, style=self.style_name, **self.props)
-        self.widget = tk.Frame(parent, **self.props)
+        self.widget: tk.Frame = tk.Frame(parent, **self.props)
+        if self.size is not None:
+            self.widget.pack_propagate(False)
         return self.widget
 
     def get(self) -> Any:
