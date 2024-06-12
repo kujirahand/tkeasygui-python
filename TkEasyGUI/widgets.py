@@ -2967,8 +2967,8 @@ class Table(Element):
     """Table element."""
     def __init__(
                 self,
-                values: list[list[str]] = [],
-                headings: list[str] = [],
+                values: list[list[str]] = [], # Specify the table values as 2D list.
+                headings: list[str] = [], # Specify the table header as a list.
                 key: Union[str, None] = None,
                 justification: TextAlign = "center",
                 auto_size_columns: bool = True,
@@ -2977,6 +2977,7 @@ class Table(Element):
                 enable_events: bool = False,
                 event_returns_values: Union[bool, None] = None, # Returns the table value if set to True, otherwise returns the index.
                 select_mode: str="browse",
+                max_columns: int = 20, # This property cannot be changed later. It is advisable to set a larger value.
                 # text props
                 text_align: Union[TextAlign, None] = "left", # text align
                 font: Union[FontType, None] = None, # font
@@ -3002,6 +3003,10 @@ class Table(Element):
         self.max_col_width = max_col_width
         self.col_widths = col_widths
         self.has_font_prop = False # has, but not widget root
+        # check headings
+        if len(self.headings) < max_columns:
+            for i in range(max_columns - len(self.headings)):
+                self.headings.append("") # add dummy
         # event_returns_values ?
         self.event_returns_values: bool = not _compatibility
         if event_returns_values is not None:
@@ -3060,7 +3065,10 @@ class Table(Element):
                 font_w = 12
                 if (self.font is not None) and (len(self.font) >= 2):
                     font_w = self.font[1]
-                kw["width"] = self.col_widths[i % len(self.col_widths)] * font_w
+                if h == "":
+                    kw["width"] = 0 # hidden column
+                else:
+                    kw["width"] = self.col_widths[i % len(self.col_widths)] * font_w
             self.widget.column(i+1, **kw)
         # add data
         self.set_values(self.values, self.headings)
@@ -3079,6 +3087,8 @@ class Table(Element):
         # update heading
         for i, h in enumerate(self.headings):
             self.widget.heading(i+1, text=h, anchor="center")
+            if h == "":
+                self.widget.column(i+1, width=0, stretch=tk.NO)
         # add data
         for row_no, row in enumerate(self.values):
             self.widget.insert(parent="", iid=row_no, index="end", values=row)
@@ -3108,16 +3118,35 @@ class Table(Element):
         if len(args) >= 1:
             values = args[0]
             kw["values"] = values
-        self.values = kw["values"]
-        # update list
-        if self.widget is not None:
-            tree = self.widget
-            for i in tree.get_children(): # clear all
-                tree.delete(i)
-        # set values
-        self.set_values(self.values, self.headings)
-        # 
-        del kw["values"]
+        if "max_columns" in kw:
+            raise TkEasyError("Table.max_columns cannot be changed; it can only be set in the constructor.")
+        if "headings" in kw:
+            new_heading = kw["headings"]
+            del kw["headings"]
+            # ヘッダ更新処理 #54
+            # 旧ヘッダを処理
+            for i, _h in enumerate(self.headings):
+                h2 = new_heading[i] if len(new_heading) > i else ""
+                self.widget.heading(i+1, text=h2, anchor="center")
+                if h2 == "":
+                    self.widget.column(i+1, width=0)
+            # 新ヘッダを処理
+            for i, h in enumerate(new_heading):
+                self.widget.heading(i+1, text=h, anchor="center")
+                self.widget.column(i+1, width=100, stretch=tk.YES)
+            self.headings = new_heading
+
+        if "values" in kw:
+            self.values = kw["values"]
+            # update list
+            if self.widget is not None:
+                tree = self.widget
+                for i in tree.get_children(): # clear all
+                    tree.delete(i)
+            # set values
+            self.set_values(self.values, self.headings)
+            del kw["values"]
+        # update
         self._widget_update(**kw)
 
 #------------------------------------------------------------------------------
