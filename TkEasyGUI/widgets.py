@@ -3076,19 +3076,22 @@ class Table(Element):
             self.widget.bind("<<TreeviewSelect>>", lambda e: self._table_events(e))
         return self.frame
     
-    def set_values(self, values: list[list[str]], headings: list[str]) -> None:
+    def set_values(self, values: list[list[str]], headings: Union[list[str], None] = None) -> None:
         """Set values to the table."""
         if self.widget is None:
             return
         self.values = values
-        self.headings = headings
+        if headings is not None:
+            self.headings = headings
         # clear
-        self.widget.delete(*self.widget.get_children())
+        for row in self.widget.get_children():
+            self.widget.delete(row)
         # update heading
-        for i, h in enumerate(self.headings):
-            self.widget.heading(i+1, text=h, anchor="center")
-            if h == "":
-                self.widget.column(i+1, width=0, stretch=tk.NO)
+        if headings is not None:
+            for i, h in enumerate(self.headings):
+                self.widget.heading(i+1, text=h, anchor="center")
+                if h == "":
+                    self.widget.column(i+1, width=0, stretch=tk.NO)
         # add data
         for row_no, row in enumerate(self.values):
             self.widget.insert(parent="", iid=row_no, index="end", values=row)
@@ -3144,7 +3147,7 @@ class Table(Element):
                 for i in tree.get_children(): # clear all
                     tree.delete(i)
             # set values
-            self.set_values(self.values, self.headings)
+            self.set_values(self.values)
             del kw["values"]
         # update
         self._widget_update(**kw)
