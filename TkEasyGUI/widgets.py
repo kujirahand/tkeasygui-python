@@ -95,6 +95,7 @@ class Window:
         row_padding: int = 2,  # row padding
         padding_x: int = 8,  # x padding around the window
         padding_y: int = 8,  # y padding around the window
+        icon: Union[str, None] = None,  # window icon, specify filename (Experimental)
         show_scrollbar: bool = False,  # show scrollbar (Experimental)
         **kw,
     ) -> None:
@@ -137,6 +138,9 @@ class Window:
         self.padding_x: int = padding_x
         self.padding_y: int = padding_y
         self.show_scrollbar = show_scrollbar  # (experimental)
+        self._icon: Union[Any, None] = None
+        if icon is not None:
+            self.set_icon(icon)
         # Canvas
         self.canvas: Union[tk.Canvas, None] = None
         if show_scrollbar:
@@ -213,6 +217,7 @@ class Window:
 
     def _on_frame_configure(self, _event):
         """Handle frame configure event."""
+        # set scrollbar
         if self.canvas is None:
             return
         region = self.canvas.bbox("all")
@@ -770,6 +775,19 @@ class Window:
             event_name,
             lambda e: _bind_event_handler(self, element, handle_name, e, propagate=propagate, event_mode=event_mode)
         )
+
+    def set_icon(self, icon: Union[bytes, str]) -> None:
+        """Set the icon for the window."""
+        if isinstance(icon, str): # filename str
+            icon = get_image_tk(filename=icon)
+        if isinstance(icon, bytes):
+            icon = tk.PhotoImage(data=icon)
+        try:
+            root = get_root_window()
+            root.iconbitmap(self._icon)
+        except Exception as e:
+            print("Window.set_icon failed", file=sys.stderr)
+            print(e, file=sys.stderr)
 
 def _bind_event_handler(win: Window, elem: "Element", handle_name: str, event: tk.Event, propagate: bool=True, event_mode: EventMode = "user") -> None:
     """Handle an event."""
