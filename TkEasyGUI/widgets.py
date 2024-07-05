@@ -1939,7 +1939,6 @@ class Input(Element):
         self.text_var = tk.StringVar(value=self.default_text)
         if "height" in self.props:
             self.props.pop("height")
-        print("@",self.props)
         # create
         self.widget = tk.Entry(
             parent,
