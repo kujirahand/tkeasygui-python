@@ -1879,6 +1879,8 @@ class Input(Element):
                 readonly_background_color: Union[str, None] = "silver",
                 password_char: Union[str, None] = None, # if you want to use it as a password input box, set "*"
                 readonly: bool = False, # read only box
+                size: Union[tuple[int, int], None] = None, # set (width, height) character size (only width is supported)
+                width: Union[int, None] = None, # set width character size
                 # text props
                 text_align: Union[TextAlign, None] = "left", # text align
                 font: Union[FontType, None] = None, # font
@@ -1905,6 +1907,10 @@ class Input(Element):
             self.props["readonlybackground"] = readonly_background_color
         if password_char is not None:
             self.props["show"] = password_char
+        if size is not None:
+            self.props["size"] = size
+        if width is not None:
+            self.props["size"] = (width, 1)
         # set props
         self._set_text_props(font=font, text_align=text_align, color=color, text_color=text_color, background_color=background_color)
         self._set_pack_props(expand_x=expand_x, expand_y=expand_y, pad=pad)
@@ -1931,6 +1937,9 @@ class Input(Element):
         #     self.props.pop("height") # no property
         # set default text
         self.text_var = tk.StringVar(value=self.default_text)
+        if "height" in self.props:
+            self.props.pop("height")
+        print("@",self.props)
         # create
         self.widget = tk.Entry(
             parent,
