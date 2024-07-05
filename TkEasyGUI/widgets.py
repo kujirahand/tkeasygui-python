@@ -2112,30 +2112,31 @@ class InputText(Input):
 class Multiline(Element):
     """Multiline text input element."""
     def __init__(
-                self,
-                text: str = "", # default text
-                default_text: Union[str, None] = None, # same as text
-                key: Union[str, None] = None, # key
-                readonly: bool = False,
-                enable_events: bool = False, 
-                enable_key_events: bool = False,
-                enable_focus_events: bool = False,
-                size: tuple[int, int] = (50, 10), # element size (unit=character)
-                # text props
-                font: Union[FontType, None] = None, # font
-                color: Union[str, None] = None, # text color
-                text_color: Union[str, None] = None, # same as color
-                background_color: Union[str, None] = None, # background color
-                text_align: Union[TextAlign, None] = None, # text align
-                # pack props
-                expand_x: bool = False,
-                expand_y: bool = False,
-                pad: Union[PadType, None] = None,
-                # other
-                readonly_background_color: Union[str, None] = None,
-                metadata: Union[dict[str, Any], None] = None,
-                **kw
-                ) -> None:
+        self,
+        text: str = "",  # default text
+        default_text: Union[str, None] = None,  # same as text
+        key: Union[str, None] = None,  # key
+        readonly: bool = False,
+        enable_events: bool = False,
+        enable_key_events: bool = False,
+        enable_focus_events: bool = False,
+        size: tuple[int, int] = (50, 10),  # element size (unit=character)
+        # text props
+        font: Union[FontType, None] = None,  # font
+        color: Union[str, None] = None,  # text color
+        text_color: Union[str, None] = None,  # same as color
+        background_color: Union[str, None] = None,  # background color
+        text_align: Union[TextAlign, None] = None,  # text align
+        # pack props
+        expand_x: bool = False,
+        expand_y: bool = False,
+        pad: Union[PadType, None] = None,
+        # other
+        autoscroll: bool = False, # When autoscroll is set to True, it scrolls to the end with text changes.
+        readonly_background_color: Union[str, None] = None,
+        metadata: Union[dict[str, Any], None] = None,
+        **kw,
+    ) -> None:
         super().__init__("Multiline", "", key, True, metadata, **kw)
         if default_text is not None:
             text = default_text
@@ -2148,6 +2149,7 @@ class Multiline(Element):
             self.readonly_background_color = readonly_background_color
         self.has_value = True
         self.readonly = readonly
+        self.autoscroll = autoscroll
         # bind events
         if enable_events:
             self.bind_events({
@@ -2246,8 +2248,16 @@ class Multiline(Element):
             self.widget.delete(tk.SEL_FIRST, tk.SEL_LAST)
         return text
 
-    def update(self, text: Union[str, None] = None, readonly: Union[bool, None] = None, **kw) -> None:
+    def update(
+        self,
+        text: Union[str, None] = None,
+        readonly: Union[bool, None] = None,
+        autoscroll: Union[bool, None] = None,  # When autoscroll is set to True, it scrolls to the end with text changes.
+        **kw,
+        ) -> None:
         """Update the widget."""
+        if autoscroll is not None:
+            self.autoscroll = autoscroll
         if text is not None:
             self.set_text(text)
         if readonly is not None:
@@ -2276,6 +2286,9 @@ class Multiline(Element):
             self.widget.insert("1.0", text)
         if self.readonly:
             self._widget_update(state=tk.DISABLED)
+        # autoscroll ?
+        if self.autoscroll:
+            self.widget.see(tk.END)
     
     def get_selection_pos(self) -> tuple[str, str]:
         """Get selection position, returns (start_pos, end_pos)."""
@@ -2402,6 +2415,8 @@ class Multiline(Element):
             self.widget.tag_config(tag, background=background_color)
             tags.append(tag)
         self.widget.insert("end", text, tags)
+        if self.autoscroll:
+            self.widget.see(tk.END)
 
 class Textarea(Multiline):
     """Textarea element. (alias of Multiline)"""
@@ -2510,11 +2525,13 @@ class Slider(Element):
     def get_range(self) -> tuple[float, float]:
         return (self.widget.cget("from"), self.widget.cget("to"))
 
-    def update(self,
-               value: Union[float, None]=None,
-               range: Union[tuple[float, float], None]=None,
-               disable_number_display: Union[bool, None]=None,
-               **kw) -> None:
+    def update(
+        self,
+        value: Union[float, None] = None,
+        range: Union[tuple[float, float], None] = None,
+        disable_number_display: Union[bool, None] = None,
+        **kw,
+    ) -> None:
         """Update the widget."""
         if range is not None:
             self.set_range(range[0], range[1])
