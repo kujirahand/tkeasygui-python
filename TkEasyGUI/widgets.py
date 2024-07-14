@@ -3053,6 +3053,7 @@ class Table(Element):
                 event_returns_values: Union[bool, None] = None, # Returns the table value if set to True, otherwise returns the index.
                 select_mode: str="browse",
                 max_columns: int = 20, # This property cannot be changed later. It is advisable to set a larger value.
+                vertical_scroll_only: bool = True, # vertical scroll only
                 # text props
                 text_align: Union[TextAlign, None] = "left", # text align
                 font: Union[FontType, None] = None, # font
@@ -3078,6 +3079,7 @@ class Table(Element):
         self.max_col_width = max_col_width
         self.col_widths = col_widths
         self.has_font_prop = False # has, but not widget root
+        self.vertical_scroll_only = vertical_scroll_only
         # check headings
         if len(self.headings) < max_columns:
             for i in range(max_columns - len(self.headings)):
@@ -3123,11 +3125,19 @@ class Table(Element):
             **self.props)
         self.props["font"] = font
         # - SCROLLBAR
-        scrollbar = ttk.Scrollbar(self.frame, orient=tk.VERTICAL, command=tree.yview)
-        tree.configure(yscrollcommand=scrollbar.set)
+        scrollbar = tk.Scrollbar(self.frame, orient=tk.VERTICAL, command=tree.yview)
+        tree.configure(yscroll=scrollbar.set)
+        if not self.vertical_scroll_only:
+            hscrollbar = ttk.Scrollbar(self.frame, orient="horizontal", command=tree.xview)
+            tree.configure(xscroll=hscrollbar.set)
         # - pack to frame
-        self.widget.pack(expand=True, fill="both", side=tk.LEFT)
-        scrollbar.pack(fill=tk.Y, side=tk.LEFT)
+        tree.grid(row=0, column=0, sticky="nsew")
+        scrollbar.grid(row=0, column=1, sticky="ns")
+        if not self.vertical_scroll_only:
+            hscrollbar.grid(row=1, column=0, sticky="ew")
+        self.frame.grid_rowconfigure(0, weight=1)
+        self.frame.grid_columnconfigure(0, weight=1)
+
         # setting for column
         streatch = tk.YES if self.auto_size_columns else tk.NO
         for i, h in enumerate(self.headings):

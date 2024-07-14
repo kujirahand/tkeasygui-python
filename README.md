@@ -110,7 +110,8 @@ Below is a detailed list of classes and methods.
 Sorry, we only provide Japanese tutorials at the moment.
 
 - [TkEasyGUI - Pythonで最も素早くデスクトップアプリを創るライブラリ](https://note.com/kujirahand/n/n33a2df3aa3e5)
-- [マイナビニュースPython連載116回目 - 金額合計ツールでExcel要らず - 合計/整形/コピーのツールを作ろう](https://news.mynavi.jp/techplus/article/zeropython-116/)
+- [マイナビニュースPython連載116回目 - 合計/整形/コピーのツールを作ろう](https://news.mynavi.jp/techplus/article/zeropython-116/)
+- - [(Book) Pythonでつくるデスクトップアプリ メモ帳からスクレイピング・生成AI利用まで](https://amzn.to/45R2NSH)
 
 ## About the relationship with PySimpleGUI
 
