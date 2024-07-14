@@ -313,7 +313,7 @@ def popup_get_file(
 def popup_get_folder(
             message: str = "",
             title: Union[str, None] = None,
-            default_path: str = "",
+            default_path: Union[str, None] = None,
             no_window: Union[bool, None] = None, # for compatibility
             **kw
             ) -> Union[str, None]:
@@ -384,6 +384,7 @@ def popup_get_date(
         ok_label: Union[str, None] = None,
         cancel_label: Union[str, None] = None,
         date_format: Union[str, None] = None,
+        close_when_date_chosen: bool = False,
         sunday_first: bool = False, # Sunday is the first day of the week
         ) -> Union[datetime, None]:
     """Display a calendar in a popup window. Return the datetime entered or None."""
@@ -556,6 +557,9 @@ def popup_get_date(
                 if sel_date.month == current_date.month:
                     current_date = sel_date
                     update_result(current_date)
+                    if close_when_date_chosen:
+                        result = current_date
+                        break
                 else:
                     current_date = sel_date
                     update_date(get_top_date(current_date), current_date)

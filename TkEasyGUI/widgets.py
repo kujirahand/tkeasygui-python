@@ -676,8 +676,14 @@ class Window:
     def close(self) -> None:
         """Close the window."""
         # The phenomenon where a closed window remains visible is occurring, so forcibly making it transparent.
-        self.set_alpha_channel(0.0) # force hide
-        self.hide()
+        try:
+            self.set_alpha_channel(0.0) # force hide
+        except Exception as _:
+            pass
+        try:
+            self.hide()
+        except Exception as _:
+            pass
         # already closed?
         if not self.flag_alive:
             return
@@ -686,7 +692,8 @@ class Window:
             self.flag_alive = False
             _window_pop(self)
             self.window.destroy() # close window
-            if _window_count() == 0:
+            win_count = _window_count()
+            if win_count == 0:
                 self.window.quit() # quit app
         except Exception as e:
             print(f"Window.close.failed: {e}", file=sys.stderr)
@@ -1646,9 +1653,9 @@ class Button(Element):
     """
     def __init__(
         self,
-        button_text: str = "",
+        button_text: str = "Button",
         key: Union[str, None] = None,
-        disabled: bool = None,
+        disabled: bool = False,
         size: Union[tuple[int, int], None] = None,
         tooltip: Union[str, None] = None,  # (TODO) tooltip
         button_color: Union[str, tuple[str, str], None] = None,
@@ -1751,6 +1758,31 @@ class Button(Element):
         elif name == "ButtonText":
             return self.get_text()
         return super().__getattr__(name)
+
+class CloseButton(Button):
+    """CloseButton element."""
+    def __init__(
+        self,
+        button_text: str = "Close",
+        key: Union[str, None] = None,
+        **kw,
+    ) -> None:
+        key = button_text if (key is None) or (key == "") else key
+        super().__init__(button_text=button_text, key=key, **kw)
+
+    def create(self, win: Window, parent: tk.Widget) -> tk.Widget:
+        """Create a Button widget."""
+        super().create(win, parent)
+        win.register_event_hooks({
+            self.key: [
+                lambda _event, _value: self.close_window()
+            ]
+        })
+        return self.widget
+    
+    def close_window(self) -> None:
+        """Close the window."""
+        self.window.close()
 
 class Submit(Button):
     """Subtmi element. (Alias of Button) : todo: add submit event"""
@@ -3504,6 +3536,51 @@ class MultilineBrowse(FileBrowse):
                     self.key, {"event": result, "event_type": "change"}
                 )
         return result
+
+
+class CalendarBrowse(FileBrowse):
+    """CalendarBrowse element."""
+
+    def __init__(
+        self,
+        button_text: str = "...",
+        key: Union[str, None] = None,
+        target_key: Union[str, None] = None,
+        default_date: Union[datetime, None] = None,
+        date_format: Union[str, None] = "%Y-%m-%d",
+        title: str = "",
+        enable_events: bool = False,  # enable changing events
+        # other
+        metadata: Union[dict[str, Any], None] = None,
+        **kw,
+    ) -> None:
+        super().__init__("CalendarBrowse", "", key, False, metadata, **kw)
+        self.target_key = target_key
+        self.title = title
+        self.default_date = default_date
+        self.props["text"] = button_text
+        self.date_format = date_format
+        self.enable_events = enable_events
+
+    def show_dialog(self, *args) -> Union[str, None]:
+        """Show file dialog"""
+        target: tk.Widget = self.get_prev_widget(self.target_key)
+        # popup
+        result = dialogs.popup_get_date(
+            title=self.title,
+            current_date=self.default_date,
+        )
+        if (target is not None) and (result is not None) and (result != ""):
+            target.update(result.strftime(self.date_format))
+            if self.enable_events:
+                self.window._event_handler(
+                    self.key, {"event": result, "event_type": "change"}
+                )
+        return result
+
+class CalendarButton(CalendarBrowse):
+    """CalendarButton element. (alias of CalendarBrowse)"""
+    pass
 
 
 def rgb(r: int, g: int, b: int) -> str:
