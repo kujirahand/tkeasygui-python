@@ -1,7 +1,10 @@
 [
   "Button",
+  "CalendarBrowse",
+  "CalendarButton",
   "Canvas",
   "Checkbox",
+  "CloseButton",
   "ColorBrowse",
   "Column",
   "Combo",
