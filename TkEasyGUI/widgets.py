@@ -3236,6 +3236,26 @@ class Table(Element):
             del kw["values"]
         # update
         self._widget_update(**kw)
+    
+    def load_from_file(self, filename: str, delimiter: str = ",", encoding: str = "UTF-8", use_header: bool = True) -> None:
+        """Load data from a file."""
+        header = []
+        values = []
+        import csv
+        with open(filename, "r", encoding=encoding) as fp:
+            reader = csv.reader(fp, delimiter=delimiter)
+            for i, row in enumerate(reader):
+                if use_header:
+                    if i == 0:
+                        header = row
+                    else:
+                        values.append(row)
+                else:
+                    values.append(row)
+        if use_header:
+            self.set_values(values, header)
+        else:
+            self.set_values(values)
 
 #------------------------------------------------------------------------------
 # Browse elements
