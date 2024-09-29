@@ -93,6 +93,8 @@ while True:
 window.close()
 ```
 
+- [Docs > What kind of elements can be used?](https://github.com/kujirahand/tkeasygui-python/blob/main/docs/README.md#tkeasygui-elements-list)
+
 ## Samples
 
 We have prepared a selection of samples to demonstrate simple usage. Please check them out.

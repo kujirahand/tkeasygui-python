@@ -88,6 +88,8 @@ while True:
 window.close()
 ```
 
+- [Docs > どんなElementが使えますか？](https://github.com/kujirahand/tkeasygui-python/blob/main/docs/README.md#tkeasygui-elements-list)
+
 ## チュートリアル
 
 - [(note) TkEasyGUI - Pythonで最も素早くデスクトップアプリを創るライブラリ](https://note.com/kujirahand/n/n33a2df3aa3e5)
