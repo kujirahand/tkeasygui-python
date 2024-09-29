@@ -5,6 +5,7 @@ import io
 import os
 import platform
 import sys
+import threading
 import tkinter as tk
 import tkinter.font as tkfont
 from datetime import datetime
@@ -530,6 +531,18 @@ class Window:
             # return a event
             break
         return (key, values)
+    
+    def start_thread(self, target: callable, end_key: str, *args, **kw) -> None:
+        """Start a thread."""
+        def _thread_target():
+            try:
+                target(*args, **kw)
+                self._event_handler(end_key, {'result': True})
+            except Exception as e:
+                print(f"Window.start_thread.error: {e}", file=sys.stderr)
+                self._event_handler(end_key, {'result': False, 'error': e})
+        # start thread
+        threading.Thread(target=_thread_target).start()
 
     def event_iter(self, timeout: Union[int, None] = None, timeout_key: str=TIMEOUT_KEY) -> Any:
         """
