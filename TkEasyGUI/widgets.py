@@ -50,6 +50,7 @@ from .utils import (
 WINDOW_CLOSED: str = "WINDOW_CLOSED"
 WIN_CLOSED: str = "WINDOW_CLOSED"
 WINDOW_TIMEOUT: str = "-TIMEOUT-"
+WINDOW_THREAD_END: str = "-THREAD_END-"
 TIMEOUT_KEY: str = WINDOW_TIMEOUT
 WINDOW_KEY_EVENT: str = "-WINDOW_KEY_EVENT-"
 LISTBOX_SELECT_MODE_MULTIPLE: str = "multiple"
@@ -481,7 +482,11 @@ class Window:
                     result.append(elem)
         return result
 
-    def read(self, timeout: Union[int, None] = None, timeout_key: str="-TIMEOUT-") -> tuple[str, dict[str, Any]]:
+    def read(
+        self,
+        timeout: Union[int, None] = None,
+        timeout_key: str = WINDOW_TIMEOUT
+    ) -> tuple[str, dict[str, Any]]:
         """ Read events from the window."""
         self.timeout = timeout
         self.timeout_key = timeout_key
@@ -532,7 +537,13 @@ class Window:
             break
         return (key, values)
     
-    def start_thread(self, target: callable, end_key: str, *args, **kw) -> None:
+    def start_thread(
+        self,
+        target: callable,
+        end_key: str = WINDOW_THREAD_END,  # the thread processing is complete, end_key will be released
+        *args,
+        **kw,
+    ) -> None:
         """Start a thread."""
         def _thread_target():
             try:
