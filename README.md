@@ -109,7 +109,7 @@ Below is a detailed list of classes and methods.
 
 ## Tutorial
 
-Sorry, we only provide Japanese tutorials at the moment.
+Japanese tutorials:
 
 - [TkEasyGUI - Pythonで最も素早くデスクトップアプリを創るライブラリ](https://note.com/kujirahand/n/n33a2df3aa3e5)
 - [マイナビニュースPython連載116回目 - 合計/整形/コピーのツールを作ろう](https://news.mynavi.jp/techplus/article/zeropython-116/)
@@ -135,3 +135,4 @@ Sorry, we only provide Japanese tutorials at the moment.
 
 - [pypi.org > TkEasyGUI](https://pypi.org/project/tkeasygui/)
 - [GitHub > TkEasyGUI](https://github.com/kujirahand/tkeasygui-python/)
+- [Discord > TkEasyGUI](https://discord.gg/G2JXaRft)
