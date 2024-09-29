@@ -1,6 +1,7 @@
 """
 TkEasyGUI dialogs
 """
+import os
 import subprocess
 import tkinter.filedialog as filedialog
 import tkinter.messagebox as messagebox
@@ -269,7 +270,7 @@ def popup_info(message: str, title: Union[str,None]=None) -> None:
 def popup_get_file(
         message: str="",
         title: Union[str, None] = None,
-        initial_folder: str = "",
+        initial_folder: Union[str, None] = None,
         save_as: bool = False, # show `save as` dialog
         multiple_files: bool = False, # can select multiple files
         file_types: tuple[tuple[str, str]] = (("All Files", "*.*"),),
@@ -278,6 +279,8 @@ def popup_get_file(
     """Popup a file selection dialog. Return the file selected."""
     if title is None:
         title = message
+    if initial_folder is None:
+        initial_folder = os.getcwd()
     if file_types is not None:
         # check file types
         new_types = []
@@ -320,6 +323,8 @@ def popup_get_folder(
     """Popup a folder selection dialog. Return the folder selected."""
     if title is None:
         title = message
+    if default_path is None:
+        default_path = os.getcwd()
     return filedialog.askdirectory(title=title, initialdir=default_path, **kw)
 
 def popup_memo(

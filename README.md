@@ -23,6 +23,8 @@
 Install package from [PyPI](https://pypi.org/project/TkEasyGUI/).
 
 ```sh
+pip install TkEasyGUI
+# or
 python -m pip install TkEasyGUI
 ```
 
