@@ -1577,12 +1577,13 @@ class Menu(Element):
     - "---" is separator
     """
     def __init__(
-                self,
-                items: Union[Any, None] = None,
-                menu_definition: Union[list[list[Union[str,list[Any]]]], None] = None,
-                key: Union[str, None] = None,
-                metadata: Union[dict[str, Any], None] = None,
-                **kw) -> None:
+        self,
+        items: Union[list[list[Union[str, list[Any]]]], None] = None,
+        menu_definition: Union[list[list[Union[str, list[Any]]]], None] = None,
+        key: Union[str, None] = None,
+        metadata: Union[dict[str, Any], None] = None,
+        **kw,
+    ) -> None:
         super().__init__("Menu", "", key, False, metadata, **kw)
         self.items = menu_definition
         if items is not None:
@@ -1653,10 +1654,12 @@ class Menu(Element):
         self.props["text"] = text
         self._widget_update(text=text)
 
-    def update(self, text: Union[str, None] = None, *args, **kw) -> None:
+    def update(self, menu_definition: Union[list[list[Union[str, list[Any]]]], None] = None, *args, **kw) -> None:
         """Update the widget."""
-        if text is not None:
-            self.set_text(text)
+        if menu_definition is not None:
+            self.widget = tk.Menu(self.window.window)
+            self._create_menu(self.widget, menu_definition, 0)
+            self.window.window.config(menu=self.widget)
         self._widget_update(**kw)
 
 class Button(Element):
