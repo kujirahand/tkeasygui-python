@@ -222,7 +222,8 @@ def popup_input(
         ok_label: Union[str, None] = None,
         cancel_label: Union[str, None] = None,
         cancel_value: Any = None,
-        font: FontType=None) -> Union[str, None]:
+        only_number: bool = False,
+        font: FontType=None) -> Union[str, float, None]:
     """Display a message in a popup window with a text entry. Return the text entered. if canceled, return cancel_value."""
     result = cancel_value
     if title is None:
@@ -238,11 +239,14 @@ def popup_input(
     ], modal=True, font=font)
     while True:
         event, values = win.read()
-        if (event == "-user-") and (values["event_type"] == "return"):
+        if (event == ok_label) or ((event == "-user-") and (values["event_type"] == "return")):
             result = values["-user-"]
-            break
-        if event == ok_label:
-            result = values["-user-"]
+            if only_number:
+                try:
+                    result = float(result)
+                except ValueError as _:
+                    popup(le.get_text("Please enter a number."))
+                    continue
             break
         if event in [cancel_label, eg.WINDOW_CLOSED]:
             # let result = cancel_value
@@ -743,10 +747,11 @@ def msgbox(
 def input(
         message: str,
         title: Union[str,None] = None,
-        default: str = ""
-    ) -> str:
+        default: str = "",
+        only_number: bool = False
+    ) -> Union[str, float]:
     """Display a message in a popup window with a text entry. Return the text entered."""
-    return popup_input(message, title, default)
+    return popup_input(message, title, default, only_number=only_number)
 
 def print(*args, **kw) -> None:
     """Print message to popup window.(call default print function if no_window is True)"""
@@ -755,6 +760,14 @@ def print(*args, **kw) -> None:
         return
     lines = " ".join([str(a) for a in args])
     popup(lines)
+
+def input_number(
+        message: str,
+        title: Union[str,None] = None,
+        default: str = ""
+    ) -> float:
+    """Display a message in a popup window with a number entry. Return the text entered."""
+    return popup_input(message, title, default, only_number=True)
 
 def confirm(
         question: str,
