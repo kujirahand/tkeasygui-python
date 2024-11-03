@@ -227,7 +227,7 @@ def popup_input(
     """Display a message in a popup window with a text entry. Return the text entered. if canceled, return cancel_value."""
     result = cancel_value
     if title is None:
-        title = le.get_text("Text input")
+        title = le.get_text("Text input") if only_number is False else le.get_text("Number input")
     if ok_label is None:
         ok_label = le.get_text("OK")
     if cancel_label is None:
