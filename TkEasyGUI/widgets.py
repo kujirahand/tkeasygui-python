@@ -2772,6 +2772,7 @@ class Graph(Element):
         return self.widget.create_image(location, image=image, anchor=tk.NW)
 
 class ImageResizeType(Enum):
+    """Image resize type."""
     NO_RESIZE = "no_resize"
     FIT_HEIGHT = "fit_height"
     FIT_WIDTH = "fit_width"
@@ -2825,7 +2826,11 @@ class Image(Element):
             size: Union[tuple[int, int], None] = None,
             resize_type: ImageResizeType = ImageResizeType.FIT_BOTH,
             background_color: Union[tuple[int,int,int], None] = None,
-            ) -> None:
+        ) -> None:
+        """
+        Set image to Image widget.
+        - ImageResizeType is NO_RESIZE/FIT_HEIGHT/FIT_WIDTH/FIT_BOTH/IGNORE_ASPECT_RATIO/CROP_TO_SQUARE
+        """
         if self.widget is None:
             return
         # set 
