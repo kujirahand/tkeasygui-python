@@ -14,7 +14,7 @@ def main():
         [eg.Image(key="-image-")],
         [eg.Button("Close")]
     ])
-    load_image(window, "a.png")
+    load_image(window, "a.jpg")
     # event loop
     while True:
         event, values = window.read()
