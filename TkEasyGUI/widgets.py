@@ -9,6 +9,7 @@ import threading
 import tkinter as tk
 import tkinter.font as tkfont
 from datetime import datetime
+from enum import Enum
 from queue import Queue
 from tkinter import font as tkinter_font
 from tkinter import scrolledtext, ttk
@@ -2770,6 +2771,14 @@ class Graph(Element):
         self.widget.image = image # type: ignore
         return self.widget.create_image(location, image=image, anchor=tk.NW)
 
+class ImageResizeType(Enum):
+    NO_RESIZE = "no_resize"
+    FIT_HEIGHT = "fit_height"
+    FIT_WIDTH = "fit_width"
+    FIT_BOTH = "fit_both"
+    IGNORE_ASPECT_RATIO = "ignore_aspect_ratio"
+    CROP_TO_SQUARE = "crop_to_square"
+
 class Image(Element):
     """Image element."""
     def __init__(
@@ -2812,7 +2821,11 @@ class Image(Element):
     def set_image(self,
             source: Union[bytes, str, None] = None,
             filename: Union[str, None] = None,
-            data: Union[bytes, None]=None) -> None:
+            data: Union[bytes, None]=None,
+            size: Union[tuple[int, int], None] = None,
+            resize_type: ImageResizeType = ImageResizeType.FIT_BOTH,
+            background_color: Union[tuple[int,int,int], None] = None,
+            ) -> None:
         if self.widget is None:
             return
         # set 
@@ -2821,23 +2834,29 @@ class Image(Element):
         # erase
         self.erase()
         # load
-        photo = get_image_tk(source, filename, data, self.size)
+        if size is None:
+            size = self.size
+        photo = get_image_tk(source, filename, data, size=size, resize_type=resize_type, background_color=background_color)
         if photo is not None:
             self.widget.create_image(0, 0, image=photo, anchor="nw")
             self.widget.photo = photo # type ignore
 
-    def update(self,
-               source: Union[bytes, str, None] = None,
-               filename: Union[str, None] = None,
-               data: Union[bytes, None] = None,
-               size: Union[tuple[int,int], None] = None,
-               **kw) -> None:
+    def update(
+        self,
+        source: Union[bytes, str, None] = None,
+        filename: Union[str, None] = None,
+        data: Union[bytes, None] = None,
+        size: Union[tuple[int, int], None] = None,
+        resize_type: ImageResizeType = ImageResizeType.FIT_BOTH,
+        background_color: Union[tuple[int, int, int], None] = None,
+        **kw,
+    ) -> None:
         """Update the widget."""
         if size is not None:
             self.size = size
             self.widget.configure(width=size[0], height=size[1])
         if (source is not None) or (filename is not None) or (data is not None):
-            self.set_image(source, filename, data)
+            self.set_image(source, filename, data, size=size, resize_type=resize_type, background_color=background_color)
         self._widget_update(**kw)
     
     def __getattr__(self, name):
@@ -3647,20 +3666,71 @@ def rgb(r: int, g: int, b: int) -> str:
     b = b & 0xFF
     return f"#{r:02x}{g:02x}{b:02x}"
 
-def image_resize(img: PILImage, size: tuple[int, int]) -> PILImage:
+def image_resize(
+    img: PILImage,
+    size: Union[tuple[int, int], None],
+    resize_type: ImageResizeType = ImageResizeType.FIT_BOTH,
+    background_color: Union[tuple[int, int, int], None] = None,
+) -> PILImage:
     """Resize image"""
-    if size[0] < size[1]:
-        r = size[0] / img.size[0]
-    else:
+    # check background color
+    if background_color is None:
+        background_color = (0, 0, 0)
+    if size is None:
+        size = img.size
+    print(f"@@@type={resize_type}, size={size}")
+
+    # resize
+    if resize_type == ImageResizeType.NO_RESIZE:
+        return img
+    if resize_type == ImageResizeType.IGNORE_ASPECT_RATIO:
+        return img.resize(size=size)
+    if resize_type == ImageResizeType.FIT_HEIGHT:
         r = size[1] / img.size[1]
-    w, h = size[0], int(img.size[1] * r)
-    return img.resize(size=(w, h))
+        w, h = int(img.size[0] * r), size[1]
+        x, y = (size[0] - w) // 2, (size[1] - h) // 2
+        resize_im = img.resize(size=(w, h))
+        view_im = PILImage.new("RGBA", size, background_color)
+        view_im.paste(resize_im, (x, y))
+        return view_im
+    if resize_type == ImageResizeType.FIT_WIDTH:
+        r = size[0] / img.size[0]
+        w, h = size[0], int(img.size[1] * r)
+        x, y = (size[0] - w) // 2, (size[1] - h) // 2
+        resize_im = img.resize(size=(w, h))
+        view_im = PILImage.new("RGBA", size, background_color)
+        view_im.paste(resize_im, (x, y))
+        return view_im
+    if resize_type == ImageResizeType.FIT_BOTH:
+        wr = size[0] / img.size[0]
+        hr = size[1] / img.size[1]
+        r = min(wr, hr)
+        w, h = int(img.size[0] * r), int(img.size[1] * r)
+        x, y = (size[0] - w) // 2, (size[1] - h) // 2
+        resize_im = img.resize(size=(w, h))
+        view_im = PILImage.new("RGBA", size, background_color)
+        view_im.paste(resize_im, (x, y))
+        return view_im
+    if resize_type == ImageResizeType.CROP_TO_SQUARE:
+        w, h = img.size
+        if w > h:
+            x = (w - h) // 2
+            img = img.crop((x, 0, x + h, h))
+        elif h > w:
+            y = (h - w) // 2
+            img = img.crop((0, y, w, y + w))
+        print(f"@@@img.size={img.size}, size={size}")
+        return img.resize(size=(size[0], size[0]))
+    return img
 
 def get_image_tk(
         source: Union[bytes, Union[str, None]] = None,
         filename: Union[str, None] = None,
         data: Union[bytes, None] = None,
-        size: Union[tuple[int, int], None] = None) -> Union[tk.PhotoImage, None]:
+        size: Union[tuple[int, int], None] = None,
+        resize_type: ImageResizeType = ImageResizeType.FIT_BOTH,
+        background_color: Union[tuple[int, int, int], None] = None,
+        ) -> Union[tk.PhotoImage, None]:
     """Get Image for tk"""
     # if source is bytes, set data
     if source is not None:
@@ -3672,8 +3742,12 @@ def get_image_tk(
     if filename is not None:
         try:
             img: PILImage = PILImage.open(filename)
-            if size is not None:
-                img = image_resize(img, size)
+            img = image_resize(
+                img,
+                size=size,
+                resize_type=resize_type,
+                background_color=background_color,
+            )
             return ImageTk.PhotoImage(image=img)
         except Exception as e:
             raise TkEasyError(f"TkEasyGUI.Image.set_image.Error: filename='{filename}', {e}")
@@ -3683,8 +3757,12 @@ def get_image_tk(
             # check if data is PILImage
             if isinstance(data, PILImage.Image):
                 img: PILImage = data
-                if size is not None:
-                    img = image_resize(img, size)
+                img = image_resize(
+                    img,
+                    size=size,
+                    resize_type=resize_type,
+                    background_color=background_color,
+                )
                 return ImageTk.PhotoImage(image=img)
             return ImageTk.PhotoImage(data=data)
         except Exception as e:
