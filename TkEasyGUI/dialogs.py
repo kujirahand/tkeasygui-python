@@ -233,11 +233,14 @@ def popup_input(
         cancel_label = le.get_text("Cancel")
     win = eg.Window(title, layout=[
         [eg.Text(message)],
-        [eg.Input(default, key="-user-", width=40)],
+        [eg.Input(default, key="-user-", width=40, enable_events=True)],
         [eg.Button(ok_label, width=11), eg.Button(cancel_label, width=9)]
     ], modal=True, font=font)
     while True:
         event, values = win.read()
+        if (event == "-user-") and (values["event_type"] == "return"):
+            result = values["-user-"]
+            break
         if event == ok_label:
             result = values["-user-"]
             break
