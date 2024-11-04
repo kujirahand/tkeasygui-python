@@ -3683,8 +3683,6 @@ def image_resize(
         background_color = (0, 0, 0)
     if size is None:
         size = img.size
-    print(f"@@@type={resize_type}, size={size}")
-
     # resize
     if resize_type == ImageResizeType.NO_RESIZE:
         return img
@@ -3724,7 +3722,6 @@ def image_resize(
         elif h > w:
             y = (h - w) // 2
             img = img.crop((0, y, w, y + w))
-        print(f"@@@img.size={img.size}, size={size}")
         return img.resize(size=(size[0], size[0]))
     return img
 
