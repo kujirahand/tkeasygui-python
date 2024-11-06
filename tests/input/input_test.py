@@ -1,4 +1,6 @@
-# import PySimpleGUI as sg
+"""
+### Input widget test
+"""
 import TkEasyGUI as eg
 
 # window create

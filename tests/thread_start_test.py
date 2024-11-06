@@ -1,5 +1,13 @@
+"""
+# Thread test
+
+This is a test for the `Window.start_thread` method.
+"""
+
 import time
+
 import TkEasyGUI as eg
+
 
 # long-running process sample
 def long_running_process(wait):

@@ -1,3 +1,9 @@
+"""
+### Many Buttons example
+
+This example demonstrates how to create a window with many buttons.
+"""
+
 import TkEasyGUI as eg
 
 # define layout --- make 12 buttons
@@ -28,3 +34,5 @@ for event, values in window.event_iter():
         eg.popup(f"You Pushed {no}")
         # disable button
         window[event].update(disabled=True)
+
+window.close()

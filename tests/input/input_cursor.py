@@ -1,4 +1,9 @@
-# import PySimpleGUI as sg
+"""
+### Input cursor control
+
+TkEasyGUI offers a wide range of methods to control the cursor in the Input widget.
+"""
+
 import TkEasyGUI as eg
 
 # window create

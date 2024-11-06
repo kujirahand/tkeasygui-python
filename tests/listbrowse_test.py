@@ -1,22 +1,27 @@
+"""
+### ListBrowse test
+
+This is a test for the ListBrowse and MultilineBrowse widgets.
+ListBrowse is a button that opens a window with a list of items.
+MultilineBrowse is a button that opens a window with a multiline text.
+"""
 import json
 
 import TkEasyGUI as eg
 
 window = eg.Window(
-    "hoge",
+    "ListBrowse test",
     layout=[
-        [eg.Text("FileBrowse:")],
-        [
-            eg.Input("", expand_x=True, key="-file-result-"),
-            eg.FileBrowse(),
-        ],
         [eg.Text("ListBrowse:")],
         [
             eg.Input("", expand_x=True, key="-list-result-"),
             eg.ListBrowse(values=["red", "green", "blue"]),
         ],
         [eg.Text("MultilineBrowse:")],
-        [eg.Input("", expand_x=True, key="-text-result-"), eg.MultilineBrowse("This is a pen.")],
+        [
+            eg.Input("", expand_x=True, key="-text-result-"),
+            eg.MultilineBrowse("This is a pen."),
+        ],
         [eg.HSeparator()],
         [eg.Button("OK"), eg.Button("Cancel")],
     ],

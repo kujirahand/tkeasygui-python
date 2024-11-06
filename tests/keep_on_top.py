@@ -1,4 +1,8 @@
-# import PySimpleGUI as sg
+"""
+### Keep on Top Sample
+
+This example demonstrates how to create a window that stays on top of all other windows.
+"""
 import TkEasyGUI as eg
 
 window = eg.Window("Keeo on Top", layout=[

@@ -1,3 +1,7 @@
+"""
+### Menu element test
+"""
+
 # import PySimpleGUI as sg
 import TkEasyGUI as eg
 

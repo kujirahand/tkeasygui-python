@@ -1,14 +1,17 @@
-# import PySimpleGUI as sg
+"""
+### Life Game Sample
+"""
+
 import random
 import time
 
 import TkEasyGUI as eg
 
-# ライフゲームのセルの状態
+# Cell Status - ライフゲームのセルの状態
 DEAD = 0
 ALIVE = 1
 
-# ゲーム盤の行と列の数
+# board rows and columns - ゲーム盤の行と列の数
 ROWS = 30
 COLS = 40
 

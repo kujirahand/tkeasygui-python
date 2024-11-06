@@ -1,3 +1,8 @@
+"""
+### Notepad sample
+
+This is a simple notepad application. You can save and open text.
+"""
 import os
 
 import TkEasyGUI as eg

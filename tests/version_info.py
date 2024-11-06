@@ -1,3 +1,9 @@
+"""
+# Version info
+
+This script shows the version information of TkEasyGUI and system information.
+"""
+
 import subprocess
 
 import TkEasyGUI as eg

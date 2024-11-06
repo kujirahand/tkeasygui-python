@@ -1,6 +1,8 @@
 """
-OpenCV Camera Test
-Please install OpenCV
+### OpenCV Camera Test
+
+Please install OpenCV.
+
 ```
 pip install opencv-python
 pip install opencv-contrib-python

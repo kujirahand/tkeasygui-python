@@ -1,5 +1,5 @@
 """
-ui test
+UI Test
 """
 # import PySimpleGUI as sg
 import TkEasyGUI as eg

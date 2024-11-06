@@ -1,3 +1,7 @@
+"""
+### popup_get_file - Specify file types
+"""
+
 import TkEasyGUI as eg
 
 # file types

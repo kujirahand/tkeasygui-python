@@ -1,3 +1,7 @@
+"""
+### Input widget width test
+"""
+
 import TkEasyGUI as eg
 
 # Window layout

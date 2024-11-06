@@ -1,3 +1,9 @@
+"""
+### Menu Change Test
+
+Test for changing menu definition.
+"""
+
 # import PySimpleGUI as sg
 import TkEasyGUI as eg
 

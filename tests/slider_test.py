@@ -1,4 +1,6 @@
-# import PySimpleGUI as eg
+"""
+### Slider Test
+"""
 import TkEasyGUI as eg
 
 # define layout

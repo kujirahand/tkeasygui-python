@@ -1,5 +1,6 @@
 """
-Paint tool for TkEasyGUI
+### Paint tool for TkEasyGUI
+
 Using original event model
 """
 import TkEasyGUI as eg

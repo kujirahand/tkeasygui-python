@@ -1,3 +1,7 @@
+"""
+# Paint test (compatible with PySimpleGUI)
+"""
+
 # import PySimpleGUI as sg
 import TkEasyGUI as eg
 

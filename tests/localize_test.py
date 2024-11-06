@@ -1,3 +1,10 @@
+""""
+### Localize test
+
+This is a test for licalization. - ローカライズのテストです。
+実行するOSの言語によって、ダイアログのボタンのラベルが変わります。
+"""
+
 import TkEasyGUI as eg
 
 # --- popup_yes_no は、自動でローカライズに対応している ---

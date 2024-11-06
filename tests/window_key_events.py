@@ -1,4 +1,6 @@
+"""
 # Window key events
+"""
 import TkEasyGUI as eg
 
 layout = [
