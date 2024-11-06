@@ -8,6 +8,7 @@ import tkinter as tk
 from tkinter import ttk
 from typing import Any, Literal, TypeVar, Union
 
+import PIL.Image
 import pyperclip
 
 # define TypeAlias
@@ -36,6 +37,7 @@ def get_clipboard():
 
 #------------------------------------------------------------------------------
 # utility
+# ------------------------------------------------------------------------------
 def get_platform() -> str:
     """get platform"""
     return platform.system()
@@ -47,6 +49,12 @@ def is_mac() -> bool:
 def is_win() -> bool:
     """platform : is Windows?"""
     return get_platform() == "Windows"
+
+def screenshot() -> PIL.Image:
+    """Take a screenshot."""
+    import PIL.ImageGrab
+    screen_image = PIL.ImageGrab.grab()
+    return screen_image
 
 # -------------------------------------------------------------------
 # tkinter window management

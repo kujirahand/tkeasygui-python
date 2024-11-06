@@ -16,7 +16,7 @@ from tkinter import scrolledtext, ttk
 from typing import Any, Union
 
 # from typing import TypeAlias
-from PIL import Image as PILImage
+import PIL
 from PIL import ImageTk
 
 from . import dialogs, utils, version
@@ -217,6 +217,10 @@ class Window:
             # could not get size with geometry() before window is shown
             # so, move window to center after window is shown `_on_window_show`
             pass
+
+    def post_event(self, key: str, values: dict[str, Any]) -> None:
+        """Post an event."""
+        self.events.put((key, values))
 
     def _on_frame_configure(self, _event):
         """Handle frame configure event."""
@@ -2820,6 +2824,12 @@ class Image(Element):
         """Erase image"""
         self.widget.delete("all")
 
+    def screenshot(self) -> PIL.Image:
+        """Take a screenshot"""
+        screen_image = utils.screenshot()
+        self.set_image(data=screen_image, size=self.size)
+        return screen_image
+    
     def set_image(
         self,
         source: Union[bytes, str, None] = None,
@@ -3679,17 +3689,16 @@ def rgb(r: int, g: int, b: int) -> str:
     return f"#{r:02x}{g:02x}{b:02x}"
 
 def image_resize(
-    img: PILImage,
+    img: PIL.Image,
     size: Union[tuple[int, int], None],
     resize_type: ImageResizeType = ImageResizeType.FIT_BOTH,
     background_color: Union[str, None] = None, # color (example) "red" or "#FF0000"
-) -> PILImage:
+) -> PIL.Image:
     """Resize image"""
-    import PIL.ImageColor as PILImageColor
     # check background color
     if background_color is None:
         background_color = "white"
-    background_color_rgba = PILImageColor.getcolor(background_color, "RGBA")
+    background_color_rgba = PIL.ImageColor.getcolor(background_color, "RGBA")
     if size is None:
         size = img.size
     # resize
@@ -3702,7 +3711,7 @@ def image_resize(
         w, h = int(img.size[0] * r), size[1]
         x, y = (size[0] - w) // 2, (size[1] - h) // 2
         resize_im = img.resize(size=(w, h))
-        view_im = PILImage.new("RGBA", size, background_color_rgba)
+        view_im = PIL.Image.new("RGBA", size, background_color_rgba)
         view_im.paste(resize_im, (x, y))
         return view_im
     if resize_type == ImageResizeType.FIT_WIDTH:
@@ -3710,7 +3719,7 @@ def image_resize(
         w, h = size[0], int(img.size[1] * r)
         x, y = (size[0] - w) // 2, (size[1] - h) // 2
         resize_im = img.resize(size=(w, h))
-        view_im = PILImage.new("RGBA", size, background_color_rgba)
+        view_im = PIL.Image.new("RGBA", size, background_color_rgba)
         view_im.paste(resize_im, (x, y))
         return view_im
     if resize_type == ImageResizeType.FIT_BOTH:
@@ -3721,7 +3730,7 @@ def image_resize(
         w, h = int(img.size[0] * r), int(img.size[1] * r)
         x, y = (size[0] - w) // 2, (size[1] - h) // 2
         resize_im = img.resize(size=(w, h))
-        view_im = PILImage.new("RGBA", size, background_color_rgba)
+        view_im = PIL.Image.new("RGBA", size, background_color_rgba)
         view_im.paste(resize_im, (x, y))
         # print("@@@FIT_BOTH", x, y, w, h, size, wr)
         return view_im
@@ -3754,7 +3763,7 @@ def get_image_tk(
     # load from file?
     if filename is not None:
         try:
-            img: PILImage = PILImage.open(filename)
+            img: PIL.Image = PIL.Image.open(filename)
             img = image_resize(
                 img,
                 size=size,
@@ -3767,9 +3776,9 @@ def get_image_tk(
     # load from data
     if data is not None:
         try:
-            # check if data is PILImage
-            if isinstance(data, PILImage.Image):
-                img: PILImage = data
+            # check if data is PIL.Image
+            if isinstance(data, PIL.Image.Image):
+                img: PIL.Image = data
                 img = image_resize(
                     img,
                     size=size,
@@ -3783,7 +3792,7 @@ def get_image_tk(
             return data
     return None
 
-def imagedata_to_bytes(image_data: PILImage) -> bytes:
+def imagedata_to_bytes(image_data: PIL.Image) -> bytes:
     """Convert JPEG to PNG"""
     img_bytes = io.BytesIO()
     image_data.save(img_bytes, format='PNG')
@@ -3792,7 +3801,7 @@ def imagedata_to_bytes(image_data: PILImage) -> bytes:
 
 def imagefile_to_bytes(filename: str) -> bytes:
     """Read image file and convert to bytes"""
-    image = PILImage.open(filename)
+    image = PIL.Image.open(filename)
     img_bytes = io.BytesIO()
     image.save(img_bytes, format='PNG')
     img_bytes = img_bytes.getvalue()

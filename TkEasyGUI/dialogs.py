@@ -281,6 +281,7 @@ def popup_get_file(
         save_as: bool = False, # show `save as` dialog
         multiple_files: bool = False, # can select multiple files
         file_types: tuple[tuple[str, str]] = (("All Files", "*.*"),),
+        default_extension: Union[str, None] = None,
         no_window: Union[bool, None] = None, # for compatibility
         **kw) -> Union[str, tuple[str], None]:
     """Popup a file selection dialog. Return the file selected."""
@@ -310,7 +311,11 @@ def popup_get_file(
             title=title,
             initialdir=initial_folder,
             filetypes=file_types,
-            **kw)
+            defaultextension=default_extension,
+        )
+        if result and default_extension:
+            if result.endswith(default_extension) is False:
+                result += default_extension
     else:
         result = filedialog.askopenfilename(
             title=title, 
