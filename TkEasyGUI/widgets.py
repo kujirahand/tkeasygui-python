@@ -2788,7 +2788,7 @@ class Image(Element):
                 filename = None, # filen ame
                 data: bytes = None, # image data
                 key: Union[str, None] = None,
-                background_color: Union[str, None] = None,
+                background_color: Union[str, None] = None, # background color (example) "red", "#FF0000"
                 size: tuple[int, int] = (300, 300),
                 # other
                 metadata: Union[dict[str, Any], None] = None,
@@ -2799,6 +2799,7 @@ class Image(Element):
         self.filename = filename
         self.data = data
         self.size = self.props["size"] = size
+        self.background_color = background_color
         if background_color is not None:
             self.props["background"] = background_color
 
@@ -2819,14 +2820,15 @@ class Image(Element):
         """Erase image"""
         self.widget.delete("all")
 
-    def set_image(self,
-            source: Union[bytes, str, None] = None,
-            filename: Union[str, None] = None,
-            data: Union[bytes, None]=None,
-            size: Union[tuple[int, int], None] = None,
-            resize_type: ImageResizeType = ImageResizeType.FIT_BOTH,
-            background_color: Union[tuple[int,int,int], None] = None,
-        ) -> None:
+    def set_image(
+        self,
+        source: Union[bytes, str, None] = None,
+        filename: Union[str, None] = None,
+        data: Union[bytes, None] = None,
+        size: Union[tuple[int, int], None] = None,
+        resize_type: ImageResizeType = ImageResizeType.FIT_BOTH,
+        background_color: Union[str, None] = None,  # background color (example) "red", "#FF0000"
+    ) -> None:
         """
         Set image to Image widget.
         - ImageResizeType is NO_RESIZE/FIT_HEIGHT/FIT_WIDTH/FIT_BOTH/IGNORE_ASPECT_RATIO/CROP_TO_SQUARE
@@ -2836,12 +2838,14 @@ class Image(Element):
         # set 
         self.filename = filename
         self.data = data
+        if background_color is not None:
+            self.background_color = background_color
         # erase
         self.erase()
         # load
         if size is None:
             size = self.size
-        photo = get_image_tk(source, filename, data, size=size, resize_type=resize_type, background_color=background_color)
+        photo = get_image_tk(source, filename, data, size=size, resize_type=resize_type, background_color=self.background_color)
         if photo is not None:
             self.widget.create_image(0, 0, image=photo, anchor="nw")
             self.widget.photo = photo # type ignore
@@ -2860,8 +2864,11 @@ class Image(Element):
         if size is not None:
             self.size = size
             self.widget.configure(width=size[0], height=size[1])
+        if background_color is not None:
+            self.background_color = background_color
+            self.props["background"] = background_color
         if (source is not None) or (filename is not None) or (data is not None):
-            self.set_image(source, filename, data, size=size, resize_type=resize_type, background_color=background_color)
+            self.set_image(source, filename, data, size=self.size, resize_type=resize_type, background_color=background_color)
         self._widget_update(**kw)
     
     def __getattr__(self, name):
@@ -3675,12 +3682,14 @@ def image_resize(
     img: PILImage,
     size: Union[tuple[int, int], None],
     resize_type: ImageResizeType = ImageResizeType.FIT_BOTH,
-    background_color: Union[tuple[int, int, int], None] = None,
+    background_color: Union[str, None] = None, # color (example) "red" or "#FF0000"
 ) -> PILImage:
     """Resize image"""
+    import PIL.ImageColor as PILImageColor
     # check background color
     if background_color is None:
-        background_color = (0, 0, 0)
+        background_color = "white"
+    background_color_rgba = PILImageColor.getcolor(background_color, "RGBA")
     if size is None:
         size = img.size
     # resize
@@ -3693,7 +3702,7 @@ def image_resize(
         w, h = int(img.size[0] * r), size[1]
         x, y = (size[0] - w) // 2, (size[1] - h) // 2
         resize_im = img.resize(size=(w, h))
-        view_im = PILImage.new("RGBA", size, background_color)
+        view_im = PILImage.new("RGBA", size, background_color_rgba)
         view_im.paste(resize_im, (x, y))
         return view_im
     if resize_type == ImageResizeType.FIT_WIDTH:
@@ -3701,18 +3710,20 @@ def image_resize(
         w, h = size[0], int(img.size[1] * r)
         x, y = (size[0] - w) // 2, (size[1] - h) // 2
         resize_im = img.resize(size=(w, h))
-        view_im = PILImage.new("RGBA", size, background_color)
+        view_im = PILImage.new("RGBA", size, background_color_rgba)
         view_im.paste(resize_im, (x, y))
         return view_im
     if resize_type == ImageResizeType.FIT_BOTH:
+        # check aspect ratio
         wr = size[0] / img.size[0]
         hr = size[1] / img.size[1]
-        r = min(wr, hr)
+        r = min(wr, hr) # select min
         w, h = int(img.size[0] * r), int(img.size[1] * r)
         x, y = (size[0] - w) // 2, (size[1] - h) // 2
         resize_im = img.resize(size=(w, h))
-        view_im = PILImage.new("RGBA", size, background_color)
+        view_im = PILImage.new("RGBA", size, background_color_rgba)
         view_im.paste(resize_im, (x, y))
+        # print("@@@FIT_BOTH", x, y, w, h, size, wr)
         return view_im
     if resize_type == ImageResizeType.CROP_TO_SQUARE:
         w, h = img.size
@@ -3731,7 +3742,7 @@ def get_image_tk(
         data: Union[bytes, None] = None,
         size: Union[tuple[int, int], None] = None,
         resize_type: ImageResizeType = ImageResizeType.FIT_BOTH,
-        background_color: Union[tuple[int, int, int], None] = None,
+        background_color: Union[str, None] = None, # color (example) "red" or "#FF0000"
         ) -> Union[tk.PhotoImage, None]:
     """Get Image for tk"""
     # if source is bytes, set data
