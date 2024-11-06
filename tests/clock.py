@@ -1,20 +1,24 @@
 # clock
 import datetime
 
-import TkEasyGUI as sg
+import TkEasyGUI as eg
+
+# show time
+def show_cur_time(window):
+    now = datetime.datetime.now()
+    window["-time-"].update(now.strftime("%H:%M:%S"))
 
 # create window
-layout = [
-    [sg.Text("00:00:00", key="-output-", font=("Helvetica", 80))]
-]
-window = sg.Window("Digital Clock", layout)
+window = eg.Window(
+    "Digital Clock",
+    layout=[
+        [eg.Text("00:00:00", key="-time-", font=("Helvetica", 80))]
+    ])
+
 # event loop
-while True:
-    event, _ = window.read(timeout=10)
-    if event == sg.WINDOW_CLOSED:
-        break
-    # show current time
-    now = datetime.datetime.now()
-    window["-output-"].update(
-        now.strftime("%H:%M:%S")
-    )
+show_cur_time(window)
+while window.is_running():
+    event, _ = window.read(timeout=1000)
+    print(event)
+    if event == eg.TIMEOUT_KEY:
+        show_cur_time(window)
