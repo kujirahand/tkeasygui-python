@@ -740,9 +740,6 @@ class Window:
         """Cancel the close event."""
         self.flag_alive = True
     
-    def write_event_value(self, key: str, values: dict[str, Any]) -> None:
-        self.events.put((key, values))
-    
     def __getitem__(self, key: str) -> Any:
         """Get an element by its key."""
         return self.key_elements[key]
