@@ -1,10 +1,10 @@
 # import PySimpleGUI as sg
-import TkEasyGUI as sg
+import TkEasyGUI as eg
 
-window = sg.Window("Keeo on Top", layout=[
+window = eg.Window("Keeo on Top", layout=[
         [
-            sg.Button("x"),
-            sg.Text("This window will stay on top")
+            eg.Button("x"),
+            eg.Text("This window will stay on top")
         ],
     ],
     keep_on_top=True,
@@ -14,6 +14,6 @@ window = sg.Window("Keeo on Top", layout=[
 )
 while True:
     event, values = window.read()
-    if event in [sg.WIN_CLOSED, "x"]:
+    if event in [eg.WIN_CLOSED, "x"]:
         break
 window.close()

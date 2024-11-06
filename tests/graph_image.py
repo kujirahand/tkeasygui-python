@@ -1,32 +1,35 @@
+"""
+### Graph sample
+"""
 from PIL import Image
 
-import TkEasyGUI as sg
+import TkEasyGUI as eg
 
 # load background image
 back_image = Image.open("b.jpg").resize((400, 400))
 
 def main():
     layout = [
-        [sg.Graph(
+        [eg.Graph(
             canvas_size=(400, 400),
             key='-canvas-',
         )],
-        [sg.Button('Close')]]
+        [eg.Button('Close')]]
     # create window
-    window = sg.Window('graph test', layout)
-    canvas: sg.Graph = window['-canvas-']
+    window = eg.Window('graph test', layout)
+    canvas: eg.Graph = window['-canvas-']
     # event loop
     angle = 0
     while True:
         event, _ = window.read(timeout=100)
-        if event in [sg.WINDOW_CLOSED, "Close"]:
+        if event in [eg.WINDOW_CLOSED, "Close"]:
             break
         # draw image
         canvas.erase()
         canvas.draw_image(data=back_image, location=(0, 0))
         angle1 = angle % 360
         angle2 = (angle + 90) % 360
-        color = sg.rgb(100, 206 + (angle * 5 % 50), 156 + ((angle * 10) % 100))
+        color = eg.rgb(100, 206 + (angle * 5 % 50), 156 + ((angle * 10) % 100))
         canvas.draw_arc((100, 100), (300, 300), start_angle=angle1, extent=angle2, fill_color=color, arc_color="white")
         angle += 1
         window.refresh()

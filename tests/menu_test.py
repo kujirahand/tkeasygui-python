@@ -1,5 +1,5 @@
 # import PySimpleGUI as sg
-import TkEasyGUI as sg
+import TkEasyGUI as eg
 
 # define menu
 menu_def = [
@@ -11,19 +11,19 @@ menu_def = [
 
 # create window
 layout = [
-    [sg.Menu(menu_def)],
-    [sg.Text('This is a test window for Menu element.')],
-    [sg.Multiline('', size=(60, 8), key="-log-")],
+    [eg.Menu(menu_def)],
+    [eg.Text('This is a test window for Menu element.')],
+    [eg.Multiline('', size=(60, 8), key="-log-")],
 ]
-window = sg.Window('Menu test',layout)
+window = eg.Window('Menu test',layout)
 # event loop
 while True:
     event, values = window.read()
     print(event, values)
-    if event in [sg.WINDOW_CLOSED, "Exit"]:
+    if event in [eg.WINDOW_CLOSED, "Exit"]:
         break
     if event == "Hello":
-        sg.popup("Hello Popup")
+        eg.popup("Hello Popup")
         continue
     # else
     window["-log-"].print(f"{event}", text_color="blue", background_color="yellow")

@@ -1,4 +1,6 @@
+"""
 # screenshot sample
+"""
 import TkEasyGUI as eg
 
 

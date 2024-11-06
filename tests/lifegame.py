@@ -2,7 +2,7 @@
 import random
 import time
 
-import TkEasyGUI as sg
+import TkEasyGUI as eg
 
 # ライフゲームのセルの状態
 DEAD = 0
@@ -45,10 +45,10 @@ def create_gui(board):
     for i in range(ROWS):
         row = []
         for j in range(COLS):
-            row.append(sg.Text("", key=(i, j), size=(2, 1), pad=(0,0), enable_events=True))
+            row.append(eg.Text("", key=(i, j), size=(2, 1), pad=(0,0), enable_events=True))
         layout.append(row)
 
-    window = sg.Window('Life Game', layout, row_padding=0, finalize=True)
+    window = eg.Window('Life Game', layout, row_padding=0, finalize=True)
     return window
 
 # GUI上の盤面を更新する関数
@@ -66,9 +66,9 @@ def main():
     paused = False
     while True:
         event, _ = window.read(timeout=100 if not paused else None)
-        if event == sg.WINDOW_CLOSED:
+        if event == eg.WINDOW_CLOSED:
             break
-        elif event != sg.TIMEOUT_KEY:
+        elif event != eg.TIMEOUT_KEY:
             x, y = event
             if board[x][y] == ALIVE:
                 board[x][y] = DEAD

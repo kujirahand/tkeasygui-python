@@ -1,7 +1,10 @@
 """
-Calc sample
+### Calculator Sample
+
+This sample demonstrates how to create a simple calculator using TkEasyGUI.
+It also shows how to create multiple buttons and handle button events effectively.
 """
-import TkEasyGUI as sg
+import TkEasyGUI as eg
 
 # define the calculator buttons
 calc_buttons = [
@@ -14,7 +17,7 @@ calc_buttons = [
 font = ("Helvetica", 20)
 # create window
 layout = [
-    [sg.Input("0",
+    [eg.Input("0",
              key="-output-", 
              background_color="white",
              color="black",
@@ -26,19 +29,19 @@ layout = [
 for row in calc_buttons:
     buttons = []
     for ch in row:
-        btn = sg.Button(
+        btn = eg.Button(
             ch, # label
             key=f"-btn{ch}",
             size=(4, 1),
         )
         buttons.append(btn)
     layout.append(buttons)
-window = sg.Window("Calc", layout, font=font)
+window = eg.Window("Calc", layout, font=font)
 
 # event loop
 output = "0"
 for event, values in window.event_iter():
-    if event == sg.WINDOW_CLOSED:
+    if event == eg.WINDOW_CLOSED:
         break
     # when a button is pressed
     if event.startswith("-btn"):

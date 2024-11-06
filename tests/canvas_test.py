@@ -1,28 +1,52 @@
-import TkEasyGUI as sg
+"""
+### Canvas test
 
-# import PySimpleGUI as eg
+Canvas is a widget that can draw various shapes and images.
+This sample demonstrates how to use draw shapes.
+"""
+import random
 
+import TkEasyGUI as eg
+
+# create window
 layout = [[
-    sg.Canvas(
+    eg.Canvas(
         size=(400, 400),
         key="-canvas-",
-        background_color="white"
+        background_color="white",
+        enable_events=True
     )]]
-window = sg.Window("Canvas Test", layout)
+window = eg.Window("Canvas Test", layout)
 canvas = window["-canvas-"]
+
+# initial values
+ox, oy, ow = random.randint(50, 250), random.randint(50, 250), 30
+flag_update = True
+
 # Event Loop
-painted = False
-while True:
-    event, _ = window.read(timeout=10)
-    print(event)
-    if event == sg.WINDOW_CLOSED:
+while window.is_running():
+    event, values = window.read(timeout=200)
+    print(event, values)
+    if event == eg.WINDOW_CLOSED:
         break
-    # get Widget from Canvas
-    if not painted:
-        widget = canvas.Widget
-        # draw
-        widget.create_rectangle(10, 10, 300, 300, fill="yellow")
-        widget.create_oval(50, 50, 350, 350, fill="blue")
-        widget.create_line(10, 10, 390, 390, fill="red", width=5)
-        painted = True
+    # check mouse event
+    if event == "-canvas-" and values["event_type"] == "mousemove":
+        flag_update = True
+        if 'event' in values:
+            e = values["event"]
+            ox = e.x
+            oy = e.y
+    # Update canvas
+    if flag_update:
+        canvas.clear()
+        # draw rectangle
+        canvas.create_rectangle(50, 50, 350, 350, fill="yellow")
+        # draw random lines
+        for i in range(50):
+            p = [random.randint(0, 400) for _ in range(4)]
+            canvas.create_line(p[0], p[1], p[2], p[3], fill="green", width=1)
+        # draw oval at mouse position
+        canvas.create_oval(ox-ow, oy-ow, ox+ow, oy+ow, fill="blue")
+        flag_update = False
+# close
 window.close()

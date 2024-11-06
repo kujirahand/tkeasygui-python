@@ -1,11 +1,11 @@
 # import PySimpleGUI as sg
-import TkEasyGUI as sg
+import TkEasyGUI as eg
 
 # canvas
-canvas = sg.Canvas(size=(400, 400), key="-canvas-", background_color="red")
+canvas = eg.Canvas(size=(400, 400), key="-canvas-", background_color="red")
 # window create
-window = sg.Window("Hello World", layout=[
-    [sg.Button("Exit")],
+window = eg.Window("Hello World", layout=[
+    [eg.Button("Exit")],
     [canvas],
 ], finalize=True)
 # bind user event

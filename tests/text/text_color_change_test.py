@@ -1,33 +1,33 @@
-import TkEasyGUI as sg
+import TkEasyGUI as eg
 
 # generate widgets with color
-text1 = sg.Text(
+text1 = eg.Text(
     "Better to enjoy what the eyes see than to wander after one's desires.",
     background_color="yellow",
     color="black")
-text2 = sg.Text(
+text2 = eg.Text(
     "This too is futility, a chasing after the wind.",
     background_color="yellow",
     color="black")
 
 # create window
-window = sg.Window(
+window = eg.Window(
     "text/simple",
     layout=[
         [
-            sg.Frame(
+            eg.Frame(
                 "Text",
                 layout=[
                     [text1],
                     [text2],
                     [
-                        sg.Button("Copy to clipboard"),
-                        sg.Button("Change color"),
+                        eg.Button("Copy to clipboard"),
+                        eg.Button("Change color"),
                     ],
                 ],
             )
         ],
-        [sg.Button("Close")],
+        [eg.Button("Close")],
     ],
     font=("Arial", 16),
 )
@@ -41,5 +41,5 @@ for event, values in window.event_iter():
         text2.update(background="blue", color="white")
     if event == "Copy to clipboard":
         s = text1.get_text() + "\n" + text2.get_text()
-        sg.set_clipboard(s)
-        sg.popup("Copied to clipboard.")
+        eg.set_clipboard(s)
+        eg.popup("Copied to clipboard.")

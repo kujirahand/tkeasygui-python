@@ -1,4 +1,4 @@
-import TkEasyGUI as sg
+import TkEasyGUI as eg
 
 # define layout --- make 12 buttons
 layout = []
@@ -6,15 +6,15 @@ for row in range(3):
     layout.append([])
     for col in range(4):
         no = row*4+col+1
-        btn = sg.Button(str(no), key=f"-button{no}",
+        btn = eg.Button(str(no), key=f"-button{no}",
                         size=(3, 1), metadata={"no": no})
         layout[row].append(btn)
 # add close button
-layout.append([sg.HSeparator()])
-layout.append([sg.Button("Close")])
+layout.append([eg.HSeparator()])
+layout.append([eg.Button("Close")])
 
 # make window
-window = sg.Window("Many buttons", layout)
+window = eg.Window("Many buttons", layout)
 
 # event loop
 for event, values in window.event_iter():
@@ -25,6 +25,6 @@ for event, values in window.event_iter():
     if event.startswith("-button"):
         # get number from metadata
         no = window[event].metadata["no"]
-        sg.popup(f"You Pushed {no}")
+        eg.popup(f"You Pushed {no}")
         # disable button
         window[event].update(disabled=True)

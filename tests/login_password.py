@@ -1,15 +1,15 @@
-import TkEasyGUI as sg
+import TkEasyGUI as eg
 
 # define layout
 layout=[
-    [sg.Text("User Id:")],
-    [sg.Input("test@example.com", key="-userid-", enable_events=True)],
-    [sg.Text("Password:")],
-    [sg.Input("abcdefg", key="-password-", password_char="*")],
-    [sg.Button("OK"), sg.Button("Cancel")],
+    [eg.Text("User Id:")],
+    [eg.Input("test@example.com", key="-userid-", enable_events=True)],
+    [eg.Text("Password:")],
+    [eg.Input("abcdefg", key="-password-", password_char="*")],
+    [eg.Button("OK"), eg.Button("Cancel")],
 ]
 # window create
-window = sg.Window("Login dialog", layout=layout)
+window = eg.Window("Login dialog", layout=layout)
 # window.move_to_center()
 # event loop
 while window.is_alive():
@@ -19,5 +19,5 @@ while window.is_alive():
         break
     if event == "OK":
         print(window.get_location())
-        sg.popup("OK, " + values["-userid-"])
+        eg.popup("OK, " + values["-userid-"])
 window.close()

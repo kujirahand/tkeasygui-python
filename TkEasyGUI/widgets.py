@@ -2487,7 +2487,7 @@ class Multiline(Element):
         text.mark_set(tk.INSERT, '1.0')
         self.widget.see(tk.INSERT)
 
-    def print(self, text: str, text_color: Union[str, None] = None, background_color: Union[str, None] = None, end:str="\n") -> None:
+    def print(self, text: str, text_color: Union[str, None] = None, background_color: Union[str, None] = None, end:str="\n", autoscroll: bool = False) -> None:
         """Print text."""
         text += end
         if self.widget is None:
@@ -2502,7 +2502,7 @@ class Multiline(Element):
             self.widget.tag_config(tag, background=background_color)
             tags.append(tag)
         self.widget.insert("end", text, tags)
-        if self.autoscroll:
+        if self.autoscroll or autoscroll:
             self.widget.see(tk.END)
 
 class Textarea(Multiline):
@@ -2799,6 +2799,7 @@ class Image(Element):
                 key: Union[str, None] = None,
                 background_color: Union[str, None] = None, # background color (example) "red", "#FF0000"
                 size: tuple[int, int] = (300, 300),
+                enable_events: bool = False,
                 # other
                 metadata: Union[dict[str, Any], None] = None,
                 **kw) -> None:
@@ -2811,6 +2812,15 @@ class Image(Element):
         self.background_color = background_color
         if background_color is not None:
             self.props["background"] = background_color
+        if enable_events:
+            self.bind_events(
+                {
+                    "<ButtonPress>": "mousedown",
+                    "<ButtonRelease>": "mouseup",
+                    "<Motion>": "mousemove",
+                },
+                "system",
+            )
 
     def create(self, win: Window, parent: tk.Widget) -> tk.Widget:
         """Create a Image widget."""
@@ -3033,6 +3043,10 @@ class Listbox(Element):
 
     def get(self) -> Any:
         """Get the value of the widget."""
+        return self.get_selected_items()
+    
+    def get_selected_items(self) -> list[str]:
+        """Get selected items"""
         if self.widget is None:
             return None
         wg: tk.Listbox = self.widget

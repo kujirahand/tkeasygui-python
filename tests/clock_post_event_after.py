@@ -1,11 +1,15 @@
+"""
 # clock (with window.post_event_after)
+
+This sample demonstrates how to create a digital clock using the `post_event_after` method.
+"""
 import datetime
 
-import TkEasyGUI as sg
+import TkEasyGUI as eg
 
 # create window
-layout = [[sg.Text("00:00:00", key="-output-", font=("Helvetica", 80))]]
-window = sg.Window("Digital Clock", layout)
+layout = [[eg.Text("00:00:00", key="-output-", font=("Helvetica", 80))]]
+window = eg.Window("Digital Clock", layout)
 window.post_event("tick", {})
 # event loop
 while window.is_running():

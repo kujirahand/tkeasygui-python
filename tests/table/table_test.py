@@ -1,4 +1,4 @@
-import TkEasyGUI as sg
+import TkEasyGUI as eg
 
 data = [
     ["名前", "年齢", "住所"],
@@ -16,7 +16,7 @@ data = [
 
 # create window
 layout = [
-    [sg.Table(
+    [eg.Table(
         key="-table-",
         values=data[1:], # テーブルに表示するデータ(ヘッダ行を含まない)を指定
         headings=data[0], # ヘッダ行を指定
@@ -27,14 +27,14 @@ layout = [
         max_col_width=30, # 最大カラムサイズを指定
         enable_events=True, # イベントを有効にする
         font=("Arial", 14))],
-    [sg.Button("Close", expand_x=True), sg.Button("Update")]
+    [eg.Button("Close", expand_x=True), eg.Button("Update")]
 ]
-win = sg.Window("Table test", layout)
+win = eg.Window("Table test", layout)
 # event loop
 while True:
     event, values = win.read()
     print(event, values)
-    if event == sg.WIN_CLOSED:
+    if event == eg.WIN_CLOSED:
         break
     if event == "Close":
         break

@@ -1,15 +1,22 @@
-import TkEasyGUI as sg
+"""
+### CalendarBrowse sample
+
+This sample demonstrates how to use the CalendarBrowse widget.
+CalendarBrowse is a button that opens a calendar dialog.
+"""
+
+import TkEasyGUI as eg
 
 # Create window
 layout = [
-    [sg.Text("date:")],
+    [eg.Text("date:")],
     [
-        sg.Input(key="-input-"),
-        sg.CalendarBrowse() # Calendar button
+        eg.Input(key="-input-"),
+        eg.CalendarBrowse() # Calendar button
     ],
-    [sg.CloseButton()],
+    [eg.CloseButton()],
 ]
-window = sg.Window("CalendarBrowse Test", layout)
+window = eg.Window("CalendarBrowse Test", layout)
 
 # Event loop
 while window.is_running():

@@ -1,17 +1,17 @@
-import TkEasyGUI as sg
+import TkEasyGUI as eg
 
 # Create window
-layout = [[sg.Text(
+layout = [[eg.Text(
     "For wisdom is better than corals;\n" + 
     "All other desirable things cannot compare to it."
 )]]
-window = sg.Window("Proverb", layout)
+window = eg.Window("Proverb", layout)
 # Event loop
 while True:
     # get window event
     event, values = window.read()
     # close button
-    if event == sg.WINDOW_CLOSED:
+    if event == eg.WINDOW_CLOSED:
         break
     # check OK Button
     if event == "OK":

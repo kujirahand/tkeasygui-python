@@ -2,10 +2,10 @@
 Paint tool for TkEasyGUI
 Using original event model
 """
-import TkEasyGUI as sg
+import TkEasyGUI as eg
 
 # canvas
-canvas = sg.Canvas(
+canvas = eg.Canvas(
     size=(400, 400),
     key="-canvas-",
     background_color="red",
@@ -25,8 +25,8 @@ canvas = sg.Canvas(
 """
 
 # window create
-window = sg.Window("Paint tool", layout=[
-    [sg.Button("Exit"), sg.Button("Clear")],
+window = eg.Window("Paint tool", layout=[
+    [eg.Button("Exit"), eg.Button("Clear")],
     [canvas]])
 flag_on = False
 # event loop

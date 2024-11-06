@@ -1,21 +1,21 @@
 # no key sample - Inch to cm converter
 # import PySimpleGUI as sg
-import TkEasyGUI as sg
+import TkEasyGUI as eg
 
-window = sg.Window("Inch to cm", layout=[
-    [sg.Text("Please input Inch:")],
-    [sg.Input("1"), sg.Button("Convert")],
+window = eg.Window("Inch to cm", layout=[
+    [eg.Text("Please input Inch:")],
+    [eg.Input("1"), eg.Button("Convert")],
 ])
 while True:
     event, values = window.read()
-    if event == sg.WIN_CLOSED:
+    if event == eg.WIN_CLOSED:
         break
     if event == "Convert":
         try:
             inch = float(values[0]) # key = 0
             cm = inch * 2.54
             result = f"{inch} inch is {cm} cm"
-            sg.popup(result)
+            eg.popup(result)
         except Exception as _e:
-            sg.popup("Please input number.")
+            eg.popup("Please input number.")
 window.close()

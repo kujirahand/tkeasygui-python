@@ -9,21 +9,21 @@ pip install opencv-contrib-python
 
 import cv2 as cv
 
-import TkEasyGUI as sg
+import TkEasyGUI as eg
 
 # camera
 vc = cv.VideoCapture(0)
 # layout
 layout = [
-    [sg.Button("Exit")],
-    [sg.Image(key="-image-", size=(400, 300))],
+    [eg.Button("Exit")],
+    [eg.Image(key="-image-", size=(400, 300))],
 ]
 # event loop
-window = sg.Window("Camera Test", layout)
+window = eg.Window("Camera Test", layout)
 while True:
     event, values = window.read(timeout=100)
     print('#', event, values)
-    if event in (sg.WIN_CLOSED, "Exit"):
+    if event in (eg.WIN_CLOSED, "Exit"):
         break
     # capture
     ret, frame = vc.read()

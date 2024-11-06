@@ -1,24 +1,39 @@
-import TkEasyGUI as sg
+"""
+### FileBrowse and FolderBrowse sample
+
+FileBrowse is a button that opens a file dialog.
+FolderBrowse is a button that opens a folder dialog.
+"""
+
+import TkEasyGUI as eg
 
 # Create window
 layout = [
-    [sg.Text("file:")],
+    [eg.Text("file:")],
     [
-        sg.Input(key="-file-"),
-        sg.FileBrowse(),  # FileBrowse button
+        eg.Input(key="-file-"),
+        eg.FileBrowse(),  # FileBrowse button
+        eg.Button("Copy", key="-copy-file-"),
     ],
-    [sg.Text("folder:")],
+    [eg.Text("folder:")],
     [
-        sg.Input(key="-folder-"),
-        sg.FolderBrowse(),  # FolderBrowse button
+        eg.Input(key="-folder-"),
+        eg.FolderBrowse(),  # FolderBrowse button
+        eg.Button("Copy", key="-copy-folder-"),
     ],
-    [sg.CloseButton()],
+    [eg.CloseButton()],
 ]
-window = sg.Window("FileBrowse Test", layout)
+window = eg.Window("FileBrowse Test", layout)
 
 # Event loop
 while window.is_running():
     # get window event
     event, values = window.read()
     print("@@@", event, values)
+    if event == "-copy-file-":
+        eg.set_clipboard(values["-file-"])
+        eg.print("Copied to clipboard:\n", values["-file-"])
+    if event == "-copy-folder-":
+        eg.set_clipboard(values["-folder-"])
+        eg.print("Copied to clipboard:\n", values["-folder-"])
 window.close()

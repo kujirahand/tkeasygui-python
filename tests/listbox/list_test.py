@@ -1,14 +1,14 @@
-import TkEasyGUI as sg
+import TkEasyGUI as eg
 
 # set items
 items = [f"item_{i}" for i in range(50)]
 # create window
-window = sg.Window(
+window = eg.Window(
     "Listbox test",
     layout=[
-        [sg.Text("Please select item:")],
+        [eg.Text("Please select item:")],
         [
-            sg.Listbox(
+            eg.Listbox(
                 items,
                 default_values=["item_5"],
                 enable_events=True,
@@ -16,20 +16,20 @@ window = sg.Window(
                 key="-listbox-",
             )
         ],
-        [sg.Text("-", key="-result-")],
-        [sg.Button("Select[30]"), sg.Button("Select[3]")],
-        [sg.Button("OK")],
+        [eg.Text("-", key="-result-")],
+        [eg.Button("Select[30]"), eg.Button("Select[3]")],
+        [eg.Button("OK")],
     ],
 )
 # event loop
 while True:
     event, values = window.read()
     print(event, values)
-    if event == sg.WIN_CLOSED:
+    if event == eg.WIN_CLOSED:
         break
     if event == "OK":
         selected = ",".join(values["-listbox-"])
-        sg.print("You selected:", selected)
+        eg.print("You selected:", selected)
         break
     if event == "Select[3]":
         window["-listbox-"].set_cursor_index(3)

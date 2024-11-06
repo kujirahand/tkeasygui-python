@@ -1,18 +1,23 @@
 #!/usr/bin/env python
+"""
+### File Viewer
+
+The File Viewer is a simple program that allows you to view and run Python files in a directory.
+"""
 import os
 import subprocess
 import sys
 from threading import Thread
 
 # import PySimpleGUI as sg
-import TkEasyGUI as sg
+import TkEasyGUI as eg
 
 # set path
 ROOT_DIR = os.path.dirname(os.path.abspath(__file__))
 #TARGET_DIR = os.path.join(ROOT_DIR, "tests")
 TARGET_DIR = ROOT_DIR
 # get font
-font = ("Arial", 20 if sg.is_mac() else 12)
+font = ("Arial", 20 if eg.is_mac() else 12)
 
 def get_program_files():
     # files = os.listdir(ROOT_DIR)
@@ -33,33 +38,33 @@ def run_program(filename):
 
 layout = [
     [
-        sg.Text("TkEasyGUI samples:"),
-        sg.Text(f"(TkEasyGUI v.{sg.__version__})")
+        eg.Text("TkEasyGUI samples:"),
+        eg.Text(f"(TkEasyGUI v.{eg.__version__})")
     ],
     [
         # left sizde listbox
-        sg.Listbox( 
+        eg.Listbox( 
             values=get_program_files(), 
             size=(30, 20), 
             key="-files-", 
             enable_events=True,
         ),
-        sg.VSeparator(pad=5),
+        eg.VSeparator(pad=5),
         # right side textbox
-        sg.Multiline(size=(40, 20), key="-body-", expand_y=True, expand_x=True)
+        eg.Multiline(size=(40, 20), key="-body-", expand_y=True, expand_x=True)
     ],
-    [sg.HSeparator(pad=5)],
+    [eg.HSeparator(pad=5)],
     [
-        sg.Button(sg.get_text("Run"), key="-run-", size=(10, 1)),
-        sg.Button(sg.get_text("Close"), key="-close-"),
+        eg.Button(eg.get_text("Run"), key="-run-", size=(10, 1)),
+        eg.Button(eg.get_text("Close"), key="-close-"),
     ],
 ]
-window = sg.Window("Python Viewer", layout, font=font)
+window = eg.Window("Python Viewer", layout, font=font)
 # event loop
 while True:
     event, values = window.read()
     print("#", event, values)
-    if event in [sg.WINDOW_CLOSED, "-close-"]:
+    if event in [eg.WINDOW_CLOSED, "-close-"]:
         break
     if event == "-run-":
         files = values["-files-"]

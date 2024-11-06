@@ -1,25 +1,32 @@
+"""
+### Image Test
+"""
+
 from PIL import Image
 
-import TkEasyGUI as sg
+import TkEasyGUI as eg
 
 
 def main():
-    # load image with Pillow
-    def_image = Image.open("a.jpg").resize((400, 400))
+    image_files = ["a.jpg", "b.jpg"]
+    image_index = 0
     # create window
-    window = sg.Window("Hello World", layout=[
-        [sg.Text("Hello World")],
-        [sg.Image(def_image, key="-image-")],
-        [sg.Button("Change")],
-        [sg.Button("OK")]
-    ])
+    window = eg.Window(
+        "Image Test",
+        layout=[
+            [eg.Text("Image:")],
+            [eg.Image(filename=image_files[0], key="-image-")],
+            [eg.Button("Change")],
+        ],
+    )
     # event loop
-    while True:
+    while window.is_running():
         event, _ = window.read()
         if event == "Change":
-            window["-image-"].update(filename="b.jpg")
-        if event in [sg.WIN_CLOSED, "OK"]:
-            break
+            image_index = (image_index + 1) % len(image_files)
+            window["-image-"].update(filename=image_files[image_index])
+        if event == "-image-":
+            window.post_event("Change")
 
 if __name__ == "__main__":
     main()

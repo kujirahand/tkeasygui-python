@@ -1,15 +1,28 @@
+"""
 # Column test
+
+Using the `Column` widget allows you to divide the window horizontally and place two-dimensional widgets in each Column.
+"""
 import TkEasyGUI as eg
 
 # sample text
 a_text = (("0123456789" * 5) + "\n") * 5
 
 # define sub layout
-layout1 = [[eg.Multiline(a_text, key="-size-", expand_x=True, expand_y=True)]]
-layout2 = [[eg.Multiline(a_text, expand_x=True, expand_y=True)]]
+layout1 = [
+    [eg.Label("col1")],
+    [eg.Multiline(a_text, key="-col1-", expand_x=True, expand_y=True)],
+    [eg.Button("Get Size")],
+]
+layout2 = [
+    [eg.Label("col2")],
+    [eg.Multiline(a_text, key="-col2-", expand_x=True, expand_y=True)],
+    [eg.Button("Test")]
+]
 layout3 = [
-    [eg.Multiline(a_text, expand_x=True, expand_y=True)],
-    [eg.InputText("Input1"), eg.Button("Button2")]
+    [eg.Label("col3")],
+    [eg.Multiline(a_text, key="-col3-", expand_x=True, expand_y=True)],
+    [eg.InputText("TEST(col3)", key="-input-"), eg.Button("Add")],
 ] 
 # define main layout
 col1 = eg.Column(layout1, key="col1", width=300, expand_y=True)
@@ -18,7 +31,7 @@ col3 = eg.Column(layout3, key="col3", expand_x=True, expand_y=True)
 main_layout = [
     [col1, col2, col3],
     [eg.HSeparator()],
-    [eg.Button("Get Size"), eg.Button("Close")],
+    [eg.Button("Close")],
 ]
 # create window
 window = eg.Window(
@@ -29,7 +42,12 @@ while window.is_running():
     event, values = window.read()
     if event == "Get Size":
         text = f"col1={col1.get_width()}\ncol2={col2.get_width()}\ncol3={col3.get_width()}"
-        window["-size-"].update(text)
+        window["-col1-"].update(text)
+    elif event == "Test":
+        window["-col2-"].update("Test button clicked")
+    elif event == "Add":
+        v = values["-col3-"] + "\n" + values["-input-"]
+        window["-col3-"].update(v)
     elif event == "Close":
         break
 window.close()

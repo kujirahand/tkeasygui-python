@@ -1,4 +1,4 @@
-import TkEasyGUI as sg
+import TkEasyGUI as eg
 
 # file types
 file_types = (
@@ -6,7 +6,7 @@ file_types = (
     ("All files", "*.*"),
 )
 # popup
-files = sg.popup_get_file(
+files = eg.popup_get_file(
     "Please select images.",
     file_types=file_types,
     multiple_files=True,
