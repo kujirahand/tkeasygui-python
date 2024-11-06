@@ -222,6 +222,14 @@ class Window:
         """Post an event."""
         self.events.put((key, values))
 
+    def post_event_after(self, msec: int, key: str, values: dict[str, Any]) -> None:
+        """Post an event after msec."""
+        self.window.after(msec, self.events.put, (key, values))
+
+    def set_timeout(self, callback: callable, msec: int, *args, **kw) -> None:
+        """Set a timeout event."""
+        self.window.after(msec, callback, *args, **kw)
+
     def _on_frame_configure(self, _event):
         """Handle frame configure event."""
         # set scrollbar
