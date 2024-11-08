@@ -142,7 +142,7 @@ class Window:
         self.padding_y: int = padding_y
         self.show_scrollbar = show_scrollbar  # (experimental)
         self._icon: Union[Any, None] = None
-        self._idle_time: int = 100
+        self._idle_time: int = 10
         self._has_last_event = True
         if icon is not None:
             self.set_icon(icon)
@@ -537,6 +537,7 @@ class Window:
                 # check interval
                 interval = time_checker_end(timeout_chcker_id)
                 if interval > timeout:
+                    self._has_last_event = True
                     key, values = (self.timeout_key, {}) # create timeout event
                     return (key, values)
             # get ui event
