@@ -142,6 +142,8 @@ class Window:
         self.padding_y: int = padding_y
         self.show_scrollbar = show_scrollbar  # (experimental)
         self._icon: Union[Any, None] = None
+        self._idle_time: int = 100
+        self._has_last_event = True
         if icon is not None:
             self.set_icon(icon)
         # Canvas
@@ -518,7 +520,11 @@ class Window:
             if self.timeout_id is not None:
                 self.window.after_cancel(self.timeout_id)
             self.window.update_idletasks()
-            self.timeout_id = self.window.after("idle", self._window_idle_handler)
+            # set next event
+            if self._has_last_event:
+                self.timeout_id = self.window.after("idle", self._window_idle_handler)
+            else:
+                self.timeout_id = self.window.after(self._idle_time, self._window_idle_handler)
             # -----------------------------------------------------
             # mainloop - should be called only once
             # -----------------------------------------------------
@@ -535,7 +541,9 @@ class Window:
                     return (key, values)
             # get ui event
             if self.events.empty():
+                self._has_last_event = False
                 continue
+            self._has_last_event = True
             key, values = self.events.get()
             # _event_hooks
             if key in self._event_hooks:
