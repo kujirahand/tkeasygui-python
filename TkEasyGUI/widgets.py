@@ -220,6 +220,16 @@ class Window:
             # so, move window to center after window is shown `_on_window_show`
             pass
 
+    def focus(self) -> None:
+        """Focus the window."""
+        self.window.focus_force()
+    
+    def focus_element(self, key: str) -> None:
+        """Focus the element."""
+        elem = self.get_element_by_key(key)
+        if elem is not None:
+            elem.focus()
+
     def post_event(self, key: str, values: dict[str, Any]) -> None:
         """Post an event."""
         self.events.put((key, values))

@@ -97,6 +97,16 @@ def save_json_file(filename: str, data: Any) -> None:
         json.dump(data, f, ensure_ascii=False, indent=4)
 
 # -------------------------------------------------------------------
+# other utilities
+# -------------------------------------------------------------------
+def str_to_float(value: str, default_value: float = 0) -> float:
+    """Convert string to float."""
+    try:
+        return float(value)
+    except ValueError:
+        return default_value
+
+# -------------------------------------------------------------------
 # tkinter window management
 # -------------------------------------------------------------------
 # only one root element

@@ -11,12 +11,7 @@ from typing import Any, Union
 
 from . import locale_easy as le
 from . import widgets as eg
-from .utils import (
-    FontType,
-    get_root_window,
-    is_mac,
-    is_win,
-)
+from .utils import FontType, get_root_window, is_mac, is_win
 
 YES = "Yes"
 NO = "No"
@@ -585,6 +580,100 @@ def popup_get_date(
                 else:
                     current_date = sel_date
                     update_date(get_top_date(current_date), current_date)
+    return result
+
+def popup_get_form(
+    form_items: list[Union[str, tuple[str, str], tuple[str, str, Any]]], # list of form items(label, type [, default])
+    title: str = "Form" # window title
+) -> Union[dict[str, Any], None]:
+    """
+    Displays a form that allows multiple items to be entered.
+    By specifying the labels and input types for each item, the form is automatically generated and displayed in a dialog.
+    When the user enters the items and clicks [OK], it returns `{label: value}`. If the user clicks [Cancel], it returns `None`.
+
+    The `form_items` argument can specify input fields simply as `[label1, label2, label3, ...]`.
+    Alternatively, you can specify labels, types, and default values as `[(label1, type1, default1), (label2, type2, default2), ...]`.
+    The following values can be specified for the type: `text`, `number`, `password`, `combo`, `list`, `date`, `file`, `files`, `folder`, `color`.
+    """
+    # make form layout
+    item_labels = []
+    item_converters = []
+    layout = []
+    for i, it in enumerate(form_items):
+        it_key = f"-formitem{i}"
+        if isinstance(it, tuple) or isinstance(it, list):
+            label = it[0]
+            itype = it[1] if len(it) >= 2 else "text"
+            default_value = it[2] if len(it) >= 3 else ""
+        else:
+            label = it
+            itype = "text"
+            default_value = ""
+        # for making result
+        item_labels.append(label)
+        item_converters.append(None)
+        # make line
+        line = [eg.Text(label, key=f"{it_key}-label", size=(15, 1), text_align="right")]
+        # check type
+        itype == itype.lower()
+        if itype == "text" or itype == "number" or itype == "password":
+            line.append(eg.Input(
+                default_value, key=it_key, size=(20, 1),
+                password_char="*" if itype == "password" else None))
+            if itype == "number":
+                item_converters[i] = float
+        elif itype == "combo":
+            sels = default_value
+            val = sels[0] if len(sels) > 0 else ""
+            line.append(eg.Combo(sels, default_value=val, key=it_key, size=(19, 1)))
+        elif itype == "list":
+            sels = default_value
+            val = sels[0] if len(sels) > 0 else ""
+            line.append(eg.Input(val, key=it_key, size=(15, 1)))
+            line.append(eg.ListBrowse(sels))
+        elif itype == "date":
+            line.append(eg.Input(default_value, key=it_key, size=(15, 1)))
+            line.append(eg.CalendarBrowse())
+        elif itype == "file":
+            line.append(eg.Input(default_value, key=it_key, size=(15, 1)))
+            line.append(eg.FileBrowse())
+        elif itype == "files":
+            line.append(eg.Input(default_value, key=it_key, size=(15, 1)))
+            line.append(eg.FileBrowse(multiple_files=True))
+        elif itype == "folder":
+            line.append(eg.Input(default_value, key=it_key, size=(15, 1)))
+            line.append(eg.FolderBrowse())
+        elif itype == "color":
+            line.append(eg.Input(default_value, key=it_key, size=(15, 1)))
+            line.append(eg.ColorBrowse())
+        # append line
+        layout.append(line)
+    layout.append([eg.HSeparator()])
+    layout.append([eg.Button("OK", width=9), eg.Button("Cancel", width=5)])
+    with eg.Window(title, layout=layout, modal=True) as win:
+        result = None
+        for event, values in win.event_iter():
+            if event == "Cancel":
+                result = None
+                break
+            if event == "OK":
+                result = {}
+                for i, label in enumerate(item_labels):
+                    it_key = f"-formitem{i}"
+                    val = values[it_key] if it_key in values else ""
+                    if item_converters[i] is not None:
+                        try:
+                            val = item_converters[i](val)
+                        except ValueError as _:
+                            popup(le.get_text("Please enter a number."))
+                            win.focus_element(it_key)
+                            result = None
+                            break
+                    result[label] = val
+                # form error?
+                if result is None:
+                    continue
+                break
     return result
 
 #------------------------------------------------------------------------------
