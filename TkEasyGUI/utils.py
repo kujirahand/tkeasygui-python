@@ -44,7 +44,7 @@ def paste_from_clipboard():
     return get_clipboard()
 
 #------------------------------------------------------------------------------
-# utility
+# platform utility
 # ------------------------------------------------------------------------------
 def get_platform() -> str:
     """get platform"""
@@ -63,6 +63,25 @@ def screenshot() -> PIL.Image:
     import PIL.ImageGrab
     screen_image = PIL.ImageGrab.grab()
     return screen_image
+
+# ------------------------------------------------------------------------------
+# text file utility
+# ------------------------------------------------------------------------------
+def load_text_file(filename: str, encoding: str="utf-8") -> str:
+    """Load text file."""
+    with open(filename, "r", encoding=encoding) as f:
+        text = f.read()
+    return text
+
+def save_text_file(filename: str, text: str, encoding: str="utf-8") -> None:
+    """Save text file."""
+    with open(filename, "w", encoding=encoding) as f:
+        f.write(text)
+
+def append_text_file(filename: str, text: str, encoding: str="utf-8") -> None:
+    """Append text file."""
+    with open(filename, "a", encoding=encoding) as f:
+        f.write(text)
 
 # -------------------------------------------------------------------
 # tkinter window management
