@@ -83,6 +83,19 @@ def append_text_file(filename: str, text: str, encoding: str="utf-8") -> None:
     with open(filename, "a", encoding=encoding) as f:
         f.write(text)
 
+def load_json_file(filename: str) -> Any:
+    """Load JSON file."""
+    import json
+    with open(filename, "r", encoding="utf-8") as f:
+        data = json.load(f)
+    return data
+
+def save_json_file(filename: str, data: Any) -> None:
+    """Save JSON file."""
+    import json
+    with open(filename, "w", encoding="utf-8") as f:
+        json.dump(data, f, ensure_ascii=False, indent=4)
+
 # -------------------------------------------------------------------
 # tkinter window management
 # -------------------------------------------------------------------
