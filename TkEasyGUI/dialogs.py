@@ -18,6 +18,11 @@ from .utils import (
     is_win,
 )
 
+YES = "Yes"
+NO = "No"
+OK = "OK"
+CANCEL = "Cancel"
+
 # save original print
 _print = print
 

@@ -39,7 +39,7 @@ def copy_to_clipboard(text):
     """copy text to clipboard"""
     set_clipboard(text)
 
-def paster_from_clipboard():
+def paste_from_clipboard():
     """get text from clipboard"""
     return get_clipboard()
 
