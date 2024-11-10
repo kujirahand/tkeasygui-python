@@ -594,6 +594,8 @@ def popup_get_form(
     The `form_items` argument can specify input fields simply as `[label1, label2, label3, ...]`.
     Alternatively, you can specify labels, types, and default values as `[(label1, type1, default1), (label2, type2, default2), ...]`.
     The following values can be specified for the type: `text`, `number`, `password`, `combo`, `list`, `date`, `file`, `files`, `folder`, `color`.
+
+    @see [tests/popup_get_form.py](/tests/popup_get_form.py)
     """
     # make form layout
     item_labels = []
@@ -650,7 +652,7 @@ def popup_get_form(
         layout.append(line)
     layout.append([eg.HSeparator()])
     layout.append([eg.Button("OK", width=9), eg.Button("Cancel", width=5)])
-    with eg.Window(title, layout=layout, modal=True) as win:
+    with eg.Window(title, layout=layout) as win:
         result = None
         for event, values in win.event_iter():
             if event == "Cancel":
