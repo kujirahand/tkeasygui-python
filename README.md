@@ -58,11 +58,16 @@ Furthermore, a dialog is available that allows specifying multiple input fields.
 
 ```py
 import TkEasyGUI as eg
-m = eg.popup_get_form(["Name", ["Age", "number"]])
+m = eg.popup_get_form([
+    ("Name", "kujira"),
+    ("Age", 20, "number"),
+    ("Gender", ("M", "W", "-"))])
 if m:
     name = m["Name"]
     age = m["Age"]
-    eg.print(f"name={name}, age={age}") # name=kujira, age=20.0
+    gender = m["Gender"]
+    eg.print(f"name={name}, age={age}, gender={gender}")
+    # name=kujira, age=20.0, gender=M
 ```
 
 - [Docs > Dialogs](https://github.com/kujirahand/tkeasygui-python/blob/main/docs/TkEasyGUI/dialogs-py.md)

@@ -595,7 +595,7 @@ def popup_get_date(
     return result
 
 def popup_get_form(
-    form_items: list[Union[str, tuple[str, str], tuple[str, str, Any]]], # list of form items(label, type [, default])
+    form_items: list[Union[str, tuple[str, Any], tuple[str, Any, str]]], # list of form items(label[,selection or default][,type])
     title: str = "Form" # window title
 ) -> Union[dict[str, Any], None]:
     """
@@ -607,7 +607,7 @@ def popup_get_form(
     Alternatively, you can specify labels, types, and default values as `[(label1, type1, default1), (label2, type2, default2), ...]`.
     The following values can be specified for the type: `text`, `number`, `password`, `combo`, `list`, `date`, `file`, `files`, `folder`, `color`.
 
-    @see [tests/popup_get_form.py](/tests/popup_get_form.py)
+    @see [tests/popup_get_form_test.py](/tests/popup_get_form_test.py)
     """
     # make form layout
     item_labels = []
@@ -617,12 +617,14 @@ def popup_get_form(
         it_key = f"-formitem{i}"
         if isinstance(it, tuple) or isinstance(it, list):
             label = it[0]
-            itype = it[1] if len(it) >= 2 else "text"
-            default_value = it[2] if len(it) >= 3 else ""
+            default_value = it[1] if len(it) >= 2 else ""
+            itype = it[2] if len(it) >= 3 else "text"
+            if isinstance(default_value, tuple) or isinstance(default_value, list):
+                itype = "list"
         else:
             label = it
-            itype = "text"
             default_value = ""
+            itype = "text"
         # for making result
         item_labels.append(label)
         item_converters.append(None)

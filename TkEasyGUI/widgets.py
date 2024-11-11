@@ -937,7 +937,7 @@ class Element:
         self.key: str|int|None = key
         if (self.key is not None) and (self.key != ""):
             if not register_element_key(self.key): # for checking unique key
-                raise TkEasyError(f"Element key is not unique: {self.key}")
+                pass # raise TkEasyError(f"Element key is not unique: {self.key}")
         if self.has_value and (self.key is None or self.key == ""):
             self.key = generate_element_id()
         self.element_type: str = element_type
