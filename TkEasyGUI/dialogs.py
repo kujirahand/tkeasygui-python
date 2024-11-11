@@ -625,6 +625,8 @@ def popup_get_form(
             label = it
             default_value = ""
             itype = "text"
+        if itype == "":
+            itype = "text"
         # for making result
         item_labels.append(label)
         item_converters.append(None)
