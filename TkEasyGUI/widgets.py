@@ -743,14 +743,39 @@ class Window:
         # already closed?
         if not self.flag_alive:
             return
+        root = get_root_window()
+        # remove from key registry
+        for key in self.key_elements.keys():
+            utils.remove_element_key(key)
         # close window
         try:
             self.flag_alive = False
-            _window_pop(self)
-            self.window.destroy() # close window
+            # update window
+            try:
+                root.update()
+            except Exception as _:
+                pass
+            # destroy window in TKinter
+            try:
+                self.window.destroy() # close window
+                del self.window
+            except Exception as _: # ignore
+                pass
+            # update window again
+            try:
+                root.update()
+            except Exception as _:
+                pass
+            # remove from TkEasyGUI window stack
+            try:
+                _window_pop(self)
+            except Exception as _:  # ignore
+                pass
+            # check window count
             win_count = _window_count()
             if win_count == 0:
                 self.window.quit() # quit app
+            ### print("TkEasyGUI.Window.close: window closed")
         except Exception as e:
             print(f"Window.close.failed: {e}", file=sys.stderr)
             pass
@@ -912,7 +937,8 @@ class Element:
         self.has_value: bool = has_value
         self.key: str|int|None = key
         if self.key is not None:
-            register_element_key(self.key) # for checking unique key
+            if not register_element_key(self.key): # for checking unique key
+                raise TkEasyError(f"Element key is not unique: {self.key}")
         if self.has_value and (self.key is None or self.key == ""):
             self.key = generate_element_id()
         self.element_type: str = element_type
@@ -1054,7 +1080,7 @@ class Element:
         # copy
         for key, val in props.items():
             result[key] = val
-        # check props
+        # --- check props ---
         # size
         if "size" in result:
             size = result.pop("size", (8, 1))
@@ -1127,7 +1153,10 @@ class Element:
         style_name = self.style_name
         # create style
         if style_name not in style.element_names():
-            style.element_create(style_name, "from", get_current_theme())
+            try:
+                style.element_create(style_name, "from", get_current_theme())
+            except Exception as _: #ignore
+                pass
         # set font style
         font = None
         if "font" in self.props:

@@ -266,6 +266,13 @@ def register_element_key(key: str) -> bool:
     _element_key_names[key] = True
     return True
 
+def remove_element_key(key: str) -> bool:
+    """Remove element key."""
+    if key in _element_key_names:
+        _element_key_names.pop(key)
+        return True
+    return False
+
 _elements_with_value: int = 0
 def generate_element_id() -> int:
     """Generate a unique id for a value element."""
