@@ -1,16 +1,27 @@
 import TkEasyGUI as eg
 
+# Ask simplely
+result = eg.popup_get_form(["Name", "Hobbies"])
+if result:
+    name = result["Name"]
+    hobbies = result["Hobbies"]
+    eg.print(f"Hi, {name}. I know you like {hobbies}.")
+
+# Ask with default values
 result = eg.popup_get_form(
     [
-        ["Name", "kujira"],
+        # [label, default_or_selections, type]
+        ["Name", "Suzu", "text"],
         ["Age", 20, "number"],
-        ["OS",["Windows", "macOS", "Ubuntu"],"combo"],
-        ["Fruits", ["Banana", "Orange"], "list",],
+        ["Hobbies", ["Reading", "Writing"], "list"],
+        ["OS", ["Windows", "macOS", "Ubuntu"], "combo"],
         ["Password", "", "password"],
         ["Date", "", "date"],
         ["File", "", "file"],
+        ["Folder", "", "folder"],
         ["Theme Color", "", "color"],
     ],
     title="Form Test",
 )
-print(result)
+if result:
+    print(result)

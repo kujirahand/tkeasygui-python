@@ -42,7 +42,7 @@ Using TkEasyGUI is simple. If you only want to display a dialog, it requires jus
 
 ```py
 import TkEasyGUI as eg
-# Displays the message in a popup dialog.
+# Show Text dialog
 eg.print("A joyful heart is good medicine.")
 ```
 
@@ -50,6 +50,7 @@ Ask the user for their name and display that name in the window.
 
 ```py
 import TkEasyGUI as eg
+# Show Input dialog
 name = eg.input("What is your name?")
 eg.print(f"Hello, {name}.")
 ```
@@ -58,16 +59,13 @@ Furthermore, a dialog is available that allows specifying multiple input fields.
 
 ```py
 import TkEasyGUI as eg
-m = eg.popup_get_form([
-    ("Name", "Suzu", "text"),
-    ("Age", 20, "number"),
-    ("Gender", ("M", "W", "-"), "list")])
-if m:
-    name = m["Name"]
-    age = m["Age"]
-    gender = m["Gender"]
-    eg.print(f"name={name}, age={age}, gender={gender}")
-    # name=Suzu, age=20.0, gender=M
+# Show Form dialog
+form = eg.popup_get_form(["Name", "Age", "Hobbies"])
+if form:
+    name = form["Name"]
+    age = form["Age"]
+    hobbies = form["Hobbies"]
+    eg.print(f"name={name}, age={age}, hobby={hobbies}")
 ```
 
 - [Docs > Dialogs](https://github.com/kujirahand/tkeasygui-python/blob/main/docs/TkEasyGUI/dialogs-py.md)
