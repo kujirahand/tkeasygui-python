@@ -2,8 +2,6 @@
 ### Image Test
 """
 
-from PIL import Image
-
 import TkEasyGUI as eg
 
 
