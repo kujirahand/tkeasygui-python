@@ -308,7 +308,7 @@ By specifying the labels and input types for each item, the form is automaticall
 When the user enters the items and clicks [OK], it returns `{label: value}`. If the user clicks [Cancel], it returns `None`.
 
 The `form_items` argument can specify input fields simply as `[label1, label2, label3, ...]`.
-Alternatively, you can specify labels, types, and default values as `[(label1, type1, default1), (label2, type2, default2), ...]`.
+Alternatively, you can specify labels, types, and default values as `[(label1, default1, type1), (label2, default2, type2), ...]`.
 The following values can be specified for the type: `text`, `number`, `password`, `combo`, `list`, `date`, `file`, `files`, `folder`, `color`.
 
 @see [tests/popup_get_form_test.py](/tests/popup_get_form_test.py)
