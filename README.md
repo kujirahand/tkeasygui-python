@@ -54,6 +54,14 @@ name = eg.input("What is your name?")
 eg.print(f"Hello, {name}.")
 ```
 
+Furthermore, a dialog is available that allows specifying multiple input fields.
+
+```py
+import TkEasyGUI as eg
+m = eg.file_get_form(["Name", ["Age", "number"]])
+eg.print(f"name={m["Name"]}, age={m["Age"]}")
+```
+
 ### How to use - widgets
 
 To create a simple window with only labels and buttons, you would write as follows:

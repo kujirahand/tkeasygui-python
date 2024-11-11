@@ -758,7 +758,6 @@ class Window:
             # destroy window in TKinter
             try:
                 self.window.destroy() # close window
-                del self.window
             except Exception as _: # ignore
                 pass
             # update window again
@@ -936,7 +935,7 @@ class Element:
         # define properties
         self.has_value: bool = has_value
         self.key: str|int|None = key
-        if self.key is not None:
+        if (self.key is not None) and (self.key != ""):
             if not register_element_key(self.key): # for checking unique key
                 raise TkEasyError(f"Element key is not unique: {self.key}")
         if self.has_value and (self.key is None or self.key == ""):

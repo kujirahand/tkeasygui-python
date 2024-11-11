@@ -504,7 +504,19 @@ def popup_get_date(
         ok_label = le.get_text("OK")
     if cancel_label is None:
         cancel_label = le.get_text("Cancel")
-    layout.append([eg.Button(ok_label, size=(8, 1)), eg.Button(cancel_label, size=(5, 1))])
+    panel = eg.Frame(
+        "",
+        layout=[
+            [
+                eg.Button(ok_label, size=(10, 1)),
+                eg.Button(cancel_label, size=(8, 1)),
+            ]
+        ],
+        text_align="center",
+        expand_x=True,
+        relief="flat",
+    )
+    layout.append([panel])
     # update label
     def update_date(top: datetime, current_date: datetime):
         cur = datetime(year=top.year, month=top.month, day=top.day)
