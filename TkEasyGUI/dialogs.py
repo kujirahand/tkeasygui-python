@@ -599,15 +599,44 @@ def popup_get_form(
     title: str = "Form" # window title
 ) -> Union[dict[str, Any], None]:
     """
-    Displays a form that allows multiple items to be entered.
-    By specifying the labels and input types for each item, the form is automatically generated and displayed in a dialog.
-    When the user enters the items and clicks [OK], it returns `{label: value}`. If the user clicks [Cancel], it returns `None`.
+        Displays a form that allows multiple items to be entered.
+        By specifying the labels and input types for each item, the form is automatically generated and displayed in a dialog.
+        When the user enters the items and clicks [OK], it returns `{label: value}`. If the user clicks [Cancel], it returns `None`.
 
-    The `form_items` argument can specify input fields simply as `[label1, label2, label3, ...]`.
-    Alternatively, you can specify labels, types, and default values as `[(label1, default1, type1), (label2, default2, type2), ...]`.
-    The following values can be specified for the type: `text`, `number`, `password`, `combo`, `list`, `date`, `file`, `files`, `folder`, `color`.
+        The `form_items` argument can specify input fields simply as `[label1, label2, label3, ...]`.
+        Alternatively, you can specify labels, types, and default values as `[(label1, default1, type1), (label2, default2, type2), ...]`.
+        The following values can be specified for the type: `text`, `number`, `password`, `combo`, `list`, `date`, `file`, `files`, `folder`, `color`.
 
-    @see [tests/popup_get_form_test.py](/tests/popup_get_form_test.py)
+        @see [tests/popup_get_form_test.py](/tests/popup_get_form_test.py)
+
+        #### Simple Example:
+        ```py
+        import TkEasyGUI as eg
+        form = eg.popup_get_form(["Name", "Hobbies"])
+        if form:
+            name = form["Name"]
+            hobbies = form["Hobbies"]
+            eg.print(f"name={name}, hobbies={hobbies}")
+        ```
+
+        #### Example:
+        ```py
+        import TkEasyGUI as eg
+        result = eg.popup_get_form([
+            # [label, default_or_selections, type]
+            ["Name", "Suzu", "text"],
+            ["Age", 20, "number"],
+            ["Hobbies", ["Reading", "Writing"], "list"],
+            ["OS", ["Windows", "macOS", "Ubuntu"], "combo"],
+            ["Password", "", "password"],
+            ["Date", "", "date"],
+            ["File", "", "file"],
+            ["Folder", "", "folder"],
+            ["Theme Color", "", "color"],
+        ])
+        if result:
+            print(result)
+        ```
     """
     # make form layout
     item_labels = []
