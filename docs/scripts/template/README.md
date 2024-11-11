@@ -3,7 +3,7 @@
 **TkEasyGUI** is a Python library that allows for the **easy** and simple creation of **GUI** applications.
 
 - [TkEasyGUI > README.md](https://github.com/kujirahand/tkeasygui-python/blob/main/README.md)
-- [TkEasyGUI > docs/TkEasyGUI](https://github.com/kujirahand/tkeasygui-python/blob/main/docs/TkEasyGUI/index.md)
+- [TkEasyGUI > Modules](https://github.com/kujirahand/tkeasygui-python/blob/main/docs/TkEasyGUI/index.md)
 
 ## Widgets documents
 

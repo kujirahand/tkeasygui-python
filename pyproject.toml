@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "TkEasyGUI"
-version = "1.0.5"
+version = "1.0.6"
 dependencies = [
   "Pillow",
   "pyperclip",
@@ -19,7 +19,7 @@ maintainers = [
 description = "TkEasyGUI is simple GUI Library for Python3 with Tkinter"
 readme = "README.md"
 license = {file = "LICENSE"}
-keywords = ["GUI", "Tkinter", "PySimpleGUI"]
+keywords = ["GUI", "tkinter", "TkEasyGUI"]
 classifiers = [
     "Intended Audience :: Developers",
     "License :: OSI Approved :: MIT License",
