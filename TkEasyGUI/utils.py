@@ -2,6 +2,7 @@
 TkEasyGUI utilities functions
 """
 
+import os
 import platform
 import sys
 import tkinter as tk
@@ -67,11 +68,13 @@ def screenshot() -> PIL.Image:
 # ------------------------------------------------------------------------------
 # text file utility
 # ------------------------------------------------------------------------------
-def load_text_file(filename: str, encoding: str="utf-8") -> str:
+def load_text_file(filename: str, encoding: str="utf-8", default_value: str="") -> str:
     """Load text file."""
-    with open(filename, "r", encoding=encoding) as f:
-        text = f.read()
-    return text
+    if os.path.exists(filename):
+        with open(filename, "r", encoding=encoding) as f:
+            text = f.read()
+        return text
+    return default_value
 
 def save_text_file(filename: str, text: str, encoding: str="utf-8") -> None:
     """Save text file."""
@@ -83,12 +86,14 @@ def append_text_file(filename: str, text: str, encoding: str="utf-8") -> None:
     with open(filename, "a", encoding=encoding) as f:
         f.write(text)
 
-def load_json_file(filename: str) -> Any:
+def load_json_file(filename: str, default_value: Any = None) -> Any:
     """Load JSON file."""
     import json
-    with open(filename, "r", encoding="utf-8") as f:
-        data = json.load(f)
-    return data
+    if os.path.exists(filename) is False:
+        with open(filename, "r", encoding="utf-8") as f:
+            data = json.load(f)
+        return data
+    return default_value
 
 def save_json_file(filename: str, data: Any) -> None:
     """Save JSON file."""
