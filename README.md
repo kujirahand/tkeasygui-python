@@ -125,6 +125,9 @@ Running `tests/file_viewer.py` allows all samples to be easily launched.
 Below is a detailed list of classes and methods.
 
 - [docs](https://github.com/kujirahand/tkeasygui-python/tree/main/docs)
+  - [Dialogs](https://github.com/kujirahand/tkeasygui-python/blob/main/docs/TkEasyGUI/dialogs-py.md)
+  - [Elements](https://github.com/kujirahand/tkeasygui-python/blob/main/docs/TkEasyGUI/widgets-py.md)
+  - [Utilities](https://github.com/kujirahand/tkeasygui-python/blob/main/docs/TkEasyGUI/utils-py.md)
 
 ## Tutorial
 
@@ -134,17 +137,17 @@ Japanese tutorials:
 - [マイナビニュースPython連載116回目 - 合計/整形/コピーのツールを作ろう](https://news.mynavi.jp/techplus/article/zeropython-116/)
 - [(Book) Pythonでつくるデスクトップアプリ メモ帳からスクレイピング・生成AI利用まで](https://amzn.to/45R2NSH)
 
-## About the relationship with PySimpleGUI
+## Compatibility with PySimpleGUI
 
-- When utilizing basic features, it is compatible with PySimpleGUI. You can write programs using the same event model as PySimpleGUI.
-- The names of basic GUI components are also kept the same. However, while some property names differ, many unique features have been implemented.
-- This project was developed with PySimpleGUI in mind, but has been implemented entirely from scratch. There are no licensing issues.
-- We are not considering full compatibility with PySimpleGUI.
+- When using basic functionalities, it is compatible with PySimpleGUI. Programs can be written using the same event-driven model as PySimpleGUI.  
+- The names of basic GUI components are kept the same, but some property names differ.  
+- TkEasyGUI has been completely reimplemented from scratch and is licensed under the MIT License.
+- However, full compatibility with PySimpleGUI is not intended.
 
 ### TkEasyGUI features:
 
 - Using a `for` loop and `window.event_iter()` enables straightforward event processing.
-- Custom popup dialogs, such as a color selection dialog (`eg.popup_color`), are available.
+- Custom popup dialogs, such as a color selection dialog (`eg.popup_color`), form dialog (`eg.popup_get_form`), are available.
 - The `Image` class supports not only PNG but also JPEG formats.
 - Convenient event hooks and features for bulk event registration are provided - [docs/custom_events](docs/custom_events.md).
 - Methods such as Copy, Paste, and Cut are added to text boxes (Multiline/Input).

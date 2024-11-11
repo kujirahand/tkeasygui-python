@@ -1,14 +1,14 @@
 # TkEasyGUI
 
-`TkEasyGUI`は、**Pythonで最も簡単にGUIアプリケーション開発するライブラリ**です。`Tkinter`のような従来のUIライブラリが持つ複雑さを解消し、より多くの開発者がGUIアプリの開発を楽しめます。本ライブラリは、簡単にGUIを構築できるライブラリ`PySimpleGUI`の概念を引き継ぎつつ、独自の機能を追加しています。
+`TkEasyGUI`は、**Pythonで最も簡単にGUIアプリの開発するライブラリ**です。`Tkinter`のような従来のUIライブラリが持つ複雑さを解消し、シンプルな使い勝手を実現しました。手軽に使える豊富なダイアログを用意しています。本ライブラリは、簡単にGUIを構築できるライブラリ`PySimpleGUI`の概念を引き継ぎつつ、独自の機能を追加しています。
 
 - [👉English](https://github.com/kujirahand/tkeasygui-python/blob/main/README.md)
 
 ## TkEasyGUIの特徴:
 
 - `TkEasyGUI`は、GUIアプリケーションを簡単かつシンプルに作成することができるPythonライブラリです。
-- イベントモデルでは、よく知られたGUIライブラリ`PySimpleGUI`と互換性があります。
-- Pythonの標準UIライブラリ`Tkinter`は、学習障壁が高と考えられていますが、このライブラリを使用すると、GUIアプリケーションを直感的に作成できます。
+- Pythonの標準UIライブラリ`Tkinter`は、学習障壁が高いと考えられていますが、このライブラリを使用すると、GUIアプリケーションを直感的に作成できます。
+- イベントモデルや基本部品では、よく知られたGUIライブラリ`PySimpleGUI`と互換性があります。
 - 型ヒントに対応しているので、コード補完でプロパティを選択できます。(本パッケージの利用には、`Python 3.9以降`が必要です。)
 - ライセンスには比較的緩い`MITライセンス`を採用しています。将来このライセンスを変えることはありません。
 
@@ -18,19 +18,19 @@
 
 ## インストール:
 
-pypiからインストールします。
+[PyPI](https://pypi.org/project/TkEasyGUI/)からインストールできます。
 
 ```sh
 python -m pip install TkEasyGUI
 ```
 
-GitHubリポジトリからインストールします。
+[GitHubリポジトリ](https://github.com/kujirahand/tkeasygui-python)からインストールできます。
 
 ```sh
 python -m pip install git+https://github.com/kujirahand/tkeasygui-python
 ```
 
-- (memo) v0.2.24未満のバージョンからのアップデートに失敗する場合があります。その場合、[こちら](docs/installation_trouble.md)を確認してください。
+- (メモ) v0.2.24未満からのアップデートに失敗する場合は[こちら](docs/installation_trouble.md)を確認してください。
 
 ## 簡単な使い方 - ポップアップダイアログを使う
 
@@ -48,6 +48,22 @@ import TkEasyGUI as eg
 name = eg.input("What is your name?")
 eg.print(f"Hello, {name}.")
 ```
+
+さらに、複数入力が可能なフォームダイアログも手軽に表示できます。
+
+```py
+import TkEasyGUI as eg
+# フォームダイアログを表示
+form = eg.popup_get_form(["名前", "年齢", "趣味"], title="プロフィールの入力")
+if form:
+    name = form["名前"]
+    age = form["年齢"]
+    hobbies = form["趣味"]
+    eg.print(f"name={name}, age={age}, hobby={hobbies}")
+```
+
+- [Docs > Dialogs](https://github.com/kujirahand/tkeasygui-python/blob/main/docs/TkEasyGUI/dialogs-py.md)
+
 
 ## 簡単な使い方 - カスタムウィンドウを定義して使う
 
@@ -108,20 +124,22 @@ window.close()
 
 ライブラリの詳細なクラスやメソッドの一覧です。
 
-- [docs](https://github.com/kujirahand/tkeasygui-python/tree/main/docs)
+- [マニュアル](https://github.com/kujirahand/tkeasygui-python/tree/main/docs)
+  - [ダイアログの一覧](https://github.com/kujirahand/tkeasygui-python/blob/main/docs/TkEasyGUI/dialogs-py.md)
+  - [カスタム要素の一覧](https://github.com/kujirahand/tkeasygui-python/blob/main/docs/TkEasyGUI/widgets-py.md)
+  - [便利なユーティリティ関数群](https://github.com/kujirahand/tkeasygui-python/blob/main/docs/TkEasyGUI/utils-py.md)
 
-## PySimpleGUIとの関係について
+## PySimpleGUIとの互換性について
 
 - 基本機能を使う場合、PySimpleGUIと互換性があります。PySimpleGUIと同じイベントモデルでプログラムを記述できます。
-- 基本的なGUI部品の名前も同じにしてあります。しかし、いくつかのプロパティの名前が異なっていますが、多くの独自機能が実装されています。
-- 本プロジェクトは、PySimpleGUIの存在を意識して開発しましたが、完全にゼロから実装しています。ライセンス的にも問題はありません。
-
-PySimpleGUIと完全な互換性は考えていません。
+- 基本的なGUI部品の名前も同じにしてありますが、いくつかのプロパティ名は異なります。
+- TkEasyGUIは完全にゼロから実装しなおしており、MITライセンスを採用しています。
+- ただし、PySimpleGUIと完全な互換性は考えていません。
 
 ### TkEasyGUI独自の機能
 
 - for文と `window.event_iter()` を使って気軽にイベント処理が可能
-- 任意のボタンを持つダイアログ(eg.popup_buttons)や色選択ダイアログ(eg.popup_color)など、独自のポップアップダイアログを用意
+- 任意のボタンを持つダイアログ(`eg.popup_buttons`)や色選択ダイアログ(`eg.popup_color`)、複数項目を入力するダイアログ(`eg.popup_get_form`)など、独自のポップアップダイアログを用意
 - ImageはPNGだけでなくJPEGも読み込み可能
 - 便利なイベントフックや一括イベント登録機能 - [docs/custom_events](docs/custom_events.md)
 - テキストボックス(Muliline/Input)に便利なCopy/Paste/Cutなどのメソッドを追加
