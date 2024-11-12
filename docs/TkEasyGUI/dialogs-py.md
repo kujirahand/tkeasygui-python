@@ -101,7 +101,7 @@ Get root window.
 def get_root_window() -> tk.Tk:
 ```
 
-- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/utils.py#L116)
+- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/utils.py#L121)
 
 ## input
 
@@ -140,7 +140,7 @@ platform : is mac?
 def is_mac() -> bool:
 ```
 
-- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/utils.py#L53)
+- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/utils.py#L54)
 
 ## is_win
 
@@ -150,7 +150,7 @@ platform : is Windows?
 def is_win() -> bool:
 ```
 
-- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/utils.py#L57)
+- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/utils.py#L58)
 
 ## msgbox
 
