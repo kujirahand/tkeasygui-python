@@ -1,6 +1,6 @@
 # TkEasyGUI
 
-`TkEasyGUI`は、**Pythonで最も簡単にGUIアプリ開発ができるライブラリ**です。`Tkinter`のような従来のUIライブラリが持つ複雑さを解消し、シンプルな使い勝手を実現しました。手軽に使える豊富なダイアログを用意しています。本ライブラリは、簡単にGUIを構築できるライブラリ`PySimpleGUI`の概念を引き継ぎつつ、独自の機能を追加しています。
+`TkEasyGUI`は、**Pythonで最も簡単にGUIアプリが開発できるライブラリ**です。`Tkinter`のような従来のUIライブラリが持つ複雑さを解消し、シンプルな使い勝手を実現しました。手軽に使える豊富なダイアログを用意しています。本ライブラリは、簡単にGUIを構築できるライブラリ`PySimpleGUI`の概念を引き継ぎつつ、独自の機能を追加しています。
 
 - [👉English](https://github.com/kujirahand/tkeasygui-python/blob/main/README.md)
 
