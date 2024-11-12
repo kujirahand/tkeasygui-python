@@ -188,7 +188,14 @@ def _window_pop(win: Window) -> None:
 _tkeasygui_info: dict[str, Any] = {}
 
 def set_theme(name: str) -> None:
-    """Change look and feel --- [TODO] Currently, the implementation is incomplete."""
+    """
+    Change look and feel
+
+    - macOS --- ('aqua', 'clam', 'alt', 'default', 'classic')
+    - Windows --- ('winnative', 'clam', 'alt', 'default', 'classic', 'vista', 'xpnative')
+    - Linux --- ('clam', 'alt', 'default', 'classic')
+    """
+    # [TODO] Currently, the implementation is incomplete.
     win = get_root_window()
     win.withdraw()
     style = get_ttk_style()

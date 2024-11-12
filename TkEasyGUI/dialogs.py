@@ -911,7 +911,7 @@ def input_number(
         message: str,
         title: Union[str,None] = None,
         default: str = ""
-    ) -> float:
+    ) -> Union[float, None]:
     """Display a message in a popup window with a number entry. Return the text entered."""
     return popup_input(message, title, default, only_number=True)
 
