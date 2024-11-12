@@ -14,6 +14,7 @@ def long_running_process(wait):
     print("sleep start")
     time.sleep(wait)
     print("sleep end")
+    return f"done {wait}"
 
 # define layout
 layout = [
@@ -22,10 +23,11 @@ layout = [
     [eg.Text("Long-running process")],
     [eg.Text("wait:"), eg.Input("3", key="-wait-")],
     [
-        eg.Button("Start1", key="-start1-"),
-        eg.Button("Start2", key="-start2-"),
-        eg.Button("Exit"),
+        eg.Button("thread1(wait=user)", key="-start1-"),
+        eg.Button("thread2(wait=3)", key="-start2-"),
+        eg.Button("no-thread(wait=3)", key="-start3-"),
     ],
+    [eg.Button("Exit")],
 ]
 # create a window
 window = eg.Window("Long-running process test", layout)
@@ -49,14 +51,20 @@ while True:
             continue
         window.start_thread(long_running_process, end_key="-threadend-", wait=wait)
     if event == "-threadend-":
-        eg.print("Thread end")
+        result = values["-threadend-"]
+        eg.print(result)
         window["-start1-"].update(disabled=False)
     # === -start2- ===
     if event == "-start2-":
         window["-start2-"].update(disabled=True)
         window.start_thread(long_running_process, wait=3) # no end_key
-    if event == eg.WINDOW_THREAD_END: # no end_key
-        eg.print("Thread end")
+    if event == eg.WINDOW_THREAD_END:  # no end_key
+        result = values[eg.WINDOW_THREAD_END]
+        eg.print(result)
         window["-start2-"].update(disabled=False)
+    # === -start3- ===
+    if event == "-start3-":
+        res = long_running_process(3)
+        eg.print(res)
 # close window
 window.close()

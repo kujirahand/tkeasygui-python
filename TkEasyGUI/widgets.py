@@ -576,11 +576,31 @@ class Window:
         *args,
         **kw,
     ) -> None:
-        """Start a thread."""
+        """
+        Start a thread.
+        ### Example
+        ```py
+        import TkEasyGUI as eg
+        # long-running process sample
+        def long_running_process(wait):
+            print("sleep start")
+            time.sleep(wait)
+            return f"done {wait}"
+        # create a window
+        with eg.Window("threading", layout=[[eg.Button("Run")]]) as window:
+            # event loop
+            for event, values in window.event_iter():
+                if event == "Run":
+                    window.start_thread(long_running_process, end_key="-threadend-", wait=3)
+                if event == "-threadend-":
+                    result = values["-threadend-"]
+                    eg.print("Thread end", result)
+        ```
+        """
         def _thread_target():
             try:
-                target(*args, **kw)
-                self._event_handler(end_key, {'result': True})
+                result = target(*args, **kw)
+                self._event_handler(end_key, {'result': True, end_key: result})
             except Exception as e:
                 print(f"Window.start_thread.error: {e}", file=sys.stderr)
                 self._event_handler(end_key, {'result': False, 'error': e})
