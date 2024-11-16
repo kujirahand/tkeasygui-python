@@ -55,7 +55,7 @@ Convert RGB color(16bit tuple) to HTML color name.
 def convert_color_html(color_name: str) -> str:
 ```
 
-- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/utils.py#L240)
+- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/utils.py#L247)
 
 ## convert_color_rgb16
 
@@ -65,7 +65,7 @@ Convert color to RGB, return (r, g, b) tuple. range=0-65535
 def convert_color_rgb16(color_name: str) -> tuple[int, int, int]:
 ```
 
-- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/utils.py#L235)
+- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/utils.py#L242)
 
 ## copy_to_clipboard
 
@@ -85,7 +85,7 @@ Generate a unique id for a value element.
 def generate_element_id() -> int:
 ```
 
-- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/utils.py#L282)
+- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/utils.py#L289)
 
 ## generate_element_style_key
 
@@ -95,7 +95,7 @@ Get a unique id for an element.
 def generate_element_style_key(element_type: str) -> int:
 ```
 
-- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/utils.py#L252)
+- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/utils.py#L259)
 
 ## get_clipboard
 
@@ -115,7 +115,7 @@ Get current theme
 def get_current_theme() -> str:
 ```
 
-- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/utils.py#L213)
+- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/utils.py#L220)
 
 ## get_platform
 
@@ -148,7 +148,7 @@ print(get_themes())
 def get_tnemes() -> list[str]:
 ```
 
-- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/utils.py#L198)
+- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/utils.py#L205)
 
 ## get_ttk_style
 
@@ -218,7 +218,7 @@ Register element key.
 def register_element_key(key: str) -> bool:
 ```
 
-- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/utils.py#L267)
+- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/utils.py#L274)
 
 ## remove_element_key
 
@@ -228,7 +228,7 @@ Remove element key.
 def remove_element_key(key: str) -> bool:
 ```
 
-- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/utils.py#L274)
+- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/utils.py#L281)
 
 ## save_json_file
 
@@ -291,11 +291,15 @@ print(get_themes())
 def set_default_theme() -> None:
 ```
 
-- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/utils.py#L217)
+- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/utils.py#L224)
 
 ## set_theme
 
-Change look and feel --- [TODO] Currently, the implementation is incomplete.
+Change look and feel
+
+- macOS --- ('aqua', 'clam', 'alt', 'default', 'classic')
+- Windows --- ('winnative', 'clam', 'alt', 'default', 'classic', 'vista', 'xpnative')
+- Linux --- ('clam', 'alt', 'default', 'classic')
 
 ```py
 def set_theme(name: str) -> None:
@@ -321,5 +325,5 @@ Set theme (alias of set_theme)
 def theme(name: str) -> None:
 ```
 
-- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/utils.py#L209)
+- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/utils.py#L216)
 

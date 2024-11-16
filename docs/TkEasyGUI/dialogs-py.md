@@ -127,7 +127,7 @@ def input_number(
     message: str,
     title: Union[str,None] = None,
     default: str = ""
-    ) -> float:
+    ) -> Union[float, None]:
 ```
 
 - [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/dialogs.py#L910)
