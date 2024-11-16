@@ -3139,18 +3139,21 @@ class Listbox(Element):
 class Combo(Element):
     """Combo element."""
     def __init__(
-                self,
-                values: list[str]=[],
-                default_value: str="",
-                key: Union[str, None] = None,
-                enable_events: bool = False,
-                # other
-                metadata: Union[dict[str, Any], None] = None,
-                **kw) -> None:
+        self,
+        values: list[str] = [],
+        default_value: str = "",
+        key: Union[str, None] = None,
+        enable_events: bool = False,
+        readonly: bool = False,
+        # other
+        metadata: Union[dict[str, Any], None] = None,
+        **kw,
+    ) -> None:
         super().__init__("Combo", "TCombobox", key, True, metadata, **kw)
         self.values = values
         self.value: tk.StringVar|None = None
         self.default_value = default_value
+        self.readonly: bool = readonly
         # event
         if enable_events:
             self.bind_events({
@@ -3162,6 +3165,8 @@ class Combo(Element):
         self.value = tk.StringVar()
         self.widget = ttk.Combobox(parent, values=self.values, textvariable=self.value, **self.props)
         self.set_value(self.default_value)
+        if self.readonly:
+            self.set_readonly(self.readonly)
         return self.widget
 
     def set_values(self, values: list[str]) -> None:
@@ -3180,6 +3185,12 @@ class Combo(Element):
             return None
         return self.value.get()
 
+    def set_readonly(self, readonly: bool) -> None:
+        """set readonly"""
+        self.readonly = readonly
+        state = "readonly" if self.readonly else "normal"
+        self._widget_update(state=state)
+
     def update(self, *args, **kw) -> None:
         """Update the widget."""
         if self.widget is None:
@@ -3190,6 +3201,8 @@ class Combo(Element):
             self.set_values(kw.pop("values"))
         if "value" in kw:
             self.set_value(kw.pop("value"))
+        if "readonly" in kw:
+            self.set_readonly(kw.pop("readonly"))
         self._widget_update(**kw)
 
 class Table(Element):
