@@ -9,7 +9,7 @@
 - 이 패키지는 타입 힌트를 지원하여 코드 완성을 통해 속성을 선택할 수 있습니다. `Python 3.9 이상`이 필요합니다.
 - 이 프로젝트는 관대한 MIT 라이선스를 채택하고 있으며, 이 라이선스는 향후 변경되지 않을 것입니다. 함께 GUI 프로그램 제작을 즐겨보세요.
 
-- [👉日本語](https://github.com/kujirahand/tkeasygui-python/blob/main/README-ja.md) / [👉中文](https://github.com/kujirahand/tkeasygui-python/blob/main/README-zh.md)
+- [👉English](https://github.com/kujirahand/tkeasygui-python/blob/main/README.md)
 
 > This document has been translated automatically. Please let us know if you find any unnatural expressions.
 
@@ -159,4 +159,3 @@ window.close()
 - [pypi.org > TkEasyGUI](https://pypi.org/project/tkeasygui/)
 - [GitHub > TkEasyGUI](https://github.com/kujirahand/tkeasygui-python/)
 - [Discord > TkEasyGUI](https://discord.gg/G2JXaRft)
-- 
