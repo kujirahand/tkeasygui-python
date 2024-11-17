@@ -1,5 +1,9 @@
 #!/bin/sh
-
+set -e
+echo "+--------------------------------"
+echo "| package.sh"
+echo "+--------------------------------"
+echo "|"
 echo "[Package]"
 echo "https://packaging.python.org/en/latest/tutorials/packaging-projects/"
 
@@ -24,10 +28,10 @@ python3 -m twine upload --repository testpypi dist/* --verbose
 echo "--- wait a moment ---"
 
 echo "--- install test repo ---"
-echo "[TRY]: python -m pip install -U --index-url https://test.pypi.org/simple/ --no-deps TkEasyGUI   "
+echo "[TRY]: python -m pip install -U --index-url https://test.pypi.org/simple/ --no-deps TkEasyGUI"
 echo "** check version **"
 
 echo "--- upload pypi ---"
-echo "[TRY]: python -m twine upload dist/* --verbose   "
+echo "[TRY]: python -m twine upload dist/* --verbose"
 
 
