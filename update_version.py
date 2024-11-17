@@ -10,7 +10,7 @@ with open("pyproject.toml", "r", encoding="utf-8") as f:
     data = toml.load(f)
 version = data["project"]["version"]
 versions = version.split(".")
-if int(versions[1]) == 0 or int(versions[2]) == 0:
+if int(versions[0]) == 0 or int(versions[2]) == 0:
     print("---------------------------------------", file=sys.stderr)
     print("!!! BROKEN VERSION INFO", file=sys.stderr)
     print("!!! Please check : `update_version.py` & `pyproject.toml`", file=sys.stderr)
