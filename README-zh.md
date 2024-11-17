@@ -6,6 +6,8 @@ Python 的标准 UI 库 `Tkinter`，通常被认为入门门槛高且难以使�
 
 此项目采用宽松的 MIT 许可证。这个许可证将来不会更改。让我们享受创建 GUI 程序的乐趣。
 
+> This document has been translated automatically. Please let us know if you find any unnatural expressions.
+
 ## 平台
 
 - Windows / macOS / Linux（需要 tkinter）
