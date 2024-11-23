@@ -294,7 +294,7 @@ class Window:
     def __exit__(self, exc_type, exc_value, traceback):
         """Finalize resource"""
         self.close()
-    
+
     def register_event_hooks(self, hooks: dict[str, list[callable]]) -> None:
         """
         Register event hooks. (append hook events)
@@ -752,6 +752,10 @@ class Window:
     def close(self) -> None:
         """Close the window."""
         # The phenomenon where a closed window remains visible is occurring, so forcibly making it transparent.
+        try:
+            self.window.grab_release()
+        except Exception as _:
+            pass
         try:
             self.set_alpha_channel(0.0) # force hide
         except Exception as _:

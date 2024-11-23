@@ -51,10 +51,10 @@ def popup_buttons(
     result = buttons[-1] if len(buttons) > 0 else None
     
     # create window
-    win = eg.Window(title, layout=[
+    layout = [
         [eg.Text(message)],
         [eg.Button(s, width=9) for s in buttons],
-    ], modal=True)
+    ]
     
     # event loop
     timer_id = eg.time_checker_start()
@@ -62,19 +62,15 @@ def popup_buttons(
     if non_blocking:
         # TODO: popup non blocking window
         pass
-    while True:
-        event, _ = win.read(timeout=100, timeout_key=eg.WINDOW_TIMEOUT)
-        if event == eg.WINDOW_CLOSED:
-            result = eg.WINDOW_CLOSED
-            break
-        if event in buttons:
-            result = event
-            break
-        if event == eg.WINDOW_TIMEOUT:
-            if auto_close_duration > 0 and eg.time_checker_end(timer_id) > autoclose_sec:
-                result = timeout_key # timeout_key only use result
+    with eg.Window(title, layout=layout, modal=True) as win:
+        for event, _ in win.event_iter(timeout=100, timeout_key=eg.WINDOW_TIMEOUT):
+            if event in buttons:
+                result = event
                 break
-    win.close()
+            if event == eg.WINDOW_TIMEOUT:
+                if auto_close_duration > 0 and eg.time_checker_end(timer_id) > autoclose_sec:
+                    result = timeout_key # timeout_key only use result
+                    break
     return result
 
 def popup(message: str, title: str = "") -> str:
