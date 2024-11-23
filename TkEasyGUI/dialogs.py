@@ -658,7 +658,7 @@ def popup_get_form(
         # make line
         line = [eg.Text(label, key=f"{it_key}-label", size=(15, 1), text_align="right")]
         # check type
-        itype == itype.lower()
+        itype = itype.lower()
         if itype == "text" or itype == "number" or itype == "password":
             line.append(eg.Input(
                 default_value, key=it_key, size=(20, 1),
