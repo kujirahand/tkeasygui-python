@@ -157,4 +157,4 @@ Japanese tutorials:
 
 - [pypi.org > TkEasyGUI](https://pypi.org/project/tkeasygui/)
 - [GitHub > TkEasyGUI](https://github.com/kujirahand/tkeasygui-python/)
-- [Discord > TkEasyGUI](https://discord.gg/jB2ZZh2b)
+- [Discord > TkEasyGUI](https://discord.gg/NX8WEQd42S)
