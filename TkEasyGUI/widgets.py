@@ -83,7 +83,7 @@ class Window:
         self,
         title: str,
         layout: list[list[Element]],  # set elements layout
-        size: Union[tuple[str, int], None] = None,  # window size
+        size: Union[tuple[int, int], None] = None,  # window size
         resizable: bool = False,
         font: Union[FontType, None] = None,
         modal: bool = False,  # modal window
