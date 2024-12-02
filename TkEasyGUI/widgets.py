@@ -3171,6 +3171,8 @@ class Combo(Element):
         self.set_value(self.default_value)
         if self.readonly:
             self.set_readonly(self.readonly)
+        if "font" in self.props:
+            parent.option_add("*TCombobox*Listbox*Font", tkfont.Font(font=self.props['font']))
         return self.widget
 
     def set_values(self, values: list[str]) -> None:
