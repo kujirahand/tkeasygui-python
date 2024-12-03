@@ -1977,10 +1977,22 @@ class Radio(Element):
             }, "system")
 
     def create(self, win: Window, parent: tk.Widget) -> tk.Widget:
+        # post change event
+        def post_change_event(*args):
+            selected_key: str = self.key
+            values = win.get_values()
+            for k in values.keys():
+                if values[k] is True:
+                    selected_key = k
+            values['event'] = args
+            values['event_type'] = "change"
+            win.post_event(selected_key, values)
         # create radio group
         if self.group_id not in win.radio_group_dict:
             win.radio_group_dict[self.group_id] = [tk.IntVar(value=0), 1]
-            win.radio_group_dict[self.group_id][0].trace_add("write", lambda *args: self.disptach_event({"event_type": "change", "event": args}))
+            win.radio_group_dict[self.group_id][0].trace_add(
+                "write", lambda *args: post_change_event(*args)
+            )
         else:
             win.radio_group_dict[self.group_id][1] += 1
         self.value = win.radio_group_dict[self.group_id][1]
