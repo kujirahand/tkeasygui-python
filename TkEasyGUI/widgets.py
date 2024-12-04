@@ -120,7 +120,9 @@ class Window:
         self.layout: list[list[Element]] = layout
         self._event_hooks: dict[str, list[callable]] = {}
         self.font: Union[FontType, None] = font
-        self.radio_group_dict: dict[str, list[tk.IntVar, int]] = {}
+        self.radio_group_dict: dict[str, list[tk.IntVar, int]] = {} # value=[variable, last_id]
+        self.radio_group_dict_keys: dict[str, list[str]] = {}
+        self.checkbox_dict: dict[str, list[str]] = {}
         self.minimized: bool = False
         self.maximized: bool = False
         self.is_hidden: bool = False
@@ -695,6 +697,17 @@ class Window:
             except Exception:
                 # if not possible, return last_values
                 return self.last_values
+        # add radio group
+        for group, vals in self.radio_group_dict.items():
+            selected = vals[0].get()
+            values[group] = self.radio_group_dict_keys[group][selected - 1] if selected > 0 else ""
+        # add checkbox group
+        for group, vals in self.checkbox_dict.items():
+            selected_keys = []
+            for key in vals:
+                if values[key]:
+                    selected_keys.append(key)
+            values[group] = selected_keys
         # set cache
         self.last_values = values
         return values
@@ -1903,6 +1916,7 @@ class Checkbox(Element):
                 default: bool=False,
                 key: Union[str, None] = None,
                 enable_events: bool=False,
+                group_id: Union[str, None] = None, # If a group_id is provided, the values will contain key's list of True
                 # other
                 metadata: Union[dict[str, Any], None] = None,
                 **kw) -> None:
@@ -1916,8 +1930,15 @@ class Checkbox(Element):
             self.bind_events({
                 "<Button-3>": "right_click"
             }, "system")
+        self.group_id = group_id
 
     def create(self, win: Window, parent: tk.Widget) -> tk.Widget:
+        # set group_id
+        if self.group_id:
+            if self.group_id not in win.checkbox_dict:
+                win.checkbox_dict[self.group_id] = []
+            win.checkbox_dict[self.group_id].append(self.key)
+        # create checkbox
         self.checkbox_var = tk.BooleanVar(value=self.default_value)
         self.checkbox_var.trace_add("write", lambda *args: self.disptach_event({"event_type": "change", "event": args}))
         self.widget = ttk.Checkbutton(parent, style=self.style_name, variable=self.checkbox_var, **self.props)
@@ -1971,6 +1992,7 @@ class Radio(Element):
         self.value: int = 0
         self.props["text"] = text
         self.group_id: str = str(group_id)
+        self.created_radio = False
         if enable_events:
             self.bind_events({
                 "<Button-3>": "right_click"
@@ -1979,22 +2001,25 @@ class Radio(Element):
     def create(self, win: Window, parent: tk.Widget) -> tk.Widget:
         # post change event
         def post_change_event(*args):
+            if not self.created_radio:
+                return
             selected_key: str = self.key
             values = win.get_values()
             for k in values.keys():
                 if values[k] is True:
                     selected_key = k
-            values['event'] = args
             values['event_type'] = "change"
             win.post_event(selected_key, values)
         # create radio group
         if self.group_id not in win.radio_group_dict:
-            win.radio_group_dict[self.group_id] = [tk.IntVar(value=0), 1]
+            win.radio_group_dict[self.group_id] = [tk.IntVar(value=0), 1] # list of [variable, id]
             win.radio_group_dict[self.group_id][0].trace_add(
                 "write", lambda *args: post_change_event(*args)
             )
+            win.radio_group_dict_keys[self.group_id] = [self.key]
         else:
             win.radio_group_dict[self.group_id][1] += 1
+            win.radio_group_dict_keys[self.group_id].append(self.key)
         self.value = win.radio_group_dict[self.group_id][1]
         # create radiobutton
         self.widget = ttk.Radiobutton(
@@ -2005,6 +2030,7 @@ class Radio(Element):
             **self.props)
         if self.default_value:
             self.select()
+        self.created_radio = True
         return self.widget
     
     def select(self) -> None:
