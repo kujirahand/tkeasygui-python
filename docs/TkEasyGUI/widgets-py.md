@@ -91,7 +91,7 @@ class Button(
     ) 
 ```
 
-- [source](https://github.com/kujirahand/tkeasygui-python/blob/main\TkEasyGUI\widgets.py#L1762)
+- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L1775)
 
 ### Methods of Button
 
@@ -181,7 +181,7 @@ class CalendarBrowse(
     ) 
 ```
 
-- [source](https://github.com/kujirahand/tkeasygui-python/blob/main\TkEasyGUI\widgets.py#L3759)
+- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L3785)
 
 ### Methods of CalendarBrowse
 
@@ -265,7 +265,7 @@ class CalendarButton(
     ) 
 ```
 
-- [source](https://github.com/kujirahand/tkeasygui-python/blob/main\TkEasyGUI\widgets.py#L3759)
+- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L3785)
 
 ### Methods of CalendarButton
 
@@ -347,7 +347,7 @@ class Canvas(
     **kw) 
 ```
 
-- [source](https://github.com/kujirahand/tkeasygui-python/blob/main\TkEasyGUI\widgets.py#L2721)
+- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L2747)
 
 ### Methods of Canvas
 
@@ -417,12 +417,13 @@ class Checkbox(
     default: bool=False,
     key: Union[str, None] = None,
     enable_events: bool=False,
+    group_id: Union[str, None] = None, # If a group_id is provided, the values will contain key's list of True
     # other
     metadata: Union[dict[str, Any], None] = None,
     **kw) 
 ```
 
-- [source](https://github.com/kujirahand/tkeasygui-python/blob/main\TkEasyGUI\widgets.py#L1901)
+- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L1914)
 
 ### Methods of Checkbox
 
@@ -503,7 +504,7 @@ class CloseButton(
     ) 
 ```
 
-- [source](https://github.com/kujirahand/tkeasygui-python/blob/main\TkEasyGUI\widgets.py#L1872)
+- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L1885)
 
 ### Methods of CloseButton
 
@@ -596,7 +597,7 @@ class ColorBrowse(
     ) 
 ```
 
-- [source](https://github.com/kujirahand/tkeasygui-python/blob/main\TkEasyGUI\widgets.py#L3625)
+- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L3651)
 
 ### Methods of ColorBrowse
 
@@ -684,7 +685,7 @@ class Column(
     **kw) 
 ```
 
-- [source](https://github.com/kujirahand/tkeasygui-python/blob/main\TkEasyGUI\widgets.py#L1354)
+- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L1367)
 
 ### Methods of Column
 
@@ -758,7 +759,7 @@ class Combo(
     ) 
 ```
 
-- [source](https://github.com/kujirahand/tkeasygui-python/blob/main\TkEasyGUI\widgets.py#L3157)
+- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L3183)
 
 ### Methods of Combo
 
@@ -843,7 +844,7 @@ class Element(
     **kw) 
 ```
 
-- [source](https://github.com/kujirahand/tkeasygui-python/blob/main\TkEasyGUI\widgets.py#L950)
+- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L963)
 
 ### Methods of Element
 
@@ -922,7 +923,7 @@ class FileBrowse(
     ) 
 ```
 
-- [source](https://github.com/kujirahand/tkeasygui-python/blob/main\TkEasyGUI\widgets.py#L3452)
+- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L3478)
 
 ### Methods of FileBrowse
 
@@ -1005,7 +1006,7 @@ class FileSaveAs(
     ) 
 ```
 
-- [source](https://github.com/kujirahand/tkeasygui-python/blob/main\TkEasyGUI\widgets.py#L3562)
+- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L3588)
 
 ### Methods of FileSaveAs
 
@@ -1088,7 +1089,7 @@ class FileSaveAsBrowse(
     ) 
 ```
 
-- [source](https://github.com/kujirahand/tkeasygui-python/blob/main\TkEasyGUI\widgets.py#L3562)
+- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L3588)
 
 ### Methods of FileSaveAsBrowse
 
@@ -1171,7 +1172,7 @@ class FilesBrowse(
     ) 
 ```
 
-- [source](https://github.com/kujirahand/tkeasygui-python/blob/main\TkEasyGUI\widgets.py#L3538)
+- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L3564)
 
 ### Methods of FilesBrowse
 
@@ -1254,7 +1255,7 @@ class FolderBrowse(
     ) 
 ```
 
-- [source](https://github.com/kujirahand/tkeasygui-python/blob/main\TkEasyGUI\widgets.py#L3590)
+- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L3616)
 
 ### Methods of FolderBrowse
 
@@ -1350,7 +1351,7 @@ class Frame(
     ) 
 ```
 
-- [source](https://github.com/kujirahand/tkeasygui-python/blob/main\TkEasyGUI\widgets.py#L1285)
+- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L1298)
 
 ### Methods of Frame
 
@@ -1425,7 +1426,7 @@ class Graph(
     **kw) 
 ```
 
-- [source](https://github.com/kujirahand/tkeasygui-python/blob/main\TkEasyGUI\widgets.py#L2766)
+- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L2792)
 
 ### Methods of Graph
 
@@ -1541,7 +1542,7 @@ class HSeparator(
     **kw) 
 ```
 
-- [source](https://github.com/kujirahand/tkeasygui-python/blob/main\TkEasyGUI\widgets.py#L3014)
+- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L3040)
 
 ### Methods of HSeparator
 
@@ -1616,7 +1617,7 @@ class Image(
     **kw) 
 ```
 
-- [source](https://github.com/kujirahand/tkeasygui-python/blob/main\TkEasyGUI\widgets.py#L2877)
+- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L2903)
 
 ### Methods of Image
 
@@ -1721,7 +1722,7 @@ class Input(
     ) 
 ```
 
-- [source](https://github.com/kujirahand/tkeasygui-python/blob/main\TkEasyGUI\widgets.py#L2041)
+- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L2067)
 
 ### Methods of Input
 
@@ -1877,7 +1878,7 @@ class InputText(
     ) 
 ```
 
-- [source](https://github.com/kujirahand/tkeasygui-python/blob/main\TkEasyGUI\widgets.py#L2041)
+- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L2067)
 
 ### Methods of InputText
 
@@ -2026,7 +2027,7 @@ class Label(
     ) 
 ```
 
-- [source](https://github.com/kujirahand/tkeasygui-python/blob/main\TkEasyGUI\widgets.py#L1581)
+- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L1594)
 
 ### Methods of Label
 
@@ -2112,7 +2113,7 @@ class ListBrowse(
     ) 
 ```
 
-- [source](https://github.com/kujirahand/tkeasygui-python/blob/main\TkEasyGUI\widgets.py#L3661)
+- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L3687)
 
 ### Methods of ListBrowse
 
@@ -2196,7 +2197,7 @@ class Listbox(
     ) 
 ```
 
-- [source](https://github.com/kujirahand/tkeasygui-python/blob/main\TkEasyGUI\widgets.py#L3039)
+- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L3065)
 
 ### Methods of Listbox
 
@@ -2300,7 +2301,7 @@ class Menu(
     ) 
 ```
 
-- [source](https://github.com/kujirahand/tkeasygui-python/blob/main\TkEasyGUI\widgets.py#L1660)
+- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L1673)
 
 ### Methods of Menu
 
@@ -2397,7 +2398,7 @@ class Multiline(
     ) 
 ```
 
-- [source](https://github.com/kujirahand/tkeasygui-python/blob/main\TkEasyGUI\widgets.py#L2284)
+- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L2310)
 
 ### Methods of Multiline
 
@@ -2547,7 +2548,7 @@ class MultilineBrowse(
     ) 
 ```
 
-- [source](https://github.com/kujirahand/tkeasygui-python/blob/main\TkEasyGUI\widgets.py#L3710)
+- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L3736)
 
 ### Methods of MultilineBrowse
 
@@ -2644,7 +2645,7 @@ class Output(
     ) 
 ```
 
-- [source](https://github.com/kujirahand/tkeasygui-python/blob/main\TkEasyGUI\widgets.py#L2284)
+- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L2310)
 
 ### Methods of Output
 
@@ -2790,7 +2791,7 @@ class Radio(
     **kw) 
 ```
 
-- [source](https://github.com/kujirahand/tkeasygui-python/blob/main\TkEasyGUI\widgets.py#L1957)
+- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L1978)
 
 ### Methods of Radio
 
@@ -2885,7 +2886,7 @@ class Slider(
     **kw) 
 ```
 
-- [source](https://github.com/kujirahand/tkeasygui-python/blob/main\TkEasyGUI\widgets.py#L2601)
+- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L2627)
 
 ### Methods of Slider
 
@@ -2983,7 +2984,7 @@ class Submit(
     ) 
 ```
 
-- [source](https://github.com/kujirahand/tkeasygui-python/blob/main\TkEasyGUI\widgets.py#L1762)
+- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L1775)
 
 ### Methods of Submit
 
@@ -3096,7 +3097,7 @@ class Tab(
     ) 
 ```
 
-- [source](https://github.com/kujirahand/tkeasygui-python/blob/main\TkEasyGUI\widgets.py#L1433)
+- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L1446)
 
 ### Methods of Tab
 
@@ -3195,7 +3196,7 @@ class TabGroup(
     ) 
 ```
 
-- [source](https://github.com/kujirahand/tkeasygui-python/blob/main\TkEasyGUI\widgets.py#L1513)
+- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L1526)
 
 ### Methods of TabGroup
 
@@ -3283,7 +3284,7 @@ class Table(
     **kw) 
 ```
 
-- [source](https://github.com/kujirahand/tkeasygui-python/blob/main\TkEasyGUI\widgets.py#L3228)
+- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L3254)
 
 ### Methods of Table
 
@@ -3376,7 +3377,7 @@ class Text(
     ) 
 ```
 
-- [source](https://github.com/kujirahand/tkeasygui-python/blob/main\TkEasyGUI\widgets.py#L1581)
+- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L1594)
 
 ### Methods of Text
 
@@ -3473,7 +3474,7 @@ class Textarea(
     ) 
 ```
 
-- [source](https://github.com/kujirahand/tkeasygui-python/blob/main\TkEasyGUI\widgets.py#L2284)
+- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L2310)
 
 ### Methods of Textarea
 
@@ -3611,7 +3612,7 @@ Update the widget.
 class TkEasyError(self, message="TkEasyError"):
 ```
 
-- [source](https://github.com/kujirahand/tkeasygui-python/blob/main\TkEasyGUI\widgets.py#L74)
+- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L74)
 
 ### Methods of TkEasyError
 
@@ -3645,7 +3646,7 @@ class VSeparator(
     **kw) 
 ```
 
-- [source](https://github.com/kujirahand/tkeasygui-python/blob/main\TkEasyGUI\widgets.py#L2990)
+- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L3016)
 
 ### Methods of VSeparator
 
@@ -3731,7 +3732,7 @@ class Window(
     ) 
 ```
 
-- [source](https://github.com/kujirahand/tkeasygui-python/blob/main\TkEasyGUI\widgets.py#L82)
+- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L82)
 
 ### Methods of Window
 
@@ -3968,7 +3969,7 @@ Generate a unique id for a value element.
 def generate_element_id() -> int:
 ```
 
-- [source](https://github.com/kujirahand/tkeasygui-python/blob/main\TkEasyGUI\utils.py#L289)
+- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/utils.py#L289)
 
 ## generate_element_style_key
 
@@ -3978,7 +3979,7 @@ Get a unique id for an element.
 def generate_element_style_key(element_type: str) -> int:
 ```
 
-- [source](https://github.com/kujirahand/tkeasygui-python/blob/main\TkEasyGUI\utils.py#L259)
+- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/utils.py#L259)
 
 ## get_current_theme
 
@@ -3988,7 +3989,7 @@ Get current theme
 def get_current_theme() -> str:
 ```
 
-- [source](https://github.com/kujirahand/tkeasygui-python/blob/main\TkEasyGUI\utils.py#L220)
+- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/utils.py#L220)
 
 ## get_font_list
 
@@ -3998,7 +3999,7 @@ Get font list
 def get_font_list() -> list[str]:
 ```
 
-- [source](https://github.com/kujirahand/tkeasygui-python/blob/main\TkEasyGUI\widgets.py#L3951)
+- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L3977)
 
 ## get_image_tk
 
@@ -4015,7 +4016,7 @@ def get_image_tk(
     ) -> Union[tk.PhotoImage, None]:
 ```
 
-- [source](https://github.com/kujirahand/tkeasygui-python/blob/main\TkEasyGUI\widgets.py#L3865)
+- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L3891)
 
 ## get_root_window
 
@@ -4025,7 +4026,7 @@ Get root window.
 def get_root_window() -> tk.Tk:
 ```
 
-- [source](https://github.com/kujirahand/tkeasygui-python/blob/main\TkEasyGUI\utils.py#L121)
+- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/utils.py#L121)
 
 ## get_system_info
 
@@ -4035,7 +4036,7 @@ def get_root_window() -> tk.Tk:
 def get_system_info():
 ```
 
-- [source](https://github.com/kujirahand/tkeasygui-python/blob/main\TkEasyGUI\widgets.py#L3957)
+- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L3983)
 
 ## get_tcl_version
 
@@ -4045,7 +4046,7 @@ Get tcl version
 def get_tcl_version() -> str:
 ```
 
-- [source](https://github.com/kujirahand/tkeasygui-python/blob/main\TkEasyGUI\widgets.py#L3945)
+- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L3971)
 
 ## get_tk_version
 
@@ -4055,7 +4056,7 @@ Get tk version
 def get_tk_version() -> str:
 ```
 
-- [source](https://github.com/kujirahand/tkeasygui-python/blob/main\TkEasyGUI\widgets.py#L3939)
+- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L3965)
 
 ## get_ttk_style
 
@@ -4065,7 +4066,7 @@ Get ttk style
 def get_ttk_style() -> ttk.Style:
 ```
 
-- [source](https://github.com/kujirahand/tkeasygui-python/blob/main\TkEasyGUI\utils.py#L151)
+- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/utils.py#L151)
 
 ## image_resize
 
@@ -4080,7 +4081,7 @@ def image_resize(
 ) -> PIL.Image:
 ```
 
-- [source](https://github.com/kujirahand/tkeasygui-python/blob/main\TkEasyGUI\widgets.py#L3808)
+- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L3834)
 
 ## imagedata_to_bytes
 
@@ -4090,7 +4091,7 @@ Convert JPEG to PNG
 def imagedata_to_bytes(image_data: PIL.Image) -> bytes:
 ```
 
-- [source](https://github.com/kujirahand/tkeasygui-python/blob/main\TkEasyGUI\widgets.py#L3912)
+- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L3938)
 
 ## imagefile_to_bytes
 
@@ -4100,7 +4101,7 @@ Read image file and convert to bytes
 def imagefile_to_bytes(filename: str) -> bytes:
 ```
 
-- [source](https://github.com/kujirahand/tkeasygui-python/blob/main\TkEasyGUI\widgets.py#L3919)
+- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L3945)
 
 ## register_element_key
 
@@ -4110,7 +4111,7 @@ Register element key.
 def register_element_key(key: str) -> bool:
 ```
 
-- [source](https://github.com/kujirahand/tkeasygui-python/blob/main\TkEasyGUI\utils.py#L274)
+- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/utils.py#L274)
 
 ## rgb
 
@@ -4120,7 +4121,7 @@ Convert RGB to Hex
 def rgb(r: int, g: int, b: int) -> str:
 ```
 
-- [source](https://github.com/kujirahand/tkeasygui-python/blob/main\TkEasyGUI\widgets.py#L3801)
+- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L3827)
 
 ## time_checker_end
 
@@ -4130,7 +4131,7 @@ timer end
 def time_checker_end(start_time: datetime) -> int:
 ```
 
-- [source](https://github.com/kujirahand/tkeasygui-python/blob/main\TkEasyGUI\widgets.py#L3931)
+- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L3957)
 
 ## time_checker_start
 
@@ -4140,5 +4141,5 @@ timer start
 def time_checker_start() -> datetime:
 ```
 
-- [source](https://github.com/kujirahand/tkeasygui-python/blob/main\TkEasyGUI\widgets.py#L3927)
+- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L3953)
 
