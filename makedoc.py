@@ -3,6 +3,7 @@ import inspect
 import json
 import os
 import re
+import types
 
 import TkEasyGUI as eg
 
@@ -13,7 +14,7 @@ REPO = "https://github.com/kujirahand/tkeasygui-python/blob/main"
 def main():
     package_path = eg.__path__[0]
     print(package_path)
-    print(eg.__doc__)
+    # print(eg.__doc__)
     root_name = eg.__package__
 
     # get modules
@@ -21,7 +22,7 @@ def main():
     for file in files:
         read_module(file, root_name)
 
-def read_module(file: str, root_name: str):
+def read_module(file: str, root_name: str) -> None:
     module_name = os.path.basename(file).replace(".py", "")
     if module_name == "__init__":
         return
@@ -42,7 +43,7 @@ def read_module(file: str, root_name: str):
         if prop.startswith("__"):
             continue
         p = getattr(mod, prop)
-        if str(type(p)) == "<class 'type'>":
+        if type(p) is type:
             mod2 = inspect.getmodule(p)
             if mod2 != mod:
                 continue
@@ -57,7 +58,7 @@ def read_module(file: str, root_name: str):
                 print("@@@", prop)
                 code_def = get_function_definition(p.__init__, skip_self=True)
                 code_def = re.sub("^def __init__", f"class {class_name}", code_def)
-                code_def = re.sub("->\s*None\s*:", "", code_def)
+                code_def = re.sub(r"->\s*None\s*:", "", code_def)
                 if prop == "Button":
                     print("@@@", code_def)
                     # print(inspect.getsource(p.__init__))
@@ -81,10 +82,7 @@ def read_module(file: str, root_name: str):
                 doc = trim_docstring(method.__doc__)
                 if doc.strip() != "":
                     method_doc += doc.strip() + "\n\n"
-                try:
-                    code = method.__code__
-                except Exception as e:
-                    print("###", e)
+                if type(p) is not types.FunctionType:
                     continue
                 def_code = get_function_definition(method, skip_self=True)
                 method_doc += "```py\n"
@@ -99,10 +97,15 @@ def read_module(file: str, root_name: str):
                 classes += method_doc
     if classes:
         result += f"# Classes of {root_name}.{module_name}\n\n"
+        if module_name == "widgets":
+            class_link = []
+            for class_name in elements:
+                class_link.append(f"- [{class_name}](#{class_name.lower()})")
+            result += "\n".join(class_link) + "\n\n"
         result += classes
         head_link.append(f"- [Classes](#classes-of-{root_name.lower()}{module_name.lower()})")
     # elements
-    if len(elements) > 0 and os.path.basename(file) == "widgets.py":
+    if len(elements) > 0 and module_name == "widgets":
         print("* elements:\n", elements)
         if "Window" in elements:
             elements.remove("Window")
@@ -122,7 +125,7 @@ def read_module(file: str, root_name: str):
         if prop.startswith("_"):
             continue
         p = getattr(mod, prop)
-        if str(type(p)) == "<class 'function'>":
+        if type(p) is types.FunctionType:
             doc = trim_docstring(p.__doc__)
             code = p.__code__
             def_code = get_function_definition(p)
