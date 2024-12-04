@@ -1796,7 +1796,7 @@ class Element(
     self,
     element_type: str, # element type
     ttk_style_name: str, # tkinter widget type
-    key: Union[str, int, None], # key
+    key: Optional[KeyType], # key
     has_value: bool, # has value
     metadata: Union[dict[str, Any], None] = None, # meta data
     **kw) 
@@ -8411,7 +8411,7 @@ def get_size(self) -> tuple[int, int]:
 Get values from the window.
 
 ```py
-def get_values(self) -> dict[str, Any]:
+def get_values(self) -> dict[KeyType, Any]:
 ```
 
 - [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L83)
@@ -8521,7 +8521,7 @@ def normal(self) -> None:
 Post an event.
 
 ```py
-def post_event(self, key: str, values: dict[str, Any]) -> None:
+def post_event(self, key: KeyType, values: dict[KeyType, Any]) -> None:
 ```
 
 - [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L83)
@@ -8531,7 +8531,7 @@ def post_event(self, key: str, values: dict[str, Any]) -> None:
 Post an event after msec.
 
 ```py
-def post_event_after(self, msec: int, key: str, values: dict[str, Any]) -> None:
+def post_event_after(self, msec: int, key: KeyType, values: dict[KeyType, Any]) -> None:
 ```
 
 - [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L83)
@@ -8545,7 +8545,7 @@ def read(
     self,
     timeout: Union[int, None] = None,
     timeout_key: str = WINDOW_TIMEOUT
-    ) -> tuple[str, dict[str, Any]]:
+    ) -> tuple[KeyType, dict[KeyType, Any]]:
 ```
 
 - [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L83)
@@ -8757,7 +8757,7 @@ Generate a unique id for a value element.
 def generate_element_id() -> int:
 ```
 
-- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/utils.py#L259)
+- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/utils.py#L260)
 
 ## generate_element_style_key
 
@@ -8767,7 +8767,7 @@ Get a unique id for an element.
 def generate_element_style_key(element_type: str) -> str:
 ```
 
-- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/utils.py#L229)
+- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/utils.py#L230)
 
 ## get_current_theme
 
@@ -8777,7 +8777,7 @@ Get current theme
 def get_current_theme() -> str:
 ```
 
-- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/utils.py#L190)
+- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/utils.py#L191)
 
 ## get_font_list
 
@@ -8814,7 +8814,7 @@ Get root window.
 def get_root_window() -> tk.Tk:
 ```
 
-- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/utils.py#L119)
+- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/utils.py#L120)
 
 ## get_system_info
 
@@ -8854,7 +8854,7 @@ Get ttk style
 def get_ttk_style() -> ttk.Style:
 ```
 
-- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/utils.py#L149)
+- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/utils.py#L150)
 
 ## image_resize
 
@@ -8896,10 +8896,10 @@ def imagefile_to_bytes(filename: str) -> bytes:
 Register element key.
 
 ```py
-def register_element_key(key: str) -> bool:
+def register_element_key(key: KeyType) -> bool:
 ```
 
-- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/utils.py#L244)
+- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/utils.py#L245)
 
 ## rgb
 
