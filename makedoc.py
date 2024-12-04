@@ -11,6 +11,7 @@ SCRIPT_DIR = os.path.dirname(__file__)
 OUTPUT_DIR = os.path.join(SCRIPT_DIR, "docs", "TkEasyGUI")
 DOCS_SCRIPTS_DIR = os.path.join(SCRIPT_DIR, "docs", "scripts")
 REPO = "https://github.com/kujirahand/tkeasygui-python/blob/main"
+
 def main():
     package_path = eg.__path__[0]
     print(package_path)
@@ -18,9 +19,14 @@ def main():
     root_name = eg.__package__
 
     # get modules
+    outputs = []
     files = glob.glob(os.path.join(package_path, "*.py"))
     for file in files:
         read_module(file, root_name)
+        outputs.append(file)
+    print("[output files]")
+    for file in outputs:
+        print("-", file)
 
 def read_module(file: str, root_name: str) -> None:
     module_name = os.path.basename(file).replace(".py", "")
@@ -55,12 +61,13 @@ def read_module(file: str, root_name: str) -> None:
             elements.append(class_name)
             # get init code
             if p.__init__ is not None:
-                print("@@@", prop)
+                print(f"- class {prop}")
                 code_def = get_function_definition(p.__init__, skip_self=True)
                 code_def = re.sub("^def __init__", f"class {class_name}", code_def)
                 code_def = re.sub(r"->\s*None\s*:", "", code_def)
                 if prop == "Button":
-                    print("@@@", code_def)
+                    # for DEBUG - print only button
+                    print("@@@ (debug)", code_def)
                     # print(inspect.getsource(p.__init__))
                 if code_def != "":
                     classes += "```py\n"
@@ -77,12 +84,14 @@ def read_module(file: str, root_name: str) -> None:
             for name, method in methods:
                 if name.startswith("_"):
                     continue
-                print("###", class_name, name)
+                print(f"  - (method) {module_name}.{class_name}.{name}")
                 method_doc += f"### {class_name}.{name}\n\n"
                 doc = trim_docstring(method.__doc__)
                 if doc.strip() != "":
                     method_doc += doc.strip() + "\n\n"
-                if type(p) is not types.FunctionType:
+                ff = getattr(p, name)
+                if not isinstance(ff, types.FunctionType):
+                    print("*** skip *** ", type(ff), class_name, name)
                     continue
                 def_code = get_function_definition(method, skip_self=True)
                 method_doc += "```py\n"
@@ -125,7 +134,8 @@ def read_module(file: str, root_name: str) -> None:
         if prop.startswith("_"):
             continue
         p = getattr(mod, prop)
-        if type(p) is types.FunctionType:
+        if isinstance(p, types.FunctionType):
+            print(f"- (func_type) {module_name}.{prop}")
             doc = trim_docstring(p.__doc__)
             code = p.__code__
             def_code = get_function_definition(p)
@@ -150,6 +160,7 @@ def read_module(file: str, root_name: str) -> None:
     # print(result)
     with open(output_file, "w", encoding="utf-8") as fp:
         fp.write(result)
+    print("- output=", output_file)
 
 def trim_docstring(doc):
     """docstringのインデントを整形する"""

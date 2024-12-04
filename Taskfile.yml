@@ -7,6 +7,7 @@ tasks:
   check:
     cmds:
       - ruff check
+      - mypy TkEasyGUI/
   test:
     cmds:
       - ruff check
