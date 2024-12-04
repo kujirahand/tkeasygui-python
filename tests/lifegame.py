@@ -3,7 +3,6 @@
 """
 
 import random
-import time
 
 import TkEasyGUI as eg
 
@@ -48,7 +47,9 @@ def create_gui(board):
     for i in range(ROWS):
         row = []
         for j in range(COLS):
-            row.append(eg.Text("", key=(i, j), size=(2, 1), pad=(0,0), enable_events=True))
+            row.append(
+                eg.Text("", key=f"b{i}-{j}", size=(2, 1), pad=(0, 0), enable_events=True)
+            )
         layout.append(row)
 
     window = eg.Window('Life Game', layout, row_padding=0, finalize=True)
@@ -59,7 +60,7 @@ def update_gui(window, board):
     for i in range(ROWS):
         for j in range(COLS):
             bg = "red" if board[i][j] == ALIVE else "black"
-            window[(i, j)].update(background_color=bg)
+            window[f"b{i}-{j}"].update(background_color=bg)
 
 # メイン関数
 def main():
@@ -68,11 +69,12 @@ def main():
     window = create_gui(board)
     paused = False
     while True:
-        event, _ = window.read(timeout=100 if not paused else None)
+        event, _ = window.read(timeout=200 if not paused else None)
         if event == eg.WINDOW_CLOSED:
             break
-        elif event != eg.TIMEOUT_KEY:
-            x, y = event
+        elif event.startswith("b"):
+            a = event[1:].split("-")
+            x, y = int(a[0]), int(a[1])
             if board[x][y] == ALIVE:
                 board[x][y] = DEAD
             else:
@@ -81,7 +83,6 @@ def main():
         else:
             board = calculate_next_generation(board)
             update_gui(window, board)
-            time.sleep(0.1)
     window.close()
 
 if __name__ == "__main__":

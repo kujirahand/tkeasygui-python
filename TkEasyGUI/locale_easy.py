@@ -4,7 +4,8 @@
 import locale
 from typing import Union
 
-_locale: str = ""
+# locale
+_locale: str = "" # locale cache
 # locale messages
 _locale_messages: dict[str, dict[str, str]] = {
     "ja": {
@@ -63,9 +64,11 @@ def get_locale() -> str:
     """get locale"""
     global _locale
     if _locale == "":
-        _locale = locale.getdefaultlocale()[0]
-        if "_" in _locale:
-            _locale = _locale.split("_")[0]
+        def_locale = locale.getdefaultlocale()
+        if len(def_locale) >= 1:
+            _locale = def_locale[0] if def_locale[0] is not None else "en"
+            if "_" in _locale:
+                _locale = _locale.split("_")[0]
     return _locale
 
 def set_locale(locale: str) -> None:

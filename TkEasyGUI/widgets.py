@@ -13,16 +13,14 @@ from enum import Enum
 from queue import Queue
 from tkinter import font as tkinter_font
 from tkinter import scrolledtext, ttk
-from typing import Any, Union
+from typing import Any, Callable, Optional, TypeAlias, Union
 
-# from typing import TypeAlias
 import PIL
 from PIL import ImageTk
 
 from . import dialogs, utils, version
 from .utils import (
     # type alias
-    Element,
     EventMode,
     FontType,
     ListboxSelectMode,
@@ -32,11 +30,6 @@ from .utils import (
     ReliefType,
     TextAlign,
     TextVAlign,
-    # Window,
-    _window_count,
-    _window_parent,
-    _window_pop,
-    _window_push,
     generate_element_id,
     generate_element_style_key,
     get_current_theme,
@@ -44,6 +37,14 @@ from .utils import (
     get_ttk_style,
     register_element_key,
 )
+
+# ------------------------------------------------------------------------------
+# TypeAlias
+# ------------------------------------------------------------------------------
+WindowType: TypeAlias = "Window"
+ElementType: TypeAlias = "Element"
+LayoutType = list[list["Element"]]
+KeyType = Union[str, int]
 
 #------------------------------------------------------------------------------
 # Const
@@ -54,10 +55,10 @@ WINDOW_TIMEOUT: str = "-TIMEOUT-"
 WINDOW_THREAD_END: str = "-THREAD_END-"
 TIMEOUT_KEY: str = WINDOW_TIMEOUT
 WINDOW_KEY_EVENT: str = "-WINDOW_KEY_EVENT-"
-LISTBOX_SELECT_MODE_MULTIPLE: str = "multiple"
-LISTBOX_SELECT_MODE_BROWSE: str = "browse"
-LISTBOX_SELECT_MODE_EXTENDED: str = "extended"
-LISTBOX_SELECT_MODE_SINGLE: str = "single"
+LISTBOX_SELECT_MODE_MULTIPLE: ListboxSelectMode = "multiple"
+LISTBOX_SELECT_MODE_BROWSE: ListboxSelectMode = "browse"
+LISTBOX_SELECT_MODE_EXTENDED: ListboxSelectMode = "extended"
+LISTBOX_SELECT_MODE_SINGLE: ListboxSelectMode = "single"
 TABLE_SELECT_MODE_NONE: str = tk.NONE
 TABLE_SELECT_MODE_BROWSE: str = tk.BROWSE
 TABLE_SELECT_MODE_EXTENDED: str = tk.EXTENDED
@@ -82,10 +83,10 @@ class Window:
     def __init__(
         self,
         title: str,
-        layout: list[list[Element]],  # set elements layout
+        layout: LayoutType,  # set elements layout
         size: Union[tuple[int, int], None] = None,  # window size
         resizable: bool = False,
-        font: Union[FontType, None] = None,
+        font: Optional[FontType] = None,
         modal: bool = False,  # modal window
         keep_on_top: bool = False,  # keep on top
         no_titlebar: bool = False,  # hide titlebar
@@ -98,14 +99,14 @@ class Window:
         row_padding: int = 2,  # row padding
         padding_x: int = 8,  # x padding around the window
         padding_y: int = 8,  # y padding around the window
-        icon: Union[str, None] = None,  # window icon, specify filename (Experimental)
+        icon: Optional[str] = None,  # window icon, specify filename (Experimental)
         show_scrollbar: bool = False,  # show scrollbar (Experimental)
         **kw,
     ) -> None:
         """Create a window with a layout of widgets."""
         self.modal: bool = modal
         # check active window
-        active_win = utils._get_active_window()
+        active_win: Any = _get_active_window()
         if active_win is None:
             active_win = get_root_window()
         self.title: str = title
@@ -113,14 +114,14 @@ class Window:
         self.timeout: Union[int, None] = None
         self.timeout_key: str = WINDOW_TIMEOUT
         self.timeout_id: Union[str, None] = None
-        self.events: Queue = Queue()
-        self.key_elements: dict[str, Element] = {}
-        self.last_values: dict[str, Any] = {}
+        self.events: Queue = Queue() # Queue[key, values]
+        self.key_elements: dict[KeyType, "Element"] = {}
+        self.last_values: dict[KeyType, Any] = {}
         self.flag_alive: bool = True # Pressing the close button will turn this flag to False.
-        self.layout: list[list[Element]] = layout
-        self._event_hooks: dict[str, list[callable]] = {}
+        self.layout: LayoutType = layout
+        self._event_hooks: dict[KeyType, list[Callable]] = {}
         self.font: Union[FontType, None] = font
-        self.radio_group_dict: dict[str, list[tk.IntVar, int]] = {} # value=[variable, last_id]
+        self.radio_group_dict: dict[str, tk.IntVar] = {} # [variable]
         self.radio_group_dict_keys: dict[str, list[str]] = {}
         self.checkbox_dict: dict[str, list[str]] = {}
         self.minimized: bool = False
@@ -165,10 +166,10 @@ class Window:
             self.frame_bar.pack(side=tk.RIGHT, fill=tk.Y)
             self.canvas.configure(yscrollcommand=self.frame_bar.set)
             # Frame
-            self.frame: tk.Frame = tk.Frame(self.canvas)
+            self.frame = tk.Frame(self.canvas)
             self.canvas.create_window((0, 0), window=self.frame, anchor=tk.NW)
         else:
-            self.frame: tk.Frame = tk.Frame(self.window)
+            self.frame = tk.Frame(self.window)
             self.frame.pack(expand=True, fill="both", padx=padding_x, pady=padding_y)
         # self.frame.configure(style="TFrame")
         # set window properties
@@ -191,7 +192,8 @@ class Window:
         if alpha_channel < 1.0:
             self.set_alpha_channel(alpha_channel)
         # font
-        self._calc_font_size(font)
+        if font is not None:
+            self._calc_font_size(font)
         # bind events
         if self.enable_key_events:
             self.window.bind("<Key>", lambda e: self._event_handler(
@@ -232,15 +234,15 @@ class Window:
         if elem is not None:
             elem.focus()
 
-    def post_event(self, key: str, values: dict[str, Any]) -> None:
+    def post_event(self, key: KeyType, values: dict[KeyType, Any]) -> None:
         """Post an event."""
         self.events.put((key, values))
 
-    def post_event_after(self, msec: int, key: str, values: dict[str, Any]) -> None:
+    def post_event_after(self, msec: int, key: KeyType, values: dict[KeyType, Any]) -> None:
         """Post an event after msec."""
         self.window.after(msec, self.events.put, (key, values))
 
-    def set_timeout(self, callback: callable, msec: int, *args, **kw) -> None:
+    def set_timeout(self, callback: Callable, msec: int, *args, **kw) -> None:
         """Set a timeout event."""
         self.window.after(msec, callback, *args, **kw)
 
@@ -297,7 +299,7 @@ class Window:
         """Finalize resource"""
         self.close()
 
-    def register_event_hooks(self, hooks: dict[str, list[callable]]) -> None:
+    def register_event_hooks(self, hooks: dict[str, list[Callable]]) -> None:
         """
         Register event hooks. (append hook events)
 
@@ -322,7 +324,7 @@ class Window:
                     self._event_hooks[event_name] = []
                 self._event_hooks[event_name].append(handle)
     
-    def _create_widget(self, parent: tk.Widget, layout: list[list["Element"]], align: TextAlign="left", valign: TextVAlign="top"):
+    def _create_widget(self, parent: tk.Widget, layout: LayoutType, align: TextAlign="left", valign: TextVAlign="top"):
         """create widget from layout"""
         # check layout
         if not (len(layout) > 0 and (isinstance(layout[0], list) or isinstance(layout[0], tuple))):
@@ -343,9 +345,9 @@ class Window:
             frame_prop = {"name": f"tkeasygui_frame_row_{row_no}"}
             if bgcolor is not None:
                 frame_prop["background"] = bgcolor
-            frame_row = tk.Frame(parent, **frame_prop)
+            frame_row = tk.Frame(parent, **frame_prop) # type: ignore
             # columns
-            prev_element: Element|None = None
+            prev_element: Union[Element, None] = None
             row_pack_prop: dict[str, Any] = {
                 "expand": False,
                 "fill": "x",
@@ -354,10 +356,10 @@ class Window:
             }
             # reversed?
             if align == "right":
-                widgets = reversed(widgets)
+                widgets = reversed(widgets)  # type: ignore
             for col_no, elemment in enumerate(widgets):
                 # create widget
-                elem: Element = elemment
+                elem = elemment
                 # set window and parent
                 elem.window = self
                 elem.parent = frame_row
@@ -370,11 +372,11 @@ class Window:
                 prev_element = elem
                 # create widget
                 try:
-                    elem_parent = frame_row
+                    elem_parent: Any = frame_row
                     if type(parent) == ttk.Notebook:
                         elem_parent = parent
-                    widget: tk.Widget = elem.create(self, elem_parent)
-                    widget.__tkeasygui = elem # type : ignore
+                    widget: Any = elem.create(self, elem_parent)
+                    widget.__tkeasygui = elem
                 except Exception as e:
                     print(e.__traceback__, file=sys.stderr)
                     raise TkEasyError(
@@ -410,9 +412,9 @@ class Window:
                 # Tab?
                 if isinstance(parent, ttk.Notebook):
                     # print("@@@@ TabGroup", type(parent), type(elem.widget), elem.get())
-                    parent.add(elem.widget, text=elem.get())
+                    parent.add(elem.widget, text=elem.get()) # type: ignore
                     if isinstance(elem, Tab):
-                        group:TabGroup = parent.__tkeasygui
+                        group:TabGroup = parent.__tkeasygui # type: ignore
                         tab: Tab = elem
                         if group.max_rows > tab.rows:
                             tab.rows = group.max_rows
@@ -496,13 +498,13 @@ class Window:
         size = self.window.geometry().split("+")[0].split("x")
         return (int(size[0]), int(size[1]))
 
-    def get_element_by_key(self, key: str) -> Union[Element, None]:
+    def get_element_by_key(self, key: str) -> Union["Element", None]:
         """Get an element by its key."""
         return self.key_elements[key] if key in self.key_elements else None
     
-    def get_elements_by_type(self, element_type: str) -> list[Element]:
+    def get_elements_by_type(self, element_type: str) -> list["Element"]:
         """Get elements by type."""
-        result: list[Element] = []
+        result: list["Element"] = []
         for rows in self.layout:
             for elem in rows:
                 if elem.element_type.lower() == element_type.lower():
@@ -513,7 +515,7 @@ class Window:
         self,
         timeout: Union[int, None] = None,
         timeout_key: str = WINDOW_TIMEOUT
-    ) -> tuple[str, dict[str, Any]]:
+    ) -> tuple[KeyType, dict[KeyType, Any]]:
         """ Read events from the window."""
         self.timeout = timeout
         self.timeout_key = timeout_key
@@ -525,7 +527,8 @@ class Window:
         # set focus timer (once when window show)
         self.window.after("idle", _focus_window, self)
         # mainloop for hook
-        key, values = (None, {}) # set default key and values
+        key: KeyType = ''
+        values: dict[KeyType, Any] = {} # set default key and values
         # mainloop - read a event
         while True:
             # set timeout
@@ -573,7 +576,7 @@ class Window:
     
     def start_thread(
         self,
-        target: callable,
+        target: Callable,
         end_key: str = WINDOW_THREAD_END,  # the thread processing is complete, end_key will be released
         *args,
         **kw,
@@ -628,7 +631,7 @@ class Window:
             event, values = self.read(timeout=timeout, timeout_key=timeout_key)
             yield (event, values)
 
-    def _dispatch_event_hooks(self, key: str, values: dict[str, Any]) -> bool:
+    def _dispatch_event_hooks(self, key: KeyType, values: dict[KeyType, Any]) -> bool:
         """Dispatch event hooks."""
         # execute _event_hooks
         flag_stop = False
@@ -685,9 +688,9 @@ class Window:
         self.window.attributes("-alpha", alpha)
         self.alpha_channel = alpha
 
-    def get_values(self) -> dict[str, Any]:
+    def get_values(self) -> dict[KeyType, Any]:
         """Get values from the window."""
-        values: dict[str, Any] = {}
+        values: dict[KeyType, Any] = {}
         for key,val in self.key_elements.items():
             if not val.has_value:
                 continue
@@ -699,12 +702,12 @@ class Window:
                 return self.last_values
         # add radio group
         for group, vals in self.radio_group_dict.items():
-            selected = vals[0].get()
+            selected = vals.get()
             values[group] = self.radio_group_dict_keys[group][selected - 1] if selected > 0 else ""
         # add checkbox group
-        for group, vals in self.checkbox_dict.items():
+        for group, check_keys in self.checkbox_dict.items():
             selected_keys = []
-            for key in vals:
+            for key in check_keys:
                 if values[key]:
                     selected_keys.append(key)
             values[group] = selected_keys
@@ -716,7 +719,7 @@ class Window:
         """Handle window idle event."""
         _exit_mainloop()
 
-    def _event_handler(self, key: str, values: Union[dict[str, Any], None]) -> None:
+    def _event_handler(self, key: Union[str, int], values: Union[dict[Union[str, int], Any], None]) -> None:
         """Handle an event."""
         # set value
         if values is None:
@@ -866,10 +869,14 @@ class Window:
             return
         mouse_x = self.window.winfo_x() + event.x
         mouse_y = self.window.winfo_y() + event.y
-        move_x = mouse_x - self._mouse_x
-        move_y = mouse_y - self._mouse_y
-        win_x = self._start_x + move_x
-        win_y = self._start_y + move_y
+        sx = self._start_x if self._start_x is not None else 0
+        sy = self._start_y if self._start_y is not None else 0
+        mx = self._mouse_x if self._mouse_x is not None else 0
+        my = self._mouse_y if self._mouse_y is not None else 0
+        move_x = mouse_x - mx
+        move_y = mouse_y - my
+        win_x = sx + move_x
+        win_y = sy + move_y
         self.window.geometry(f"+{win_x}+{win_y}")
 
     def _start_move_window(self, event: tk.Event) -> None:
@@ -899,10 +906,12 @@ class Window:
 
     def set_icon(self, icon: Union[bytes, str]) -> None:
         """Set the icon for the window."""
+        icon_image: tk.PhotoImage 
         if isinstance(icon, str): # filename str
-            icon = get_image_tk(filename=icon)
+            icon_image = get_image_tk(filename=icon) # type: ignore
         if isinstance(icon, bytes):
-            icon = tk.PhotoImage(data=icon)
+            icon_image = tk.PhotoImage(data=icon)
+        self._icon = icon_image
         try:
             root = get_root_window()
             root.iconbitmap(self._icon)
@@ -913,6 +922,8 @@ class Window:
 def _bind_event_handler(win: Window, elem: "Element", handle_name: str, event: tk.Event, propagate: bool=True, event_mode: EventMode = "user") -> None:
     """Handle an event."""
     elem.user_bind_event = event # for compatibility with PySimpleGUI
+    event_key: Union[str, int] = ''
+    event_val: dict[Union[str, int], Any] = {}
     if event_mode == "user":
         event_key = f"{elem.key}{handle_name}"
         event_val = {"event": event}
@@ -924,7 +935,7 @@ def _bind_event_handler(win: Window, elem: "Element", handle_name: str, event: t
             if key_elem.has_value:
                 val = key_elem.get()
                 event_val[key] = val
-        win.events.put((event_key, event_val))
+        win.events.put((event_key, event_val,))
     # propagate
     if propagate:
         # todo
@@ -958,46 +969,50 @@ element_propery_alias: dict[str, str] = {
     "caption": "text",
     "justify": "text_align"
 }
+
 class Element:
     """Element class."""
     def __init__(
             self,
             element_type: str, # element type
             ttk_style_name: str, # tkinter widget type
-            key: Union[str, None], # key
+            key: Optional[KeyType], # key
             has_value: bool, # has value
             metadata: Union[dict[str, Any], None] = None, # meta data
             **kw) -> None:
         """Create an element."""
         # define properties
+        # check key
         self.has_value: bool = has_value
-        self.key: str|int|None = key
-        if (self.key is not None) and (self.key != ""):
-            if not register_element_key(self.key): # for checking unique key
-                pass # raise TkEasyError(f"Element key is not unique: {self.key}")
-        if self.has_value and (self.key is None or self.key == ""):
+        self.key: str|int = ""
+        if key is not None:
+            self.key = key
+        if self.key != "":
+            if not register_element_key(str(self.key)):  # for checking unique key
+                pass  # raise TkEasyError(f"Element key is not unique: {self.key}")
+        if self.has_value and (self.key == ""):
             self.key = generate_element_id()
         self.element_type: str = element_type
         self.ttk_style_name: str = ttk_style_name
         self.use_ttk: bool = False # use ttk style
         self.metadata = metadata
-        self.style_name: str = self._generate_style_name(key)
+        self.style_name: str = self._generate_style_name(self.key)
         self.props: dict[str, Any] = kw
-        self.widget: Any|None = None
+        self.widget: Optional[Any] = None
         self.expand_x: bool = False
         self.expand_y: bool = False
         self.anchor: Union[str, None] = None
         self.has_children: bool = False
-        self.prev_element: Element|None = None
-        self.next_element: Element|None = None
-        self.window: Window|None = None
-        self.parent: tk.Widget|None = None
+        self.prev_element: Union["Element", None] = None
+        self.next_element: Union["Element", None] = None
+        self.window: Union[Window, None] = None
+        self.parent: Union[tk.Widget, None] = None
         self._bind_dict: dict[str, tuple[str, bool, EventMode]] = {}
-        self.user_bind_event: tk.Event|None = None # when bind event fired then set this value
+        self.user_bind_event: Union[tk.Event, None] = None # when bind event fired then set this value
         self.vertical_alignment: TextVAlign = "center"
         self.text_align: TextAlign = "left"
-        self.padx: int|tuple[int,int]|None = 1
-        self.pady: int|tuple[int,int]|None = None
+        self.padx: Union[int, tuple[int,int], None] = 1
+        self.pady: Union[int, tuple[int,int], None] = None
         self.font: Union[FontType, None] = None
         self.has_font_prop: bool = True
         self.col_no: int = -1
@@ -1030,7 +1045,7 @@ class Element:
         if self.window is not None:
             self.window.bind(self, event_name, handle_name, propagate=propagate, event_mode=event_mode)
 
-    def disptach_event(self, values: Union[dict[str, Any], None] = None) -> None:
+    def disptach_event(self, values: Union[dict[Union[str, int], Any], None] = None) -> None:
         """Dispatch event"""
         if values is None:
             values = {}
@@ -1046,9 +1061,10 @@ class Element:
         return "center"
 
     def _set_pack_props(self,
-                expand_x: Union[bool, None] = None,
-                expand_y: Union[bool, None] = None,
-                pad: PadType=None) ->None:
+            expand_x: Union[bool, None] = None,
+            expand_y: Union[bool, None] = None,
+            pad: Union[PadType, None] = None
+        ) -> None:
         """Set pack properties"""
         if expand_x is not None:
             self.expand_x = expand_x
@@ -1162,7 +1178,7 @@ class Element:
         state = tk.DISABLED if disabled else tk.NORMAL
         self._widget_update(state=state)
 
-    def bind_events(self, events: dict[str, str], event_mode: EventMode="user") -> Element:
+    def bind_events(self, events: dict[str, str], event_mode: EventMode="user") -> "Element":
         """
         Bind user events. @see [custom events](/docs/custom_events.md)
         The specification is such that if the suffix "/hide" is attached to an event key, that event key will not be returned to the user.
@@ -1223,7 +1239,7 @@ class Element:
                 height = self.props.pop("height")
                 self.pady = (height-1)//2
     
-    def _generate_style_name(self, style_key: Union[str, None]) -> str:
+    def _generate_style_name(self, style_key: Union[str|int, None]) -> str:
         """generate style name"""
         if style_key is None or style_key == "":
             style_key = generate_element_style_key(self.element_type)
@@ -1256,15 +1272,19 @@ class Element:
         except Exception as e:
             print(f"TkEasyGUI.Element._widget_update.Error: key='{self.key}', props={kw}. {e}", file=sys.stderr)
 
-    def get_prev_widget(self, target_key: Union[str, None] = None) -> tk.Widget:
+    def get_prev_element(self, target_key: Union[str, None] = None) -> Union["Element", None]:
         """Get the previous widget."""
+        if self.window is None:
+            return None
         # check target_key
-        target: tk.Widget = None
+        target: Union["Element", None] = None
         if target_key:
             if target_key in self.window.key_elements:
                 target = self.window.key_elements[target_key]
                 return target
         # get prev_widget
+        if self.prev_element is None:
+            return None
         return self.prev_element
 
     def __getattr__(self, name: str) -> Any:
@@ -1298,7 +1318,7 @@ class Frame(Element):
     def __init__(
         self,
         title: str,
-        layout: list[list[Element]],
+        layout: LayoutType,
         key: str = "",
         size: Union[tuple[int, int], None] = None,
         relief: ReliefType = "groove",
@@ -1327,7 +1347,8 @@ class Frame(Element):
         self.label_outside = label_outside
         self.props["text"] = title
         self.props["relief"] = relief
-        self.text_align = text_align
+        if text_align is not None:
+            self.text_align = text_align
         self.vertical_alignment = vertical_alignment
         self._set_text_props(color=color, text_color=text_color, background_color=background_color, font=font)
         self._set_pack_props(expand_x=expand_x, expand_y=expand_y, pad=pad)
@@ -1366,7 +1387,7 @@ class Column(Element):
     """Frame element."""
     def __init__(
                 self,
-                layout: list[list[Element]],
+                layout: LayoutType,
                 key: str = "",
                 background_color: Union[str, None] = None,
                 vertical_alignment: TextVAlign="top",
@@ -1384,7 +1405,8 @@ class Column(Element):
         super().__init__("Column", "TFrame", key, False, metadata, **kw)
         self.has_children = True
         self.layout = layout
-        self.text_align = text_align
+        if text_align is not None:
+            self.text_align = text_align
         self.vertical_alignment = vertical_alignment
         self.has_font_prop = False
         self.use_ttk = False
@@ -1446,7 +1468,7 @@ class Tab(Element):
     def __init__(
         self,
         title: str,
-        layout: list[list[Element]],
+        layout: LayoutType,
         key: str = "",
         background_color: Union[str, None] = None,
         vertical_alignment: TextVAlign = "top",
@@ -1465,7 +1487,8 @@ class Tab(Element):
         self.has_children = True
         self.title = title
         self.layout = layout
-        self.text_align = text_align
+        if text_align is not None:
+            self.text_align = text_align
         self.vertical_alignment = vertical_alignment
         self.has_font_prop = False
         self.use_ttk = False
@@ -1499,7 +1522,6 @@ class Tab(Element):
             return self.widget
         return super().__getattr__(name)
 
-
 class TabGroup(Element):
     """
     (experimental) TabGroup element - Specify the Tab element for the child elements.
@@ -1525,7 +1547,7 @@ class TabGroup(Element):
     """
     def __init__(
         self,
-        layout: Union[list[list["TabGroup"]], list["TabGroup"]],
+        layout: Union[list[list[Tab]], list[Tab]],
         key: str = "",
         background_color: Union[str, None] = None,
         vertical_alignment: TextVAlign = "top",
@@ -1546,12 +1568,13 @@ class TabGroup(Element):
         if layout is None:
             layout = []
         if len(layout) > 0:
-            if not isinstance(layout[0], list):
-                layout = [layout]
-            if not isinstance(layout[0][0], Tab):
+            if not isinstance(layout[0], list): # type: ignore
+                layout = [layout] # type: ignore
+            if not isinstance(layout[0][0], Tab): # type: ignore
                 raise ValueError("TabGroup layout should be list of Tab")
         self.layout = layout
-        self.text_align = text_align
+        if text_align is not None:
+            self.text_align = text_align
         self.vertical_alignment = vertical_alignment
         self.has_font_prop = False
         self.use_ttk = True
@@ -1688,7 +1711,7 @@ class Menu(Element):
         self.widget = tk.Menu(win.window)
         win.window.config(menu=self.widget)
         # make items
-        self._create_menu(self.widget, self.items, 0)
+        self._create_menu(self.widget, self.items, 0) # type: ignore
         return self.widget
     
     def _add_command(self, parent: tk.Menu, label: str) -> None:
@@ -1706,7 +1729,7 @@ class Menu(Element):
             label, key = label.split("::")
         parent.add_command(
             label=label, 
-            state=state,
+            state=state, # type: ignore
             command=lambda : self.disptach_event({EG_SWAP_EVENT_NAME: key}))
 
     def _create_menu(self, parent: tk.Menu, items: list[list[Union[str, list[Any]]]], level:int = 0) -> None:
@@ -1730,7 +1753,7 @@ class Menu(Element):
                     i += 2
                     continue
             if isinstance(item, list):
-                self._create_menu(parent, item, level+1)
+                self._create_menu(parent=parent, items=item, level=level+1) # type: ignore
                 i += 1
                 continue
             # others
@@ -1750,10 +1773,12 @@ class Menu(Element):
 
     def update(self, menu_definition: Union[list[list[Union[str, list[Any]]]], None] = None, *args, **kw) -> None:
         """Update the widget."""
+        if self.window is None:
+            return
         if menu_definition is not None:
             self.widget = tk.Menu(self.window.window)
             self._create_menu(self.widget, menu_definition, 0)
-            self.window.window.config(menu=self.widget)
+            self.window.window.config(menu=self.widget) # type: ignore
         self._widget_update(**kw)
 
 class Button(Element):
@@ -1840,7 +1865,7 @@ class Button(Element):
         else:
             props["background_color"] = button_color
         if update:
-            self._widget_update(props)
+            self._widget_update(**props)
 
     def get(self) -> Any:
         """Returns the text of the button.."""
@@ -1891,11 +1916,11 @@ class CloseButton(Button):
         key = button_text if (key is None) or (key == "") else key
         super().__init__(button_text=button_text, key=key, **kw)
 
-    def create(self, win: Window, parent: tk.Widget) -> tk.Widget:
+    def create(self, win: Window, parent: tk.Widget) -> Any:
         """Create a Button widget."""
         super().create(win, parent)
         win.register_event_hooks({
-            self.key: [
+            str(self.key): [
                 lambda _event, _value: self.close_window()
             ]
         })
@@ -1903,7 +1928,8 @@ class CloseButton(Button):
     
     def close_window(self) -> None:
         """Close the window."""
-        self.window.close()
+        if self.window is not None:
+            self.window.close()
 
 class Submit(Button):
     """Subtmi element. (Alias of Button) : todo: add submit event"""
@@ -1937,7 +1963,7 @@ class Checkbox(Element):
         if self.group_id:
             if self.group_id not in win.checkbox_dict:
                 win.checkbox_dict[self.group_id] = []
-            win.checkbox_dict[self.group_id].append(self.key)
+            win.checkbox_dict[self.group_id].append(str(self.key))
         # create checkbox
         self.checkbox_var = tk.BooleanVar(value=self.default_value)
         self.checkbox_var.trace_add("write", lambda *args: self.disptach_event({"event_type": "change", "event": args}))
@@ -1976,7 +2002,8 @@ class Checkbox(Element):
 class Radio(Element):
     """Checkbox element."""
     def __init__(
-                self, text: str="",
+                self,
+                text: str = "",
                 group_id: Union[int, str] = "group",
                 default: bool = False,
                 key: Union[str, None] = None,
@@ -1989,7 +2016,8 @@ class Radio(Element):
         super().__init__("Radio", "TRadiobutton", key, True, metadata, **kw)
         self.use_ttk = True
         self.default_value = default
-        self.value: int = 0
+        self.value: int = 0 # id
+        self.text: str = text
         self.props["text"] = text
         self.group_id: str = str(group_id)
         self.created_radio = False
@@ -2000,10 +2028,10 @@ class Radio(Element):
 
     def create(self, win: Window, parent: tk.Widget) -> tk.Widget:
         # post change event
-        def post_change_event(*args):
+        def post_change_event(*args) -> None:
             if not self.created_radio:
                 return
-            selected_key: str = self.key
+            selected_key: KeyType = self.key if self.key else self.text
             values = win.get_values()
             for k in values.keys():
                 if values[k] is True:
@@ -2011,21 +2039,21 @@ class Radio(Element):
             values['event_type'] = "change"
             win.post_event(selected_key, values)
         # create radio group
+        key: str = str(self.key) if self.key else self.text
         if self.group_id not in win.radio_group_dict:
-            win.radio_group_dict[self.group_id] = [tk.IntVar(value=0), 1] # list of [variable, id]
-            win.radio_group_dict[self.group_id][0].trace_add(
+            win.radio_group_dict[self.group_id] = tk.IntVar(value=0)
+            win.radio_group_dict[self.group_id].trace_add(
                 "write", lambda *args: post_change_event(*args)
             )
-            win.radio_group_dict_keys[self.group_id] = [self.key]
+            win.radio_group_dict_keys[self.group_id] = [key]
         else:
-            win.radio_group_dict[self.group_id][1] += 1
-            win.radio_group_dict_keys[self.group_id].append(self.key)
-        self.value = win.radio_group_dict[self.group_id][1]
+            win.radio_group_dict_keys[self.group_id].append(key)
+        self.value = len(win.radio_group_dict_keys[self.group_id])
         # create radiobutton
         self.widget = ttk.Radiobutton(
             parent,
             value=self.value,
-            variable=win.radio_group_dict[self.group_id][0],
+            variable=win.radio_group_dict[self.group_id],
             style=self.style_name,
             **self.props)
         if self.default_value:
@@ -2035,14 +2063,18 @@ class Radio(Element):
     
     def select(self) -> None:
         """Select the radio button."""
-        self.window.radio_group_dict[self.group_id][0].set(self.value)
+        if self.window is None:
+            return
+        self.window.radio_group_dict[self.group_id].set(self.value)
     
     def is_selected(self) -> bool:
         """Check if the radio button is selected."""
-        return self.window.radio_group_dict[self.group_id][0].get() == self.value
+        if self.window is None:
+            return False
+        return self.window.radio_group_dict[self.group_id].get() == self.value
 
-    def get_value(self) -> bool:
-        """Get the value of the widget."""
+    def get_value(self) -> int:
+        """This method returns the id of an element within a group."""
         return self.value
 
     def get(self) -> Any:
@@ -2218,7 +2250,7 @@ class Input(Element):
     def copy(self) -> str:
         """copy to clipboard"""
         if self.widget is None:
-            return
+            return ""
         text = self.get_selected_text()
         utils.set_clipboard(text)
         return text
@@ -2226,14 +2258,14 @@ class Input(Element):
     def cut(self) -> str:
         """cut to clipboard"""
         if self.widget is None:
-            return
+            return ""
         self.copy()
         return self.delete_selected()
     
     def delete_selected(self) -> str:
         """delete selected text"""
         if self.widget is None:
-            return
+            return ""
         try:
             text = self.get_selected_text()
             self.widget.delete(tk.SEL_FIRST, tk.SEL_LAST)
@@ -2249,12 +2281,14 @@ class Input(Element):
         self.delete_selected()
         # insert
         text = utils.get_clipboard()
-        input: tk.Entry = self.widget
+        input: tk.Entry = self.widget # type: ignore
         current_cursor_position = input.index(tk.INSERT)
         input.insert(current_cursor_position, text)
     
     def get_selection_pos(self) -> tuple[int, int]:
         """get selection positions"""
+        if self.widget is None:
+            return (0, 0)
         try:
             entry: tk.Entry = self.widget
             start_pos = entry.index(tk.SEL_FIRST)
@@ -2262,19 +2296,25 @@ class Input(Element):
             return start_pos, end_pos
         except Exception as _:
             cur = self.get_cursor_pos()
-            return [cur, cur]
+            return (cur, cur)
     
     def get_cursor_pos(self) -> int:
         """get cursor position"""
+        if self.widget is None:
+            return 0
         cursor_pos = self.widget.index(tk.INSERT)
         return cursor_pos
 
     def set_cursor_pos(self, index: int) -> None:
         """set cursor position"""
+        if self.widget is None:
+            return
         self.widget.icursor(index)
  
     def get_selection_start(self) -> int:
         """get selection start"""
+        if self.widget is None:
+            return 0
         try:
             entry: tk.Entry = self.widget
             start_pos = entry.index(tk.SEL_FIRST)
@@ -2282,8 +2322,10 @@ class Input(Element):
         except Exception as _:
             return self.get_cursor_pos()
 
-    def get_selection_length(self) -> tuple[int, int]:
+    def get_selection_length(self) -> int:
         """get selection length"""
+        if self.widget is None:
+            return 0
         try:
             entry: tk.Entry = self.widget
             start_pos = entry.index(tk.SEL_FIRST)
@@ -2294,6 +2336,8 @@ class Input(Element):
     
     def set_selection_start(self, sel_start: int, sel_length: int=0) -> None:
         """set selection start and length"""
+        if self.widget is None:
+            return
         try:
             entry: tk.Entry = self.widget
             sel_end = sel_start + sel_length
@@ -2340,7 +2384,8 @@ class Multiline(Element):
         self.props["size"] = size
         self._set_text_props(font=font, color=color, text_color=text_color, background_color=background_color)
         self._set_pack_props(expand_x=expand_x, expand_y=expand_y, pad=pad)
-        self.text_align = text_align
+        if text_align is not None:
+            self.text_align = text_align
         if readonly_background_color is not None:
             self.readonly_background_color = readonly_background_color
         self.has_value = True
@@ -2492,7 +2537,7 @@ class Multiline(Element):
             return ("", "")
         try:
             sel_start, sel_end = self.widget.tag_ranges("sel")
-            return (sel_start, sel_end)
+            return (sel_start, sel_end) # type: ignore
         except Exception as _:
             pos = self.get_cursor_pos()
             return (pos, pos)
@@ -2508,10 +2553,10 @@ class Multiline(Element):
         except Exception as _:
             self.set_cursor_pos(start_pos)
 
-    def pos_to_index(self, pos: str) -> str:
+    def pos_to_index(self, pos: str) -> int:
         """Convert position to index."""
-        row, col = pos.split(".")
-        row, col = int(row), int(col)
+        row_s, col_s = pos.split(".")
+        row, col = int(row_s), int(col_s)
         text = self.get_text()
         retcode = "\r\n" if "\r\n" in text else "\n"
         retcode_len = len(retcode)
@@ -2563,11 +2608,14 @@ class Multiline(Element):
             return 0
         try:
             sel_start, _ = self.widget.tag_ranges("sel")
-            return self.pos_to_index(sel_start)
+            return int(self.pos_to_index(sel_start)) # type: ignore
         except Exception as _:
             pos = self.get_cursor_pos()
-            return self.pos_to_index(pos)
-        
+            try:
+                return int(self.pos_to_index(pos))
+            except ValueError as _:
+                return 0
+
     def set_selection_start(self, index: int, sel_length: int=0) -> None:
         """set selection start"""
         pos1 = self.index_to_pos(index)
@@ -2628,7 +2676,7 @@ class Slider(Element):
                 self,
                 range: tuple[float, float] = (1, 10), # value range (from, to)
                 default_value: Union[float, None] = None, # default value
-                resolution: Union[float, None] = None, # value resolution
+                resolution: float = 1, # value resolution
                 orientation: OrientationType = "horizontal", # orientation (h|v|horizontal|vertical)
                 tick_interval: Union[float, None] = None, # tick marks interval on the scale
                 enable_events: bool = False, # enable changing events
@@ -2690,7 +2738,7 @@ class Slider(Element):
         self.scale_var = tk.DoubleVar()
         self.scale_var.set(self.default_value)
         # command
-        command = None
+        command: Union[str, Callable] = ''
         def on_command(*event):
             self.disptach_event({"event_type": "change", "event": event})
         if self.enable_events:
@@ -2712,14 +2760,14 @@ class Slider(Element):
     
     def set(self, value: float) -> None:
         """Set value of Slider"""
-        self.widget.set(value)
-    
+        self.widget.set(value)  # type: ignore
+
     def set_range(self, from_: float, to: float) -> None:
         """Set the range of the slider."""
-        self.widget.config(from_=from_, to=to)
+        self.widget.config(from_=from_, to=to)  # type: ignore
 
     def get_range(self) -> tuple[float, float]:
-        return (self.widget.cget("from"), self.widget.cget("to"))
+        return (self.widget.cget("from"), self.widget.cget("to"))  # type: ignore
 
     def update(
         self,
@@ -2771,7 +2819,7 @@ class Canvas(Element):
     
     def clear(self) -> None:
         """Clear the canvas."""
-        self.widget.delete("all")
+        self.widget.delete("all")  # type: ignore
 
     def get(self) -> Any:
         """Return Widget"""
@@ -2835,26 +2883,26 @@ class Graph(Element):
     
     def draw_line(self, point_from: PointType, point_to: PointType, color: str = 'black', width: int = 1) -> int:
         """Draw a line."""
-        return self.widget.create_line(point_from, point_to, fill=color, width=width)
-    
+        return self.widget.create_line(point_from, point_to, fill=color, width=width)  # type: ignore
+
     def draw_lines(self, points: list[PointType], color='black', width=1) -> int:
         """Draw lines."""
-        return self.widget.create_line(points, fill=color, width=width)
-    
+        return self.widget.create_line(points, fill=color, width=width)  # type: ignore
+
     def draw_point(self, point: PointType, size: int = 2, color: str = 'black') -> int:
         """Draw a point."""
         x, y = point
         size2: float = size / 2
-        return self.widget.create_oval(x-size2, y-size2, x+size2, y+size2, fill=color)
-    
+        return self.widget.create_oval(x-size2, y-size2, x+size2, y+size2, fill=color)  # type: ignore
+
     def draw_circle(self, center_location: PointType, radius: Union[int, float], fill_color: Union[str, None] = None, line_color: Union[str, None] = 'black', line_width: int = 1) -> int:
         """Draw a circle."""
         x, y = center_location
-        return self.widget.create_oval(x-radius, y-radius, x+radius, y+radius, fill=fill_color, outline=line_color, width=line_width)
+        return self.widget.create_oval(x-radius, y-radius, x+radius, y+radius, fill=fill_color, outline=line_color, width=line_width)  # type: ignore
 
     def draw_oval(self, top_left: PointType, bottom_right: PointType, fill_color: Union[str, None] = None, line_color: Union[str, None] = None, line_width: int = 1):
         """Draw an oval."""
-        return self.widget.create_oval(top_left, bottom_right, fill=fill_color, outline=line_color, width=line_width)
+        return self.widget.create_oval(top_left, bottom_right, fill=fill_color, outline=line_color, width=line_width) # type: ignore
     
     def draw_arc(self, top_left: PointType, bottom_right: PointType, extent: Union[int, None] = None, start_angle: Union[int, None] = None, style: Union[str, None] = None, arc_color: Union[str, None] = 'black', line_width: int = 1, fill_color: Union[str, None] = None) -> int:
         """Draw an arc."""
@@ -2862,21 +2910,21 @@ class Graph(Element):
     
     def erase(self) -> None:
         """Delete all"""
-        self.widget.delete("all")
-    
+        self.widget.delete("all")  # type: ignore
+
     def draw_rectangle(self, top_left: PointType, bottom_right: PointType, fill_color: Union[str, None] = None, line_color: Union[str, None] = None, line_width: Union[int, None] = None) -> int:
         """Draw rectangle"""
-        return self.widget.create_rectangle(top_left[0], top_left[1], bottom_right[0], bottom_right[1], fill=fill_color, outline=line_color, width=line_width)
-    
+        return self.widget.create_rectangle(top_left[0], top_left[1], bottom_right[0], bottom_right[1], fill=fill_color, outline=line_color, width=line_width)  # type: ignore
+
     def draw_polygon(self, points: list[PointType], fill_color: Union[str, None] = None, line_color: Union[str, None] = None, line_width: Union[int, None] = None) -> None:
         """Draw polygon"""
-        return self.widget.create_polygon(points, fill=fill_color, outline=line_color, width=line_width)
-    
-    def draw_text(self, text: str, location: PointType, color: Union[str, None]='black', font: FontType = None, angle: Union[float, str, None] = 0, text_location: TextAlign = tk.CENTER) -> int:
+        return self.widget.create_polygon(points, fill=fill_color, outline=line_color, width=line_width)  # type: ignore
+
+    def draw_text(self, text: str, location: PointType, color: Union[str, None]='black', font: Union[FontType, None] = None, angle: Union[float, str, None] = 0, text_location: TextAlign = tk.CENTER) -> int:
         """Draw text"""
         x, y = location
         anchor = {"left": "w", "right": "e", "center": "center"}[text_location]
-        return self.widget.create_text(x, y, text=text, font=font, fill=color, angle=angle, anchor=anchor)
+        return self.widget.create_text(x, y, text=text, font=font, fill=color, angle=angle, anchor=anchor)  # type: ignore
     
     def draw_image(self, filename: Union[str, None] = None, data: Union[bytes, None] = None, location: Union[PointType, None] = None) -> int:
         """Draw image"""
@@ -2884,7 +2932,7 @@ class Graph(Element):
         if location is None:
             location = (0, 0)
         # load image
-        image: tk.PhotoImage|None = get_image_tk(filename=filename, data=data)
+        image: Union[ImageTk.PhotoImage, None] = get_image_tk(filename=filename, data=data)
         # important
         self.widget.image = image # type: ignore
         return self.widget.create_image(location, image=image, anchor=tk.NW)
@@ -2901,24 +2949,30 @@ class ImageResizeType(Enum):
 class Image(Element):
     """Image element."""
     def __init__(
-                self,
-                source: Union[bytes, str, None] = None, # image source
-                filename = None, # filen ame
-                data: bytes = None, # image data
-                key: Union[str, None] = None,
-                background_color: Union[str, None] = None, # background color (example) "red", "#FF0000"
-                size: tuple[int, int] = (300, 300),
-                enable_events: bool = False,
-                # other
-                metadata: Union[dict[str, Any], None] = None,
-                **kw) -> None:
+        self,
+        source: Union[bytes, str, None] = None,  # image source
+        filename=None,  # filen ame
+        data: Union[bytes, PIL.Image.Image, None] = None,  # image data
+        key: Union[str, None] = None,
+        background_color: Union[
+            tuple[int, int, int], str, None
+        ] = None,  # background color (example) "red", "#FF0000"
+        size: tuple[int, int] = (300, 300),
+        enable_events: bool = False,
+        # other
+        metadata: Union[dict[str, Any], None] = None,
+        **kw,
+    ) -> None:
         super().__init__("Image", "", key, False, metadata, **kw)
         self.has_font_prop = False
         self.source = source
         self.filename = filename
         self.data = data
         self.size = self.props["size"] = size
-        self.background_color = background_color
+        if isinstance(background_color, tuple):
+            background_color = rgb(
+                background_color[0], background_color[1], background_color[2])
+        self.background_color: str = background_color if background_color is not None else "white"
         if background_color is not None:
             self.props["background"] = background_color
         if enable_events:
@@ -2946,9 +3000,9 @@ class Image(Element):
 
     def erase(self) -> None:
         """Erase image"""
-        self.widget.delete("all")
+        self.widget.delete("all") # type: ignore
 
-    def screenshot(self) -> PIL.Image:
+    def screenshot(self) -> PIL.Image.Image:
         """Take a screenshot"""
         screen_image = utils.screenshot()
         self.set_image(data=screen_image, size=self.size)
@@ -2958,10 +3012,12 @@ class Image(Element):
         self,
         source: Union[bytes, str, None] = None,
         filename: Union[str, None] = None,
-        data: Union[bytes, None] = None,
+        data: Union[bytes, PIL.Image.Image, None] = None,
         size: Union[tuple[int, int], None] = None,
         resize_type: ImageResizeType = ImageResizeType.FIT_BOTH,
-        background_color: Union[str, None] = None,  # background color (example) "red", "#FF0000"
+        background_color: Union[
+            tuple[int, int, int], str, None
+        ] = None,  # background color (example) "red", "#FF0000"
     ) -> None:
         """
         Set image to Image widget.
@@ -2970,9 +3026,14 @@ class Image(Element):
         if self.widget is None:
             return
         # set 
-        self.filename = filename
-        self.data = data
+        if filename is not None:
+            self.filename = filename
+        if data is not None:
+            self.data = data
         if background_color is not None:
+            if isinstance(background_color, tuple):
+                background_color = rgb(
+                    background_color[0], background_color[1], background_color[2])
             self.background_color = background_color
         # erase
         self.erase()
@@ -2991,18 +3052,22 @@ class Image(Element):
         data: Union[bytes, None] = None,
         size: Union[tuple[int, int], None] = None,
         resize_type: ImageResizeType = ImageResizeType.FIT_BOTH,
-        background_color: Union[tuple[int, int, int], None] = None,
+        background_color: Union[tuple[int, int, int], str, None] = None,
         **kw,
     ) -> None:
         """Update the widget."""
         if size is not None:
             self.size = size
-            self.widget.configure(width=size[0], height=size[1])
+            if self.widget is not None:
+                self.widget.configure(width=size[0], height=size[1])
         if background_color is not None:
+            if isinstance(background_color, tuple):
+                background_color = rgb(
+                    background_color[0], background_color[1], background_color[2])
             self.background_color = background_color
             self.props["background"] = background_color
         if (source is not None) or (filename is not None) or (data is not None):
-            self.set_image(source, filename, data, size=self.size, resize_type=resize_type, background_color=background_color)
+            self.set_image(source=source, filename=filename, data=data, size=self.size, resize_type=resize_type, background_color=background_color)
         self._widget_update(**kw)
     
     def __getattr__(self, name):
@@ -3024,7 +3089,6 @@ class VSeparator(Element):
                 **kw) -> None:
         super().__init__("VSeparator", "TSeparator", key, False, metadata, **kw)
         self.use_ttk = True
-        size = (pad, size[1])
         self.size = self.props["size"] = size
         self.props["padx"] = pad
         if background_color is not None:
@@ -3048,7 +3112,6 @@ class HSeparator(Element):
                 **kw) -> None:
         super().__init__("HSeparator", "TSeparator", key, False, metadata, **kw)
         self.use_ttk = True
-        size = (size[1], pad)
         self.size = self.props["size"] = size
         self.props["pady"] = pad
         if background_color is not None:
@@ -3106,8 +3169,21 @@ class Listbox(Element):
         self.select_values(self.default_values)
         return self.widget_frame
 
-    def select_values(self, values: tuple[list[str], None]) -> None:
-        """Select values"""
+    def select_values(self, values: Union[list[str], None]) -> None:
+        """
+        Select values in Listbox.
+        **example**
+        ```py
+        import TkEasyGUI as eg
+        with eg.Window("Sample", layout=[
+            [eg.Listbox(["A", "B", "C"], key="a_list", select_mode="multiple")],
+            [eg.Button("Select")],
+        ]) as win:
+            for event, values in win.event_iter():
+                if event == "Select":
+                    win["a_list"].select_values(["A", "B"]) # select A and B
+        ```
+        """
         if self.widget is None:
             return
         if values is None:
@@ -3221,11 +3297,15 @@ class Combo(Element):
     
     def set_value(self, v: str) -> None:
         """Set the value of the widget."""
+        if self.value is None:
+            return None
         self.value.set(v)
 
     def get(self) -> Any:
         """Get the value of the widget."""
         if self.widget is None:
+            return None
+        if self.value is None:
             return None
         return self.value.get()
 
@@ -3301,9 +3381,9 @@ class Table(Element):
             self.event_returns_values = event_returns_values 
         # justification
         if justification is not None:
-            self.justification: str = self._justify_to_anchor(justification)
+            self.justification = self._justify_to_anchor(justification)
         if text_align is not None:
-            self.justification: str = self._justify_to_anchor(justification)
+            self.justification = self._justify_to_anchor(justification)
         # set props
         self._set_text_props(font=font, color=color, text_color=text_color, background_color=background_color)
         self._set_pack_props(expand_x=expand_x, expand_y=expand_y, pad=pad)
@@ -3337,10 +3417,10 @@ class Table(Element):
         self.props["font"] = font
         # - SCROLLBAR
         scrollbar = tk.Scrollbar(self.frame, orient=tk.VERTICAL, command=tree.yview)
-        tree.configure(yscroll=scrollbar.set)
+        tree.configure(yscroll=scrollbar.set) # type: ignore
         if not self.vertical_scroll_only:
             hscrollbar = ttk.Scrollbar(self.frame, orient="horizontal", command=tree.xview)
-            tree.configure(xscroll=hscrollbar.set)
+            tree.configure(xscroll=hscrollbar.set) # type: ignore
         # - pack to frame
         tree.grid(row=0, column=0, sticky="nsew")
         scrollbar.grid(row=0, column=1, sticky="ns")
@@ -3410,7 +3490,8 @@ class Table(Element):
 
     def _table_events(self, _event: Any) -> None:
         """Handle events."""
-        self.window._event_handler(self.key, {})
+        if (self.window is not None) and (self.key is not None):
+            self.window._event_handler(self.key, {})
 
     def update(self, *args, **kw) -> None:
         """Update the widget."""
@@ -3423,17 +3504,19 @@ class Table(Element):
             new_heading = kw["headings"]
             del kw["headings"]
             # ヘッダ更新処理 #54
-            # 旧ヘッダを処理
-            for i, _h in enumerate(self.headings):
-                h2 = new_heading[i] if len(new_heading) > i else ""
-                self.widget.heading(i+1, text=h2, anchor="center")
-                if h2 == "":
-                    self.widget.column(i+1, width=0)
-            # 新ヘッダを処理
-            for i, h in enumerate(new_heading):
-                self.widget.heading(i+1, text=h, anchor="center")
-                self.widget.column(i+1, width=100, stretch=tk.YES)
-            self.headings = new_heading
+            if self.widget is not None:
+                wid: ttk.Treeview = self.widget
+                # 旧ヘッダを処理
+                for i, _h in enumerate(self.headings):
+                    h2 = new_heading[i] if len(new_heading) > i else ""
+                    wid.heading(i+1, text=h2, anchor="center")
+                    if h2 == "":
+                        wid.column(i+1, width=0)
+                # 新ヘッダを処理
+                for i, h in enumerate(new_heading):
+                    wid.heading(i+1, text=h, anchor="center")
+                    wid.column(i+1, width=100, stretch=tk.YES)
+                self.headings = new_heading
 
         if "values" in kw:
             self.values = kw["values"]
@@ -3477,7 +3560,7 @@ class FileBrowse(Element):
     """
     def __init__(
                 self, button_text: str="...",
-                key: Union[str, None] = None,
+                key: Union[str, int, None] = None,
                 title: str = "",
                 target_key: Union[str, None] = None,
                 file_types: tuple[tuple[str, str]] = (("All Files", "*.*"),),
@@ -3514,22 +3597,22 @@ class FileBrowse(Element):
         })
         return self.widget
     
-    def _get_initial_directory(self) -> str:
-        target: tk.Widget = self.get_prev_widget(self.target_key)
+    def _get_initial_directory(self) -> Union[str, None]:
+        target: Union[Element, None] = self.get_prev_element(self.target_key)
         # get initial directory
-        init_dir = self.initial_folder
+        init_dir: Union[str, None] = self.initial_folder
         if target is not None:
             try:
-                target_text = str(target.get())
+                target_text = str(target.get()) # type: ignore
             except Exception:
                 target_text = ""
             if target_text != "":
                 init_dir = os.path.dirname(target_text)
         return init_dir
 
-    def show_dialog(self, *args) -> Union[str, None]:
+    def show_dialog(self, *args) -> Union[Any, None]:
         """Show file dialog"""
-        target: tk.Widget = self.get_prev_widget(self.target_key)
+        target: Union[Element, None] = self.get_prev_element(self.target_key)
         # get initial directory
         init_dir = self._get_initial_directory()
         # popup
@@ -3543,9 +3626,10 @@ class FileBrowse(Element):
         if isinstance(result, list) or isinstance(result, tuple):
             result = ";".join(result)
         if (target is not None) and (result is not None) and (result != ""):
-            target.update(result)
+            target.update(result)  # type: ignore [call-arg]
             if self.enable_events:
-                self.window._event_handler(self.key, {"event": result, "event_type": "change"})
+                if (self.window is not None) and (self.key is not None):
+                    self.window._event_handler(self.key, {"event": result, "event_type": "change"})
         return result
     
     def set_text(self, text: str) -> None:
@@ -3573,7 +3657,7 @@ class FilesBrowse(FileBrowse):
                 metadata: Union[dict[str, Any], None] = None,
                 **kw
                 ) -> None:
-        super().__init__("FilesBrowse", "", key, False, metadata, **kw)
+        super().__init__(button_text=button_text, key=key, metadata=metadata, **kw)
         self.target_key = target_key
         self.title = title
         self.file_types = file_types
@@ -3597,7 +3681,7 @@ class FileSaveAsBrowse(FileBrowse):
                 metadata: Union[dict[str, Any], None] = None,
                 **kw
                 ) -> None:
-        super().__init__("FileSaveAsBrowse", "", key, False, metadata, **kw)
+        super().__init__(button_text=button_text, key=key, metadata=metadata, **kw)
         self.target_key = target_key
         self.title = title
         self.file_types = file_types
@@ -3625,7 +3709,7 @@ class FolderBrowse(FileBrowse):
                 metadata: Union[dict[str, Any], None] = None,
                 **kw
                 ) -> None:
-        super().__init__("FolderBrowse", "", key, False, metadata, **kw)
+        super().__init__(button_text=button_text, key=key, metadata=metadata, **kw)
         self.target_key = target_key
         self.title = title
         self.default_path = default_path
@@ -3634,20 +3718,21 @@ class FolderBrowse(FileBrowse):
     
     def show_dialog(self, *args) -> Union[str, None]:
         """Show file dialog"""
-        target: tk.Widget = self.get_prev_widget(self.target_key)
+        target: Union[Element, None] = self.get_prev_element(self.target_key)
         # popup
         result = dialogs.popup_get_folder(
             title=self.title,
             default_path=self.default_path,
         )
         if (target is not None) and (result is not None) and (result != ""):
-            target.update(result)
+            target.update(result) # type: ignore[call-arg]
             if self.enable_events:
-                self.window._event_handler(self.key, {"event": result, "event_type": "change"})
+                if (self.window is not None) and (self.key is not None):
+                    self.window._event_handler(self.key, {"event": result, "event_type": "change"})
         return result
 
 class ColorBrowse(FileBrowse):
-    """FolderBrowse element."""
+    """ColorBrowse element."""
     def __init__(
                 self,
                 button_text: str="...",
@@ -3660,7 +3745,7 @@ class ColorBrowse(FileBrowse):
                 metadata: Union[dict[str, Any], None] = None,
                 **kw
                 ) -> None:
-        super().__init__("FolderBrowse", "", key, False, metadata, **kw)
+        super().__init__(button_text=button_text, key=key, metadata=metadata, **kw)
         self.target_key = target_key
         self.title = title
         self.default_color = default_color
@@ -3669,16 +3754,17 @@ class ColorBrowse(FileBrowse):
     
     def show_dialog(self, *args) -> Union[str, None]:
         """Show file dialog"""
-        target: tk.Widget = self.get_prev_widget(self.target_key)
+        target: Union[Element, None] = self.get_prev_element(self.target_key)
         # popup
         result = dialogs.popup_color(
             title=self.title,
             default_color=self.default_color,
         )
         if (target is not None) and (result is not None) and (result != ""):
-            target.update(result)
+            target.update(result) # type: ignore[call-arg]
             if self.enable_events:
-                self.window._event_handler(self.key, {"event": result, "event_type": "change"})
+                if (self.window is not None) and (self.key is not None):
+                    self.window._event_handler(self.key, {"event": result, "event_type": "change"})
         return result
 
 class ListBrowse(FileBrowse):
@@ -3699,7 +3785,7 @@ class ListBrowse(FileBrowse):
         metadata: Union[dict[str, Any], None] = None,
         **kw,
     ) -> None:
-        super().__init__("ListBrowse", "", key, False, metadata, **kw)
+        super().__init__(button_text=button_text, key=key, metadata=metadata, **kw)
         self.target_key = target_key
         self.title = title
         self.props["text"] = button_text
@@ -3711,9 +3797,9 @@ class ListBrowse(FileBrowse):
 
     def show_dialog(self, *args) -> Union[str, None]:
         """Show Listbox dialog"""
-        target: tk.Widget = self.get_prev_widget(self.target_key)
+        target: Union[Element, None] = self.get_prev_element(self.target_key)
         if target is not None:
-            val = target.get()
+            val = target.get() # type: ignore[attr-defined]
             if (val != "") and (val in self.values):
                 self.default_value = val
         # popup
@@ -3725,9 +3811,10 @@ class ListBrowse(FileBrowse):
             font=self.font,
         )
         if (target is not None) and (result is not None) and (result != ""):
-            target.update(result)
+            target.update(result) # type: ignore[call-arg]
             if self.enable_events:
-                self.window._event_handler(self.key, {"event": result, "event_type": "change"})
+                if (self.window is not None) and (self.key is not None):
+                    self.window._event_handler(self.key, {"event": result, "event_type": "change"})
         return result
 
 class MultilineBrowse(FileBrowse):
@@ -3746,7 +3833,7 @@ class MultilineBrowse(FileBrowse):
         metadata: Union[dict[str, Any], None] = None,
         **kw,
     ) -> None:
-        super().__init__("ListBrowse", "", key, False, metadata, **kw)
+        super().__init__(button_text=button_text, key=key, metadata=metadata, **kw)
         self.target_key = target_key
         self.title = title
         self.props["text"] = button_text
@@ -3756,9 +3843,9 @@ class MultilineBrowse(FileBrowse):
 
     def show_dialog(self, *args) -> Union[str, None]:
         """Show Listbox dialog"""
-        target: tk.Widget = self.get_prev_widget(self.target_key)
+        target: Union[Element, None] = self.get_prev_element(self.target_key)
         if target is not None:
-            val = target.get()
+            val = target.get() # type: ignore[attr-defined]
             if (val != ""):
                 val = val.replace("\\n", "\n")
                 self.message = val
@@ -3771,11 +3858,10 @@ class MultilineBrowse(FileBrowse):
         if (target is not None) and (result is not None) and (result != ""):
             result = result.replace("\r", "")
             result = result.replace("\n", "\\n")
-            target.update(result)
+            target.update(result) # type: ignore[call-arg]
             if self.enable_events:
-                self.window._event_handler(
-                    self.key, {"event": result, "event_type": "change"}
-                )
+                if (self.window is not None) and (self.key is not None):
+                    self.window._event_handler(self.key, {"event": result, "event_type": "change"})
         return result
 
 
@@ -3788,14 +3874,14 @@ class CalendarBrowse(FileBrowse):
         key: Union[str, None] = None,
         target_key: Union[str, None] = None,
         default_date: Union[datetime, None] = None,
-        date_format: Union[str, None] = "%Y-%m-%d",
+        date_format: str = "%Y-%m-%d",
         title: str = "",
         enable_events: bool = False,  # enable changing events
         # other
         metadata: Union[dict[str, Any], None] = None,
         **kw,
     ) -> None:
-        super().__init__("CalendarBrowse", "", key, False, metadata, **kw)
+        super().__init__(button_text, key, title=title, target_key=target_key, enable_events=enable_events, metadata=metadata, **kw)
         self.target_key = target_key
         self.title = title
         self.default_date = default_date
@@ -3803,20 +3889,21 @@ class CalendarBrowse(FileBrowse):
         self.date_format = date_format
         self.enable_events = enable_events
 
-    def show_dialog(self, *args) -> Union[str, None]:
+    def show_dialog(self, *args) -> Union[datetime, None]:
         """Show file dialog"""
-        target: tk.Widget = self.get_prev_widget(self.target_key)
+        target: Union[Element, None] = self.get_prev_element(self.target_key)
         # popup
         result = dialogs.popup_get_date(
             title=self.title,
             current_date=self.default_date,
         )
         if (target is not None) and (result is not None) and (result != ""):
-            target.update(result.strftime(self.date_format))
+            target.update(result.strftime(self.date_format))  # type: ignore[call-arg]
             if self.enable_events:
-                self.window._event_handler(
-                    self.key, {"event": result, "event_type": "change"}
-                )
+                if (self.window is not None) and (self.key is not None):
+                    self.window._event_handler(
+                        self.key, {"event": result, "event_type": "change"}
+                    )
         return result
 
 class CalendarButton(CalendarBrowse):
@@ -3832,11 +3919,11 @@ def rgb(r: int, g: int, b: int) -> str:
     return f"#{r:02x}{g:02x}{b:02x}"
 
 def image_resize(
-    img: PIL.Image,
+    img: PIL.Image.Image,
     size: Union[tuple[int, int], None],
     resize_type: ImageResizeType = ImageResizeType.FIT_BOTH,
     background_color: Union[str, None] = None, # color (example) "red" or "#FF0000"
-) -> PIL.Image:
+) -> PIL.Image.Image:
     """Resize image"""
     # check background color
     if background_color is None:
@@ -3889,14 +3976,15 @@ def image_resize(
     return img
 
 def get_image_tk(
-        source: Union[bytes, Union[str, None]] = None,
-        filename: Union[str, None] = None,
-        data: Union[bytes, None] = None,
-        size: Union[tuple[int, int], None] = None,
-        resize_type: ImageResizeType = ImageResizeType.FIT_BOTH,
-        background_color: Union[str, None] = None, # color (example) "red" or "#FF0000"
-        ) -> Union[tk.PhotoImage, None]:
+    source: Union[bytes, Union[str, None]] = None,
+    filename: Union[str, None] = None,
+    data: Union[bytes, PIL.Image.Image, None] = None,
+    size: Union[tuple[int, int], None] = None,
+    resize_type: ImageResizeType = ImageResizeType.FIT_BOTH,
+    background_color: Union[str, None] = None,  # color (example) "red" or "#FF0000"
+) -> Union[ImageTk.PhotoImage, None]:
     """Get Image for tk"""
+    img: PIL.Image.Image
     # if source is bytes, set data
     if source is not None:
         if isinstance(source, str): # is filename
@@ -3906,7 +3994,7 @@ def get_image_tk(
     # load from file?
     if filename is not None:
         try:
-            img: PIL.Image = PIL.Image.open(filename)
+            img = PIL.Image.open(filename)
             img = image_resize(
                 img,
                 size=size,
@@ -3921,7 +4009,7 @@ def get_image_tk(
         try:
             # check if data is PIL.Image
             if isinstance(data, PIL.Image.Image):
-                img: PIL.Image = data
+                img = data
                 img = image_resize(
                     img,
                     size=size,
@@ -3931,23 +4019,23 @@ def get_image_tk(
                 return ImageTk.PhotoImage(image=img)
             return ImageTk.PhotoImage(data=data)
         except Exception as e:
-            print("[TkEasyGUI] get_image_tk.Error:", e, stderr=True)
-            return data
+            print("[TkEasyGUI] get_image_tk.Error:", e, file=sys.stderr)
+            return None
     return None
 
-def imagedata_to_bytes(image_data: PIL.Image) -> bytes:
+def imagedata_to_bytes(image_data: PIL.Image.Image) -> bytes:
     """Convert JPEG to PNG"""
-    img_bytes = io.BytesIO()
-    image_data.save(img_bytes, format='PNG')
-    img_bytes = img_bytes.getvalue()
+    bytes_data = io.BytesIO()
+    image_data.save(bytes_data, format="PNG")
+    img_bytes = bytes_data.getvalue()
     return img_bytes
 
 def imagefile_to_bytes(filename: str) -> bytes:
     """Read image file and convert to bytes"""
     image = PIL.Image.open(filename)
-    img_bytes = io.BytesIO()
-    image.save(img_bytes, format='PNG')
-    img_bytes = img_bytes.getvalue()
+    bytes_data = io.BytesIO()
+    image.save(bytes_data, format="PNG")
+    img_bytes = bytes_data.getvalue()
     return img_bytes
 
 def time_checker_start() -> datetime:
@@ -3994,5 +4082,38 @@ architecture={platform.architecture()}
 processor={platform.processor()}
     """.strip()
 
-
 _compatibility = utils._compatibility
+
+# active window
+_window_list: list[Window] = []
+
+
+def _get_active_window() -> Union[tk.Toplevel, None]:
+    """Get the active window."""
+    if len(_window_list) == 0:
+        return None
+    return _window_list[-1].window
+
+
+def _window_parent() -> Union[Window, None]:
+    """Get the parent window."""
+    if len(_window_list) == 0:
+        return None
+    return _window_list[-1]
+
+
+def _window_count() -> int:
+    """Get the number of windows."""
+    return len(_window_list)
+
+
+def _window_push(win: Window) -> None:
+    """Push a window to the list."""
+    _window_list.append(win)
+
+
+def _window_pop(win: Window) -> None:
+    """Pop a window from the list."""
+    i = _window_list.index(win)
+    if i >= 0:
+        _window_list.pop()

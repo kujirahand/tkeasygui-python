@@ -7,14 +7,12 @@ import platform
 import sys
 import tkinter as tk
 from tkinter import ttk
-from typing import Any, Literal, TypeVar, Union
+from typing import Any, Literal, Union
 
 import PIL.Image
-import pyperclip
+import pyperclip  # type: ignore
 
 # define TypeAlias
-Window = TypeVar("Window")
-Element = TypeVar("Element")
 TextAlign = Literal["left", "right", "center"]
 TextVAlign = Literal["top", "bottom", "center"]
 FontType = Union[tuple[str, int], tuple[str, int, str]]
@@ -24,6 +22,7 @@ OrientationType = Literal["v", "h", "vertical", "horizontal"]
 ListboxSelectMode = Literal["multiple", "browse", "extended", "single"]
 PadType = Union[int, tuple[int, int], tuple[tuple[int, int], tuple[int, int]]]
 ReliefType = Literal["flat", "groove", "raised", "ridge", "solid", "sunken"]
+KeyType = Union[str, int]
 
 # -------------------------------------------------------------------
 # clipboard
@@ -59,7 +58,7 @@ def is_win() -> bool:
     """platform : is Windows?"""
     return get_platform() == "Windows"
 
-def screenshot() -> PIL.Image:
+def screenshot() -> PIL.Image.Image:
     """Take a screenshot."""
     import PIL.ImageGrab
     screen_image = PIL.ImageGrab.grab()
@@ -155,34 +154,6 @@ def get_ttk_style() -> ttk.Style:
         _ttk_style = ttk.Style()
     return _ttk_style
 
-# active window
-_window_list: list[Window] = []
-def _get_active_window() -> Union[tk.Toplevel, None]:
-    """Get the active window."""
-    if len(_window_list) == 0:
-        return None
-    return _window_list[-1].window
-
-def _window_parent() -> Union[Window, None]:
-    """Get the parent window."""
-    if len(_window_list) == 0:
-        return None
-    return _window_list[-1]
-
-def _window_count() -> int:
-    """Get the number of windows."""
-    return len(_window_list)
-
-def _window_push(win: Window) -> None:
-    """Push a window to the list."""
-    _window_list.append(win)
-
-def _window_pop(win: Window) -> None:
-    """Pop a window from the list."""
-    i = _window_list.index(win)
-    if i >= 0:
-        _window_list.pop()
-
 #------------------------------------------------------------------------------
 # theme
 _tkeasygui_info: dict[str, Any] = {}
@@ -202,7 +173,7 @@ def set_theme(name: str) -> None:
     style.theme_use(name)
     _tkeasygui_info["theme"] = name
 
-def get_tnemes() -> list[str]:
+def get_tnemes() -> tuple[str, ...]:
     """
     Get theme list
     ```py
@@ -254,14 +225,14 @@ def convert_color_html(color_name: str) -> str:
 #------------------------------------------------------------------------------
 # global variables
 # auto generate element key id
-_element_style_key_ids: dict[str, int] = {}
-_element_key_names: dict[str, bool] = {}
-def generate_element_style_key(element_type: str) -> int:
+_element_style_key_ids: dict[KeyType, int] = {}
+_element_key_names: dict[KeyType, bool] = {}
+def generate_element_style_key(element_type: str) -> str:
     """Get a unique id for an element."""
     element_type = element_type.lower()
     if element_type not in _element_style_key_ids:
         _element_style_key_ids[element_type] = 0
-    key: str = ""
+    key: KeyType = ""
     while True:
         _element_style_key_ids[element_type] += 1
         element_id = _element_style_key_ids[element_type]
@@ -271,14 +242,14 @@ def generate_element_style_key(element_type: str) -> int:
             break
     return key
 
-def register_element_key(key: str) -> bool:
+def register_element_key(key: KeyType) -> bool:
     """Register element key."""
     if key in _element_key_names:
         return False
     _element_key_names[key] = True
     return True
 
-def remove_element_key(key: str) -> bool:
+def remove_element_key(key: KeyType) -> bool:
     """Remove element key."""
     if key in _element_key_names:
         _element_key_names.pop(key)

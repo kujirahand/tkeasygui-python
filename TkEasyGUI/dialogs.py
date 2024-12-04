@@ -7,7 +7,7 @@ import tkinter.filedialog as filedialog
 import tkinter.messagebox as messagebox
 from datetime import datetime, timedelta
 from tkinter import colorchooser
-from typing import Any, Union
+from typing import Any, Callable, Iterable, Optional, Union
 
 from . import locale_easy as le
 from . import widgets as eg
@@ -32,7 +32,8 @@ def popup_buttons(
         buttons: list[str] = ["OK", "Cancel"], 
         auto_close_duration: int = -1, # auto close duration (msec)
         timeout_key: str="-TIMEOUT-", # timeout key
-        non_blocking: bool = False
+        non_blocking: bool = False,
+        default: str = '',
     ) -> str:
     """
     Popup window with user defined buttons. Return button's label.
@@ -48,10 +49,10 @@ def popup_buttons(
     """
     if title is None:
         title = le.get_text("Question")
-    result = buttons[-1] if len(buttons) > 0 else None
-    
+    result = buttons[-1] if len(buttons) > 0 else default
+
     # create window
-    layout = [
+    layout: eg.LayoutType = [
         [eg.Text(message)],
         [eg.Button(s, width=9) for s in buttons],
     ]
@@ -204,22 +205,31 @@ def popup_get_text(
         title: Union[str,None] = None,
         default: Union[str, None] = None,
         default_text: Union[str, None] = None, # same as default for compatibility
-        font: FontType=None) -> Union[str, None]:
+        font: Optional[FontType]=None) -> Union[str, None]:
     """Display a message in a popup window with a text entry. Return the text entered."""
     # return simpledialog.askstring(title, message, initialvalue=default)
     if default_text is not None:
         default = default_text
-    return popup_input(message, title, default, font=font)
+    default_str = ''
+    if default is not None:
+        default_str = default
+    result: Union[str, float, None] = popup_input(
+        message, title, default_str, font=font
+    )
+    if result is None:
+        return None
+    return str(result)
 
 def popup_input(
-        message: str,
-        title: Union[str,None] = None,
-        default: str = "",
-        ok_label: Union[str, None] = None,
-        cancel_label: Union[str, None] = None,
-        cancel_value: Any = None,
-        only_number: bool = False,
-        font: FontType=None) -> Union[str, float, None]:
+    message: str,
+    title: Optional[str] = None,
+    default: str = "",
+    ok_label: Optional[str] = None,
+    cancel_label: Optional[str] = None,
+    cancel_value: Any = None,
+    only_number: bool = False,
+    font: Optional[FontType] = None,
+) -> Union[str, float, None]:
     """Display a message in a popup window with a text entry. Return the text entered. if canceled, return cancel_value."""
     result = cancel_value
     if title is None:
@@ -285,6 +295,7 @@ def popup_get_file(
         title = message
     if initial_folder is None:
         initial_folder = os.getcwd()
+    file_type_list: Iterable[tuple[str, str | list[str] | tuple[str, ...]]] | None = []
     if file_types is not None:
         # check file types
         new_types = []
@@ -301,12 +312,12 @@ def popup_get_file(
                         new_types.append((desc, ext))
                     continue
             new_types.append(ft)
-        file_types = tuple(new_types)
+        file_type_list = tuple(new_types)
     if save_as:
         result = filedialog.asksaveasfilename(
             title=title,
             initialdir=initial_folder,
-            filetypes=file_types,
+            filetypes=file_type_list,
             defaultextension=default_extension,
         )
         if result and default_extension:
@@ -314,11 +325,12 @@ def popup_get_file(
                 result += default_extension
     else:
         result = filedialog.askopenfilename(
-            title=title, 
+            title=title,
             initialdir=initial_folder,
-            filetypes=file_types,
-            multiple=multiple_files, # type: ignore
-            **kw)
+            filetypes=file_type_list,
+            multiple=multiple_files,  # type: ignore
+            **kw,
+        )
     return result
 
 def popup_get_folder(
@@ -338,7 +350,7 @@ def popup_get_folder(
 def popup_memo(
         message: str,
         title: Union[str, None] = None,
-        size: tuple[int,int] = [60, 8],
+        size: tuple[int,int] = (60, 8),
         readonly: bool = False,
         ok_label: Union[str, None] = None,
         cancel_label: Union[str, None] = None,
@@ -349,15 +361,15 @@ def popup_memo(
     return popup_scrolled(message, title, size, readonly, ok_label, cancel_label, cancel_value, font)
 
 def popup_scrolled(
-            message: str,
-            title: tuple[str, None] = None,
-            size: tuple[int,int] = [40, 5],
-            readonly: bool = False,
-            ok_label: Union[str, None] = None,
-            cancel_label: Union[str, None] = None,
-            cancel_value: Union[str,None] = None,
-            font: Union[FontType, None] = None
-            ) -> Union[str, None]:
+    message: str,
+    title: Optional[str] = None,
+    size: tuple[int, int] = (40, 5),
+    readonly: bool = False,
+    ok_label: Optional[str] = None,
+    cancel_label: Optional[str] = None,
+    cancel_value: Optional[str] = None,
+    font: Optional[FontType] = None,
+) -> Union[str, None]:
     """
     Display a multiline message in a popup window. Return the text entered. if canceled, return cancel_value.
     #### Example:
@@ -372,12 +384,14 @@ def popup_scrolled(
         cancel_label = le.get_text("Cancel")
     if ok_label is None:
         ok_label = le.get_text("OK")
+    title_str: str = ''
     if title is None:
-        title = le.get_text("Information")
-    win = eg.Window(title, layout=[
+        title_str = le.get_text("Information")
+    layout: eg.LayoutType = [
         [eg.Multiline(message, key="-text-", size=size, readonly=readonly, font=font)],
-        [eg.Button(ok_label, width=9), eg.Button(cancel_label, width=5)]
-    ], modal=True)
+        [eg.Button(ok_label, width=9), eg.Button(cancel_label, width=5)],
+    ]
+    win: eg.Window = eg.Window(title=title_str, layout=layout, modal=True)
     result = None
     while win.is_alive():
         event, _ = win.read()
@@ -405,6 +419,7 @@ def popup_get_date(
         current_date = datetime.now()
     if date_format is None:
         date_format = le.get_text("__date_format__", "%Y-%m-%d")
+    date_format_str: str = date_format
     if title is None:
         title = le.get_text("Select date")
     # week names
@@ -417,22 +432,22 @@ def popup_get_date(
     head_size = [4, 1]
     # set
     result = None
-    layout = []
+    layout: eg.LayoutType = []
     # header
     if message != "":
         layout.append([eg.Text(message)])
         layout.append([eg.HSeparator()])
     # select month
-    month_button = [
+    month_button: list[eg.Element] = [
         eg.Frame(
             "",
             layout=[
                 [
-                    eg.Button("ᐊ", key="-prev2-", padx=0, size=[1, 1]),
-                    eg.Button("◀", key="-prev-", padx=0, size=[1, 1]),
-                    eg.Button(current_date.strftime(date_format), key="-ymd-", size=[10, 1]),
-                    eg.Button("▶", key="-next-", padx=0, size=[1, 1]),
-                    eg.Button("ᐅ", key="-next2-", padx=0, size=[1, 1]),
+                    eg.Button("ᐊ", key="-prev2-", padx=0, size=(1, 1)),
+                    eg.Button("◀", key="-prev-", padx=0, size=(1, 1)),
+                    eg.Button(current_date.strftime(date_format_str), key="-ymd-", size=(10, 1)),
+                    eg.Button("▶", key="-next-", padx=0, size=(1, 1)),
+                    eg.Button("ᐅ", key="-next2-", padx=0, size=(1, 1)),
                 ]
             ],
             expand_x=True,
@@ -442,7 +457,7 @@ def popup_get_date(
         )
     ]
     layout.append(month_button)
-    week_labels = [
+    week_labels: list[eg.Element] = [
         eg.Text(
             name,
             size=head_size,
@@ -472,12 +487,12 @@ def popup_get_date(
                 top_date = first_day - timedelta(days=week_i)
         return top_date
     # create calendar days buttons
-    cols = []
+    cols: list[eg.Element] = []
     cur = get_top_date(current_date)
     for i in range(42):
         cols.append(
             eg.Text(
-                cur.day,
+                f"{cur.day}",
                 size=days_size,
                 key=f"-b{i}-",
                 text_color=week_colors[i % 7],
@@ -528,13 +543,14 @@ def popup_get_date(
                 if i % 7 == 6:
                     fg = "black"
             # update
-            btn.set_text(cur.day)
+            btn.set_text(str(cur.day))
             btn.set_disabled(current_date.month != cur.month)
             btn.update(text_color=fg, background_color=bg)
-            btn.metadata["date"] = datetime.fromtimestamp(cur.timestamp())
+            if btn.metadata is not None:
+                btn.metadata["date"] = datetime.fromtimestamp(cur.timestamp())
             # next day
             cur = cur + timedelta(days=1)
-        window["-ymd-"].update(current_date.strftime(date_format))
+        window["-ymd-"].update(current_date.strftime(date_format_str))
     # update result
     def update_result(current_date):
         top = get_top_date(datetime(year=current_date.year, month=current_date.month, day=1))
@@ -576,7 +592,7 @@ def popup_get_date(
                 update_date(get_top_date(current_date), current_date)
             elif event.startswith("-b"):
                 elm:eg.Text = window[event]
-                if elm is None:
+                if elm is None or elm.metadata is None:
                     continue
                 sel_date: datetime = elm.metadata["date"]
                 if sel_date.month == current_date.month:
@@ -636,8 +652,8 @@ def popup_get_form(
     """
     # make form layout
     item_labels = []
-    item_converters = []
-    layout = []
+    item_converters: list[Union[Callable, None]] = []
+    layout: eg.LayoutType = []
     for i, it in enumerate(form_items):
         it_key = f"-formitem{i}"
         if isinstance(it, tuple) or isinstance(it, list):
@@ -656,7 +672,7 @@ def popup_get_form(
         item_labels.append(label)
         item_converters.append(None)
         # make line
-        line = [eg.Text(label, key=f"{it_key}-label", size=(15, 1), text_align="right")]
+        line: list[eg.Element] = [eg.Text(label, key=f"{it_key}-label", size=(15, 1), text_align="right")]
         # check type
         itype = itype.lower()
         if itype == "text" or itype == "number" or itype == "password":
@@ -694,7 +710,7 @@ def popup_get_form(
     layout.append([eg.HSeparator()])
     layout.append([eg.Button("OK", width=9), eg.Button("Cancel", width=5)])
     with eg.Window(title, layout=layout) as win:
-        result = None
+        result: Union[dict[str, Any], None] = None
         for event, values in win.event_iter():
             if event == "Cancel":
                 result = None
@@ -704,14 +720,15 @@ def popup_get_form(
                 for i, label in enumerate(item_labels):
                     it_key = f"-formitem{i}"
                     val = values[it_key] if it_key in values else ""
-                    if item_converters[i] is not None:
-                        try:
-                            val = item_converters[i](val)
-                        except ValueError as _:
-                            popup(le.get_text("Please enter a number."))
-                            win.focus_element(it_key)
-                            result = None
-                            break
+                    fn = item_converters[i]
+                    try:
+                        if fn is not None:
+                            val = fn(val)
+                    except ValueError as _:
+                        popup(le.get_text("Please enter a number."))
+                        win.focus_element(it_key)
+                        result = None
+                        break
                     result[label] = val
                 # form error?
                 if result is None:
@@ -779,9 +796,9 @@ def popup_listbox(
     multiple: bool = False,  # multiple selection
 ) -> Union[str, None]:
     """Display Listbox in a popup window"""
-    select_mode = eg.LISTBOX_SELECT_MODE_BROWSE if multiple is False else eg.LISTBOX_SELECT_MODE_MULTIPLE
+    select_mode: eg.ListboxSelectMode = eg.LISTBOX_SELECT_MODE_BROWSE if multiple is False else eg.LISTBOX_SELECT_MODE_MULTIPLE
     # create window
-    layout = []
+    layout: list[list[eg.Element]] = []
     if message != "":
         layout.append([eg.Text(message)])
     layout.append([
@@ -817,21 +834,22 @@ def popup_image(
         ok_label: Union[str, None] = None,
         ok_value: str = "OK",
         cancel_label: Union[str, None] = None,
-        cancel_value: str = "Cancel",
+        cancel_value: Union[str, None] = None,
         font: Union[FontType, None] = None,
-        ) -> str:
-    """Display an image in a popup window. Return the text entered."""
+        ) -> Union[str, None]:
+    """Display an image in a popup window. Return the pushed Button("OK" or None)."""
     if title is None:
         title = message
     if ok_label is None:
         ok_label = le.get_text("OK")
     if cancel_label is None:
         cancel_label = le.get_text("Cancel")
-    win = eg.Window(title, layout=[
+    layout: list[list[eg.Element]] = [
         [eg.Text(message)],
         [eg.Image(image_path, image_data, size=size)],
-        [eg.Button(ok_label, width=9), eg.Button(cancel_label, width=5)]
-    ], modal=True, font=font)
+        [eg.Button(ok_label, width=9), eg.Button(cancel_label, width=5)],
+    ]
+    win = eg.Window(title, layout=layout, modal=True, font=font)
     result = cancel_value
     while win.is_alive():
         event, _ = win.read()
@@ -891,7 +909,7 @@ def input(
         title: Union[str,None] = None,
         default: str = "",
         only_number: bool = False
-    ) -> Union[str, float]:
+    ) -> Union[str, float, None]:
     """Display a message in a popup window with a text entry. Return the text entered."""
     return popup_input(message, title, default, only_number=only_number)
 
@@ -909,7 +927,10 @@ def input_number(
         default: str = ""
     ) -> Union[float, None]:
     """Display a message in a popup window with a number entry. Return the text entered."""
-    return popup_input(message, title, default, only_number=True)
+    result = popup_input(message, title, default, only_number=True)
+    if isinstance(result, float):
+        return result
+    return None
 
 def confirm(
         question: str,

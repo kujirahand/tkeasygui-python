@@ -21,7 +21,7 @@ get locale
 def get_locale() -> str:
 ```
 
-- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/locale_easy.py#L62)
+- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/locale_easy.py#L63)
 
 ## get_text
 
@@ -31,7 +31,7 @@ get locale text
 def get_text(key: str, default_text: Union[str, None]=None) -> str:
 ```
 
-- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/locale_easy.py#L76)
+- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/locale_easy.py#L79)
 
 ## set_locale
 
@@ -41,7 +41,7 @@ set locale
 def set_locale(locale: str) -> None:
 ```
 
-- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/locale_easy.py#L71)
+- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/locale_easy.py#L74)
 
 ## set_text
 
@@ -51,5 +51,5 @@ set locale text
 def set_text(key: str, message: str, locale:str = "") -> None:
 ```
 
-- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/locale_easy.py#L86)
+- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/locale_easy.py#L89)
 
