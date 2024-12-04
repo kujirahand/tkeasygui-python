@@ -29,3 +29,7 @@ __ELEMENTS__
 ### TkEasyGUI Original features
 
 - [Custom Events](https://github.com/kujirahand/tkeasygui-python/blob/main/docs/custom_events.md)
+
+### Package developper
+
+- [TkEasyGUI Package Developer's Guide](/docs/dev.md)
