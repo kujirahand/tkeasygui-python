@@ -46,6 +46,9 @@ import TkEasyGUI as eg
 eg.print("A joyful heart is good medicine.")
 ```
 
+<img src="https://github.com/kujirahand/tkeasygui-python/raw/main/docs/image/sample1.png" width="300" alt="TkEasyGUI">
+
+
 Ask the user for their name and display that name in the window.
 
 ```py
@@ -54,6 +57,8 @@ import TkEasyGUI as eg
 name = eg.input("What is your name?")
 eg.print(f"Hello, {name}.")
 ```
+
+<img src="https://github.com/kujirahand/tkeasygui-python/raw/main/docs/image/sample2.png" width="300" alt="TkEasyGUI">
 
 Furthermore, a dialog is available that allows specifying multiple input fields.
 
@@ -70,6 +75,7 @@ if form:
 
 - [Docs > Dialogs](https://github.com/kujirahand/tkeasygui-python/blob/main/docs/TkEasyGUI/dialogs-py.md)
 
+<img src="https://github.com/kujirahand/tkeasygui-python/raw/main/docs/image/sample3.png" width="300" alt="TkEasyGUI">
 
 ### How to use - widgets
 
@@ -90,6 +96,7 @@ with eg.Window("Hello App", layout) as window:
             eg.print("Thank you.")
             break
 ```
+
 
 You can describe it using an event model similar to the famous GUI library, PySimpleGUI.
 
