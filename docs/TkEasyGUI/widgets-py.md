@@ -9,6 +9,43 @@ TkEasyGUI Widgets
 
 # Classes of TkEasyGUI.widgets
 
+- [Button](#button)
+- [CalendarBrowse](#calendarbrowse)
+- [CalendarButton(alias of CalendarBrowse)](#calendarbutton)
+- [Checkbox](#checkbox)
+- [CloseButton](#closebutton)
+- [ColorBrowse](#colorbrowse)
+- [Column](#column)
+- [Combo](#combo)
+- [Element](#element)
+- [FileBrowse](#filebrowse)
+- [FileSaveAs](#filesaveas)
+- [FileSaveAsBrowse](#filesaveasbrowse)
+- [FilesBrowse](#filesbrowse)
+- [FolderBrowse](#folderbrowse)
+- [Frame](#frame)
+- [Graph](#graph)
+- [HSeparator](#hseparator)
+- [Image](#image)
+- [Input](#input)
+- [InputText(alias of Input)](#inputtext)
+- [Label(alias of Text)](#label)
+- [ListBrowse](#listbrowse)
+- [Listbox](#listbox)
+- [Menu](#menu)
+- [Multiline](#multiline)
+- [MultilineBrowse](#multilinebrowse)
+- [Output(alias of Multiline)](#output)
+- [Radio](#radio)
+- [Submit(alias of Button)](#submit)
+- [Tab](#tab)
+- [Table](#table)
+- [Text](#text)
+- [Textarea(alias of Multiline)](#textarea)
+- [TkEasyError](#tkeasyerror)
+- [VSeparator](#vseparator)
+- [Window](#window)
+
 ## Button
 
 Button element
