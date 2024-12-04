@@ -73,9 +73,13 @@ if form:
     eg.print(f"name={name}, age={age}, hobby={hobbies}")
 ```
 
-- [Docs > Dialogs](https://github.com/kujirahand/tkeasygui-python/blob/main/docs/TkEasyGUI/dialogs-py.md)
-
 <img src="https://github.com/kujirahand/tkeasygui-python/raw/main/docs/image/sample3.png" width="300" alt="TkEasyGUI">
+
+### More Dialogs
+
+`TkEasyGUI` provides a variety of dialogs. For example, a color selection dialog, a file selection dialog, and a calendar dialog.
+
+- [Docs > Dialogs](https://github.com/kujirahand/tkeasygui-python/blob/main/docs/TkEasyGUI/dialogs-py.md)
 
 ### How to use - widgets
 

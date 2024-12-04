@@ -41,6 +41,9 @@ import TkEasyGUI as eg
 eg.print("A joyful heart is good medicine.")
 ```
 
+<img src="https://github.com/kujirahand/tkeasygui-python/raw/main/docs/image/sample1.png" width="300" alt="TkEasyGUI">
+
+
 入力ボックス付きのダイアログで尋ねることもできます。次のコードは、名前を尋ねて、続くダイアログに名前を表示します。
 
 ```py
@@ -48,6 +51,8 @@ import TkEasyGUI as eg
 name = eg.input("What is your name?")
 eg.print(f"Hello, {name}.")
 ```
+
+<img src="https://github.com/kujirahand/tkeasygui-python/raw/main/docs/image/sample2.png" width="300" alt="TkEasyGUI">
 
 さらに、複数入力が可能なフォームダイアログも手軽に表示できます。
 
@@ -61,6 +66,13 @@ if form:
     hobbies = form["趣味"]
     eg.print(f"name={name}, age={age}, hobby={hobbies}")
 ```
+
+<img src="https://github.com/kujirahand/tkeasygui-python/raw/main/docs/image/sample3.png" width="300" alt="TkEasyGUI">
+
+### バラエティ豊かなダイアログを提供
+
+`TkEasyGUI` はさまざまなダイアログを提供します。
+たとえば、色選択ダイアログ、ファイル選択ダイアログ、カレンダーダイアログなどです。
 
 - [Docs > Dialogs](https://github.com/kujirahand/tkeasygui-python/blob/main/docs/TkEasyGUI/dialogs-py.md)
 
