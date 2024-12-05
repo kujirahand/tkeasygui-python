@@ -1,8 +1,8 @@
 ---
 labels: bug
-name: (ja) バグの報告
-about: こちらからバグを報告できます。日本語で大丈夫です。
-title: "[Bug]: バグの報告"
+name: Bug Report in Japanese - 日本語でバグの報告
+about: こちらからバグを報告できます。
+title: "[Bug]: タイトル"
 labels: bug
 assignees: ''
 
@@ -10,11 +10,6 @@ assignees: ''
 
 ### バグの概要
 ここにバグの概要を書いてください。
-
-### バグの再現方法
-- Step 1
-- Step 2
-- Step 3
 
 ### バグが再現するプログラム
 
@@ -26,6 +21,11 @@ assignees: ''
 import TkEasyGUI as eg
 # ...
 ```
+
+### バグの再現方法
+- Step 1
+- Step 2
+- Step 3
 
 ### 期待する動作
 期待する動作を記述してください。
