@@ -3371,15 +3371,20 @@ class Table(Element):
         self.col_widths = col_widths
         self.has_font_prop = False # has, but not widget root
         self.vertical_scroll_only = vertical_scroll_only
-        # check headings
+        self.max_columns = max_columns
+        self.col_widths_real: list[int] = []
+        # check headings length
         if len(self.headings) < max_columns:
             for i in range(max_columns - len(self.headings)):
                 self.headings.append("") # add dummy
+        if len(self.headings) > max_columns:
+            self.max_columns = len(self.headings)
         # event_returns_values ?
         self.event_returns_values: bool = not _compatibility
         if event_returns_values is not None:
             self.event_returns_values = event_returns_values 
         # justification
+        self.justification = "center"
         if justification is not None:
             self.justification = self._justify_to_anchor(justification)
         if text_align is not None:
@@ -3387,15 +3392,6 @@ class Table(Element):
         # set props
         self._set_text_props(font=font, color=color, text_color=text_color, background_color=background_color)
         self._set_pack_props(expand_x=expand_x, expand_y=expand_y, pad=pad)
-        # check col_widths
-        if self.col_widths is None:
-            self.col_widths = [len(s) for s in self.headings]
-            for row in self.values:
-                for i, cell in enumerate(row):
-                    v = max(self.col_widths[i], len(str(cell))+1)
-                    if (self.max_col_width is not None) and (self.max_col_width > 0):
-                        v = min(v, self.max_col_width)
-                    self.col_widths[i] = v
     
     def create(self, win: Window, parent: tk.Widget) -> tk.Widget:
         """Create a Table widget."""
@@ -3428,49 +3424,82 @@ class Table(Element):
             hscrollbar.grid(row=1, column=0, sticky="ew")
         self.frame.grid_rowconfigure(0, weight=1)
         self.frame.grid_columnconfigure(0, weight=1)
-
-        # setting for column
-        streatch = tk.YES if self.auto_size_columns else tk.NO
-        for i, h in enumerate(self.headings):
-            self.widget.heading(i+1, text=h, anchor="center")
-            kw: dict[str, Any] = {"stretch": streatch}
-            if self.justification != "":
-                kw["anchor"] = self.justification
-            if self.col_widths is not None:
-                # get font size
-                font_w = 12
-                if (self.font is not None) and (len(self.font) >= 2):
-                    font_w = self.font[1]
-                if h == "":
-                    kw["width"] = 0 # hidden column
-                else:
-                    kw["width"] = self.col_widths[i % len(self.col_widths)] * font_w
-            self.widget.column(i+1, **kw)
         # add data
         self.set_values(self.values, self.headings)
         if self.enable_events:
             self.widget.bind("<<TreeviewSelect>>", lambda e: self._table_events(e))
         return self.frame
-    
+
+    def _update_headers(self):
+        """Update the headers."""
+        if self.widget is None:
+            return
+        # check size
+        headings = self.headings
+        self._calc_col_width()
+        streatch = tk.YES if self.auto_size_columns else tk.NO
+        if len(headings) > self.max_columns:
+            raise TkEasyError(
+                "".join(
+                    [
+                        f"Table.max_columns is {self.max_columns}, but the number of headings is {len(headings)}.",
+                        "Please set the number of headings to the max_columns argument in the constructor.",
+                    ]
+                )
+            )
+        # set heading
+        widget: ttk.Treeview = self.widget  # type: ignore
+        for i in range(self.max_columns):
+            label = headings[i] if len(headings) > i else ""
+            widget.heading(i + 1, text=label, anchor="center")
+            if label == "":
+                widget.column(i + 1, width=0, stretch=tk.NO)
+                continue
+            w = self.col_widths_real[i] if i < len(self.col_widths_real) else 100
+            widget.column(i + 1, width=w, stretch=streatch, anchor=self.justification)
+
+    def _calc_col_width(self) -> None:
+        """Calc columns width"""
+        self.col_widths_real = [0 for _ in range(self.max_columns)]
+        # get font size
+        font_w = 12
+        if (self.font is not None) and (len(self.font) >= 2):
+            font_w = self.font[1]
+        # check text length
+        for i in range(self.max_columns):
+            # use default size
+            if self.col_widths is not None:
+                self.col_widths_real[i] = self.col_widths[i] * font_w if i < len(self.col_widths) else 100
+                continue
+            # header size
+            label = self.headings[i] if i < len(self.headings) else ""
+            max_len: int = len(label)
+            for row in self.values:
+                text = row[i] if i < len(row) else ""
+                max_len = max(len(text), max_len)
+            self.col_widths_real[i] = max_len * font_w
+
     def set_values(self, values: list[list[str]], headings: Union[list[str], None] = None) -> None:
         """Set values to the table."""
         if self.widget is None:
             return
+        # set new heading and values
         self.values = values
         if headings is not None:
             self.headings = headings
-        # clear
-        for row in self.widget.get_children():
-            self.widget.delete(row)
+        self._calc_col_width()
+        widget: ttk.Treeview = self.widget
+        # clear all rows
+        for row in widget.get_children():
+            widget.delete(row)
         # update heading
         if headings is not None:
-            for i, h in enumerate(self.headings):
-                self.widget.heading(i+1, text=h, anchor="center")
-                if h == "":
-                    self.widget.column(i+1, width=0, stretch=tk.NO)
+            self._update_headers()
         # add data
         for row_no, row in enumerate(self.values):
-            self.widget.insert(parent="", iid=row_no, index="end", values=row)
+            widget.insert(parent="", iid=row_no, index="end", values=row)
+        # update
+        widget.update_idletasks()
     
     def get(self) -> Any:
         """Get the value of the widget."""
@@ -3503,21 +3532,9 @@ class Table(Element):
         if "headings" in kw:
             new_heading = kw["headings"]
             del kw["headings"]
-            # ヘッダ更新処理 #54
-            if self.widget is not None:
-                wid: ttk.Treeview = self.widget
-                # 旧ヘッダを処理
-                for i, _h in enumerate(self.headings):
-                    h2 = new_heading[i] if len(new_heading) > i else ""
-                    wid.heading(i+1, text=h2, anchor="center")
-                    if h2 == "":
-                        wid.column(i+1, width=0)
-                # 新ヘッダを処理
-                for i, h in enumerate(new_heading):
-                    wid.heading(i+1, text=h, anchor="center")
-                    wid.column(i+1, width=100, stretch=tk.YES)
-                self.headings = new_heading
-
+            self.headings = new_heading
+            self.col_widths_real = [] # clear
+            self._update_headers()
         if "values" in kw:
             self.values = kw["values"]
             # update list
