@@ -9,17 +9,32 @@
 
 ## Task runner
 
-- Task runner [task](https://taskfile.dev/)
+- Using [Task runner task](https://taskfile.dev/)
   - [Taskfile.yaml](/Taskfile.yml)
+
+```sh
+# check all task
+task -a
+# run viewer
+task run
+```
+
+## Lint
+
+```sh
+task check
+task lint
+```
 
 ## Build documents
 
 ```sh
-task build
+task build-docs
 ```
 
-## Deploy
+## Deploy to pypi
 
 ```sh
-task deploy
+task deploy-test
+task deploy-main
 ```

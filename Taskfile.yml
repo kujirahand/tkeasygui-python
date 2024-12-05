@@ -20,11 +20,15 @@ tasks:
     cmds:
       - ruff check
       - mypy TkEasyGUI/
+  lint:
+    cmds:
+      - ruff check
+      - mypy TkEasyGUI/
   test:
     cmds:
       - ruff check
       - echo "*** TODO ***"
-  build:
+  build-docs:
     cmds:
       - echo "Buikding..."
       - python3 update_version.py
@@ -33,7 +37,7 @@ tasks:
       - echo "ok."
   deploy-build-only:
     cmds:
-      - task build
+      - task build-docs
       - echo "Deploying..."
       - echo "-- remove cache ---"
       - rm -f -r dist
@@ -49,7 +53,7 @@ tasks:
   deploy-main:
     cmds:
       - task deploy-build-only
-      - echo "--- upload to pypi(main) ---""
+      - echo "--- upload to pypi(main) ---"
       - python -m twine upload dist/* --verbose
 
 
