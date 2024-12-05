@@ -108,7 +108,10 @@ You can describe it using an event model similar to the famous GUI library, PySi
 import TkEasyGUI as eg
 
 # define layout
-layout = [[eg.Text("Hello, World!")], [eg.Button("OK")]]
+layout = [
+    [eg.Text("Hello, World!")],
+    [eg.Button("OK")]
+]
 # create a window
 window = eg.Window("Hello App", layout)
 # event loop
@@ -158,7 +161,7 @@ Japanese tutorials:
 ### TkEasyGUI features:
 
 - Using a `for` loop and `window.event_iter()` enables straightforward event processing.
-- Custom popup dialogs, such as a color selection dialog (`eg.popup_color`), form dialog (`eg.popup_get_form`), are available.
+- Custom popup dialogs, such as a color selection dialog(`eg.popup_color`), a list dialog(`eg.popup_listbox`), form dialog(`eg.popup_get_form`) are available.
 - The `Image` class supports not only PNG but also JPEG formats.
 - Convenient event hooks and features for bulk event registration are provided - [docs/custom_events](docs/custom_events.md).
 - Methods such as Copy, Paste, and Cut are added to text boxes (Multiline/Input).
