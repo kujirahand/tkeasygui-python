@@ -11,11 +11,6 @@ assignees: ''
 ### Overview of the Bug
 Please describe the details of the bug.
 
-### Steps to Reproduce
-- Step 1
-- Step 2
-- Step 3
-
 ### Source code of the Bug
 
 Write concise and minimal code that focuses on solving the problem. Ensure all other parts are functional.
@@ -25,6 +20,11 @@ Write concise and minimal code that focuses on solving the problem. Ensure all o
 import TkEasyGUI as eg
 # ...
 ```
+
+### Steps to Reproduce
+- Step 1
+- Step 2
+- Step 3
 
 ### Expected Behavior
 Please describe the expected behavior.
