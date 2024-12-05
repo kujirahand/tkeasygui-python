@@ -1,7 +1,10 @@
 blank_issues_enabled: false
 contact_links:
-  - name: Support
+  - name: Issues
     url: https://github.com/kujirahand/tkeasygui-python/issues
-    about: Please see the support page for more information.
+    about: See the issues page for more information.
+  - name: Discord
+    url: https://discord.gg/NX8WEQd42S
+    about: You can chat with us on Discord. Feel free to join and leave a comment.
 
 
