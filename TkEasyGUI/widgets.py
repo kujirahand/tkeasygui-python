@@ -3496,8 +3496,8 @@ class Table(Element):
         if headings is not None:
             self._update_headers()
         # add data
-        for row_no, row in enumerate(self.values):
-            widget.insert(parent="", iid=row_no, index="end", values=row)
+        for row_no, row_values in enumerate(self.values):
+            widget.insert(parent="", iid=row_no, index="end", values=row_values)
         # update
         widget.update_idletasks()
     
