@@ -34,7 +34,8 @@ Attach screenshots if necessary.
 
 ### Environment
 - OS: [macOS, Windows, Ubuntu]
-- TkEasyGUI's Version: v1.xx.xx
+- Python version: 3.xx.xx
+- TkEasyGUI Version: 1.xx.xx
 
 ### Additional Information
 Include any other relevant information, if available.
