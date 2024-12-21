@@ -23,6 +23,7 @@ ListboxSelectMode = Literal["multiple", "browse", "extended", "single"]
 PadType = Union[int, tuple[int, int], tuple[tuple[int, int], tuple[int, int]]]
 ReliefType = Literal["flat", "groove", "raised", "ridge", "solid", "sunken"]
 KeyType = Union[str, int]
+ColorFormatType = Literal["html", "rgb", "tuple"]
 
 # -------------------------------------------------------------------
 # clipboard

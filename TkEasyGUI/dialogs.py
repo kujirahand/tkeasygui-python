@@ -11,7 +11,7 @@ from typing import Any, Callable, Iterable, Optional, Union
 
 from . import locale_easy as le
 from . import widgets as eg
-from .utils import FontType, get_root_window, is_mac, is_win
+from .utils import ColorFormatType, FontType, get_root_window, is_mac, is_win
 
 YES = "Yes"
 NO = "No"
@@ -779,12 +779,27 @@ $AppId = '{{1AC14E77-02E7-4E5D-B744-2EB1AE5198B7}}\WindowsPowerShell\v1.0\powers
 # TkEasyGUI original dialogs
 #------------------------------------------------------------------------------
 
-def popup_color(title: str="", default_color: Union[str, None]=None) -> (Union[str, None]):
-    """Popup a color selection dialog. Return the color selected."""
+def popup_color(
+    title: str = "",
+    default_color: Union[str, None] = None,
+    format: ColorFormatType = "html",
+) -> Union[str, None]:
+    """
+    Popup a color selection dialog. Return the color selected.
+    format: "html", "rgb", "tuple"
+    """
     col = colorchooser.askcolor(title=title, color=default_color)
     if col[1] is None:
         return default_color
-    return f"{col[1]}".upper()
+    format = format.lower()
+    html = col[1].upper()
+    if format == "html":
+        return html
+    elif format == "rgb":
+        return html[1:]
+    elif format == "tuple":
+        return col[0]
+    return html
 
 def popup_listbox(
     values: list[str],  # list of items
