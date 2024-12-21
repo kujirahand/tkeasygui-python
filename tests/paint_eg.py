@@ -30,6 +30,7 @@ window = eg.Window("Paint tool", layout=[
     [eg.Button("Exit"), eg.Button("Clear")],
     [canvas]])
 flag_on = False
+
 # event loop
 for event, values in window.event_iter():
     print("#", event, values)
@@ -46,6 +47,7 @@ for event, values in window.event_iter():
         elif event_type == "mouseup":
             flag_on = False
         elif event_type == "mousemove":
+            canvas.set_cursor("hand2")
             if not flag_on:
                 continue
             # get mouse cursor position
