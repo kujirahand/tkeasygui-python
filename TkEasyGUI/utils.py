@@ -24,6 +24,11 @@ PadType = Union[int, tuple[int, int], tuple[tuple[int, int], tuple[int, int]]]
 ReliefType = Literal["flat", "groove", "raised", "ridge", "solid", "sunken"]
 KeyType = Union[str, int]
 ColorFormatType = Literal["html", "rgb", "tuple"]
+CursorType = Literal["arrow", "circle", "cross", "dotbox", "exchange", "fleur",
+    "hand1", "hand2", "heart", "man", "mouse", "pirate", "plus",
+    "shuttle", "sizing", "spider", "spraycan", "star", "target",
+    "tcross", "trek", "watch", "xterm", "ibeam", "wait", 
+    "size", "size_all", "size_nw_se", "size_ne_sw", "size_we", "size_ns"]
 
 # -------------------------------------------------------------------
 # clipboard

@@ -21,6 +21,7 @@ from PIL import ImageTk
 from . import dialogs, utils, version
 from .utils import (
     # type alias
+    CursorType,
     EventMode,
     FontType,
     ListboxSelectMode,
@@ -1269,6 +1270,11 @@ class Element:
     def update(self, *args, **kw) -> None:
         """update widget configuration."""
         pass
+
+    def set_cursor(self, cursor: CursorType) -> None:
+        """Set the cursor."""
+        if self.widget is not None:
+            self.widget.config(cursor=cursor)
     
     def _widget_update(self, **kw) -> None:
         # update element's props
