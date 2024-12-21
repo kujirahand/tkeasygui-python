@@ -379,7 +379,7 @@ class Window:
                 # create widget
                 try:
                     elem_parent: Any = frame_row
-                    if type(parent) == ttk.Notebook:
+                    if type(parent) is ttk.Notebook:
                         elem_parent = parent
                     widget: Any = elem.create(self, elem_parent)
                     widget.__tkeasygui = elem
