@@ -783,7 +783,7 @@ def popup_color(
     title: str = "",
     default_color: Union[str, None] = None,
     format: ColorFormatType = "html",
-) -> Union[str, None]:
+) -> Union[str, tuple[int,int,int], None]:
     """
     Popup a color selection dialog. Return the color selected.
     format: "html", "rgb", "tuple"
@@ -791,7 +791,6 @@ def popup_color(
     col = colorchooser.askcolor(title=title, color=default_color)
     if col[1] is None:
         return default_color
-    format = format.lower()
     html = col[1].upper()
     if format == "html":
         return html

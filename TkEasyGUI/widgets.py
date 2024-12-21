@@ -16,7 +16,7 @@ from tkinter import scrolledtext, ttk
 from typing import Any, Callable, Optional, TypeAlias, Union
 
 import PIL
-from PIL import ImageTk
+from PIL import ImageColor, ImageTk
 
 from . import dialogs, utils, version
 from .utils import (
@@ -3797,7 +3797,7 @@ class ColorBrowse(FileBrowse):
             if self.enable_events:
                 if (self.window is not None) and (self.key is not None):
                     self.window._event_handler(self.key, {"event": result, "event_type": "change"})
-        return result
+        return str(result)
 
 class ListBrowse(FileBrowse):
     """ListBrowse element."""
@@ -3960,7 +3960,7 @@ def image_resize(
     # check background color
     if background_color is None:
         background_color = "white"
-    background_color_rgba = PIL.ImageColor.getcolor(background_color, "RGBA")
+    background_color_rgba = ImageColor.getcolor(background_color, "RGBA")
     if size is None:
         size = img.size
     # resize
