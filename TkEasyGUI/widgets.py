@@ -2161,9 +2161,6 @@ class Radio(Element):
         key: str = str(self.key) if self.key else self.text
         if self.group_id not in win.radio_group_dict:
             win.radio_group_dict[self.group_id] = tk.IntVar(value=0)
-            #win.radio_group_dict[self.group_id].trace_add(
-            #    "write", lambda *args: post_change_event(*args)
-            #)
             win.radio_group_dict_keys[self.group_id] = [key]
         else:
             win.radio_group_dict_keys[self.group_id].append(key)
