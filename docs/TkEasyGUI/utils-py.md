@@ -45,7 +45,7 @@ Append text file.
 def append_text_file(filename: str, text: str, encoding: str="utf-8") -> None:
 ```
 
-- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/utils.py#L89)
+- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/utils.py#L90)
 
 ## convert_color_html
 
@@ -55,7 +55,7 @@ Convert RGB color(16bit tuple) to HTML color name.
 def convert_color_html(color_name: str) -> str:
 ```
 
-- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/utils.py#L224)
+- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/utils.py#L225)
 
 ## convert_color_rgb16
 
@@ -65,7 +65,7 @@ Convert color to RGB, return (r, g, b) tuple. range=0-65535
 def convert_color_rgb16(color_name: str) -> tuple[int, int, int]:
 ```
 
-- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/utils.py#L219)
+- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/utils.py#L220)
 
 ## copy_to_clipboard
 
@@ -75,7 +75,7 @@ copy text to clipboard
 def copy_to_clipboard(text):
 ```
 
-- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/utils.py#L44)
+- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/utils.py#L45)
 
 ## generate_element_id
 
@@ -85,7 +85,7 @@ Generate a unique id for a value element.
 def generate_element_id() -> int:
 ```
 
-- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/utils.py#L266)
+- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/utils.py#L267)
 
 ## generate_element_style_key
 
@@ -95,7 +95,7 @@ Get a unique id for an element.
 def generate_element_style_key(element_type: str) -> str:
 ```
 
-- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/utils.py#L236)
+- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/utils.py#L237)
 
 ## get_clipboard
 
@@ -105,7 +105,7 @@ get text from clipboard
 def get_clipboard():
 ```
 
-- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/utils.py#L40)
+- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/utils.py#L41)
 
 ## get_current_theme
 
@@ -115,7 +115,7 @@ Get current theme
 def get_current_theme() -> str:
 ```
 
-- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/utils.py#L197)
+- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/utils.py#L198)
 
 ## get_platform
 
@@ -125,7 +125,7 @@ get platform
 def get_platform() -> str:
 ```
 
-- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/utils.py#L55)
+- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/utils.py#L56)
 
 ## get_root_window
 
@@ -135,7 +135,7 @@ Get root window.
 def get_root_window() -> tk.Tk:
 ```
 
-- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/utils.py#L126)
+- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/utils.py#L127)
 
 ## get_tnemes
 
@@ -148,7 +148,7 @@ print(get_themes())
 def get_tnemes() -> tuple[str, ...]:
 ```
 
-- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/utils.py#L182)
+- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/utils.py#L183)
 
 ## get_ttk_style
 
@@ -158,7 +158,7 @@ Get ttk style
 def get_ttk_style() -> ttk.Style:
 ```
 
-- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/utils.py#L156)
+- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/utils.py#L157)
 
 ## is_mac
 
@@ -168,7 +168,7 @@ platform : is mac?
 def is_mac() -> bool:
 ```
 
-- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/utils.py#L59)
+- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/utils.py#L60)
 
 ## is_win
 
@@ -178,7 +178,7 @@ platform : is Windows?
 def is_win() -> bool:
 ```
 
-- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/utils.py#L63)
+- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/utils.py#L64)
 
 ## load_json_file
 
@@ -188,7 +188,7 @@ Load JSON file.
 def load_json_file(filename: str, default_value: Any = None) -> Any:
 ```
 
-- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/utils.py#L94)
+- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/utils.py#L95)
 
 ## load_text_file
 
@@ -198,7 +198,7 @@ Load text file.
 def load_text_file(filename: str, encoding: str="utf-8", default_value: str="") -> str:
 ```
 
-- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/utils.py#L76)
+- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/utils.py#L77)
 
 ## paste_from_clipboard
 
@@ -208,7 +208,7 @@ get text from clipboard
 def paste_from_clipboard():
 ```
 
-- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/utils.py#L48)
+- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/utils.py#L49)
 
 ## register_element_key
 
@@ -218,7 +218,7 @@ Register element key.
 def register_element_key(key: KeyType) -> bool:
 ```
 
-- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/utils.py#L251)
+- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/utils.py#L252)
 
 ## remove_element_key
 
@@ -228,7 +228,7 @@ Remove element key.
 def remove_element_key(key: KeyType) -> bool:
 ```
 
-- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/utils.py#L258)
+- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/utils.py#L259)
 
 ## save_json_file
 
@@ -238,7 +238,7 @@ Save JSON file.
 def save_json_file(filename: str, data: Any) -> None:
 ```
 
-- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/utils.py#L103)
+- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/utils.py#L104)
 
 ## save_text_file
 
@@ -248,7 +248,7 @@ Save text file.
 def save_text_file(filename: str, text: str, encoding: str="utf-8") -> None:
 ```
 
-- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/utils.py#L84)
+- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/utils.py#L85)
 
 ## screenshot
 
@@ -258,7 +258,7 @@ Take a screenshot.
 def screenshot() -> PIL.Image.Image:
 ```
 
-- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/utils.py#L67)
+- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/utils.py#L68)
 
 ## set_PySimpleGUI_compatibility
 
@@ -268,7 +268,7 @@ Set compatibility with PySimpleGUI (Default=True)
 def set_PySimpleGUI_compatibility(flag: bool=True) -> None:
 ```
 
-- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/utils.py#L151)
+- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/utils.py#L152)
 
 ## set_clipboard
 
@@ -278,7 +278,7 @@ copy text to clipboard
 def set_clipboard(text):
 ```
 
-- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/utils.py#L36)
+- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/utils.py#L37)
 
 ## set_default_theme
 
@@ -291,7 +291,7 @@ print(get_themes())
 def set_default_theme() -> None:
 ```
 
-- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/utils.py#L201)
+- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/utils.py#L202)
 
 ## set_theme
 
@@ -305,7 +305,7 @@ Change look and feel
 def set_theme(name: str) -> None:
 ```
 
-- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/utils.py#L167)
+- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/utils.py#L168)
 
 ## str_to_float
 
@@ -315,7 +315,7 @@ Convert string to float.
 def str_to_float(value: str, default_value: float = 0) -> float:
 ```
 
-- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/utils.py#L112)
+- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/utils.py#L113)
 
 ## theme
 
@@ -325,5 +325,5 @@ Set theme (alias of set_theme)
 def theme(name: str) -> None:
 ```
 
-- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/utils.py#L193)
+- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/utils.py#L194)
 
