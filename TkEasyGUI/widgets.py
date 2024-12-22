@@ -57,6 +57,7 @@ WINDOW_TIMEOUT: str = "-TIMEOUT-"
 WINDOW_THREAD_END: str = "-THREAD_END-"
 TIMEOUT_KEY: str = WINDOW_TIMEOUT
 WINDOW_KEY_EVENT: str = "-WINDOW_KEY_EVENT-"
+WINDOW_MOUSE_EVENT: str = "-WINDOW_MOUSE_EVENT-"
 WINDOW_SHOW_EVENT: str = "-WINDOW_SHOW_EVENT-"
 LISTBOX_SELECT_MODE_MULTIPLE: ListboxSelectMode = "multiple"
 LISTBOX_SELECT_MODE_BROWSE: ListboxSelectMode = "browse"
@@ -98,6 +99,7 @@ class Window:
         alpha_channel: float = 1.0,  # window alpha channel
         enable_key_events: bool = False,  # enable keyboard events (post WINDOW_KEY_EVENT)
         enable_show_events: bool = False,  # enable window show/hide events (post WINDOW_SHOW_EVENT)
+        enable_mouse_events: bool = False,  # enable mouse events (post WINDOW_MOUSE_EVENT)
         return_keyboard_events: bool = False,  # enable keyboard events (for compatibility)
         location: Union[tuple[int, int], None] = None,  # window location
         center_window: bool = True,  # move window to center
@@ -228,6 +230,10 @@ class Window:
         if enable_show_events:
             self.window.bind("<Map>", self._on_window_show)
             self.window.bind("<Unmap>", self._on_window_hide)
+        # set mouse events
+        if enable_mouse_events:
+            self.window.bind("<Motion>", self._on_mouse_move)
+            self.window.bind("<Button>", self._on_mouse_click)
         # set window size
         self.frame.bind("<Configure>", self._on_frame_configure)
         # position
@@ -239,6 +245,14 @@ class Window:
             pass
         # set idle event
         self.window.after_idle(self._on_show_event)
+
+    def _on_mouse_move(self, event):
+        """Mouse move event."""
+        self.post_event(WINDOW_MOUSE_EVENT, {"event": event, "event_type": "mousemove"})
+
+    def _on_mouse_click(self, event):
+        """Mouse click event."""
+        self.post_event(WINDOW_MOUSE_EVENT, {"event": event, "event_type": "click"})
 
     def _on_show_event(self) -> None:
         """This method is called only once on the first execution."""
@@ -591,6 +605,7 @@ class Window:
             if self.timeout_id is not None:
                 self.window.after_cancel(self.timeout_id)
             self.window.update_idletasks()
+            self.window.update()
             # set next event
             if self._has_last_event:
                 self.timeout_id = self.window.after_idle(self._window_idle_handler)
