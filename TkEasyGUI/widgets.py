@@ -116,7 +116,7 @@ class Window:
         """Create a window with a layout of widgets."""
         self.modal: bool = modal
         # check active window
-        active_win: Union[tk.Toplevel, None] = _get_active_window()
+        active_win: Union[tk.Toplevel, tk.Tk, None] = _get_active_window()
         if active_win is None:
             active_win = get_root_window()
         self.key = key
@@ -272,14 +272,14 @@ class Window:
             self.window.after_idle(self.focus)
 
     def _on_window_show(self, event: Any) -> None:
-        values: dict[str, Any] = self.get_values()
+        values: dict[Union[str, int], Any] = self.get_values()
         values["event"] = event
         values["window.key"] = self.key
         values["window.status"] = "show"
         self.post_event(WINDOW_SHOW_EVENT, values)
 
     def _on_window_hide(self, event: Any) -> None:
-        values: dict[str, Any] = self.get_values()
+        values: dict[Union[str, int], Any] = self.get_values()
         values["event"] = event
         values["window.key"] = self.key
         values["window.status"] = "hide"
@@ -389,17 +389,17 @@ class Window:
         layout_ej: LayoutType = []
         if self.element_justification in ["center", "c"]:
             for widgets in layout:
-                cells = []
+                cells: list[Element] = []
                 cells.append(Push())
                 cells.extend(widgets)
                 cells.append(Push())
                 layout_ej.append(cells)
         elif self.element_justification in ["right", "r"]:
             for widgets in layout:
-                cells = []
-                cells.extend(widgets)
-                cells.append(Push())
-                layout_ej.append(cells)
+                cells_r: list[Element] = []
+                cells_r.extend(widgets)
+                cells_r.append(Push())
+                layout_ej.append(cells_r)
         else:
             layout_ej = layout
         # create widgets
@@ -2084,10 +2084,11 @@ class Checkbox(Element):
 
     def _on_change(self) -> None:
         """Change event."""
-        values: dict[str, Any] = self.window.get_values()
-        values["event_type"] = "change"
-        values["event"] = self.checkbox_var.get()
-        self.window.post_event(self.key, values)
+        if self.window is not None:
+            values: dict[KeyType, Any] = self.window.get_values()
+            values["event_type"] = "change"
+            values["event"] = self.checkbox_var.get()
+            self.window.post_event(self.key, values)
     
     def get_value(self) -> Any:
         """Get the value of the widget."""
@@ -2180,10 +2181,11 @@ class Radio(Element):
     
     def _on_change(self) -> None:
         """Change event."""
-        values: dict[str, Any] = self.window.get_values()
-        values["event_type"] = "change"
-        values["radio.index"] = self.get_value()
-        self.window.post_event(self.key, values)
+        if self.window is not None:
+            values: dict[KeyType, Any] = self.window.get_values()
+            values["event_type"] = "change"
+            values["radio.index"] = self.get_value()
+            self.window.post_event(self.key, values)
     
     def select(self) -> None:
         """Select the radio button."""
