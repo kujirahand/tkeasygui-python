@@ -1715,6 +1715,20 @@ class Text(Element):
             self.set_text(text)
         self._widget_update(**kw)
 
+class Push(Text):
+    """
+    An element for achieving right alignment and center alignment.
+    """
+    def __init__(
+                self,
+                metadata: Union[dict[str, Any], None] = None, # user metadata
+                **kw
+                ) -> None:
+        super().__init__(
+            "", "",
+            expand_x=True,
+            metadata=metadata, **kw)
+
 class Label(Text):
     """
     Label element (alias of Text)
