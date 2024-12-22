@@ -105,6 +105,7 @@ class Window:
         padding_y: int = 8,  # y padding around the window
         icon: Optional[str] = None,  # window icon, specify filename
         key: Optional[str] = None, # window key for enable_show_events
+        is_hidden: bool = False,  # hidden window
         show_scrollbar: bool = False,  # show scrollbar (Experimental)
         **kw,
     ) -> None:
@@ -134,7 +135,7 @@ class Window:
         self.checkbox_dict: dict[str, list[str]] = {}
         self.minimized: bool = False
         self.maximized: bool = False
-        self.is_hidden: bool = False
+        self.is_hidden: bool = is_hidden
         self._keep_on_top: bool = keep_on_top
         self._no_titlebar: bool = no_titlebar
         self._grab_anywhere: bool = grab_anywhere
@@ -248,9 +249,10 @@ class Window:
             self.window.attributes("-topmost", 1) # topmost
             # self.window.transient(parent)
             self.window.grab_set()
-            self.window.focus_force()
-        # alpha
-        self.window.deiconify()
+        # show
+        if not self.is_hidden:
+            self.window.deiconify()
+            self.window.after_idle(self.focus)
 
     def _on_window_show(self, event: Any) -> None:
         values: dict[str, Any] = self.get_values()
