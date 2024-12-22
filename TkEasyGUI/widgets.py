@@ -56,6 +56,7 @@ WINDOW_TIMEOUT: str = "-TIMEOUT-"
 WINDOW_THREAD_END: str = "-THREAD_END-"
 TIMEOUT_KEY: str = WINDOW_TIMEOUT
 WINDOW_KEY_EVENT: str = "-WINDOW_KEY_EVENT-"
+WINDOW_SHOW_EVENT: str = "-WINDOW_SHOW_EVENT-"
 LISTBOX_SELECT_MODE_MULTIPLE: ListboxSelectMode = "multiple"
 LISTBOX_SELECT_MODE_BROWSE: ListboxSelectMode = "browse"
 LISTBOX_SELECT_MODE_EXTENDED: ListboxSelectMode = "extended"
@@ -94,7 +95,8 @@ class Window:
         no_titlebar: bool = False,  # hide titlebar
         grab_anywhere: bool = False,  # can move window by dragging anywhere
         alpha_channel: float = 1.0,  # window alpha channel
-        enable_key_events: bool = False,  # enable keyboard events
+        enable_key_events: bool = False,  # enable keyboard events (post WINDOW_KEY_EVENT)
+        enable_show_events: bool = False, # enable window show/hide events (post WINDOW_SHOW_EVENT)
         return_keyboard_events: bool = False,  # enable keyboard events (for compatibility)
         location: Union[tuple[int, int], None] = None,  # window location
         center_window: bool = True,  # move window to center
@@ -102,16 +104,20 @@ class Window:
         padding_x: int = 8,  # x padding around the window
         padding_y: int = 8,  # y padding around the window
         icon: Optional[str] = None,  # window icon, specify filename
+        key: Optional[str] = None, # window key for enable_show_events
         show_scrollbar: bool = False,  # show scrollbar (Experimental)
         **kw,
     ) -> None:
         """Create a window with a layout of widgets."""
         self.modal: bool = modal
         # check active window
-        active_win: Any = _get_active_window()
+        active_win: Union[tk.Toplevel, None] = _get_active_window()
         if active_win is None:
             active_win = get_root_window()
+        self.key = key
         self.title: str = title
+        if self.key is None:
+            self.key = self.title
         self.window: tk.Toplevel = tk.Toplevel(master=active_win)
         self.timeout: Union[int, None] = None
         self.timeout_key: str = WINDOW_TIMEOUT
@@ -149,6 +155,8 @@ class Window:
         self._icon: Optional[tk.PhotoImage] = None
         self._idle_time: int = 10
         self._has_last_event = True
+        # withdraw window
+        self.window.withdraw() # Set the window to hidden mode
         # Icon
         if icon:
             self._set_icon(icon)
@@ -196,31 +204,26 @@ class Window:
             self.window.after_idle(self.hide_titlebar, True)
         if grab_anywhere:
             self.set_grab_anywhere(True)
-        if alpha_channel < 1.0:
-            self.set_alpha_channel(alpha_channel)
         # font
         if font is not None:
             self._calc_font_size(font)
+        # set alpha
+        self.set_alpha_channel(self.alpha_channel)
         # bind events
         if self.enable_key_events:
             self.window.bind("<Key>", lambda e: self._event_handler(
                 WINDOW_KEY_EVENT,
-                {"event": e, "key": e.keysym, "event_type": "key"}))
+                {"event": e, "key": e.keysym, "event_type": "key", "window.key": self.key}))
         if self.return_keyboard_events: # for compatibility with PySimpleGUI
             self.window.bind("<Key>", lambda e: self._event_handler(
                 e.keysym if len(e.keysym) == 1 else f"{e.keysym}:{e.keycode}", {}))
-        # check modal
-        if modal:
-            # set modal action
-            self.window.attributes("-topmost", 1) # topmost
-            # self.window.transient(parent)
-            self.window.grab_set()
-            self.window.focus_force()
         # push window
         self.parent_window: Union[Window, None] = _window_parent()
         _window_push(self)
         # set show event
-        self.window.bind("<Map>", self._on_window_show)
+        if enable_show_events:
+            self.window.bind("<Map>", self._on_window_show)
+            self.window.bind("<Unmap>", self._on_window_hide)
         # set window size
         self.frame.bind("<Configure>", self._on_frame_configure)
         # position
@@ -228,8 +231,40 @@ class Window:
             self.set_location(location)
         else:
             # could not get size with geometry() before window is shown
-            # so, move window to center after window is shown `_on_window_show`
+            # so, move window to center after window is shown `_on_show_event`
             pass
+        # set idle event
+        self.window.after_idle(self._on_show_event)
+
+    def _on_show_event(self) -> None:
+        """This method is called only once on the first execution."""
+        if self.center_window:
+            if self.parent_window is None: # only this window
+                self.move_to_center()
+            else:
+                self.move_to_center(center_pos=self.parent_window.get_center_location())
+        if self.modal:
+            # set modal action
+            self.window.attributes("-topmost", 1) # topmost
+            # self.window.transient(parent)
+            self.window.grab_set()
+            self.window.focus_force()
+        # alpha
+        self.window.deiconify()
+
+    def _on_window_show(self, event: Any) -> None:
+        values: dict[str, Any] = self.get_values()
+        values["event"] = event
+        values["window.key"] = self.key
+        values["window.status"] = "show"
+        self.post_event(WINDOW_SHOW_EVENT, values)
+
+    def _on_window_hide(self, event: Any) -> None:
+        values: dict[str, Any] = self.get_values()
+        values["event"] = event
+        values["window.key"] = self.key
+        values["window.status"] = "hide"
+        self.post_event(WINDOW_SHOW_EVENT, values)
 
     def focus(self) -> None:
         """Focus the window."""
@@ -273,15 +308,6 @@ class Window:
                 h = sh - pad_y
             self.set_size((w + pad_x, h + pad_y))
             self.size = pre_size
-
-    def _on_window_show(self, *event) -> None:
-        """Handle window show event."""
-        if self.center_window:
-            if self.parent_window is None: # only this window
-                self.move_to_center()
-            else:
-                self.move_to_center(center_pos=self.parent_window.get_center_location())
-        self.update_idle_tasks()
 
     def set_location(self, xy: tuple[int, int]) -> None:
         """Set window location."""
