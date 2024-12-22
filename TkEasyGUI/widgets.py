@@ -645,7 +645,7 @@ class Window:
             break
         return (key, values)
 
-    def _check_focus_widget(self, event: Any) -> None:
+    def _check_focus_widget(self) -> None:
         """Check Focus window"""
         if not self.flag_alive:
             return
@@ -2071,9 +2071,23 @@ class Checkbox(Element):
             win.checkbox_dict[self.group_id].append(str(self.key))
         # create checkbox
         self.checkbox_var = tk.BooleanVar(value=self.default_value)
-        self.checkbox_var.trace_add("write", lambda *args: self.disptach_event({"event_type": "change", "event": args}))
-        self.widget = ttk.Checkbutton(parent, style=self.style_name, variable=self.checkbox_var, **self.props)
+        # self.checkbox_var.trace_add("write", lambda *args: self.disptach_event({"event_type": "change", "event": args}))
+        # self.checkbox_var.trace_add("write", self._on_change)
+        self.widget = ttk.Checkbutton(
+            parent,
+            style=self.style_name,
+            variable=self.checkbox_var,
+            command=self._on_change,
+            **self.props,
+        )
         return self.widget
+
+    def _on_change(self) -> None:
+        """Change event."""
+        values: dict[str, Any] = self.window.get_values()
+        values["event_type"] = "change"
+        values["event"] = self.checkbox_var.get()
+        self.window.post_event(self.key, values)
     
     def get_value(self) -> Any:
         """Get the value of the widget."""
@@ -2147,9 +2161,9 @@ class Radio(Element):
         key: str = str(self.key) if self.key else self.text
         if self.group_id not in win.radio_group_dict:
             win.radio_group_dict[self.group_id] = tk.IntVar(value=0)
-            win.radio_group_dict[self.group_id].trace_add(
-                "write", lambda *args: post_change_event(*args)
-            )
+            #win.radio_group_dict[self.group_id].trace_add(
+            #    "write", lambda *args: post_change_event(*args)
+            #)
             win.radio_group_dict_keys[self.group_id] = [key]
         else:
             win.radio_group_dict_keys[self.group_id].append(key)
@@ -2160,11 +2174,19 @@ class Radio(Element):
             value=self.value,
             variable=win.radio_group_dict[self.group_id],
             style=self.style_name,
+            command=self._on_change,
             **self.props)
         if self.default_value:
             self.select()
         self.created_radio = True
         return self.widget
+    
+    def _on_change(self) -> None:
+        """Change event."""
+        values: dict[str, Any] = self.window.get_values()
+        values["event_type"] = "change"
+        values["radio.index"] = self.get_value()
+        self.window.post_event(self.key, values)
     
     def select(self) -> None:
         """Select the radio button."""
