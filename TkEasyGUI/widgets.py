@@ -22,6 +22,7 @@ from . import dialogs, utils, version
 from .utils import (
     # type alias
     CursorType,
+    ElementJustifcation,
     EventMode,
     FontType,
     ListboxSelectMode,
@@ -96,7 +97,7 @@ class Window:
         grab_anywhere: bool = False,  # can move window by dragging anywhere
         alpha_channel: float = 1.0,  # window alpha channel
         enable_key_events: bool = False,  # enable keyboard events (post WINDOW_KEY_EVENT)
-        enable_show_events: bool = False, # enable window show/hide events (post WINDOW_SHOW_EVENT)
+        enable_show_events: bool = False,  # enable window show/hide events (post WINDOW_SHOW_EVENT)
         return_keyboard_events: bool = False,  # enable keyboard events (for compatibility)
         location: Union[tuple[int, int], None] = None,  # window location
         center_window: bool = True,  # move window to center
@@ -104,8 +105,9 @@ class Window:
         padding_x: int = 8,  # x padding around the window
         padding_y: int = 8,  # y padding around the window
         icon: Optional[str] = None,  # window icon, specify filename
-        key: Optional[str] = None, # window key for enable_show_events
+        key: Optional[str] = None,  # window key for enable_show_events
         is_hidden: bool = False,  # hidden window
+        element_justification: ElementJustifcation = "left",  # element justification
         show_scrollbar: bool = False,  # show scrollbar (Experimental)
         **kw,
     ) -> None:
@@ -156,6 +158,7 @@ class Window:
         self._icon: Optional[tk.PhotoImage] = None
         self._idle_time: int = 10
         self._has_last_event = True
+        self.element_justification = element_justification
         # withdraw window
         self.window.withdraw() # Set the window to hidden mode
         # Icon
@@ -368,9 +371,26 @@ class Window:
         for widgets in layout:
             for elem in widgets:
                 elem.prepare_create(self)
+        # check element_justification
+        layout_ej: LayoutType = []
+        if self.element_justification in ["center", "c"]:
+            for widgets in layout:
+                cells = []
+                cells.append(Push())
+                cells.extend(widgets)
+                cells.append(Push())
+                layout_ej.append(cells)
+        elif self.element_justification in ["right", "r"]:
+            for widgets in layout:
+                cells = []
+                cells.extend(widgets)
+                cells.append(Push())
+                layout_ej.append(cells)
+        else:
+            layout_ej = layout
         # create widgets
         self.need_focus_widget: tk.Widget|None = None
-        for row_no, widgets in enumerate(layout):
+        for row_no, widgets in enumerate(layout_ej):
             bgcolor = None
             if parent is not None:
                 try:
@@ -558,9 +578,10 @@ class Window:
         # get root window
         root = get_root_window()
         # update window before mainloop
-        root.update() 
+        root.update()
         # set focus timer (once when window show)
-        self.window.after("idle", _focus_window, self)
+        if self.need_focus_widget is not None:
+            self.window.after_idle(self._check_focus_widget)
         # mainloop for hook
         key: KeyType = ''
         values: dict[KeyType, Any] = {} # set default key and values
@@ -572,7 +593,7 @@ class Window:
             self.window.update_idletasks()
             # set next event
             if self._has_last_event:
-                self.timeout_id = self.window.after("idle", self._window_idle_handler)
+                self.timeout_id = self.window.after_idle(self._window_idle_handler)
             else:
                 self.timeout_id = self.window.after(self._idle_time, self._window_idle_handler)
             # -----------------------------------------------------
@@ -608,7 +629,16 @@ class Window:
             # return a event
             break
         return (key, values)
-    
+
+    def _check_focus_widget(self, event: Any) -> None:
+        """Check Focus window"""
+        if not self.flag_alive:
+            return
+        if self.need_focus_widget is not None:
+            self.need_focus_widget.focus_set()
+            self.need_focus_widget = None
+            _exit_mainloop()
+
     def start_thread(
         self,
         target: Callable,
@@ -987,15 +1017,6 @@ def _exit_mainloop() -> None:
     except Exception:
         print("_exit_mainloop: failed to exit mainloop", file=sys.stderr)
         pass
-
-def _focus_window(self: Window) -> None:
-    """Focus window"""
-    if not self.flag_alive:
-        return
-    if self.need_focus_widget is not None:
-        self.need_focus_widget.focus_set()
-        self.need_focus_widget = None
-        _exit_mainloop()
 
 #------------------------------------------------------------------------------
 # Element
@@ -1718,6 +1739,18 @@ class Text(Element):
 class Push(Text):
     """
     An element for achieving right alignment and center alignment.
+    **Example**
+    ```py
+    win = sg.Window(
+        title="Hello World",
+        layout=[
+            [sg.Text("=" * 50)],
+            [sg.Push(), sg.Button("Hello World")],  # right alignment
+            [sg.Push(), sg.Button("OK"), sg.Push()], # center alignment
+        ])
+    while win.is_running():
+    event, values = win.read()
+    ```
     """
     def __init__(
                 self,

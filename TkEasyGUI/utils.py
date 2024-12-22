@@ -29,6 +29,7 @@ CursorType = Literal["arrow", "circle", "cross", "dotbox", "exchange", "fleur",
     "shuttle", "sizing", "spider", "spraycan", "star", "target",
     "tcross", "trek", "watch", "xterm", "ibeam", "wait", 
     "size", "size_all", "size_nw_se", "size_ne_sw", "size_we", "size_ns"]
+ElementJustifcation = Literal["left", "center", "right", "c", "r"]
 
 # -------------------------------------------------------------------
 # clipboard
