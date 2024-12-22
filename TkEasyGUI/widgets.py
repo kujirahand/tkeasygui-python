@@ -3597,10 +3597,10 @@ class Table(Element):
                 continue
             # header size
             label = self.headings[i] if i < len(self.headings) else ""
-            max_len: int = len(label)
+            max_len: int = len(str(label))
             for row in self.values:
                 text = row[i] if i < len(row) else ""
-                max_len = max(len(text), max_len)
+                max_len = max(len(str(text)), max_len)
             self.col_widths_real[i] = max_len * font_w
 
     def set_values(self, values: list[list[str]], headings: Union[list[str], None] = None) -> None:
