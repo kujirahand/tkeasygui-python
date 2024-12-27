@@ -244,7 +244,8 @@ class Window:
             # so, move window to center after window is shown `_on_show_event`
             pass
         # set idle event
-        self.window.after_idle(self._on_show_event)
+        self.update_idle_tasks()
+        self.window.after(10, self._on_show_event)
 
     def _on_mouse_move(self, event):
         """Mouse move event."""
@@ -256,11 +257,7 @@ class Window:
 
     def _on_show_event(self) -> None:
         """This method is called only once on the first execution."""
-        if self.center_window:
-            if self.parent_window is None: # only this window
-                self.move_to_center()
-            else:
-                self.move_to_center(center_pos=self.parent_window.get_center_location())
+        alpha = self.alpha_channel  # for hidden window
         if self.modal:
             # set modal action
             self.window.attributes("-topmost", 1) # topmost
@@ -268,8 +265,20 @@ class Window:
             self.window.grab_set()
         # show
         if not self.is_hidden:
+            self.set_alpha_channel(0)
+            root = get_root_window()
+            root.update_idletasks()
             self.window.deiconify()
+            root.focus_force()
             self.window.after_idle(self.focus)
+        # center window
+        if self.center_window or self.modal:
+            if self.parent_window is None:  # only this window
+                self.move_to_center()
+            else:
+                self.move_to_center(center_pos=self.parent_window.get_center_location())
+        # show window
+        self.set_alpha_channel(alpha)
 
     def _on_window_show(self, event: Any) -> None:
         values: dict[Union[str, int], Any] = self.get_values()
@@ -539,16 +548,20 @@ class Window:
     def move_to_center(self, center_pos: Union[tuple[int, int], None] = None) -> None:
         """Move the window to the center of the screen."""
         if center_pos is None:
+            print("@@@ center_pos is None")
             w, h = self.get_screen_size()
             cx, cy = w // 2, h // 2
         else:
             cx, cy = center_pos
+            w, h = self.get_screen_size()
+            print(f"@@@({cx},{cy})={w}, {h}")
         try:
             if self.size is None:
                 win_x, win_y = self.get_size()
                 if win_x < 10 or win_y < 10:
                     win_x = 600 # TODO: 適当なサイズ
                     win_y = 400
+                print("@@@ self.size is None=", win_x, win_y)
             else:
                 win_x, win_y = self.size
             x = (cx - win_x // 2)
@@ -888,6 +901,12 @@ class Window:
             # remove from TkEasyGUI window stack
             try:
                 _window_pop(self)
+            except Exception as _:  # ignore
+                pass
+            # activate parent window
+            try:
+                if self.parent_window is not None:
+                    self.parent_window.window.focus_force()
             except Exception as _:  # ignore
                 pass
             # check window count
