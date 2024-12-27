@@ -161,8 +161,6 @@ class Window:
         self._idle_time: int = 10
         self._has_last_event = True
         self.element_justification = element_justification
-        # withdraw window
-        self.window.withdraw() # Set the window to hidden mode
         # Icon
         if icon:
             self._set_icon(icon)
@@ -213,8 +211,8 @@ class Window:
         # font
         if font is not None:
             self._calc_font_size(font)
-        # set alpha
-        self.set_alpha_channel(self.alpha_channel)
+        # set hidden
+        self.window.attributes("-alpha", 0) # hidden window for calculating size
         # bind events
         if self.enable_key_events:
             self.window.bind("<Key>", lambda e: self._event_handler(
@@ -245,7 +243,7 @@ class Window:
             pass
         # set idle event
         self.update_idle_tasks()
-        self.window.after(10, self._on_show_event)
+        self.window.after_idle(self._on_show_event)
 
     def _on_mouse_move(self, event):
         """Mouse move event."""
@@ -257,7 +255,6 @@ class Window:
 
     def _on_show_event(self) -> None:
         """This method is called only once on the first execution."""
-        alpha = self.alpha_channel  # for hidden window
         if self.modal:
             # set modal action
             self.window.attributes("-topmost", 1) # topmost
@@ -265,10 +262,8 @@ class Window:
             self.window.grab_set()
         # show
         if not self.is_hidden:
-            self.set_alpha_channel(0)
             root = get_root_window()
             root.update_idletasks()
-            self.window.deiconify()
             root.focus_force()
             self.window.after_idle(self.focus)
         # center window
@@ -278,7 +273,7 @@ class Window:
             else:
                 self.move_to_center(center_pos=self.parent_window.get_center_location())
         # show window
-        self.set_alpha_channel(alpha)
+        self.set_alpha_channel(self.alpha_channel)
 
     def _on_window_show(self, event: Any) -> None:
         values: dict[Union[str, int], Any] = self.get_values()
@@ -548,20 +543,16 @@ class Window:
     def move_to_center(self, center_pos: Union[tuple[int, int], None] = None) -> None:
         """Move the window to the center of the screen."""
         if center_pos is None:
-            print("@@@ center_pos is None")
             w, h = self.get_screen_size()
             cx, cy = w // 2, h // 2
         else:
             cx, cy = center_pos
-            w, h = self.get_screen_size()
-            print(f"@@@({cx},{cy})={w}, {h}")
         try:
             if self.size is None:
                 win_x, win_y = self.get_size()
                 if win_x < 10 or win_y < 10:
                     win_x = 600 # TODO: 適当なサイズ
                     win_y = 400
-                print("@@@ self.size is None=", win_x, win_y)
             else:
                 win_x, win_y = self.size
             x = (cx - win_x // 2)
