@@ -161,6 +161,8 @@ class Window:
         self._idle_time: int = 10
         self._has_last_event = True
         self.element_justification = element_justification
+        # withdraw window
+        self.window.withdraw() # Set the window to hidden mode
         # Icon
         if icon:
             self._set_icon(icon)
@@ -255,6 +257,9 @@ class Window:
 
     def _on_show_event(self) -> None:
         """This method is called only once on the first execution."""
+        # hide window for showing ghost window (#102)
+        alpha = self.alpha_channel
+        self.set_alpha_channel(0)
         if self.modal:
             # set modal action
             self.window.attributes("-topmost", 1) # topmost
@@ -265,6 +270,7 @@ class Window:
             root = get_root_window()
             root.update_idletasks()
             root.focus_force()
+            self.window.deiconify()
             self.window.after_idle(self.focus)
         # center window
         if self.center_window or self.modal:
@@ -273,7 +279,7 @@ class Window:
             else:
                 self.move_to_center(center_pos=self.parent_window.get_center_location())
         # show window
-        self.set_alpha_channel(self.alpha_channel)
+        self.set_alpha_channel(alpha)
 
     def _on_window_show(self, event: Any) -> None:
         values: dict[Union[str, int], Any] = self.get_values()
