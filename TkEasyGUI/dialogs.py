@@ -52,9 +52,11 @@ def popup_buttons(
     result = buttons[-1] if len(buttons) > 0 else default
 
     # create window
+    eg_buttons: list[eg.Element] = [eg.Button(s, width=9) for s in buttons]
+    eg_buttons_pad: list[eg.Element] = [eg.Push()] + eg_buttons + [eg.Push()]
     layout: eg.LayoutType = [
         [eg.Text(message)],
-        [eg.Button(s, width=9) for s in buttons],
+        eg_buttons_pad,
     ]
     
     # event loop
@@ -708,7 +710,8 @@ def popup_get_form(
         # append line
         layout.append(line)
     layout.append([eg.HSeparator()])
-    layout.append([eg.Button("OK", width=9), eg.Button("Cancel", width=5)])
+    cancel_label = le.get_text("Cancel")
+    layout.append([eg.Push(), eg.Button("OK", width=9), eg.Button(cancel_label, key="Cancel", width=5), eg.Push()])
     with eg.Window(title, layout=layout) as win:
         result: Union[dict[str, Any], None] = None
         for event, values in win.event_iter():
