@@ -11,12 +11,15 @@
 
 - [👉日本語](https://github.com/kujirahand/tkeasygui-python/blob/main/README-ja.md) / [👉中文](https://github.com/kujirahand/tkeasygui-python/blob/main/README-zh.md) / [👉한국어](https://github.com/kujirahand/tkeasygui-python/blob/main/README-ko.md)
 
+[![PyPI Downloads](https://static.pepy.tech/badge/tkeasygui)](https://pepy.tech/projects/tkeasygui)
+[![PyPI Version](https://img.shields.io/pypi/v/tkeasygui)](https://pypi.org/project/tkeasygui/)
+[![GitHub License](https://img.shields.io/github/license/kujirahand/tkeasygui-python)]
 
 ## Platform
 
 - Windows / macOS / Linux (Tkinter required)
 
-<img src="https://github.com/kujirahand/tkeasygui-python/raw/main/docs/image/tkeasygui-shot640.jpg" width="300" alt="TkEasyGUI">
+<img src="https://github.com/kujirahand/tkeasygui-python/raw/main/docs/image/tkeasygui-shot1000.jpg" width="500" alt="TkEasyGUI">
 
 ## Install
 
