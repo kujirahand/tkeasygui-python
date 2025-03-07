@@ -10,16 +10,14 @@ This library allows you to easily create GUI applications with Python.
 Since it is based on Tkinter, it runs consistently on Windows, macOS, and Linux.
 With a variety of built-in dialogs and customizable forms, you can develop applications effortlessly.
 
-<img src="https://github.com/kujirahand/tkeasygui-python/raw/main/docs/image/logo-button.jpg" width="180" alt="TkEasyGUI Logo">
+<img src="https://github.com/kujirahand/tkeasygui-python/raw/main/docs/image/tkeasygui-shot1000.jpg" width="500" alt="TkEasyGUI Screenshot">
 
 - [👉日本語](https://github.com/kujirahand/tkeasygui-python/blob/main/README-ja.md) / [👉中文](https://github.com/kujirahand/tkeasygui-python/blob/main/README-zh.md) / [👉한국어](https://github.com/kujirahand/tkeasygui-python/blob/main/README-ko.md)
-
 
 ## Platform
 
 - Windows / macOS / Linux (Tkinter required)
 
-<img src="https://github.com/kujirahand/tkeasygui-python/raw/main/docs/image/tkeasygui-shot1000.jpg" width="500" alt="TkEasyGUI">
 
 ## Install
 
@@ -166,7 +164,9 @@ Japanese tutorials:
 - TkEasyGUI has been completely reimplemented from scratch and is licensed under the MIT License.
 - However, full compatibility with PySimpleGUI is not intended.
 
-### TkEasyGUI features:
+## TkEasyGUI features:
+
+<img src="https://github.com/kujirahand/tkeasygui-python/raw/main/docs/image/logo-button.jpg" width="180" alt="TkEasyGUI Logo">
 
 - Using a `for` loop and `window.event_iter()` enables straightforward event processing.
 - Custom popup dialogs, such as a color selection dialog(`eg.popup_color`), a list dialog(`eg.popup_listbox`), form dialog(`eg.popup_get_form`) are available.
