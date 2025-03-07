@@ -1,19 +1,19 @@
-# TkEasyGUI
-
-`TkEasyGUI` is the easiest library for creating GUIs in Python.
-
-<img src="https://github.com/kujirahand/tkeasygui-python/raw/main/docs/image/logo-button.jpg" width="180" alt="TkEasyGUI Logo">
-
-- Python's standard UI library `Tkinter`, is often considered to have a high barrier to entry and to be difficult to use. By using this library, you can create GUI applications easily and intuitively.
-- In the event model, it is compatible with the well-known GUI library `PySimpleGUI`.
-- This package supports type hints, allowing property selection via code completion. `Python 3.9 or later` is required.
-- This project adopts the lenient MIT license. This license will not change in the future. Let's enjoy creating GUI programs.
-
-- [👉日本語](https://github.com/kujirahand/tkeasygui-python/blob/main/README-ja.md) / [👉中文](https://github.com/kujirahand/tkeasygui-python/blob/main/README-zh.md) / [👉한국어](https://github.com/kujirahand/tkeasygui-python/blob/main/README-ko.md)
+# TkEasyGUI - the easiest library for GUI
 
 [![PyPI Downloads](https://static.pepy.tech/badge/tkeasygui)](https://pepy.tech/projects/tkeasygui)
 [![PyPI Version](https://img.shields.io/pypi/v/tkeasygui)](https://pypi.org/project/tkeasygui/)
-[![GitHub License](https://img.shields.io/github/license/kujirahand/tkeasygui-python)]
+[![GitHub License](https://img.shields.io/github/license/kujirahand/tkeasygui-python)](https://github.com/kujirahand/kudb-python/blob/main/LICENSE)
+
+`TkEasyGUI` is the easiest library for creating GUIs in Python.
+
+This library allows you to easily create GUI applications with Python.
+Since it is based on Tkinter, it runs consistently on Windows, macOS, and Linux.
+With a variety of built-in dialogs and customizable forms, you can develop applications effortlessly.
+
+<img src="https://github.com/kujirahand/tkeasygui-python/raw/main/docs/image/logo-button.jpg" width="180" alt="TkEasyGUI Logo">
+
+- [👉日本語](https://github.com/kujirahand/tkeasygui-python/blob/main/README-ja.md) / [👉中文](https://github.com/kujirahand/tkeasygui-python/blob/main/README-zh.md) / [👉한국어](https://github.com/kujirahand/tkeasygui-python/blob/main/README-ko.md)
+
 
 ## Platform
 
@@ -37,7 +37,12 @@ Install package from [GitHub Repository](https://github.com/kujirahand/tkeasygui
 python -m pip install git+https://github.com/kujirahand/tkeasygui-python
 ```
 
-- (memo) Updating from older versions (less than 0.2.24) will fail. ([See the solution](https://github.com/kujirahand/tkeasygui-python/blob/main/docs/installation_trouble.md))
+## Features of This Library
+
+- Python's standard UI library `Tkinter`, is often considered to have a high barrier to entry and to be difficult to use. By using this library, you can create GUI applications easily and intuitively.
+- This package supports type hints, allowing property selection via code completion. `Python 3.9 or later` is required.
+- In the event model, it is compatible with the well-known GUI library `PySimpleGUI`.
+- This project adopts the lenient MIT license. This license will not change in the future. Let's enjoy creating GUI programs.
 
 ## How to use - popup dialogs
 
