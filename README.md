@@ -156,6 +156,11 @@ Japanese tutorials:
 - [TkEasyGUI - Pythonで最も素早くデスクトップアプリを創るライブラリ](https://note.com/kujirahand/n/n33a2df3aa3e5)
 - [マイナビニュースPython連載116回目 - 合計/整形/コピーのツールを作ろう](https://news.mynavi.jp/techplus/article/zeropython-116/)
 - [(Book) Pythonでつくるデスクトップアプリ メモ帳からスクレイピング・生成AI利用まで](https://amzn.to/45R2NSH)
+- [(Magazine) 日経ソフトウエア2025年5月号の特集記事 - TkEasyGUIを使ってみよう](https://amzn.to/4j1lj0c)
+
+There are other helpful articles as well.
+
+- [TkEasyGUI - 目的別ダイアログ完全ガイド](https://note.com/sirodon_256/n/n4138ebf4877f)
 
 ## Compatibility with PySimpleGUI
 
