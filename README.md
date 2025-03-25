@@ -161,6 +161,7 @@ Japanese tutorials:
 There are other helpful articles as well.
 
 - [TkEasyGUI - 目的別ダイアログ完全ガイド](https://note.com/sirodon_256/n/n4138ebf4877f)
+- [TkEasyGUIライブラリの基本とサンプルコード解説](https://note.com/sirodon_256/n/na73d3fdac68d)
 
 ## Compatibility with PySimpleGUI
 
