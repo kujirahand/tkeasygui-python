@@ -87,7 +87,7 @@ if form:
 
 - [Docs > Dialogs](https://github.com/kujirahand/tkeasygui-python/blob/main/docs/TkEasyGUI/dialogs-py.md)
 
-### How to use - widgets
+## How to use - widgets
 
 To create a simple window with only labels and buttons, you would write as follows:
 
