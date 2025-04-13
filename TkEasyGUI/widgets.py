@@ -12,7 +12,7 @@ from enum import Enum
 from queue import Queue
 from tkinter import font as tkinter_font
 from tkinter import scrolledtext, ttk
-from typing import Any, cast, Callable, Optional, TypeAlias, Union
+from typing import Any, cast, Callable, Optional, TypeAlias, Union, Sequence
 
 from PIL import Image as PILImage
 from PIL import ImageColor, ImageTk
@@ -44,7 +44,7 @@ from .utils import (
 # ------------------------------------------------------------------------------
 WindowType: TypeAlias = "Window"
 ElementType: TypeAlias = "Element"
-LayoutType = list[list["Element"]]
+LayoutType = Sequence[Sequence["Element"]]
 KeyType = Union[str, int]
 
 # ------------------------------------------------------------------------------
