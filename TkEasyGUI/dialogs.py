@@ -1,6 +1,4 @@
-"""
-TkEasyGUI dialogs
-"""
+"""TkEasyGUI dialogs."""
 
 import base64
 import os
@@ -261,6 +259,7 @@ def popup_yes_no(
 ) -> str:
     """
     Display a message in a popup window with Yes and No buttons. Return "Yes" or "No" (or eg.WINDOW_CLOSED).
+
     @see [tests/localize_test.py](https://github.com/kujirahand/tkeasygui-python/blob/main/tests/localize_test.py)
     #### Example - simple:
     Ask user question, [Yes] or [No] buttons.
@@ -596,7 +595,6 @@ def popup_memo(
         cancel_value,
         font,
         resizable=resizable,
-        size=size,
     )
 
 
@@ -613,6 +611,7 @@ def popup_scrolled(
 ) -> Union[str, None]:
     """
     Display a multiline message in a popup window. Return the text entered. if canceled, return cancel_value.
+
     #### Example:
     ```py
     import TkEasyGUI as eg
@@ -885,42 +884,41 @@ def popup_get_form(
 ) -> Union[dict[str, Any], None]:
     """
     Displays a form that allows multiple items to be entered.
+
     By specifying the labels and input types for each item, the form is automatically generated and displayed in a dialog.
     When the user enters the items and clicks [OK], it returns `{label: value}`. If the user clicks [Cancel], it returns `None`.
 
-    The `form_items` argument can specify input fields simply as `[label1, label2, label3, ...]`.
-    Alternatively, you can specify labels, types, and default values as `[(label1, default1, type1), (label2, default2, type2), ...]`.
-    The following values can be specified for the type: `text`, `number`, `password`, `combo`, `list`, `date`, `file`, `files`, `folder`, `color`.
+    ### Arguments:
+    - `form_items` (list): A list of form items. Each item can be:
+      - A string (label only, default type is "text").
+      - A tuple of `(label, default_value)` (default type is "text").
+      - A tuple of `(label, default_value, type)` where `type` can be:
+        - `"text"`: Single-line text input.
+        - `"number"`: Numeric input.
+        - `"password"`: Password input (masked).
+        - `"combo"`: Dropdown menu.
+        - `"list"`: List selection.
+        - `"date"`: Date picker.
+        - `"file"`: File selection.
+        - `"files"`: Multiple file selection.
+        - `"folder"`: Folder selection.
+        - `"color"`: Color picker.
 
-    @see [tests/popup_get_form_test.py](/tests/popup_get_form_test.py)
+    - `title` (str): The title of the form window. Default is "Form".
+    - `size` (tuple[int, int] | None): The size of the form window. Default is `None`.
 
+    ### Returns:
+    - `dict[str, Any] | None`: A dictionary with `{label: value}` pairs if the user clicks [OK]. Returns `None` if the user clicks [Cancel].
+
+    ### Examples:
     #### Simple Example:
-    ```py
+    ```python
     import TkEasyGUI as eg
     form = eg.popup_get_form(["Name", "Hobbies"])
     if form:
         name = form["Name"]
         hobbies = form["Hobbies"]
         eg.print(f"name={name}, hobbies={hobbies}")
-    ```
-
-    #### Example:
-    ```py
-    import TkEasyGUI as eg
-    result = eg.popup_get_form([
-        # [label, default_or_selections, type]
-        ["Name", "Suzu", "text"],
-        ["Age", 20, "number"],
-        ["Hobbies", ["Reading", "Writing"], "list"],
-        ["OS", ["Windows", "macOS", "Ubuntu"], "combo"],
-        ["Password", "", "password"],
-        ["Date", "", "date"],
-        ["File", "", "file"],
-        ["Folder", "", "folder"],
-        ["Theme Color", "", "color"],
-    ])
-    if result:
-        print(result)
     ```
     """
     # make form layout
@@ -929,6 +927,7 @@ def popup_get_form(
     layout: eg.LayoutType = []
     for i, it in enumerate(form_items):
         it_key = f"-formitem{i}"
+        default_value: Union[str, tuple[str, Any], tuple[str, Any, str]] = ""
         if isinstance(it, tuple) or isinstance(it, list):
             label = it[0]
             default_value = it[1] if len(it) >= 2 else ""
@@ -937,7 +936,6 @@ def popup_get_form(
                 itype = "list"
         else:
             label = it
-            default_value = ""
             itype = "text"
         if itype == "":
             itype = "text"
@@ -950,10 +948,16 @@ def popup_get_form(
         ]
         # check type
         itype = itype.lower()
+        sels: list = []
         if itype == "text" or itype == "number" or itype == "password":
+            text = ""
+            if isinstance(default_value, tuple) or isinstance(default_value, list):
+                default_value = ",".join(default_value)
+            else:
+                text = str(default_value)
             line.append(
                 eg.Input(
-                    default_value,
+                    text=text,
                     key=it_key,
                     size=(20, 1),
                     password_char="*" if itype == "password" else None,
@@ -962,28 +966,36 @@ def popup_get_form(
             if itype == "number":
                 item_converters[i] = float
         elif itype == "combo":
-            sels = default_value
+            sels = []
+            if isinstance(default_value, tuple) or isinstance(default_value, list):
+                sels = list(default_value)
+            else:
+                sels = default_value.split(",")
             val = sels[0] if len(sels) > 0 else ""
             line.append(eg.Combo(sels, default_value=val, key=it_key, size=(19, 1)))
         elif itype == "list":
-            sels = default_value
+            sels = []
+            if isinstance(default_value, tuple) or isinstance(default_value, list):
+                sels = list(default_value)
+            else:
+                sels = default_value.split(",")
             val = sels[0] if len(sels) > 0 else ""
             line.append(eg.Input(val, key=it_key, size=(15, 1)))
             line.append(eg.ListBrowse(sels))
         elif itype == "date":
-            line.append(eg.Input(default_value, key=it_key, size=(15, 1)))
+            line.append(eg.Input(str(default_value), key=it_key, size=(15, 1)))
             line.append(eg.CalendarBrowse())
         elif itype == "file":
-            line.append(eg.Input(default_value, key=it_key, size=(15, 1)))
+            line.append(eg.Input(str(default_value), key=it_key, size=(15, 1)))
             line.append(eg.FileBrowse())
         elif itype == "files":
-            line.append(eg.Input(default_value, key=it_key, size=(15, 1)))
+            line.append(eg.Input(str(default_value), key=it_key, size=(15, 1)))
             line.append(eg.FileBrowse(multiple_files=True))
         elif itype == "folder":
-            line.append(eg.Input(default_value, key=it_key, size=(15, 1)))
+            line.append(eg.Input(str(default_value), key=it_key, size=(15, 1)))
             line.append(eg.FolderBrowse())
         elif itype == "color":
-            line.append(eg.Input(default_value, key=it_key, size=(15, 1)))
+            line.append(eg.Input(str(default_value), key=it_key, size=(15, 1)))
             line.append(eg.ColorBrowse())
         # append line
         layout.append(line)
@@ -1040,7 +1052,7 @@ def popup_notify(message: str, title: str = "") -> None:
 
 
 def send_notification_mac(message: str, title: str = "") -> bool:
-    """ "Send Notification on mac"""
+    """Send Notification on mac"""
     # check osascript
     oascript_path = "/usr/bin/osascript"
     if not os.path.exists(oascript_path):
@@ -1131,6 +1143,7 @@ def popup_color(
 ) -> Union[str, tuple[int, int, int], None]:
     """
     Popup a color selection dialog. Return the color selected.
+
     format: "html", "rgb", "tuple"
     """
     col = colorchooser.askcolor(title=title, color=default_color)
@@ -1257,19 +1270,19 @@ def ask_retry_cancel(message: str, title: str = "Question") -> bool:
 
 
 def show_message(message: str, title: Union[str, None] = None) -> None:
-    """show message in a popup window"""
+    """Show message in a popup window"""
     title = title if title is not None else le.get_text("Information")
     messagebox.showinfo(title, message)
 
 
 def show_info(message: str, title: Union[str, None] = None) -> None:
-    """show message in a popup window"""
+    """Show message in a popup window"""
     title = title if title is not None else le.get_text("Information")
     messagebox.showinfo(title, message)
 
 
 def msgbox(message: str, title: Union[str, None] = None) -> None:  # message
-    """show message in a popup window like VB"""
+    """Show message in a popup window like VB"""
     title = title if title is not None else le.get_text("Information")
     messagebox.showinfo(title, message)
 

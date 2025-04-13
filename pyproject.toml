@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "TkEasyGUI"
-version = "1.0.21"
+version = "1.0.22"
 dependencies = [
   "Pillow",
   "pyperclip",
@@ -40,5 +40,5 @@ Issues = "https://github.com/kujirahand/tkeasygui-python/issues"
 Changelog = "https://github.com/kujirahand/tkeasygui-python/releases"
 
 [tool.ruff.lint]
-select = ["E", "F", "I"]
-ignore = ["E501"]
+select = ["E", "F", "D"]
+ignore = ["E501", "D415", "D203", "D212", "D400", "D401"]

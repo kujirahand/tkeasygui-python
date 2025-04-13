@@ -1,11 +1,11 @@
-#------------------------------------------------------------------------------
-# TkEasyGUI locale
-#------------------------------------------------------------------------------
+"""TkEasyGUI locale module"""
+
 import locale
 from typing import Union
 
 # locale
-_locale: str = "" # locale cache
+_locale: str = ""  # locale cache
+
 # locale messages
 _locale_messages: dict[str, dict[str, str]] = {
     "ja": {
@@ -31,7 +31,7 @@ _locale_messages: dict[str, dict[str, str]] = {
         "Run": "実行",
         "Quit": "終了",
         "Thank you.": "ありがとうございます。",
-        "Please enter a number." : "数値を入力してください。",
+        "Please enter a number.": "数値を入力してください。",
     },
     "zh": {
         "__date_format__": "%Y年%m月%d日",
@@ -56,12 +56,13 @@ _locale_messages: dict[str, dict[str, str]] = {
         "Run": "运行",
         "Quit": "退出",
         "Thank you.": "谢谢。",
-        "Please enter a number." : "请输入一个数字。",
+        "Please enter a number.": "请输入一个数字。",
     },
 }
 
+
 def get_locale() -> str:
-    """get locale"""
+    """Get locale"""
     global _locale
     if _locale == "":
         def_locale = locale.getdefaultlocale()
@@ -71,13 +72,15 @@ def get_locale() -> str:
                 _locale = _locale.split("_")[0]
     return _locale
 
+
 def set_locale(locale: str) -> None:
-    """set locale"""
+    """Set locale"""
     global _locale
     _locale = locale
 
-def get_text(key: str, default_text: Union[str, None]=None) -> str:
-    """get locale text"""
+
+def get_text(key: str, default_text: Union[str, None] = None) -> str:
+    """Get locale text"""
     locale = get_locale()
     if locale in _locale_messages:
         if key in _locale_messages[locale]:
@@ -86,11 +89,11 @@ def get_text(key: str, default_text: Union[str, None]=None) -> str:
         return default_text
     return key
 
-def set_text(key: str, message: str, locale:str = "") -> None:
-    """set locale text"""
+
+def set_text(key: str, message: str, locale: str = "") -> None:
+    """Set locale text"""
     if locale == "":
         locale = get_locale()
         if locale not in _locale_messages:
             _locale_messages[locale] = {}
     _locale_messages[locale][key] = message
-

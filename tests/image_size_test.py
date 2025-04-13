@@ -1,4 +1,5 @@
-""""
+"""
+"
 ### Image size sample
 
 """

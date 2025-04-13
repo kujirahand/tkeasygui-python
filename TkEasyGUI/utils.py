@@ -1,6 +1,4 @@
-"""
-TkEasyGUI utilities functions
-"""
+"""TkEasyGUI utilities functions."""
 
 import os
 import platform
@@ -24,57 +22,97 @@ PadType = Union[int, tuple[int, int], tuple[tuple[int, int], tuple[int, int]]]
 ReliefType = Literal["flat", "groove", "raised", "ridge", "solid", "sunken"]
 KeyType = Union[str, int]
 ColorFormatType = Literal["html", "rgb", "tuple"]
-CursorType = Literal["arrow", "circle", "cross", "dotbox", "exchange", "fleur",
-    "hand1", "hand2", "heart", "man", "mouse", "pirate", "plus",
-    "shuttle", "sizing", "spider", "spraycan", "star", "target",
-    "tcross", "trek", "watch", "xterm", "ibeam", "wait", 
-    "size", "size_all", "size_nw_se", "size_ne_sw", "size_we", "size_ns"]
+CursorType = Literal[
+    "arrow",
+    "circle",
+    "cross",
+    "dotbox",
+    "exchange",
+    "fleur",
+    "hand1",
+    "hand2",
+    "heart",
+    "man",
+    "mouse",
+    "pirate",
+    "plus",
+    "shuttle",
+    "sizing",
+    "spider",
+    "spraycan",
+    "star",
+    "target",
+    "tcross",
+    "trek",
+    "watch",
+    "xterm",
+    "ibeam",
+    "wait",
+    "size",
+    "size_all",
+    "size_nw_se",
+    "size_ne_sw",
+    "size_we",
+    "size_ns",
+]
 ElementJustifcation = Literal["left", "center", "right", "c", "r"]
+
 
 # -------------------------------------------------------------------
 # clipboard
 # -------------------------------------------------------------------
 def set_clipboard(text):
-    """copy text to clipboard"""
+    """Copy text to clipboard"""
     pyperclip.copy(text)
 
+
 def get_clipboard():
-    """get text from clipboard"""
+    """Get text from clipboard"""
     return pyperclip.paste()
 
+
 def copy_to_clipboard(text):
-    """copy text to clipboard"""
+    """Copy text to clipboard"""
     set_clipboard(text)
 
+
 def paste_from_clipboard():
-    """get text from clipboard"""
+    """Get text from clipboard"""
     return get_clipboard()
 
-#------------------------------------------------------------------------------
+
+# ------------------------------------------------------------------------------
 # platform utility
 # ------------------------------------------------------------------------------
 def get_platform() -> str:
-    """get platform"""
+    """Get platform"""
     return platform.system()
 
+
 def is_mac() -> bool:
-    """platform : is mac?"""
+    """Platform : is mac?"""
     return get_platform() == "Darwin"
 
+
 def is_win() -> bool:
-    """platform : is Windows?"""
+    """Platform : is Windows?"""
     return get_platform() == "Windows"
+
 
 def screenshot() -> PIL.Image.Image:
     """Take a screenshot."""
     import PIL.ImageGrab
+
     screen_image = PIL.ImageGrab.grab()
     return screen_image
+
 
 # ------------------------------------------------------------------------------
 # text file utility
 # ------------------------------------------------------------------------------
-def load_text_file(filename: str, encoding: str="utf-8", default_value: str="") -> str:
+def load_text_file(
+    filename: str, encoding: str = "utf-8", default_value: str = ""
+) -> str:
     """Load text file."""
     if os.path.exists(filename):
         with open(filename, "r", encoding=encoding) as f:
@@ -82,30 +120,37 @@ def load_text_file(filename: str, encoding: str="utf-8", default_value: str="") 
         return text
     return default_value
 
-def save_text_file(filename: str, text: str, encoding: str="utf-8") -> None:
+
+def save_text_file(filename: str, text: str, encoding: str = "utf-8") -> None:
     """Save text file."""
     with open(filename, "w", encoding=encoding) as f:
         f.write(text)
 
-def append_text_file(filename: str, text: str, encoding: str="utf-8") -> None:
+
+def append_text_file(filename: str, text: str, encoding: str = "utf-8") -> None:
     """Append text file."""
     with open(filename, "a", encoding=encoding) as f:
         f.write(text)
 
+
 def load_json_file(filename: str, default_value: Any = None) -> Any:
     """Load JSON file."""
     import json
+
     if os.path.exists(filename) is False:
         with open(filename, "r", encoding="utf-8") as f:
             data = json.load(f)
         return data
     return default_value
 
+
 def save_json_file(filename: str, data: Any) -> None:
     """Save JSON file."""
     import json
+
     with open(filename, "w", encoding="utf-8") as f:
         json.dump(data, f, ensure_ascii=False, indent=4)
+
 
 # -------------------------------------------------------------------
 # other utilities
@@ -117,6 +162,7 @@ def str_to_float(value: str, default_value: float = 0) -> float:
     except ValueError:
         return default_value
 
+
 # -------------------------------------------------------------------
 # tkinter window management
 # -------------------------------------------------------------------
@@ -124,14 +170,16 @@ def str_to_float(value: str, default_value: float = 0) -> float:
 _root_window: Union[tk.Tk, None] = None
 _ttk_style: Union[ttk.Style, None] = None
 tkversion: str = "0.0.0"
+
+
 def get_root_window() -> tk.Tk:
     """Get root window."""
     global _root_window
     global tkversion
     if _root_window is None:
         _root_window = tk.Tk()
-        _root_window.attributes('-alpha', 0)
-        _root_window.eval('tk::PlaceWindow . center')
+        _root_window.attributes("-alpha", 0)
+        _root_window.eval("tk::PlaceWindow . center")
         _root_window.withdraw()
         # set theme
         try:
@@ -149,10 +197,13 @@ def get_root_window() -> tk.Tk:
 
 # Prioritize compatibility with PySimpleGUI
 _compatibility: bool = True
-def set_PySimpleGUI_compatibility(flag: bool=True) -> None:
+
+
+def set_PySimpleGUI_compatibility(flag: bool = True) -> None:
     """Set compatibility with PySimpleGUI (Default=True)"""
     global _compatibility
     _compatibility = flag
+
 
 def get_ttk_style() -> ttk.Style:
     """Get ttk style"""
@@ -161,9 +212,11 @@ def get_ttk_style() -> ttk.Style:
         _ttk_style = ttk.Style()
     return _ttk_style
 
-#------------------------------------------------------------------------------
+
+# ------------------------------------------------------------------------------
 # theme
 _tkeasygui_info: dict[str, Any] = {}
+
 
 def set_theme(name: str) -> None:
     """
@@ -180,9 +233,11 @@ def set_theme(name: str) -> None:
     style.theme_use(name)
     _tkeasygui_info["theme"] = name
 
+
 def get_tnemes() -> tuple[str, ...]:
     """
     Get theme list
+
     ```py
     print(get_themes())
     ```
@@ -191,17 +246,21 @@ def get_tnemes() -> tuple[str, ...]:
     win.withdraw()
     return ttk.Style().theme_names()
 
+
 def theme(name: str) -> None:
     """Set theme (alias of set_theme)"""
     set_theme(name)
+
 
 def get_current_theme() -> str:
     """Get current theme"""
     return _tkeasygui_info.get("theme", "")
 
+
 def set_default_theme() -> None:
     """
     Set default theme
+
     ```py
     print(get_themes())
     ```
@@ -217,23 +276,28 @@ def set_default_theme() -> None:
     else:
         set_theme("clam")
 
+
 def convert_color_rgb16(color_name: str) -> tuple[int, int, int]:
     """Convert color to RGB, return (r, g, b) tuple. range=0-65535"""
     root = get_root_window()
     return root.winfo_rgb(color_name)
+
 
 def convert_color_html(color_name: str) -> str:
     """Convert RGB color(16bit tuple) to HTML color name."""
     r, g, b = convert_color_rgb16(color_name)
     return f"#{r//256:02x}{g//256:02x}{b//256:02x}"
 
-#------------------------------------------------------------------------------
+
+# ------------------------------------------------------------------------------
 # Utility functions
-#------------------------------------------------------------------------------
+# ------------------------------------------------------------------------------
 # global variables
 # auto generate element key id
 _element_style_key_ids: dict[KeyType, int] = {}
 _element_key_names: dict[KeyType, bool] = {}
+
+
 def generate_element_style_key(element_type: str) -> str:
     """Get a unique id for an element."""
     element_type = element_type.lower()
@@ -249,12 +313,14 @@ def generate_element_style_key(element_type: str) -> str:
             break
     return key
 
+
 def register_element_key(key: KeyType) -> bool:
     """Register element key."""
     if key in _element_key_names:
         return False
     _element_key_names[key] = True
     return True
+
 
 def remove_element_key(key: KeyType) -> bool:
     """Remove element key."""
@@ -263,11 +329,13 @@ def remove_element_key(key: KeyType) -> bool:
         return True
     return False
 
+
 _elements_with_value: int = 0
+
+
 def generate_element_id() -> int:
     """Generate a unique id for a value element."""
     global _elements_with_value
     element_id = _elements_with_value
     _elements_with_value += 1
     return element_id
-

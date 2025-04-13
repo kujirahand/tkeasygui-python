@@ -1,4 +1,5 @@
-""""
+"""
+"
 ### Localize test
 
 This is a test for licalization. - ローカライズのテストです。

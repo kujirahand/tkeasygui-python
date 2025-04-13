@@ -1,6 +1,6 @@
 # Module TkEasyGUI.locale_easy
 
-None
+TkEasyGUI locale module
 
 ---------------------------
 
@@ -15,41 +15,41 @@ None
 
 ## get_locale
 
-get locale
+Get locale
 
 ```py
 def get_locale() -> str:
 ```
 
-- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/locale_easy.py#L63)
+- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/locale_easy.py#L64)
 
 ## get_text
 
-get locale text
+Get locale text
 
 ```py
-def get_text(key: str, default_text: Union[str, None]=None) -> str:
+def get_text(key: str, default_text: Union[str, None] = None) -> str:
 ```
 
-- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/locale_easy.py#L79)
+- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/locale_easy.py#L82)
 
 ## set_locale
 
-set locale
+Set locale
 
 ```py
 def set_locale(locale: str) -> None:
 ```
 
-- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/locale_easy.py#L74)
+- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/locale_easy.py#L76)
 
 ## set_text
 
-set locale text
+Set locale text
 
 ```py
-def set_text(key: str, message: str, locale:str = "") -> None:
+def set_text(key: str, message: str, locale: str = "") -> None:
 ```
 
-- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/locale_easy.py#L89)
+- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/locale_easy.py#L93)
 

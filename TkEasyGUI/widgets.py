@@ -1,6 +1,4 @@
-"""
-TkEasyGUI Widgets
-"""
+"""TkEasyGUI Widgets."""
 
 import io
 import os
@@ -14,9 +12,9 @@ from enum import Enum
 from queue import Queue
 from tkinter import font as tkinter_font
 from tkinter import scrolledtext, ttk
-from typing import Any, Callable, Optional, TypeAlias, Union
+from typing import Any, cast, Callable, Optional, TypeAlias, Union
 
-import PIL
+from PIL import Image as PILImage
 from PIL import ImageColor, ImageTk
 
 from . import dialogs, utils, version
@@ -80,15 +78,16 @@ DEFAULT_WINDOW_ICON = DEFAULT_BASE64_ICON
 # Widget wrapper
 # ------------------------------------------------------------------------------
 class TkEasyError(Exception):
+    """TkEasyError Exception class."""
+
     def __init__(self, message="TkEasyError"):
+        """Create a TkEasyError exception."""
         self.message = message
         super().__init__(self.message)
 
 
 class Window:
-    """
-    Main window object in TkEasyGUI
-    """
+    """Main window object in TkEasyGUI"""
 
     def __init__(
         self,
@@ -276,7 +275,7 @@ class Window:
         self.post_event(WINDOW_MOUSE_EVENT, {"event": event, "event_type": "click"})
 
     def _on_show_event(self) -> None:
-        """This method is called only once on the first execution."""
+        """Call this method only once on the first execution."""
         # hide window for showing ghost window (#102)
         alpha = self.alpha_channel
         self.set_alpha_channel(0)
@@ -417,7 +416,7 @@ class Window:
         align: TextAlign = "left",
         valign: TextVAlign = "top",
     ):
-        """create widget from layout"""
+        """Create widget from layout"""
         # check layout
         if not (
             len(layout) > 0
@@ -716,6 +715,7 @@ class Window:
     ) -> None:
         """
         Start a thread.
+
         ### Example
         ```py
         import TkEasyGUI as eg
@@ -752,6 +752,7 @@ class Window:
     ) -> Any:
         """
         Return generator with event and values
+
         **Example**
         ```py
         import TkEasyGUI as eg
@@ -796,7 +797,7 @@ class Window:
         self.minimized = True
 
     def normal(self) -> None:
-        """set normal window."""
+        """Set normal window."""
         if self.minimized:
             self.window.deiconify()
             self.minimized = False
@@ -1219,9 +1220,7 @@ class Element:
         propagate: bool = True,
         event_mode: EventMode = "user",
     ) -> None:
-        """
-        Bind event. @see [Window.bind](#windowbind)
-        """
+        """Bind event. @see [Window.bind](#windowbind)"""
         self._bind_dict[event_name] = (handle_name, propagate, event_mode)
         if self.window is not None:
             self.window.bind(
@@ -1278,7 +1277,7 @@ class Element:
         text_color: Union[str, None] = None,
         background_color: Union[str, None] = None,
     ) -> None:
-        """set default props style"""
+        """Set default props style"""
         if font is not None:
             self.props["font"] = font
             self.font = font
@@ -1365,9 +1364,7 @@ class Element:
         return result
 
     def set_disabled(self, disabled: bool) -> None:
-        """
-        Set disabled widgets state
-        """
+        """Set disabled widgets state"""
         self.disabled = disabled
         state = tk.DISABLED if disabled else tk.NORMAL
         self._widget_update(state=state)
@@ -1376,7 +1373,9 @@ class Element:
         self, events: dict[str, str], event_mode: EventMode = "user"
     ) -> "Element":
         """
-        Bind user events. @see [custom events](/docs/custom_events.md)
+        Bind user events.
+
+        @see [custom events](/docs/custom_events.md)
         The specification is such that if the suffix "/hide" is attached to an event key, that event key will not be returned to the user.
         @see [Window.read](#windowread)
         """
@@ -1389,6 +1388,7 @@ class Element:
         return None
 
     def prepare_create(self, win: Window) -> None:
+        """Prepare to create a widget."""
         # convert properties
         if (win.font is not None) and (self.font is None) and self.has_font_prop:
             self.props["font"] = self.font = win.font
@@ -1436,7 +1436,7 @@ class Element:
                 self.pady = (height - 1) // 2
 
     def _generate_style_name(self, style_key: Union[str | int, None]) -> str:
-        """generate style name"""
+        """Generate style name"""
         if style_key is None or style_key == "":
             style_key = generate_element_style_key(self.element_type)
         if "." in self.ttk_style_name:
@@ -1453,7 +1453,7 @@ class Element:
         return "-"
 
     def update(self, *args, **kw) -> None:
-        """update widget configuration."""
+        """Update widget configuration."""
         pass
 
     def set_cursor(self, cursor: CursorType) -> None:
@@ -1547,6 +1547,7 @@ class Frame(Element):
         use_ttk: bool = False,
         **kw,
     ) -> None:
+        """Create a Frame element."""
         style_name = "TLabelframe" if use_ttk else ""
         super().__init__("Frame", style_name, key, False, metadata, **kw)
         self.has_children = True
@@ -1614,6 +1615,7 @@ class Column(Element):
         metadata: Union[dict[str, Any], None] = None,
         **kw,
     ) -> None:
+        """Create a Column element."""
         super().__init__("Column", "TFrame", key, False, metadata, **kw)
         self.has_children = True
         self.layout = layout
@@ -1634,6 +1636,7 @@ class Column(Element):
             self.props["anchor"] = self._justify_to_anchor(text_align)
 
     def create(self, win: Window, parent: tk.Widget) -> tk.Widget:
+        """Create a Column element"""
         # if self.use_ttk:
         #     self.widget = ttk.Frame(parent, style=self.style_name, **self.props)
         self.widget: tk.Frame = tk.Frame(parent, **self.props)
@@ -1659,6 +1662,7 @@ class Column(Element):
 class Tab(Element):
     """
     (experimental) Tab element - Tab is used together with TabGroup.
+
     **Example:**
     ```py
     import TkEasyGUI as sg
@@ -1697,6 +1701,7 @@ class Tab(Element):
         metadata: Union[dict[str, Any], None] = None,
         **kw,
     ) -> None:
+        """Create a Tab element."""
         super().__init__("Tab", "Frame", key, False, metadata, **kw)
         self.has_children = True
         self.title = title
@@ -1719,6 +1724,7 @@ class Tab(Element):
             self.props["anchor"] = self._justify_to_anchor(text_align)
 
     def create(self, win: Window, parent: tk.Widget) -> tk.Widget:
+        """Create a Tab element."""
         self.widget = tk.Frame(parent, **self.props)
         return self.widget
 
@@ -1778,6 +1784,7 @@ class TabGroup(Element):
         metadata: Union[dict[str, Any], None] = None,
         **kw,
     ) -> None:
+        """Create a TabGroup element."""
         super().__init__("TabGroup", "Notebook", key, False, metadata, **kw)
         self.has_children = True
         # check layout type
@@ -1803,11 +1810,13 @@ class TabGroup(Element):
             self.props["anchor"] = self._justify_to_anchor(text_align)
 
     def create(self, win: Window, parent: tk.Widget) -> tk.Widget:
+        """Create a TabGroup element."""
         self.window = win
         self.widget = ttk.Notebook(parent, **self.props)
         return self.widget
 
     def post_create(self, win: Window, parent: tk.Widget) -> None:
+        """Post create widget."""
         if win.size is None:
             win.set_size((600, 400))
         return super().post_create(win, parent)
@@ -1850,6 +1859,7 @@ class Text(Element):
         metadata: Union[dict[str, Any], None] = None,  # user metadata
         **kw,
     ) -> None:
+        """Create a Text element."""
         key = text if (key is None) or (key == "") else key
         super().__init__("Text", "", key, False, metadata, **kw)
         self.props["text"] = text
@@ -1884,6 +1894,9 @@ class Text(Element):
         return self.get_text()
 
     def get_text(self) -> str:
+        """Get the text of the widget."""
+        if self.widget is None:
+            return ""
         return self.props["text"]
 
     def set_text(self, text: str) -> None:
@@ -1901,6 +1914,7 @@ class Text(Element):
 class Push(Text):
     """
     An element for achieving right alignment and center alignment.
+
     **Example**
     ```py
     win = sg.Window(
@@ -1918,13 +1932,12 @@ class Push(Text):
     def __init__(
         self, metadata: Union[dict[str, Any], None] = None, **kw  # user metadata
     ) -> None:
+        """Create a Push element."""
         super().__init__("", "", expand_x=True, metadata=metadata, **kw)
 
 
 class Label(Text):
-    """
-    Label element (alias of Text)
-    """
+    """Label element (alias of Text)"""
 
     pass
 
@@ -1932,6 +1945,7 @@ class Label(Text):
 class Menu(Element):
     """
     Menu element.
+
     **Example**
     ```
     menu = eg.Menu([
@@ -1953,6 +1967,7 @@ class Menu(Element):
         metadata: Union[dict[str, Any], None] = None,
         **kw,
     ) -> None:
+        """Create a Menu element."""
         super().__init__("Menu", "", key, False, metadata, **kw)
         self.items = menu_definition
         if items is not None:
@@ -1985,9 +2000,7 @@ class Menu(Element):
             command=lambda: self.disptach_event({EG_SWAP_EVENT_NAME: key}),
         )
 
-    def _create_menu(
-        self, parent: tk.Menu, items: list[list[Union[str, list[Any]]]], level: int = 0
-    ) -> None:
+    def _create_menu(self, parent: tk.Menu, items: list[Any], level: int = 0) -> None:
         i = 0
         while i < len(items):
             item = items[i]
@@ -2000,7 +2013,7 @@ class Menu(Element):
                     self._add_command(parent, item)
                     i += 1
                     continue
-                else:  # if isinstance(next_item, list):
+                elif isinstance(next_item, list):
                     # submenu
                     submenu = tk.Menu(parent, tearoff=False)
                     parent.add_cascade(label=item, menu=submenu)
@@ -2019,6 +2032,9 @@ class Menu(Element):
         return self.get_text()
 
     def get_text(self) -> str:
+        """Get the text of the widget."""
+        if self.widget is None:
+            return ""
         return self.props["text"]
 
     def set_text(self, text: str) -> None:
@@ -2084,6 +2100,7 @@ class Button(Element):
         metadata: Union[dict[str, Any], None] = None,
         **kw,
     ) -> None:
+        """Create a Button element."""
         key = button_text if (key is None) or (key == "") else key
         super().__init__("Button", "TButton", key, False, metadata, **kw)
         self.use_ttk = use_ttk_buttons  # can select ttk or tk button
@@ -2194,6 +2211,7 @@ class CloseButton(Button):
         key: Union[str, None] = None,
         **kw,
     ) -> None:
+        """Create a CloseButton element."""
         key = button_text if (key is None) or (key == "") else key
         super().__init__(button_text=button_text, key=key, **kw)
 
@@ -2233,6 +2251,7 @@ class Checkbox(Element):
         metadata: Union[dict[str, Any], None] = None,
         **kw,
     ) -> None:
+        """Create a Checkbox element."""
         if key is None or key == "":
             key = text
         super().__init__("Checkbox", "TCheckbutton", key, True, metadata, **kw)
@@ -2244,6 +2263,7 @@ class Checkbox(Element):
         self.group_id = group_id
 
     def create(self, win: Window, parent: tk.Widget) -> tk.Widget:
+        """Create a Checkbox widget."""
         # set group_id
         if self.group_id:
             if self.group_id not in win.checkbox_dict:
@@ -2314,6 +2334,7 @@ class Radio(Element):
         metadata: Union[dict[str, Any], None] = None,
         **kw,
     ) -> None:
+        """Create a Radio element."""
         if key is None or key == "":
             key = text
         super().__init__("Radio", "TRadiobutton", key, True, metadata, **kw)
@@ -2328,6 +2349,8 @@ class Radio(Element):
             self.bind_events({"<Button-3>": "right_click"}, "system")
 
     def create(self, win: Window, parent: tk.Widget) -> tk.Widget:
+        """Create a Radio widget."""
+
         # post change event
         def post_change_event(*args) -> None:
             if not self.created_radio:
@@ -2383,7 +2406,7 @@ class Radio(Element):
         return self.window.radio_group_dict[self.group_id].get() == self.value
 
     def get_value(self) -> int:
-        """This method returns the id of an element within a group."""
+        """Returns the id of an element within a group."""
         return self.value
 
     def get(self) -> Any:
@@ -2403,9 +2426,7 @@ class Radio(Element):
 
 
 class Input(Element):
-    """
-    Text input element.
-    """
+    """Text input element."""
 
     def __init__(
         self,
@@ -2438,6 +2459,7 @@ class Input(Element):
         metadata: Union[dict[str, Any], None] = None,
         **kw,
     ) -> None:
+        """Create a Input element."""
         super().__init__("Input", "TEntry", key, True, metadata, **kw)
         self.use_ttk = False
         self.readonly: bool = readonly
@@ -2495,7 +2517,7 @@ class Input(Element):
             )
 
     def create(self, win: Window, parent: tk.Widget) -> tk.Widget:
-        """create Input widget"""
+        """Create Input widget"""
         # check props
         # if "height" in self.props:
         #     self.props.pop("height") # no property
@@ -2528,7 +2550,7 @@ class Input(Element):
         return self.get_text()
 
     def set_text(self, text: str) -> None:
-        """set text"""
+        """Set text"""
         if self.widget is None:
             return
         # change text
@@ -2539,11 +2561,11 @@ class Input(Element):
         #   self.insert(0, text)
 
     def get_text(self) -> str:
-        """get text"""
+        """Get text"""
         return self.text_var.get()
 
     def get_selected_text(self) -> str:
-        """get selected text"""
+        """Get selected text"""
         if self.widget is None:
             return ""
         try:
@@ -2557,7 +2579,7 @@ class Input(Element):
         utils.set_clipboard(text)
 
     def set_readonly(self, readonly: bool) -> None:
-        """set readonly"""
+        """Set readonly"""
         self.readonly = readonly
         state = "readonly" if self.readonly else "normal"
         self._widget_update(state=state)
@@ -2591,7 +2613,7 @@ class Input(Element):
         input.icursor("end")
 
     def copy(self) -> str:
-        """copy to clipboard"""
+        """Copy to clipboard"""
         if self.widget is None:
             return ""
         text = self.get_selected_text()
@@ -2599,14 +2621,14 @@ class Input(Element):
         return text
 
     def cut(self) -> str:
-        """cut to clipboard"""
+        """Cut to clipboard"""
         if self.widget is None:
             return ""
         self.copy()
         return self.delete_selected()
 
     def delete_selected(self) -> str:
-        """delete selected text"""
+        """Delete selected text"""
         if self.widget is None:
             return ""
         try:
@@ -2617,7 +2639,7 @@ class Input(Element):
         return text
 
     def paste(self):
-        """paste from clipboard"""
+        """Paste from clipboard"""
         if self.widget is None:
             return
         # delete selected
@@ -2629,7 +2651,7 @@ class Input(Element):
         input.insert(current_cursor_position, text)
 
     def get_selection_pos(self) -> tuple[int, int]:
-        """get selection positions"""
+        """Get selection positions"""
         if self.widget is None:
             return (0, 0)
         try:
@@ -2642,20 +2664,20 @@ class Input(Element):
             return (cur, cur)
 
     def get_cursor_pos(self) -> int:
-        """get cursor position"""
+        """Get cursor position"""
         if self.widget is None:
             return 0
         cursor_pos = self.widget.index(tk.INSERT)
         return cursor_pos
 
     def set_cursor_pos(self, index: int) -> None:
-        """set cursor position"""
+        """Set cursor position"""
         if self.widget is None:
             return
         self.widget.icursor(index)
 
     def get_selection_start(self) -> int:
-        """get selection start"""
+        """Get selection start"""
         if self.widget is None:
             return 0
         try:
@@ -2666,7 +2688,7 @@ class Input(Element):
             return self.get_cursor_pos()
 
     def get_selection_length(self) -> int:
-        """get selection length"""
+        """Get selection length"""
         if self.widget is None:
             return 0
         try:
@@ -2678,7 +2700,7 @@ class Input(Element):
             return 0
 
     def set_selection_start(self, sel_start: int, sel_length: int = 0) -> None:
-        """set selection start and length"""
+        """Set selection start and length"""
         if self.widget is None:
             return
         try:
@@ -2724,6 +2746,7 @@ class Multiline(Element):
         metadata: Union[dict[str, Any], None] = None,
         **kw,
     ) -> None:
+        """Create a Multiline element."""
         super().__init__("Multiline", "", key, True, metadata, **kw)
         if default_text is not None:
             text = default_text
@@ -2779,7 +2802,7 @@ class Multiline(Element):
         )
         # text_align
         if self.text_align is not None:
-            self.widget.tag_configure(self.text_align, justify=self.text_align)
+            self.widget.tag_configure(str(self.text_align), justify=self.text_align)
             self.widget.insert("1.0", text, self.text_align)
         else:
             # set text
@@ -2834,7 +2857,7 @@ class Multiline(Element):
     def copy(self) -> str:
         """Copy the selected text."""
         if self.widget is None:
-            return
+            return ""
         text = self.get_selected_text()
         utils.set_clipboard(text)
         return text
@@ -2851,7 +2874,7 @@ class Multiline(Element):
     def cut(self) -> str:
         """Cut the selected text."""
         if self.widget is None:
-            return
+            return ""
         text = ""
         if self.widget.tag_ranges(tk.SEL):
             text = self.copy()
@@ -2960,7 +2983,7 @@ class Multiline(Element):
     def get_cursor_pos(self) -> str:
         """Get Cursor position. liek `3.0` row=3, col=0"""
         if self.widget is None:
-            return 0
+            return "0"
         try:
             cur = self.widget.index("insert")
         except Exception as _:
@@ -2974,7 +2997,7 @@ class Multiline(Element):
         self.widget.mark_set(tk.INSERT, pos)
 
     def get_selection_start(self) -> int:
-        """get selection start"""
+        """Get selection start"""
         if self.widget is None:
             return 0
         try:
@@ -2988,7 +3011,7 @@ class Multiline(Element):
                 return 0
 
     def set_selection_start(self, index: int, sel_length: int = 0) -> None:
-        """set selection start"""
+        """Set selection start"""
         pos1 = self.index_to_pos(index)
         pos2 = self.index_to_pos(index + sel_length)
         if sel_length > 0:
@@ -2997,7 +3020,7 @@ class Multiline(Element):
             self.set_cursor_pos(pos1)
 
     def get_selection_length(self) -> int:
-        """get selection length"""
+        """Get selection length"""
         if self.widget is None:
             return 0
         try:
@@ -3007,7 +3030,7 @@ class Multiline(Element):
             return 0
 
     def select_all(self) -> None:
-        """select all text"""
+        """Select all text"""
         if self.widget is None:
             return
         text: tk.Text = self.widget
@@ -3075,6 +3098,7 @@ class Slider(Element):
         metadata: Union[dict[str, Any], None] = None,
         **kw,
     ) -> None:
+        """Create Slider element."""
         style_name = (
             "Horizontal.TScale"
             if (orientation == "h" or orientation == "horizontal")
@@ -3159,6 +3183,7 @@ class Slider(Element):
         self.widget.config(from_=from_, to=to)  # type: ignore
 
     def get_range(self) -> tuple[float, float]:
+        """Get the range of the slider."""
         return (self.widget.cget("from"), self.widget.cget("to"))  # type: ignore
 
     def update(
@@ -3182,6 +3207,7 @@ class Slider(Element):
 class Canvas(Element):
     """
     Canvas element.
+
     This widget provides the same drawing methods as [tk.Canvas](https://tkdocs.com/tutorial/canvas.html).
     methods: create_line/create_rectangle/create_oval/create_polygon/create_arc/create_image/delete etc...
     """
@@ -3196,6 +3222,7 @@ class Canvas(Element):
         metadata: Union[dict[str, Any], None] = None,
         **kw,
     ) -> None:
+        """Create Canvas element."""
         super().__init__("Canvas", "", key, False, metadata, **kw)
         self.props["size"] = size
         self.has_font_prop = False
@@ -3212,6 +3239,7 @@ class Canvas(Element):
             )
 
     def create(self, win: Window, parent: tk.Widget) -> tk.Widget:
+        """Create Canvas widget."""
         self.widget = tk.Canvas(parent, **self.props)
         return self.widget
 
@@ -3253,6 +3281,7 @@ class Graph(Element):
         metadata: Union[dict[str, Any], None] = None,
         **kw,
     ) -> None:
+        """Create Graph element."""
         super().__init__("Graph", "", key, False, metadata, **kw)
         self.has_font_prop = False
         # <Coordinate> graph_Declared for compatibility, but not yet implemented.
@@ -3269,6 +3298,7 @@ class Graph(Element):
         self.parent_window: Window | None = None
 
     def create(self, win: Window, parent: tk.Widget) -> tk.Widget:
+        """Create Graph widget."""
         self.widget: tk.Canvas = tk.Canvas(parent, **self.props)
         self.parent_window = win
         return self.widget
@@ -3429,7 +3459,7 @@ class Image(Element):
         self,
         source: Union[bytes, str, None] = None,  # image source
         filename=None,  # filen ame
-        data: Union[bytes, PIL.Image.Image, None] = None,  # image data
+        data: Union[bytes, PILImage.Image, None] = None,  # image data
         key: Union[str, None] = None,
         background_color: Union[
             tuple[int, int, int], str, None
@@ -3441,6 +3471,7 @@ class Image(Element):
         metadata: Union[dict[str, Any], None] = None,
         **kw,
     ) -> None:
+        """Create a Image element"""
         super().__init__("Image", "", key, False, metadata, **kw)
         self.has_font_prop = False
         self.source = source
@@ -3487,7 +3518,7 @@ class Image(Element):
         """Erase image"""
         self.widget.delete("all")  # type: ignore
 
-    def screenshot(self) -> PIL.Image.Image:
+    def screenshot(self) -> PILImage.Image:
         """Take a screenshot"""
         screen_image = utils.screenshot()
         self.set_image(data=screen_image, size=self.size)
@@ -3497,7 +3528,7 @@ class Image(Element):
         self,
         source: Union[bytes, str, None] = None,
         filename: Union[str, None] = None,
-        data: Union[bytes, PIL.Image.Image, None] = None,
+        data: Union[bytes, PILImage.Image, None] = None,
         size: Union[tuple[int, int], None] = None,
         resize_type: ImageResizeType = ImageResizeType.FIT_BOTH,
         background_color: Union[
@@ -3506,6 +3537,7 @@ class Image(Element):
     ) -> None:
         """
         Set image to Image widget.
+
         - ImageResizeType is NO_RESIZE/FIT_HEIGHT/FIT_WIDTH/FIT_BOTH/IGNORE_ASPECT_RATIO/CROP_TO_SQUARE
         """
         if self.widget is None:
@@ -3593,6 +3625,7 @@ class VSeparator(Element):
         metadata: Union[dict[str, Any], None] = None,
         **kw,
     ) -> None:
+        """Create VSeparator element."""
         super().__init__("VSeparator", "TSeparator", key, False, metadata, **kw)
         self.use_ttk = True
         self.size = self.props["size"] = size
@@ -3602,6 +3635,7 @@ class VSeparator(Element):
         self.props["expand_y"] = True
 
     def create(self, win: Window, parent: tk.Widget) -> Any:
+        """Create VSeparator widget."""
         self.widget = ttk.Separator(parent, orient="vertical")
         return self.widget
 
@@ -3619,6 +3653,7 @@ class HSeparator(Element):
         metadata: Union[dict[str, Any], None] = None,
         **kw,
     ) -> None:
+        """Create HSeparator element."""
         super().__init__("HSeparator", "TSeparator", key, False, metadata, **kw)
         self.use_ttk = True
         self.size = self.props["size"] = size
@@ -3628,6 +3663,7 @@ class HSeparator(Element):
         self.props["expand_x"] = True
 
     def create(self, win: Window, parent: tk.Widget) -> Any:
+        """Create HSeparator widget."""
         self.widget = ttk.Separator(parent, orient="horizontal")
         return self.widget
 
@@ -3648,6 +3684,13 @@ class Listbox(Element):
         items: Union[list[str], None] = None,  # same as values (alias values)
         **kw,
     ) -> None:
+        """
+        Create Listbox element.
+
+        - select_mode: LISTBOX_SELECT_MODE_BROWSE, LISTBOX_SELECT_MODE_SINGLE, LISTBOX_SELECT_MODE_MULTIPLE
+        - default_value: default selected value
+        - default_values: default selected values
+        """
         super().__init__("Listbox", "", key, True, metadata, **kw)
         self.values = values
         if items is not None:  # alias
@@ -3684,6 +3727,7 @@ class Listbox(Element):
     def select_values(self, values: Union[list[str], None]) -> None:
         """
         Select values in Listbox.
+
         **example**
         ```py
         import TkEasyGUI as eg
@@ -3720,7 +3764,7 @@ class Listbox(Element):
     def get_cursor_index(self) -> int:
         """Get cursor index (return -1 if not selected)"""
         if self.widget is None:
-            return None
+            return -1
         wg: tk.Listbox = self.widget
         selections = wg.curselection()
         if selections is None or len(selections) == 0:
@@ -3745,7 +3789,7 @@ class Listbox(Element):
     def get_selected_items(self) -> list[str]:
         """Get selected items"""
         if self.widget is None:
-            return None
+            return []
         wg: tk.Listbox = self.widget
         selected: list[str] = []
         selections: Any = wg.curselection()
@@ -3781,6 +3825,7 @@ class Combo(Element):
         metadata: Union[dict[str, Any], None] = None,
         **kw,
     ) -> None:
+        """Create a Combo element"""
         super().__init__("Combo", "TCombobox", key, True, metadata, **kw)
         self.values = values
         self.value: tk.StringVar | None = None
@@ -3826,7 +3871,7 @@ class Combo(Element):
         return self.value.get()
 
     def set_readonly(self, readonly: bool) -> None:
-        """set readonly"""
+        """Set readonly"""
         self.readonly = readonly
         state = "readonly" if self.readonly else "normal"
         self._widget_update(state=state)
@@ -3982,7 +4027,8 @@ class Table(Element):
                 widget.column(i + 1, width=0, stretch=tk.NO)
                 continue
             w = self.col_widths_real[i] if i < len(self.col_widths_real) else 100
-            widget.column(i + 1, width=w, stretch=streatch, anchor=self.justification)
+            anchor = cast(tk._Anchor, self.justification)
+            widget.column(i + 1, width=w, stretch=streatch, anchor=anchor)
 
     def _calc_col_width(self) -> None:
         """Calc columns width"""
@@ -4113,9 +4159,7 @@ class Table(Element):
 
 
 class FileBrowse(Element):
-    """
-    FileBrowse element.
-    """
+    """FileBrowse element."""
 
     def __init__(
         self,
@@ -4132,6 +4176,7 @@ class FileBrowse(Element):
         metadata: Union[dict[str, Any], None] = None,
         **kw,
     ) -> None:
+        """Create a FileBrowse element."""
         if key is None or key == "":
             key = generate_element_style_key("Browse")
         super().__init__("FileBrowse", "", key, False, metadata, **kw)
@@ -4145,6 +4190,7 @@ class FileBrowse(Element):
         self.enable_events = enable_events
 
     def create(self, win: Window, parent: tk.Widget) -> tk.Widget:
+        """Create a FileBrowse widget."""
         self.widget = tk.Button(parent, **self.props)
         # hook
         event_name = "--browse_action/hide"
@@ -4221,6 +4267,7 @@ class FilesBrowse(FileBrowse):
         metadata: Union[dict[str, Any], None] = None,
         **kw,
     ) -> None:
+        """Create a FilesBrowse element."""
         super().__init__(button_text=button_text, key=key, metadata=metadata, **kw)
         self.target_key = target_key
         self.title = title
@@ -4247,6 +4294,7 @@ class FileSaveAsBrowse(FileBrowse):
         metadata: Union[dict[str, Any], None] = None,
         **kw,
     ) -> None:
+        """Create FileSaveAsBrowse element."""
         super().__init__(button_text=button_text, key=key, metadata=metadata, **kw)
         self.target_key = target_key
         self.title = title
@@ -4279,6 +4327,7 @@ class FolderBrowse(FileBrowse):
         metadata: Union[dict[str, Any], None] = None,
         **kw,
     ) -> None:
+        """Create a folder browse element."""
         super().__init__(button_text=button_text, key=key, metadata=metadata, **kw)
         self.target_key = target_key
         self.title = title
@@ -4319,6 +4368,7 @@ class ColorBrowse(FileBrowse):
         metadata: Union[dict[str, Any], None] = None,
         **kw,
     ) -> None:
+        """ColorBrowse element."""
         super().__init__(button_text=button_text, key=key, metadata=metadata, **kw)
         self.target_key = target_key
         self.title = title
@@ -4362,6 +4412,7 @@ class ListBrowse(FileBrowse):
         metadata: Union[dict[str, Any], None] = None,
         **kw,
     ) -> None:
+        """Create a ListBrowse element."""
         super().__init__(button_text=button_text, key=key, metadata=metadata, **kw)
         self.target_key = target_key
         self.title = title
@@ -4413,6 +4464,7 @@ class MultilineBrowse(FileBrowse):
         metadata: Union[dict[str, Any], None] = None,
         **kw,
     ) -> None:
+        """Create a MultilineBrowse element."""
         super().__init__(button_text=button_text, key=key, metadata=metadata, **kw)
         self.target_key = target_key
         self.title = title
@@ -4463,6 +4515,7 @@ class CalendarBrowse(FileBrowse):
         metadata: Union[dict[str, Any], None] = None,
         **kw,
     ) -> None:
+        """Create a CalendarBrowse element."""
         super().__init__(
             button_text,
             key,
@@ -4512,16 +4565,19 @@ def rgb(r: int, g: int, b: int) -> str:
 
 
 def image_resize(
-    img: PIL.Image.Image,
+    img: PILImage.Image,
     size: Union[tuple[int, int], None],
     resize_type: ImageResizeType = ImageResizeType.FIT_BOTH,
     background_color: Union[str, None] = None,  # color (example) "red" or "#FF0000"
-) -> PIL.Image.Image:
+) -> PILImage.Image:
     """Resize image"""
     # check background color
     if background_color is None:
         background_color = "white"
-    background_color_rgba = ImageColor.getcolor(background_color, "RGBA")
+    background_color_rgba: int = 0
+    c = ImageColor.getcolor(background_color, "RGBA")
+    if isinstance(c, int):
+        background_color_rgba = c
     if size is None:
         size = img.size
     # resize
@@ -4534,7 +4590,7 @@ def image_resize(
         w, h = int(img.size[0] * r), size[1]
         x, y = (size[0] - w) // 2, (size[1] - h) // 2
         resize_im = img.resize(size=(w, h))
-        view_im = PIL.Image.new("RGBA", size, background_color_rgba)
+        view_im = PILImage.new("RGBA", size, background_color_rgba)
         view_im.paste(resize_im, (x, y))
         return view_im
     if resize_type == ImageResizeType.FIT_WIDTH:
@@ -4542,7 +4598,7 @@ def image_resize(
         w, h = size[0], int(img.size[1] * r)
         x, y = (size[0] - w) // 2, (size[1] - h) // 2
         resize_im = img.resize(size=(w, h))
-        view_im = PIL.Image.new("RGBA", size, background_color_rgba)
+        view_im = PILImage.new("RGBA", size, background_color_rgba)
         view_im.paste(resize_im, (x, y))
         return view_im
     if resize_type == ImageResizeType.FIT_BOTH:
@@ -4553,7 +4609,7 @@ def image_resize(
         w, h = int(img.size[0] * r), int(img.size[1] * r)
         x, y = (size[0] - w) // 2, (size[1] - h) // 2
         resize_im = img.resize(size=(w, h))
-        view_im = PIL.Image.new("RGBA", size, background_color_rgba)
+        view_im = PILImage.new("RGBA", size, background_color_rgba)
         view_im.paste(resize_im, (x, y))
         # print("@@@FIT_BOTH", x, y, w, h, size, wr)
         return view_im
@@ -4565,20 +4621,21 @@ def image_resize(
         elif h > w:
             y = (h - w) // 2
             img = img.crop((0, y, w, y + w))
-        return img.resize(size=(size[0], size[0]))
+        if size is not None:
+            img.resize(size=(size[0], size[0]))
     return img
 
 
 def get_image_tk(
     source: Union[bytes, Union[str, None]] = None,
     filename: Union[str, None] = None,
-    data: Union[bytes, PIL.Image.Image, None] = None,
+    data: Union[bytes, PILImage.Image, None] = None,
     size: Union[tuple[int, int], None] = None,
     resize_type: ImageResizeType = ImageResizeType.FIT_BOTH,
     background_color: Union[str, None] = None,  # color (example) "red" or "#FF0000"
 ) -> Union[ImageTk.PhotoImage, None]:
     """Get Image for tk"""
-    img: PIL.Image.Image
+    img: PILImage.Image
     # if source is bytes, set data
     if source is not None:
         if isinstance(source, str):  # is filename
@@ -4588,7 +4645,7 @@ def get_image_tk(
     # load from file?
     if filename is not None:
         try:
-            img = PIL.Image.open(filename)
+            img = PILImage.open(filename)
             img = image_resize(
                 img,
                 size=size,
@@ -4603,8 +4660,8 @@ def get_image_tk(
     # load from data
     if data is not None:
         try:
-            # check if data is PIL.Image
-            if isinstance(data, PIL.Image.Image):
+            # check if data is PILImage
+            if isinstance(data, PILImage.Image):
                 img = data
                 img = image_resize(
                     img,
@@ -4620,7 +4677,7 @@ def get_image_tk(
     return None
 
 
-def imagedata_to_bytes(image_data: PIL.Image.Image) -> bytes:
+def imagedata_to_bytes(image_data: PILImage.Image) -> bytes:
     """Convert JPEG to PNG"""
     bytes_data = io.BytesIO()
     image_data.save(bytes_data, format="PNG")
@@ -4630,7 +4687,7 @@ def imagedata_to_bytes(image_data: PIL.Image.Image) -> bytes:
 
 def imagefile_to_bytes(filename: str) -> bytes:
     """Read image file and convert to bytes"""
-    image = PIL.Image.open(filename)
+    image = PILImage.open(filename)
     bytes_data = io.BytesIO()
     image.save(bytes_data, format="PNG")
     img_bytes = bytes_data.getvalue()
@@ -4638,12 +4695,12 @@ def imagefile_to_bytes(filename: str) -> bytes:
 
 
 def time_checker_start() -> datetime:
-    """timer start"""
+    """Timer start"""
     return datetime.now()
 
 
 def time_checker_end(start_time: datetime) -> int:
-    """timer end"""
+    """Timer end"""
     elapsed_time = (datetime.now() - start_time).total_seconds()
     msec = int(elapsed_time * 1000)
     return msec
@@ -4672,6 +4729,7 @@ def get_font_list() -> list[str]:
 
 
 def get_system_info():
+    """Get system info"""
     # node={platform.node()}
     py_ver = sys.version.replace("\n", "")
     return f"""
