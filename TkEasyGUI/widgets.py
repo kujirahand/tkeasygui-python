@@ -4586,6 +4586,51 @@ class CalendarButton(CalendarBrowse):
     pass
 
 
+# -------------------------------------------------------------------
+# layout helper
+# -------------------------------------------------------------------
+def align_center(parts: list[Element]) -> list[Element]:
+    """Align center : layout helper"""
+    if len(parts) == 0:
+        return []
+    return [Push()] + parts + [Push()]
+
+
+def align_right(parts: list[Element]) -> list[Element]:
+    """Align right : layout helper"""
+    if len(parts) == 0:
+        return []
+    return [Push()] + parts
+
+
+def align_left(parts: list[Element]) -> list[Element]:
+    """Align left : layout helper"""
+    return parts
+
+
+def valign_top(grid: list[list[Element]]) -> list[list[Element]]:
+    """Vertical align top : layout helper"""
+    return grid
+
+
+def valign_middle(grid: list[list[Element]]) -> list[list[Element]]:
+    """Vertical align middle : layout helper"""
+    if len(grid) == 0:
+        return []
+    return (
+        cast(list[list[Element]], [[VPush()]])
+        + grid
+        + cast(list[list[Element]], [[VPush()]])
+    )
+
+
+def valign_bottom(grid: list[list[Element]]) -> list[list[Element]]:
+    """Vertical align bottom : layout helper"""
+    if len(grid) == 0:
+        return []
+    return cast(list[list[Element]], [[VPush()]]) + grid
+
+
 def rgb(r: int, g: int, b: int) -> str:
     """Convert RGB to Hex"""
     r = r & 0xFF
