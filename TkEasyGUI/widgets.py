@@ -1925,7 +1925,7 @@ class Push(Text):
             [sg.Push(), sg.Button("OK"), sg.Push()], # center alignment
         ])
     while win.is_running():
-    event, values = win.read()
+        event, values = win.read()
     ```
     """
 
@@ -1934,6 +1934,36 @@ class Push(Text):
     ) -> None:
         """Create a Push element."""
         super().__init__("", "", expand_x=True, metadata=metadata, **kw)
+
+
+class VPush(Text):
+    """
+    An element that inserts flexible space above or below to shift the layout to the center or bottom.
+
+    **Example**
+    ```py
+    import TkEasyGUI as eg
+
+    layout = [
+        [eg.VPush()],
+        [eg.Push(), eg.Text("== Middle =="), eg.Push()],
+        [eg.Push(), eg.Button("OK"), eg.Push()],
+        [eg.VPush()],
+    ]
+
+    window = eg.Window(title="VPush Test", layout=layout, size=(400, 350))
+    while window.is_alive():
+        event, values = window.read(timeout=1000)
+        if event == eg.WIN_CLOSED or event == "OK":
+            break
+    ```
+    """
+
+    def __init__(
+        self, metadata: Union[dict[str, Any], None] = None, **kw  # user metadata
+    ) -> None:
+        """Create a VPush element."""
+        super().__init__("", "", expand_y=True, metadata=metadata, **kw)
 
 
 class Label(Text):
