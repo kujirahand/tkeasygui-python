@@ -3435,6 +3435,7 @@ class Image(Element):
             tuple[int, int, int], str, None
         ] = None,  # background color (example) "red", "#FF0000"
         size: tuple[int, int] = (300, 300),
+        resize_type: ImageResizeType = ImageResizeType.FIT_BOTH,
         enable_events: bool = False,
         # other
         metadata: Union[dict[str, Any], None] = None,
@@ -3446,6 +3447,8 @@ class Image(Element):
         self.filename = filename
         self.data = data
         self.size = self.props["size"] = size
+        self.resize_type = resize_type
+        self.image_margin = 3
         if isinstance(background_color, tuple):
             background_color = rgb(
                 background_color[0], background_color[1], background_color[2]
@@ -3469,7 +3472,9 @@ class Image(Element):
         """Create a Image widget."""
         self.widget = tk.Canvas(parent, **self.props)
         try:
-            self.set_image(self.source, self.filename, self.data)
+            self.set_image(
+                self.source, self.filename, self.data, resize_type=self.resize_type
+            )
         except Exception:
             pass
         return self.widget
@@ -3530,7 +3535,9 @@ class Image(Element):
             background_color=self.background_color,
         )
         if photo is not None:
-            self.widget.create_image(0, 0, image=photo, anchor="nw")
+            self.widget.create_image(
+                self.image_margin, self.image_margin, image=photo, anchor="nw"
+            )
             self.widget.photo = photo  # type ignore
 
     def update(
@@ -4643,8 +4650,6 @@ def time_checker_end(start_time: datetime) -> int:
 
 
 # get system info
-
-
 def get_tk_version() -> str:
     """Get tk version"""
     root = get_root_window()

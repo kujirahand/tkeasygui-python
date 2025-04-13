@@ -39,6 +39,8 @@ def popup_buttons(
     timeout_key: str = "-TIMEOUT-",  # timeout key
     non_blocking: bool = False,
     default: str = "",
+    icon: str = "",  # filename or icon name(information/info, warning, error, question/?)
+    icon_size: tuple[int, int] = (48, 48),
 ) -> str:
     """
     Popup window with user defined buttons. Return button's label.
@@ -59,8 +61,27 @@ def popup_buttons(
     # create window
     eg_buttons: list[eg.Element] = [eg.Button(s, width=9) for s in buttons]
     eg_buttons_pad: list[eg.Element] = [eg.Push()] + eg_buttons + [eg.Push()]
+    eg_messages: list[eg.Element] = []
+    if icon != "":
+        if os.path.exists(icon):
+            eg_messages.append(eg.Image(icon, size=icon_size))
+        else:
+            font_info = ("", icon_size[0])
+            icon = icon.lower()
+            if icon == "information" or icon == "info":
+                eg_messages.append(eg.Label("📖", font=font_info))
+            elif icon == "warning":
+                eg_messages.append(eg.Label("⚠️", font=font_info))
+            elif icon == "error":
+                eg_messages.append(eg.Label("❌", font=font_info))
+            elif icon == "question" or icon == "?":
+                eg_messages.append(eg.Label("❓", font=font_info))
+            else:
+                eg_messages.append(eg.Label("🌱", font=font_info))  # error
+    if message != "":
+        eg_messages.append(eg.Text(message, expand_x=True, expand_y=True))
     layout: eg.LayoutType = [
-        [eg.Text(message)],
+        eg_messages,
         eg_buttons_pad,
     ]
 
@@ -85,7 +106,9 @@ def popup_buttons(
     return result
 
 
-def popup(message: str, title: str = "") -> str:
+def popup(
+    message: str, title: str = "", icon: str = "", icon_size: tuple[int, int] = (48, 48)
+) -> str:
     """
     Display a message in a popup window.
 
@@ -95,7 +118,9 @@ def popup(message: str, title: str = "") -> str:
     ```
     """
     # messagebox.showinfo(title, message)
-    return popup_buttons(message=message, title=title, buttons=["OK"])
+    return popup_buttons(
+        message=message, title=title, buttons=["OK"], icon=icon, icon_size=icon_size
+    )
 
 
 def popup_non_blocking(
@@ -122,6 +147,8 @@ def popup_auto_close(
     auto_close_duration: int = 3,
     buttons: list[str] = ["OK", "Cancel"],
     timeout_key="-TIMEOUT-",
+    icon: str = "information",
+    icon_size: tuple[int, int] = (48, 48),
 ) -> str:
     """Display a message in a popup window that closes automatically after a specified time."""
     return popup_buttons(
@@ -130,17 +157,32 @@ def popup_auto_close(
         buttons=buttons,
         auto_close_duration=auto_close_duration,
         timeout_key=timeout_key,
+        icon=icon,
+        icon_size=icon_size,
     )
 
 
-def popup_no_wait(message: str, title: str = "", **kw) -> str:
+def popup_no_wait(
+    message: str,
+    title: str = "",
+    icon: str = "information",
+    icon_size: tuple[int, int] = (48, 48),
+    **kw,
+) -> str:
     """Display a message in a popup window without waiting."""
-    return popup_auto_close(message, title, auto_close_duration=0, **kw)
+    return popup_auto_close(
+        message, title, auto_close_duration=0, icon=icon, icon_size=icon_size, **kw
+    )
 
 
-def popup_ok(message: str, title: str = "") -> str:
+def popup_ok(
+    message: str,
+    title: str = "",
+    icon: str = "information",
+    icon_size: tuple[int, int] = (48, 48),
+) -> str:
     """Display a message in a popup window.(Alias popup)"""
-    return popup_buttons(message, title, buttons=["OK"])
+    return popup_buttons(message, title, buttons=["OK"], icon=icon, icon_size=icon_size)
 
 
 def popup_ok_cancel(
@@ -150,13 +192,17 @@ def popup_ok_cancel(
     cancel_label: Union[str, None] = None,
     ok_value: str = "OK",
     cancel_value: str = "Cancel",
+    icon: str = "",
+    icon_size: tuple[int, int] = (48, 48),
 ) -> str:
     """Display a message in a popup window with OK and Cancel buttons. Return "OK" or "Cancel" or eg.WINDOW_CLOSED."""
     if ok_label is None:
         ok_label = le.get_text("OK")
     if cancel_label is None:
         cancel_label = le.get_text("Cancel")
-    result = popup_buttons(message, title, buttons=[ok_label, cancel_label])
+    result = popup_buttons(
+        message, title, buttons=[ok_label, cancel_label], icon=icon, icon_size=icon_size
+    )
     if result == ok_label:
         return ok_value
     if result == cancel_label:
@@ -171,6 +217,8 @@ def popup_yes_no(
     no_label: Union[str, None] = None,  # label for no button
     yes_value: str = "Yes",  # return value for yes
     no_value: str = "No",  # return value for no
+    icon: str = "?",
+    icon_size: tuple[int, int] = (48, 48),
 ) -> str:
     """
     Display a message in a popup window with Yes and No buttons. Return "Yes" or "No" (or eg.WINDOW_CLOSED).
@@ -196,7 +244,9 @@ def popup_yes_no(
     yes_label = yes_label if yes_label is not None else le.get_text("Yes")
     no_label = no_label if no_label is not None else le.get_text("No")
     # ask yes or no
-    result = popup_buttons(message, title, buttons=[yes_label, no_label])
+    result = popup_buttons(
+        message, title, buttons=[yes_label, no_label], icon=icon, icon_size=icon_size
+    )
     # get result
     if result == yes_label:
         return yes_value
@@ -214,6 +264,8 @@ def popup_yes_no_cancel(
     yes_value: str = "Yes",
     no_value: str = "No",
     cancel_value: str = "Cancel",
+    icon: str = "?",
+    icon_size: tuple[int, int] = (48, 48),
 ) -> str:
     """Display a message in a popup window with Yes and No buttons. Return "Yes" or "No" or "Cancel"."""
     # return popup_buttons(message, title, buttons=["Yes", "No", "Cancel"])
@@ -223,7 +275,13 @@ def popup_yes_no_cancel(
     no_label = no_label if no_label is not None else le.get_text("No")
     cancel_label = cancel_label if cancel_label is not None else le.get_text("Cancel")
     # ask yes or no
-    result = popup_buttons(message, title, buttons=[yes_label, no_label, cancel_label])
+    result = popup_buttons(
+        message,
+        title,
+        buttons=[yes_label, no_label, cancel_label],
+        icon=icon,
+        icon_size=icon_size,
+    )
     # get result
     if result == yes_label:
         return yes_value
@@ -234,10 +292,17 @@ def popup_yes_no_cancel(
     return cancel_label
 
 
-def popup_cancel(message: str, title: str = "") -> str:
+def popup_cancel(
+    message: str,
+    title: str = "",
+    icon: str = "information",
+    icon_size: tuple[int, int] = (48, 48),
+) -> str:
     """Display a message in a popup window with OK and Cancel buttons. Return "Cancel" or eg.WINDOW_CLOSED."""
     cancel_label = le.get_text("Cancel")
-    result = popup_buttons(message, title, buttons=["Cancel"])
+    result = popup_buttons(
+        message, title, buttons=["Cancel"], icon=icon, icon_size=icon_size
+    )
     return cancel_label if result == cancel_label else result
 
 
@@ -320,27 +385,54 @@ def popup_input(
     return result
 
 
-def popup_error(message: str, title: Union[str, None] = None) -> None:
+def popup_error(
+    message: str,
+    title: Union[str, None] = None,
+    icon: str = "error",
+    icon_size: tuple[int, int] = (48, 48),
+) -> None:
     """Display a message in a popup window with an error icon."""
     if title is None:
         title = le.get_text("Error")
     error_label = le.get_text("Error")
-    popup_buttons(message, title, buttons=[error_label])
+    popup_buttons(message, title, buttons=[error_label], icon=icon, icon_size=icon_size)
     # messagebox.showerror(title, message)
 
 
-def popup_warning(message: str, title: Union[str, None] = None) -> None:
+def popup_warning(
+    message: str,
+    title: Union[str, None] = None,
+    icon: str = "warning",
+    icon_size: tuple[int, int] = (48, 48),
+    use_tk_dialog: bool = False,
+) -> None:
     """Display a message in a popup window with an warning icon."""
     if title is None:
         title = le.get_text("Warning")
-    messagebox.showwarning(title, message)
+    if use_tk_dialog:
+        messagebox.showwarning(title, message)
+    else:
+        popup_buttons(
+            message, title, buttons=[le.get_text("OK")], icon=icon, icon_size=icon_size
+        )
 
 
-def popup_info(message: str, title: Union[str, None] = None) -> None:
+def popup_info(
+    message: str,
+    title: Union[str, None] = None,
+    icon: str = "information",
+    icon_size: tuple[int, int] = (48, 48),
+    use_tk_dialog: bool = False,
+) -> None:
     """Display a message in a popup window with an warning icon."""
     if title is None:
         title = le.get_text("Information")
-    messagebox.showwarning(title, message)
+    if use_tk_dialog:
+        messagebox.showwarning(title, message)
+    else:
+        popup_buttons(
+            message, title, buttons=[le.get_text("OK")], icon=icon, icon_size=icon_size
+        )
 
 
 def popup_get_file(
@@ -618,19 +710,14 @@ def popup_get_date(
         ok_label = le.get_text("OK")
     if cancel_label is None:
         cancel_label = le.get_text("Cancel")
-    panel = eg.Frame(
-        "",
-        layout=[
-            [
-                eg.Button(ok_label, size=(10, 1)),
-                eg.Button(cancel_label, size=(8, 1)),
-            ]
-        ],
-        text_align="center",
-        expand_x=True,
-        relief="flat",
+    layout.append(
+        [
+            eg.Push(),
+            eg.Button(ok_label, size=(10, 1)),
+            eg.Button(cancel_label, size=(8, 1)),
+            eg.Push(),
+        ]
     )
-    layout.append([panel])
 
     # update label
     def update_date(top: datetime, current_date: datetime):
