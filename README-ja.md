@@ -120,9 +120,15 @@ window.close()
 
 ## チュートリアル
 
-- [(note) TkEasyGUI - Pythonで最も素早くデスクトップアプリを創るライブラリ](https://note.com/kujirahand/n/n33a2df3aa3e5)
-- [(マイナビPython連載) (116回目)金額合計ツールでExcel要らず - 合計/整形/コピーのツールを作ろう](https://news.mynavi.jp/techplus/article/zeropython-116/)
+- [TkEasyGUI - Pythonで最も素早くデスクトップアプリを創るライブラリ](https://note.com/kujirahand/n/n33a2df3aa3e5)
+- [マイナビニュースPython連載116回目 - 合計/整形/コピーのツールを作ろう](https://news.mynavi.jp/techplus/article/zeropython-116/)
 - [(書籍) Pythonでつくるデスクトップアプリ メモ帳からスクレイピング・生成AI利用まで](https://amzn.to/45R2NSH)
+- [(特集記事) 日経ソフトウエア2025年5月号の特集記事 - TkEasyGUIを使ってみよう](https://amzn.to/4j1lj0c)
+
+公式ではないですが、役立つ技術記事があります！
+
+- [TkEasyGUI - 目的別ダイアログ完全ガイド](https://note.com/sirodon_256/n/n4138ebf4877f)
+- [TkEasyGUIライブラリの基本とサンプルコード解説](https://note.com/sirodon_256/n/na73d3fdac68d)
 
 ## サンプル
 
