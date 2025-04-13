@@ -39,6 +39,7 @@ def popup_buttons(
     timeout_key: str = "-TIMEOUT-",  # timeout key
     non_blocking: bool = False,
     default: str = "",
+    size: Union[tuple[int, int], None] = None,
     icon: str = "",  # filename or icon name(information/info, warning, error, question/?)
     icon_size: tuple[int, int] = (48, 48),
 ) -> str:
@@ -91,7 +92,7 @@ def popup_buttons(
     if non_blocking:
         # TODO: popup non blocking window
         pass
-    with eg.Window(title, layout=layout, modal=True) as win:
+    with eg.Window(title, layout=layout, size=size, modal=True) as win:
         for event, _ in win.event_iter(timeout=100, timeout_key=eg.WINDOW_TIMEOUT):
             if event in buttons:
                 result = event
@@ -107,7 +108,11 @@ def popup_buttons(
 
 
 def popup(
-    message: str, title: str = "", icon: str = "", icon_size: tuple[int, int] = (48, 48)
+    message: str,
+    title: str = "",
+    size: Union[tuple[int, int], None] = None,
+    icon: str = "",
+    icon_size: tuple[int, int] = (48, 48),
 ) -> str:
     """
     Display a message in a popup window.
@@ -119,12 +124,20 @@ def popup(
     """
     # messagebox.showinfo(title, message)
     return popup_buttons(
-        message=message, title=title, buttons=["OK"], icon=icon, icon_size=icon_size
+        message=message,
+        title=title,
+        buttons=["OK"],
+        size=size,
+        icon=icon,
+        icon_size=icon_size,
     )
 
 
 def popup_non_blocking(
-    message: str, title: str = "", auto_close_duration: int = -1
+    message: str,
+    title: str = "",
+    auto_close_duration: int = -1,
+    size: Union[tuple[int, int], None] = None,
 ) -> str:
     """(TODO) Display a non blocking window"""
     return popup_buttons(
@@ -133,12 +146,19 @@ def popup_non_blocking(
         buttons=["OK"],
         auto_close_duration=auto_close_duration,
         non_blocking=True,
+        size=size,
     )
 
 
-def popup_no_buttons(message: str, title: str = "") -> None:
+def popup_no_buttons(
+    message: str,
+    title: str = "",
+    icon: str = "",
+    icon_size: tuple[int, int] = (48, 48),
+    size: Union[tuple[int, int], None] = None,
+) -> None:
     """Display a message in a popup window without buttons."""
-    popup_buttons(message, title, buttons=[])
+    popup_buttons(message, title, buttons=[], icon=icon, icon_size=icon_size, size=size)
 
 
 def popup_auto_close(
@@ -147,6 +167,7 @@ def popup_auto_close(
     auto_close_duration: int = 3,
     buttons: list[str] = ["OK", "Cancel"],
     timeout_key="-TIMEOUT-",
+    size: Union[tuple[int, int], None] = None,
     icon: str = "information",
     icon_size: tuple[int, int] = (48, 48),
 ) -> str:
@@ -157,6 +178,7 @@ def popup_auto_close(
         buttons=buttons,
         auto_close_duration=auto_close_duration,
         timeout_key=timeout_key,
+        size=size,
         icon=icon,
         icon_size=icon_size,
     )
@@ -165,24 +187,34 @@ def popup_auto_close(
 def popup_no_wait(
     message: str,
     title: str = "",
+    size: Union[tuple[int, int], None] = None,
     icon: str = "information",
     icon_size: tuple[int, int] = (48, 48),
     **kw,
 ) -> str:
     """Display a message in a popup window without waiting."""
     return popup_auto_close(
-        message, title, auto_close_duration=0, icon=icon, icon_size=icon_size, **kw
+        message,
+        title,
+        auto_close_duration=0,
+        size=size,
+        icon=icon,
+        icon_size=icon_size,
+        **kw,
     )
 
 
 def popup_ok(
     message: str,
     title: str = "",
+    size: Union[tuple[int, int], None] = None,
     icon: str = "information",
     icon_size: tuple[int, int] = (48, 48),
 ) -> str:
     """Display a message in a popup window.(Alias popup)"""
-    return popup_buttons(message, title, buttons=["OK"], icon=icon, icon_size=icon_size)
+    return popup_buttons(
+        message, title, buttons=["OK"], size=size, icon=icon, icon_size=icon_size
+    )
 
 
 def popup_ok_cancel(
@@ -192,6 +224,7 @@ def popup_ok_cancel(
     cancel_label: Union[str, None] = None,
     ok_value: str = "OK",
     cancel_value: str = "Cancel",
+    size: Union[tuple[int, int], None] = None,
     icon: str = "",
     icon_size: tuple[int, int] = (48, 48),
 ) -> str:
@@ -201,7 +234,12 @@ def popup_ok_cancel(
     if cancel_label is None:
         cancel_label = le.get_text("Cancel")
     result = popup_buttons(
-        message, title, buttons=[ok_label, cancel_label], icon=icon, icon_size=icon_size
+        message,
+        title,
+        buttons=[ok_label, cancel_label],
+        size=size,
+        icon=icon,
+        icon_size=icon_size,
     )
     if result == ok_label:
         return ok_value
@@ -217,6 +255,7 @@ def popup_yes_no(
     no_label: Union[str, None] = None,  # label for no button
     yes_value: str = "Yes",  # return value for yes
     no_value: str = "No",  # return value for no
+    size: Union[tuple[int, int], None] = None,
     icon: str = "?",
     icon_size: tuple[int, int] = (48, 48),
 ) -> str:
@@ -245,7 +284,12 @@ def popup_yes_no(
     no_label = no_label if no_label is not None else le.get_text("No")
     # ask yes or no
     result = popup_buttons(
-        message, title, buttons=[yes_label, no_label], icon=icon, icon_size=icon_size
+        message,
+        title,
+        buttons=[yes_label, no_label],
+        size=size,
+        icon=icon,
+        icon_size=icon_size,
     )
     # get result
     if result == yes_label:
@@ -264,6 +308,7 @@ def popup_yes_no_cancel(
     yes_value: str = "Yes",
     no_value: str = "No",
     cancel_value: str = "Cancel",
+    size: Union[tuple[int, int], None] = None,
     icon: str = "?",
     icon_size: tuple[int, int] = (48, 48),
 ) -> str:
@@ -279,6 +324,7 @@ def popup_yes_no_cancel(
         message,
         title,
         buttons=[yes_label, no_label, cancel_label],
+        size=size,
         icon=icon,
         icon_size=icon_size,
     )
@@ -295,13 +341,14 @@ def popup_yes_no_cancel(
 def popup_cancel(
     message: str,
     title: str = "",
+    size: Union[tuple[int, int], None] = None,
     icon: str = "information",
     icon_size: tuple[int, int] = (48, 48),
 ) -> str:
     """Display a message in a popup window with OK and Cancel buttons. Return "Cancel" or eg.WINDOW_CLOSED."""
     cancel_label = le.get_text("Cancel")
     result = popup_buttons(
-        message, title, buttons=["Cancel"], icon=icon, icon_size=icon_size
+        message, title, buttons=["Cancel"], size=size, icon=icon, icon_size=icon_size
     )
     return cancel_label if result == cancel_label else result
 
@@ -312,6 +359,7 @@ def popup_get_text(
     default: Union[str, None] = None,
     default_text: Union[str, None] = None,  # same as default for compatibility
     font: Optional[FontType] = None,
+    size: Union[tuple[int, int], None] = None,
 ) -> Union[str, None]:
     """Display a message in a popup window with a text entry. Return the text entered."""
     # return simpledialog.askstring(title, message, initialvalue=default)
@@ -321,7 +369,11 @@ def popup_get_text(
     if default is not None:
         default_str = default
     result: Union[str, float, None] = popup_input(
-        message, title, default_str, font=font
+        message,
+        title,
+        default_str,
+        font=font,
+        size=size,
     )
     if result is None:
         return None
@@ -337,6 +389,7 @@ def popup_input(
     cancel_value: Any = None,
     only_number: bool = False,
     font: Optional[FontType] = None,
+    size: Union[tuple[int, int], None] = None,
 ) -> Union[str, float, None]:
     """Display a message in a popup window with a text entry. Return the text entered. if canceled, return cancel_value."""
     result = cancel_value
@@ -364,8 +417,9 @@ def popup_input(
         ],
         modal=True,
         font=font,
+        size=size,
     )
-    while True:
+    while win.is_alive():
         event, values = win.read()
         if (event == ok_label) or (
             (event == "-user-") and (values["event_type"] == "return")
@@ -388,6 +442,7 @@ def popup_input(
 def popup_error(
     message: str,
     title: Union[str, None] = None,
+    size: Union[tuple[int, int], None] = None,
     icon: str = "error",
     icon_size: tuple[int, int] = (48, 48),
 ) -> None:
@@ -395,13 +450,16 @@ def popup_error(
     if title is None:
         title = le.get_text("Error")
     error_label = le.get_text("Error")
-    popup_buttons(message, title, buttons=[error_label], icon=icon, icon_size=icon_size)
+    popup_buttons(
+        message, title, buttons=[error_label], size=size, icon=icon, icon_size=icon_size
+    )
     # messagebox.showerror(title, message)
 
 
 def popup_warning(
     message: str,
     title: Union[str, None] = None,
+    size: Union[tuple[int, int], None] = None,
     icon: str = "warning",
     icon_size: tuple[int, int] = (48, 48),
     use_tk_dialog: bool = False,
@@ -413,13 +471,19 @@ def popup_warning(
         messagebox.showwarning(title, message)
     else:
         popup_buttons(
-            message, title, buttons=[le.get_text("OK")], icon=icon, icon_size=icon_size
+            message,
+            title,
+            buttons=[le.get_text("OK")],
+            size=size,
+            icon=icon,
+            icon_size=icon_size,
         )
 
 
 def popup_info(
     message: str,
     title: Union[str, None] = None,
+    size: Union[tuple[int, int], None] = None,
     icon: str = "information",
     icon_size: tuple[int, int] = (48, 48),
     use_tk_dialog: bool = False,
@@ -431,7 +495,12 @@ def popup_info(
         messagebox.showwarning(title, message)
     else:
         popup_buttons(
-            message, title, buttons=[le.get_text("OK")], icon=icon, icon_size=icon_size
+            message,
+            title,
+            buttons=[le.get_text("OK")],
+            size=size,
+            icon=icon,
+            icon_size=icon_size,
         )
 
 
@@ -527,6 +596,7 @@ def popup_memo(
         cancel_value,
         font,
         resizable=resizable,
+        size=size,
     )
 
 
@@ -578,7 +648,11 @@ def popup_scrolled(
         ],
     ]
     win: eg.Window = eg.Window(
-        title=title_str, layout=layout, modal=True, resizable=resizable
+        title=title_str,
+        layout=layout,
+        modal=True,
+        resizable=resizable,
+        size=size,
     )
     result = None
     while win.is_alive():
@@ -807,6 +881,7 @@ def popup_get_form(
         Union[str, tuple[str, Any], tuple[str, Any, str]]
     ],  # list of form items(label[,selection or default][,type])
     title: str = "Form",  # window title
+    size: Union[tuple[int, int], None] = None,
 ) -> Union[dict[str, Any], None]:
     """
     Displays a form that allows multiple items to be entered.
@@ -922,7 +997,7 @@ def popup_get_form(
             eg.Push(),
         ]
     )
-    with eg.Window(title, layout=layout) as win:
+    with eg.Window(title, layout=layout, size=size) as win:
         result: Union[dict[str, Any], None] = None
         for event, values in win.event_iter():
             if event == "Cancel":
