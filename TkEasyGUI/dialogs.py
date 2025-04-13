@@ -10,6 +10,8 @@ import tkinter.messagebox as messagebox
 from datetime import datetime, timedelta
 from tkinter import colorchooser
 from typing import Any, Callable, Iterable, Optional, Union
+import tempfile
+import sys
 
 from . import locale_easy as le
 from . import widgets as eg
@@ -860,14 +862,12 @@ def send_notification_mac(message: str, title: str = "") -> bool:
     set decodedTitle to do shell script "echo {encoded_title} | base64 -D"
     display notification decodedMessage with title decodedTitle
     """
-    subprocess.run([oascript_path, "-e", script])
+    subprocess.run([oascript_path, "-e", script], check=False)
     return True
 
 
 def send_notification_win(message: str, title: str = "") -> bool:
     """Send Notification on Windows using PowerShell"""
-    import tempfile
-
     # get powershell path
     powershell_path = os.path.join(
         os.environ["SystemRoot"],
@@ -878,6 +878,8 @@ def send_notification_win(message: str, title: str = "") -> bool:
     )
     if not os.path.exists(powershell_path):
         return False
+    if title == "":
+        title = "Notification"
 
     # Base64 encode the title and message
     def to_base64(s: str) -> str:
@@ -888,7 +890,7 @@ def send_notification_win(message: str, title: str = "") -> bool:
 
     # PowerShell Script using Base64
     script_content = r"""
-param($encodedTitle, $encodedMessage)
+param($encodedTitle, $encodedMessage, $appPath)
 $decodedTitle = [System.Text.Encoding]::UTF8.GetString([System.Convert]::FromBase64String($encodedTitle))
 $decodedMessage = [System.Text.Encoding]::UTF8.GetString([System.Convert]::FromBase64String($encodedMessage))
 $bodyText = "$decodedTitle`n$decodedMessage"
@@ -896,8 +898,7 @@ $bodyText = "$decodedTitle`n$decodedMessage"
 $ToastText01 = [Windows.UI.Notifications.ToastTemplateType, Windows.UI.Notifications, ContentType = WindowsRuntime]::ToastText01
 $TemplateContent = [Windows.UI.Notifications.ToastNotificationManager, Windows.UI.Notifications, ContentType = WindowsRuntime]::GetTemplateContent($ToastText01)
 $TemplateContent.SelectSingleNode('//text[@id="1"]').InnerText = $bodyText
-$AppId = '{{1AC14E77-02E7-4E5D-B744-2EB1AE5198B7}}\WindowsPowerShell\v1.0\powershell.exe'
-[Windows.UI.Notifications.ToastNotificationManager]::CreateToastNotifier($AppId).Show($TemplateContent)
+[Windows.UI.Notifications.ToastNotificationManager]::CreateToastNotifier($appPath).Show($TemplateContent)
 """
 
     # generate temp script file
@@ -916,9 +917,11 @@ $AppId = '{{1AC14E77-02E7-4E5D-B744-2EB1AE5198B7}}\WindowsPowerShell\v1.0\powers
                 script_path,
                 encoded_title,
                 encoded_message,
+                sys.executable,
             ],
             check=True,
         )
+        return True
     finally:
         # 実行後に一時ファイルを削除
         os.remove(script_path)
