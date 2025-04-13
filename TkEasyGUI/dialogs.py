@@ -290,7 +290,12 @@ def popup_input(
         layout=[
             [eg.Text(message)],
             [eg.Input(default, key="-user-", width=40, enable_events=True)],
-            [eg.Button(ok_label, width=11), eg.Button(cancel_label, width=9)],
+            [
+                eg.Push(),
+                eg.Button(ok_label, width=11),
+                eg.Button(cancel_label, width=9),
+                eg.Push(),
+            ],
         ],
         modal=True,
         font=font,
@@ -417,10 +422,19 @@ def popup_memo(
     cancel_label: Union[str, None] = None,
     cancel_value: Union[str, None] = None,
     font: Union[FontType, None] = None,
+    resizable: bool = True,
 ) -> Union[str, None]:
     """Display a multiline message in a popup window. Return the text entered. if canceled, return cancel_value."""
     return popup_scrolled(
-        message, title, size, readonly, ok_label, cancel_label, cancel_value, font
+        message,
+        title,
+        size,
+        readonly,
+        ok_label,
+        cancel_label,
+        cancel_value,
+        font,
+        resizable=resizable,
     )
 
 
@@ -433,6 +447,7 @@ def popup_scrolled(
     cancel_label: Optional[str] = None,
     cancel_value: Optional[str] = None,
     font: Optional[FontType] = None,
+    resizable: bool = True,
 ) -> Union[str, None]:
     """
     Display a multiline message in a popup window. Return the text entered. if canceled, return cancel_value.
@@ -452,10 +467,27 @@ def popup_scrolled(
     if title is None:
         title_str = le.get_text("Information")
     layout: eg.LayoutType = [
-        [eg.Multiline(message, key="-text-", size=size, readonly=readonly, font=font)],
-        [eg.Button(ok_label, width=9), eg.Button(cancel_label, width=5)],
+        [
+            eg.Multiline(
+                message,
+                key="-text-",
+                size=size,
+                readonly=readonly,
+                font=font,
+                expand_x=True,
+                expand_y=True,
+            )
+        ],
+        [
+            eg.Push(),
+            eg.Button(ok_label, width=9),
+            eg.Button(cancel_label, width=5),
+            eg.Push(),
+        ],
     ]
-    win: eg.Window = eg.Window(title=title_str, layout=layout, modal=True)
+    win: eg.Window = eg.Window(
+        title=title_str, layout=layout, modal=True, resizable=resizable
+    )
     result = None
     while win.is_alive():
         event, _ = win.read()
@@ -986,7 +1018,9 @@ def popup_listbox(
             )
         ]
     )
-    layout.append([eg.Button("OK", width=9), eg.Button("Cancel", width=5)])
+    layout.append(
+        [eg.Push(), eg.Button("OK", width=9), eg.Button("Cancel", width=5), eg.Push()]
+    )
     with eg.Window(title, layout=layout, modal=True, resizable=resizable) as win:
         # event loop
         result = None
