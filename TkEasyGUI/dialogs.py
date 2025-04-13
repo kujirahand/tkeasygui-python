@@ -5,13 +5,13 @@ TkEasyGUI dialogs
 import base64
 import os
 import subprocess
+import sys
+import tempfile
 import tkinter.filedialog as filedialog
 import tkinter.messagebox as messagebox
 from datetime import datetime, timedelta
 from tkinter import colorchooser
 from typing import Any, Callable, Iterable, Optional, Union
-import tempfile
-import sys
 
 from . import locale_easy as le
 from . import widgets as eg
@@ -960,6 +960,7 @@ def popup_listbox(
     font: Union[FontType, None] = None,
     default_value: Union[str, None] = None,  # default value
     multiple: bool = False,  # multiple selection
+    resizable: bool = True,  # resizable
 ) -> Union[str, None]:
     """Display Listbox in a popup window"""
     select_mode: eg.ListboxSelectMode = (
@@ -980,11 +981,13 @@ def popup_listbox(
                 size=size,
                 font=font,
                 select_mode=select_mode,
+                expand_x=True,
+                expand_y=True,
             )
         ]
     )
     layout.append([eg.Button("OK", width=9), eg.Button("Cancel", width=5)])
-    with eg.Window(title, layout=layout, modal=True) as win:
+    with eg.Window(title, layout=layout, modal=True, resizable=resizable) as win:
         # event loop
         result = None
         for event, values in win.event_iter():
