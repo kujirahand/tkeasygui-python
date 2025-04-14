@@ -1,11 +1,10 @@
-"""
-### Popup Test
-"""
+"""Popup Test"""
 
 import TkEasyGUI as eg
 
 
 def main():
+    """Main function"""
     while True:
         # select buttons
         group = eg.popup_listbox(
@@ -17,13 +16,16 @@ def main():
                 "Calendar",
                 "Others",
             ],
-            message="Please select popup group:")
+            message="Please select popup group:",
+        )
         if group is None:
             break
         else:
             popup_test(group)
 
+
 def popup_test(group):
+    """Popup test function"""
     if group == "Basic":
         # Display message in a dialog
         eg.popup("[1] popup")
@@ -68,7 +70,10 @@ def popup_test(group):
         # Color selection dialog
         print(eg.popup_color("[1] popup_color"))
         # Dialog with custom buttons
-        print(eg.popup_buttons("[2] popup_buttons", buttons=["Apple", "Banana", "Orange"]))
+        print(
+            eg.popup_buttons("[2] popup_buttons", buttons=["Apple", "Banana", "Orange"])
+        )
+
 
 if __name__ == "__main__":
     main()
