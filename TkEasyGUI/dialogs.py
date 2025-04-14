@@ -5,6 +5,7 @@ import os
 import subprocess
 import sys
 import tempfile
+import tkinter
 import tkinter.filedialog as filedialog
 import tkinter.messagebox as messagebox
 from datetime import datetime, timedelta
@@ -13,7 +14,14 @@ from typing import Any, Callable, Iterable, Optional, Union
 
 from . import locale_easy as le
 from . import widgets as eg
-from .utils import ColorFormatType, FontType, get_root_window, is_mac, is_win
+from .utils import (
+    ColorFormatType,
+    FontType,
+    get_root_window,
+    is_mac,
+    is_win,
+    copy_to_clipboard,
+)
 
 YES = "Yes"
 NO = "No"
@@ -40,6 +48,7 @@ def popup_buttons(
     size: Union[tuple[int, int], None] = None,
     icon: str = "",  # filename or icon name(information/info, warning, error, question/?)
     icon_size: tuple[int, int] = (48, 48),
+    can_copy_message: bool = True,
 ) -> str:
     """
     Popup window with user defined buttons. Return button's label.
@@ -78,7 +87,17 @@ def popup_buttons(
             else:
                 eg_messages.append(eg.Label("🌱", font=font_info))  # error
     if message != "":
-        eg_messages.append(eg.Text(message, expand_x=True, expand_y=True))
+        msg = eg.Text(
+            message,
+            key="-msg-",
+            expand_x=True,
+            expand_y=True,
+            enable_events=can_copy_message,
+        )
+        eg_messages.append(msg)
+        # popup menu
+        popup_menu = tkinter.Menu(get_root_window(), tearoff=0)
+        popup_menu.add_command(label="Copy", command=lambda: copy_to_clipboard(message))
     layout: eg.LayoutType = [
         eg_messages,
         eg_buttons_pad,
@@ -91,7 +110,7 @@ def popup_buttons(
         # TODO: popup non blocking window
         pass
     with eg.Window(title, layout=layout, size=size, modal=True) as win:
-        for event, _ in win.event_iter(timeout=100, timeout_key=eg.WINDOW_TIMEOUT):
+        for event, values in win.event_iter(timeout=100, timeout_key=eg.WINDOW_TIMEOUT):
             if event in buttons:
                 result = event
                 break
@@ -102,6 +121,9 @@ def popup_buttons(
                 ):
                     result = timeout_key  # timeout_key only use result
                     break
+            if event == "-msg-" and "event" in values:  # click message
+                e = values["event"]
+                popup_menu.post(e.x_root, e.y_root)
     return result
 
 
@@ -111,6 +133,7 @@ def popup(
     size: Union[tuple[int, int], None] = None,
     icon: str = "",
     icon_size: tuple[int, int] = (48, 48),
+    can_copy_message: bool = True,
 ) -> str:
     """
     Display a message in a popup window.
@@ -128,6 +151,7 @@ def popup(
         size=size,
         icon=icon,
         icon_size=icon_size,
+        can_copy_message=can_copy_message,
     )
 
 
@@ -136,6 +160,7 @@ def popup_non_blocking(
     title: str = "",
     auto_close_duration: int = -1,
     size: Union[tuple[int, int], None] = None,
+    can_copy_message=True,
 ) -> str:
     """(TODO) Display a non blocking window"""
     return popup_buttons(
@@ -145,6 +170,7 @@ def popup_non_blocking(
         auto_close_duration=auto_close_duration,
         non_blocking=True,
         size=size,
+        can_copy_message=can_copy_message,
     )
 
 
@@ -154,9 +180,18 @@ def popup_no_buttons(
     icon: str = "",
     icon_size: tuple[int, int] = (48, 48),
     size: Union[tuple[int, int], None] = None,
+    can_copy_message: bool = True,
 ) -> None:
     """Display a message in a popup window without buttons."""
-    popup_buttons(message, title, buttons=[], icon=icon, icon_size=icon_size, size=size)
+    popup_buttons(
+        message,
+        title,
+        buttons=[],
+        icon=icon,
+        icon_size=icon_size,
+        size=size,
+        can_copy_message=can_copy_message,
+    )
 
 
 def popup_auto_close(
@@ -168,6 +203,7 @@ def popup_auto_close(
     size: Union[tuple[int, int], None] = None,
     icon: str = "information",
     icon_size: tuple[int, int] = (48, 48),
+    can_copy_message: bool = True,
 ) -> str:
     """Display a message in a popup window that closes automatically after a specified time."""
     return popup_buttons(
@@ -179,6 +215,7 @@ def popup_auto_close(
         size=size,
         icon=icon,
         icon_size=icon_size,
+        can_copy_message=can_copy_message,
     )
 
 
@@ -208,10 +245,17 @@ def popup_ok(
     size: Union[tuple[int, int], None] = None,
     icon: str = "information",
     icon_size: tuple[int, int] = (48, 48),
+    can_copy_message: bool = True,
 ) -> str:
     """Display a message in a popup window.(Alias popup)"""
     return popup_buttons(
-        message, title, buttons=["OK"], size=size, icon=icon, icon_size=icon_size
+        message,
+        title,
+        buttons=["OK"],
+        size=size,
+        icon=icon,
+        icon_size=icon_size,
+        can_copy_message=can_copy_message,
     )
 
 
@@ -225,6 +269,7 @@ def popup_ok_cancel(
     size: Union[tuple[int, int], None] = None,
     icon: str = "",
     icon_size: tuple[int, int] = (48, 48),
+    can_copy_message: bool = True,
 ) -> str:
     """Display a message in a popup window with OK and Cancel buttons. Return "OK" or "Cancel" or eg.WINDOW_CLOSED."""
     if ok_label is None:
@@ -238,6 +283,7 @@ def popup_ok_cancel(
         size=size,
         icon=icon,
         icon_size=icon_size,
+        can_copy_message=can_copy_message,
     )
     if result == ok_label:
         return ok_value
@@ -256,6 +302,7 @@ def popup_yes_no(
     size: Union[tuple[int, int], None] = None,
     icon: str = "?",
     icon_size: tuple[int, int] = (48, 48),
+    can_copy_message: bool = True,
 ) -> str:
     """
     Display a message in a popup window with Yes and No buttons. Return "Yes" or "No" (or eg.WINDOW_CLOSED).
@@ -289,6 +336,7 @@ def popup_yes_no(
         size=size,
         icon=icon,
         icon_size=icon_size,
+        can_copy_message=can_copy_message,
     )
     # get result
     if result == yes_label:
@@ -310,6 +358,7 @@ def popup_yes_no_cancel(
     size: Union[tuple[int, int], None] = None,
     icon: str = "?",
     icon_size: tuple[int, int] = (48, 48),
+    can_copy_message: bool = True,
 ) -> str:
     """Display a message in a popup window with Yes and No buttons. Return "Yes" or "No" or "Cancel"."""
     # return popup_buttons(message, title, buttons=["Yes", "No", "Cancel"])
@@ -326,6 +375,7 @@ def popup_yes_no_cancel(
         size=size,
         icon=icon,
         icon_size=icon_size,
+        can_copy_message=can_copy_message,
     )
     # get result
     if result == yes_label:
@@ -343,11 +393,18 @@ def popup_cancel(
     size: Union[tuple[int, int], None] = None,
     icon: str = "information",
     icon_size: tuple[int, int] = (48, 48),
+    can_copy_message: bool = True,
 ) -> str:
     """Display a message in a popup window with OK and Cancel buttons. Return "Cancel" or eg.WINDOW_CLOSED."""
     cancel_label = le.get_text("Cancel")
     result = popup_buttons(
-        message, title, buttons=["Cancel"], size=size, icon=icon, icon_size=icon_size
+        message,
+        title,
+        buttons=["Cancel"],
+        size=size,
+        icon=icon,
+        icon_size=icon_size,
+        can_copy_message=can_copy_message,
     )
     return cancel_label if result == cancel_label else result
 
@@ -444,15 +501,26 @@ def popup_error(
     size: Union[tuple[int, int], None] = None,
     icon: str = "error",
     icon_size: tuple[int, int] = (48, 48),
+    can_copy_message: bool = True,
+    use_tk_dialog: bool = False,
 ) -> None:
     """Display a message in a popup window with an error icon."""
     if title is None:
         title = le.get_text("Error")
     error_label = le.get_text("Error")
+    if use_tk_dialog:
+        messagebox.showerror(title, message)
+        return
+    # show error message
     popup_buttons(
-        message, title, buttons=[error_label], size=size, icon=icon, icon_size=icon_size
+        message,
+        title,
+        buttons=[error_label],
+        size=size,
+        icon=icon,
+        icon_size=icon_size,
+        can_copy_message=can_copy_message,
     )
-    # messagebox.showerror(title, message)
 
 
 def popup_warning(
@@ -461,6 +529,7 @@ def popup_warning(
     size: Union[tuple[int, int], None] = None,
     icon: str = "warning",
     icon_size: tuple[int, int] = (48, 48),
+    can_copy_message: bool = True,
     use_tk_dialog: bool = False,
 ) -> None:
     """Display a message in a popup window with an warning icon."""
@@ -468,15 +537,16 @@ def popup_warning(
         title = le.get_text("Warning")
     if use_tk_dialog:
         messagebox.showwarning(title, message)
-    else:
-        popup_buttons(
-            message,
-            title,
-            buttons=[le.get_text("OK")],
-            size=size,
-            icon=icon,
-            icon_size=icon_size,
-        )
+        return
+    popup_buttons(
+        message,
+        title,
+        buttons=[le.get_text("OK")],
+        size=size,
+        icon=icon,
+        icon_size=icon_size,
+        can_copy_message=can_copy_message,
+    )
 
 
 def popup_info(
@@ -485,6 +555,7 @@ def popup_info(
     size: Union[tuple[int, int], None] = None,
     icon: str = "information",
     icon_size: tuple[int, int] = (48, 48),
+    can_copy_message: bool = True,
     use_tk_dialog: bool = False,
 ) -> None:
     """Display a message in a popup window with an warning icon."""
@@ -492,15 +563,16 @@ def popup_info(
         title = le.get_text("Information")
     if use_tk_dialog:
         messagebox.showwarning(title, message)
-    else:
-        popup_buttons(
-            message,
-            title,
-            buttons=[le.get_text("OK")],
-            size=size,
-            icon=icon,
-            icon_size=icon_size,
-        )
+        return
+    popup_buttons(
+        message,
+        title,
+        buttons=[le.get_text("OK")],
+        size=size,
+        icon=icon,
+        icon_size=icon_size,
+        can_copy_message=can_copy_message,
+    )
 
 
 def popup_get_file(

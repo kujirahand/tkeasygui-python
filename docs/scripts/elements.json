@@ -35,5 +35,6 @@
   "Table",
   "Text",
   "Textarea",
+  "VPush",
   "VSeparator"
 ]

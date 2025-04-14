@@ -1887,6 +1887,12 @@ class Text(Element):
                 "<Button-1>",
                 lambda e: self.disptach_event({"event_type": "click", "event": e}),
             )
+            self.widget.bind(
+                "<Button-3>",
+                lambda e: self.disptach_event(
+                    {"event_type": "right_click", "event": e}
+                ),
+            )
         return self.widget
 
     def get(self) -> Any:
