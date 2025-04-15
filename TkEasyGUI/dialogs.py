@@ -654,19 +654,21 @@ def popup_memo(
     cancel_label: Union[str, None] = None,
     cancel_value: Union[str, None] = None,
     font: Union[FontType, None] = None,
+    window_size: Union[tuple[int, int], None] = None,
     resizable: bool = True,
 ) -> Union[str, None]:
     """Display a multiline message in a popup window. Return the text entered. if canceled, return cancel_value."""
     return popup_scrolled(
         message,
-        title,
-        size,
-        readonly,
-        ok_label,
-        cancel_label,
-        cancel_value,
-        font,
+        title=title,
+        size=size,
+        readonly=readonly,
+        ok_label=ok_label,
+        cancel_label=cancel_label,
+        cancel_value=cancel_value,
+        font=font,
         resizable=resizable,
+        window_size=window_size,
     )
 
 
@@ -679,6 +681,7 @@ def popup_scrolled(
     cancel_label: Optional[str] = None,
     cancel_value: Optional[str] = None,
     font: Optional[FontType] = None,
+    window_size: Union[tuple[int, int], None] = None,
     resizable: bool = True,
 ) -> Union[str, None]:
     """
@@ -722,8 +725,8 @@ def popup_scrolled(
         title=title_str,
         layout=layout,
         modal=True,
+        size=window_size,
         resizable=resizable,
-        size=size,
     )
     result = None
     while win.is_alive():

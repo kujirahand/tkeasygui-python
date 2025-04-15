@@ -608,7 +608,7 @@ def popup_ok_cancel(
     ok_value: str = "OK",
     cancel_value: str = "Cancel",
     size: Union[tuple[int, int], None] = None,
-    icon: str = "",
+    icon: str = "?",
     icon_size: tuple[int, int] = (48, 48),
     can_copy_message: bool = True,
 ) -> str:
