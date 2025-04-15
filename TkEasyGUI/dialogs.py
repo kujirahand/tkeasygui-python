@@ -646,43 +646,40 @@ def popup_get_folder(
 
 
 def popup_memo(
-    message: str,
-    title: Union[str, None] = None,
-    size: tuple[int, int] = (60, 8),
-    readonly: bool = False,
+    message: str,  # Text to enter in a multi-line text box
+    title: Union[str, None] = None,  # Window title
+    size: tuple[int, int] = (60, 8),  # Size of the text box
+    readonly: bool = False,  # Read-only mode
+    header: str = "",  # Label displayed above the text box
     ok_label: Union[str, None] = None,
     cancel_label: Union[str, None] = None,
     cancel_value: Union[str, None] = None,
     font: Union[FontType, None] = None,
-    window_size: Union[tuple[int, int], None] = None,
-    resizable: bool = True,
 ) -> Union[str, None]:
     """Display a multiline message in a popup window. Return the text entered. if canceled, return cancel_value."""
     return popup_scrolled(
-        message,
+        message=message,
         title=title,
         size=size,
         readonly=readonly,
+        header=header,
         ok_label=ok_label,
         cancel_label=cancel_label,
         cancel_value=cancel_value,
         font=font,
-        resizable=resizable,
-        window_size=window_size,
     )
 
 
 def popup_scrolled(
-    message: str,
-    title: Optional[str] = None,
-    size: tuple[int, int] = (40, 5),
-    readonly: bool = False,
-    ok_label: Optional[str] = None,
-    cancel_label: Optional[str] = None,
-    cancel_value: Optional[str] = None,
-    font: Optional[FontType] = None,
-    window_size: Union[tuple[int, int], None] = None,
-    resizable: bool = True,
+    message: str,  # Text to enter in a multi-line text box
+    title: Union[str, None] = None,  # Window title
+    size: tuple[int, int] = (40, 5),  # Size of the text box
+    readonly: bool = False,  # Read-only mode
+    header: str = "",  # Label displayed above the text box
+    ok_label: Union[str, None] = None,
+    cancel_label: Union[str, None] = None,
+    cancel_value: Union[str, None] = None,
+    font: Union[FontType, None] = None,
 ) -> Union[str, None]:
     """
     Display a multiline message in a popup window. Return the text entered. if canceled, return cancel_value.
@@ -699,23 +696,10 @@ def popup_scrolled(
         cancel_label = le.get_text("Cancel")
     if ok_label is None:
         ok_label = le.get_text("OK")
-    title_str: str = ""
     if title is None:
-        title_str = le.get_text("Information")
-    else:
-        title_str = str(title)
-    layout: eg.LayoutType = [
-        [
-            eg.Multiline(
-                message,
-                key="-text-",
-                size=size,
-                readonly=readonly,
-                font=font,
-                expand_x=True,
-                expand_y=True,
-            )
-        ],
+        title = le.get_text("Information")
+    layout = [
+        [eg.Multiline(message, key="-text-", size=size, readonly=readonly, font=font)],
         [
             eg.Push(),
             eg.Button(ok_label, width=9),
@@ -723,14 +707,9 @@ def popup_scrolled(
             eg.Push(),
         ],
     ]
-    _print("@@title=", title_str)
-    win: eg.Window = eg.Window(
-        title=title_str,
-        layout=layout,
-        modal=True,
-        size=window_size,
-        resizable=resizable,
-    )
+    if header != "":
+        layout.insert(0, [eg.Text(header)])
+    win = eg.Window(title, layout=layout, modal=True)
     result = None
     while win.is_alive():
         event, _ = win.read()
