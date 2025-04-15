@@ -10,7 +10,7 @@ import tkinter.filedialog as filedialog
 import tkinter.messagebox as messagebox
 from datetime import datetime, timedelta
 from tkinter import colorchooser
-from typing import Any, Callable, Iterable, Optional, Union
+from typing import Any, cast, Callable, Iterable, Optional, Union
 
 from . import locale_easy as le
 from . import widgets as eg
@@ -656,7 +656,7 @@ def popup_memo(
     cancel_value: Union[str, None] = None,
     font: Union[FontType, None] = None,
 ) -> Union[str, None]:
-    """Display a multiline message in a popup window. Return the text entered. if canceled, return cancel_value."""
+    """Display a multiline message in a popup window. Return the text entered. if canceled, return cancel_value(default is None)."""
     return popup_scrolled(
         message=message,
         title=title,
@@ -682,7 +682,7 @@ def popup_scrolled(
     font: Union[FontType, None] = None,
 ) -> Union[str, None]:
     """
-    Display a multiline message in a popup window. Return the text entered. if canceled, return cancel_value.
+    Display a multiline message in a popup window. Return the text entered. if canceled, return cancel_value(default is None).
 
     #### Example:
     ```py
@@ -709,7 +709,7 @@ def popup_scrolled(
     ]
     if header != "":
         layout.insert(0, [eg.Text(header)])
-    win = eg.Window(title, layout=layout, modal=True)
+    win = eg.Window(title, layout=cast(eg.LayoutType, layout), modal=True)
     result = None
     while win.is_alive():
         event, _ = win.read()
