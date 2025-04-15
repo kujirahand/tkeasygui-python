@@ -431,21 +431,23 @@ class Window:
                 elem.prepare_create(self)
         # check element_justification
         layout_ej: LayoutType = []
+        tmp_layout: list[list[Element]] = []
         if self.element_justification in ["center", "c"]:
             for widgets in layout:
                 cells: list[Element] = []
                 cells.append(Push())
                 cells.extend(widgets)
                 cells.append(Push())
-                layout_ej.append(cells)
+                tmp_layout.append(cells)
         elif self.element_justification in ["right", "r"]:
             for widgets in layout:
                 cells_r: list[Element] = []
                 cells_r.extend(widgets)
                 cells_r.append(Push())
-                layout_ej.append(cells_r)
+                tmp_layout.append(cells_r)
         else:
-            layout_ej = layout
+            tmp_layout = cast(list[list[Element]], layout)
+        layout_ej = tmp_layout
         # create widgets
         self.need_focus_widget: tk.Widget | None = None
         for row_no, widgets in enumerate(layout_ej):

@@ -1,5 +1,5 @@
 #!/bin/sh
 
 # pip install ruff
-ruff check
+ruff check TkEasyGUI/*.py
 mypy TkEasyGUI/*.py

@@ -769,7 +769,7 @@ def popup_get_date(
     head_size = [4, 1]
     # set
     result = None
-    layout: eg.LayoutType = []
+    layout: list[list[eg.Element]] = []
     # header
     if message != "":
         layout.append([eg.Text(message)])
@@ -999,7 +999,7 @@ def popup_get_form(
     # make form layout
     item_labels = []
     item_converters: list[Union[Callable, None]] = []
-    layout: eg.LayoutType = []
+    layout: list[list[eg.Element]] = []
     for i, it in enumerate(form_items):
         it_key = f"-formitem{i}"
         default_value: Union[str, tuple[str, Any], tuple[str, Any, str]] = ""
