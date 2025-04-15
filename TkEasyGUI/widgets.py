@@ -4065,8 +4065,13 @@ class Table(Element):
                 widget.column(i + 1, width=0, stretch=tk.NO)
                 continue
             w = self.col_widths_real[i] if i < len(self.col_widths_real) else 100
-            anchor = cast(tk._Anchor, self.justification)
-            widget.column(i + 1, width=w, stretch=streatch, anchor=anchor)
+            anchor_str: Any = self.justification
+            widget.column(
+                i + 1,
+                width=w,
+                stretch=streatch,
+                anchor=anchor_str,
+            )
 
     def _calc_col_width(self) -> None:
         """Calc columns width"""

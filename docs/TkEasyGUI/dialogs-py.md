@@ -11,6 +11,7 @@ TkEasyGUI dialogs.
 - [ask_ok_cancel](#ask_ok_cancel)
 - [ask_retry_cancel](#ask_retry_cancel)
 - [ask_yes_no](#ask_yes_no)
+- [cast](#cast)
 - [confirm](#confirm)
 - [copy_to_clipboard](#copy_to_clipboard)
 - [get_root_window](#get_root_window)
@@ -80,6 +81,21 @@ def ask_yes_no(message: str, title: str = "Question") -> bool:
 ```
 
 - [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/dialogs.py#L1314)
+
+## cast
+
+Cast a value to a type.
+
+    This returns the value unchanged.  To the type checker this
+    signals that the return value has the designated type, but at
+    runtime we intentionally don't check anything (we want this
+    to be as fast as possible).
+
+```py
+def cast(typ, val):
+```
+
+- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/Library/Frameworks/Python.framework/Versions/3.12/lib/python3.12/typing.py#L2183)
 
 ## confirm
 
