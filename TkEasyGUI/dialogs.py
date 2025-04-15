@@ -702,6 +702,8 @@ def popup_scrolled(
     title_str: str = ""
     if title is None:
         title_str = le.get_text("Information")
+    else:
+        title_str = str(title)
     layout: eg.LayoutType = [
         [
             eg.Multiline(
@@ -721,6 +723,7 @@ def popup_scrolled(
             eg.Push(),
         ],
     ]
+    _print("@@title=", title_str)
     win: eg.Window = eg.Window(
         title=title_str,
         layout=layout,
