@@ -172,14 +172,14 @@ There are other helpful articles as well.
 
 ## TkEasyGUI features:
 
-<img src="https://github.com/kujirahand/tkeasygui-python/raw/main/docs/image/icon256.png" width="256" alt="TkEasyGUI Logo">
-
 - Using a `for` loop and `window.event_iter()` enables straightforward event processing.
 - Custom popup dialogs, such as a color selection dialog(`eg.popup_color`), a list dialog(`eg.popup_listbox`), form dialog(`eg.popup_get_form`) are available.
 - The `Image` class supports not only PNG but also JPEG formats.
 - Convenient event hooks and features for bulk event registration are provided - [docs/custom_events](docs/custom_events.md).
 - Methods such as Copy, Paste, and Cut are added to text boxes (Multiline/Input).
 - The system's default color scheme is utilized.
+
+<img src="https://github.com/kujirahand/tkeasygui-python/raw/main/docs/image/icon256.png" width="256" alt="TkEasyGUI Logo">
 
 ## Link
 
