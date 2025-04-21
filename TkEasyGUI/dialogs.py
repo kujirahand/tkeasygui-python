@@ -1105,7 +1105,7 @@ def popup_get_form(
         [
             eg.Push(),
             eg.Button("OK", width=9),
-            eg.Button(cancel_label, key="Cancel", width=5),
+            eg.Button(cancel_label, key="Cancel"),
             eg.Push(),
         ]
     )
