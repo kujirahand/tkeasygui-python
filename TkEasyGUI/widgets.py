@@ -17,7 +17,7 @@ from typing import Any, cast, Callable, Optional, Union, Sequence
 from PIL import Image as PILImage
 from PIL import ImageColor, ImageTk
 
-from . import dialogs, utils, version
+from . import dialogs, utils, version, icon
 from .utils import (
     # type alias
     CursorType,
@@ -71,9 +71,7 @@ TABLE_SELECT_MODE_EXTENDED: str = tk.EXTENDED
 EG_SWAP_EVENT_NAME: str = "--swap_event_name--"
 
 # --- window icon ---
-# Base64 encoded 16x16 file
-DEFAULT_BASE64_ICON = b"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"
-DEFAULT_WINDOW_ICON = DEFAULT_BASE64_ICON
+DEFAULT_WINDOW_ICON = icon.ICON
 
 
 # ------------------------------------------------------------------------------
@@ -176,9 +174,7 @@ class Window:
         if icon:
             self._set_icon(icon)
         else:
-            # set default icon
-            if not utils.is_mac():
-                self._set_icon(DEFAULT_WINDOW_ICON)
+            self._set_icon(DEFAULT_WINDOW_ICON)
         # Canvas
         self.canvas: Union[tk.Canvas, None] = None
         if show_scrollbar:
@@ -4067,7 +4063,7 @@ class Table(Element):
                 widget.column(i + 1, width=0, stretch=tk.NO)
                 continue
             w = self.col_widths_real[i] if i < len(self.col_widths_real) else 100
-            anchor_str: Any = self.justification
+            anchor_str: Any = self.justification  # type: ignore[annotation-unchecked]
             widget.column(
                 i + 1,
                 width=w,
