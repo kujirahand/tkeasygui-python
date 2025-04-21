@@ -12,7 +12,7 @@ from enum import Enum
 from queue import Queue
 from tkinter import font as tkinter_font
 from tkinter import scrolledtext, ttk
-from typing import Any, cast, Callable, Optional, TypeAlias, Union, Sequence
+from typing import Any, cast, Callable, Optional, Union, Sequence
 
 from PIL import Image as PILImage
 from PIL import ImageColor, ImageTk
@@ -42,8 +42,10 @@ from .utils import (
 # ------------------------------------------------------------------------------
 # TypeAlias
 # ------------------------------------------------------------------------------
-WindowType: TypeAlias = "Window"
-ElementType: TypeAlias = "Element"
+# WindowType: TypeAlias = "Window"
+# ElementType: TypeAlias = "Element"
+WindowType = "Window"
+ElementType = "Element"
 LayoutType = Sequence[Sequence["Element"]]
 KeyType = Union[str, int]
 
@@ -2147,6 +2149,8 @@ class Button(Element):
             self.props["disabled"] = self.disabled = disabled
         if size is not None:
             self.props["size"] = size
+        else:
+            self.use_ttk = True
         self.props["text"] = button_text
         self.tooltip: Union[str, None] = tooltip
         if button_color is not None:
