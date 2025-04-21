@@ -78,6 +78,6 @@ for event, values in window.event_iter():
     print(src)
     with open("elements_test.py", "w", encoding="utf-8") as f:
         f.write(src)
-    os.system("python elements_test.py")
+    # os.system("python elements_test.py")
 if __name__ == "__main__":
     make_code()

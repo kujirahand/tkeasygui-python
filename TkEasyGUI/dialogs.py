@@ -48,7 +48,8 @@ def popup_buttons(
     size: Union[tuple[int, int], None] = None,
     icon: str = "",  # filename or icon name(information/info, warning, error, question/?)
     icon_size: tuple[int, int] = (48, 48),
-    can_copy_message: bool = True,
+    window_icon: Optional[str] = None,  # window icon, specify filename
+    can_copy_message: bool = True, # show copy message in popup menu
 ) -> str:
     """
     Popup window with user defined buttons. Return button's label.
@@ -109,7 +110,7 @@ def popup_buttons(
     if non_blocking:
         # TODO: popup non blocking window
         pass
-    with eg.Window(title, layout=layout, size=size, modal=True) as win:
+    with eg.Window(title, layout=layout, size=size, icon=window_icon, modal=True) as win:
         for event, values in win.event_iter(timeout=100, timeout_key=eg.WINDOW_TIMEOUT):
             if event in buttons:
                 result = event
@@ -133,6 +134,7 @@ def popup(
     size: Union[tuple[int, int], None] = None,
     icon: str = "",
     icon_size: tuple[int, int] = (48, 48),
+    window_icon: Optional[str] = None,  # window icon, specify filename
     can_copy_message: bool = True,
 ) -> str:
     """
@@ -151,6 +153,7 @@ def popup(
         size=size,
         icon=icon,
         icon_size=icon_size,
+        window_icon=window_icon,
         can_copy_message=can_copy_message,
     )
 
@@ -160,6 +163,9 @@ def popup_non_blocking(
     title: str = "",
     auto_close_duration: int = -1,
     size: Union[tuple[int, int], None] = None,
+    icon: str = "",
+    icon_size: tuple[int, int] = (48, 48),
+    window_icon: Optional[str] = None,  # window icon, specify filename
     can_copy_message=True,
 ) -> str:
     """(TODO) Display a non blocking window"""
@@ -170,6 +176,9 @@ def popup_non_blocking(
         auto_close_duration=auto_close_duration,
         non_blocking=True,
         size=size,
+        icon=icon,
+        icon_size=icon_size,
+        window_icon=window_icon,
         can_copy_message=can_copy_message,
     )
 
@@ -179,6 +188,7 @@ def popup_no_buttons(
     title: str = "",
     icon: str = "",
     icon_size: tuple[int, int] = (48, 48),
+    window_icon: Optional[str] = None,  # window icon, specify filename
     size: Union[tuple[int, int], None] = None,
     can_copy_message: bool = True,
 ) -> None:
@@ -189,6 +199,7 @@ def popup_no_buttons(
         buttons=[],
         icon=icon,
         icon_size=icon_size,
+        window_icon=window_icon,
         size=size,
         can_copy_message=can_copy_message,
     )
@@ -203,6 +214,7 @@ def popup_auto_close(
     size: Union[tuple[int, int], None] = None,
     icon: str = "information",
     icon_size: tuple[int, int] = (48, 48),
+    window_icon: Optional[str] = None,  # window icon, specify filename
     can_copy_message: bool = True,
 ) -> str:
     """Display a message in a popup window that closes automatically after a specified time."""
@@ -215,6 +227,7 @@ def popup_auto_close(
         size=size,
         icon=icon,
         icon_size=icon_size,
+        window_icon=window_icon,
         can_copy_message=can_copy_message,
     )
 
@@ -225,6 +238,7 @@ def popup_no_wait(
     size: Union[tuple[int, int], None] = None,
     icon: str = "information",
     icon_size: tuple[int, int] = (48, 48),
+    window_icon: Optional[str] = None,  # window icon, specify filename
     **kw,
 ) -> str:
     """Display a message in a popup window without waiting."""
@@ -235,6 +249,7 @@ def popup_no_wait(
         size=size,
         icon=icon,
         icon_size=icon_size,
+        window_icon=window_icon,
         **kw,
     )
 
@@ -245,6 +260,7 @@ def popup_ok(
     size: Union[tuple[int, int], None] = None,
     icon: str = "information",
     icon_size: tuple[int, int] = (48, 48),
+    window_icon: Optional[str] = None,  # window icon, specify filename
     can_copy_message: bool = True,
 ) -> str:
     """Display a message in a popup window.(Alias popup)"""
@@ -255,6 +271,7 @@ def popup_ok(
         size=size,
         icon=icon,
         icon_size=icon_size,
+        window_icon=window_icon,
         can_copy_message=can_copy_message,
     )
 
@@ -269,6 +286,7 @@ def popup_ok_cancel(
     size: Union[tuple[int, int], None] = None,
     icon: str = "?",
     icon_size: tuple[int, int] = (48, 48),
+    window_icon: Optional[str] = None,  # window icon, specify filename
     can_copy_message: bool = True,
 ) -> str:
     """Display a message in a popup window with OK and Cancel buttons. Return "OK" or "Cancel" or eg.WINDOW_CLOSED."""
@@ -283,6 +301,7 @@ def popup_ok_cancel(
         size=size,
         icon=icon,
         icon_size=icon_size,
+        window_icon=window_icon,
         can_copy_message=can_copy_message,
     )
     if result == ok_label:
@@ -302,6 +321,7 @@ def popup_yes_no(
     size: Union[tuple[int, int], None] = None,
     icon: str = "?",
     icon_size: tuple[int, int] = (48, 48),
+    window_icon: Optional[str] = None,  # window icon, specify filename
     can_copy_message: bool = True,
 ) -> str:
     """
@@ -336,6 +356,7 @@ def popup_yes_no(
         size=size,
         icon=icon,
         icon_size=icon_size,
+        window_icon=window_icon,
         can_copy_message=can_copy_message,
     )
     # get result
@@ -358,6 +379,7 @@ def popup_yes_no_cancel(
     size: Union[tuple[int, int], None] = None,
     icon: str = "?",
     icon_size: tuple[int, int] = (48, 48),
+    window_icon: Optional[str] = None,  # window icon, specify filename
     can_copy_message: bool = True,
 ) -> str:
     """Display a message in a popup window with Yes and No buttons. Return "Yes" or "No" or "Cancel"."""
@@ -375,6 +397,7 @@ def popup_yes_no_cancel(
         size=size,
         icon=icon,
         icon_size=icon_size,
+        window_icon=window_icon,
         can_copy_message=can_copy_message,
     )
     # get result
@@ -393,6 +416,7 @@ def popup_cancel(
     size: Union[tuple[int, int], None] = None,
     icon: str = "information",
     icon_size: tuple[int, int] = (48, 48),
+    window_icon: Optional[str] = None,  # window icon, specify filename
     can_copy_message: bool = True,
 ) -> str:
     """Display a message in a popup window with OK and Cancel buttons. Return "Cancel" or eg.WINDOW_CLOSED."""
@@ -404,6 +428,7 @@ def popup_cancel(
         size=size,
         icon=icon,
         icon_size=icon_size,
+        window_icon=window_icon,
         can_copy_message=can_copy_message,
     )
     return cancel_label if result == cancel_label else result
@@ -416,6 +441,7 @@ def popup_get_text(
     default_text: Union[str, None] = None,  # same as default for compatibility
     font: Optional[FontType] = None,
     size: Union[tuple[int, int], None] = None,
+    window_icon: Optional[str] = None,  # window icon, specify filename
 ) -> Union[str, None]:
     """Display a message in a popup window with a text entry. Return the text entered."""
     # return simpledialog.askstring(title, message, initialvalue=default)
@@ -430,6 +456,7 @@ def popup_get_text(
         default_str,
         font=font,
         size=size,
+        window_icon=window_icon,
     )
     if result is None:
         return None
@@ -446,6 +473,7 @@ def popup_input(
     only_number: bool = False,
     font: Optional[FontType] = None,
     size: Union[tuple[int, int], None] = None,
+    window_icon: Optional[str] = None,  # window icon, specify filename
 ) -> Union[str, float, None]:
     """Display a message in a popup window with a text entry. Return the text entered. if canceled, return cancel_value."""
     result = cancel_value
@@ -474,6 +502,7 @@ def popup_input(
         modal=True,
         font=font,
         size=size,
+        icon=window_icon,
     )
     while win.is_alive():
         event, values = win.read()
@@ -501,6 +530,7 @@ def popup_error(
     size: Union[tuple[int, int], None] = None,
     icon: str = "error",
     icon_size: tuple[int, int] = (48, 48),
+    window_icon: Optional[str] = None,  # window icon, specify filename
     can_copy_message: bool = True,
     use_tk_dialog: bool = False,
 ) -> None:
@@ -519,6 +549,7 @@ def popup_error(
         size=size,
         icon=icon,
         icon_size=icon_size,
+        window_icon=window_icon,
         can_copy_message=can_copy_message,
     )
 
@@ -529,6 +560,7 @@ def popup_warning(
     size: Union[tuple[int, int], None] = None,
     icon: str = "warning",
     icon_size: tuple[int, int] = (48, 48),
+    window_icon: Optional[str] = None,  # window icon, specify filename
     can_copy_message: bool = True,
     use_tk_dialog: bool = False,
 ) -> None:
@@ -545,6 +577,7 @@ def popup_warning(
         size=size,
         icon=icon,
         icon_size=icon_size,
+        window_icon=window_icon,
         can_copy_message=can_copy_message,
     )
 
@@ -555,6 +588,7 @@ def popup_info(
     size: Union[tuple[int, int], None] = None,
     icon: str = "information",
     icon_size: tuple[int, int] = (48, 48),
+    window_icon: Optional[str] = None,  # window icon, specify filename
     can_copy_message: bool = True,
     use_tk_dialog: bool = False,
 ) -> None:
@@ -571,6 +605,7 @@ def popup_info(
         size=size,
         icon=icon,
         icon_size=icon_size,
+        window_icon=window_icon,
         can_copy_message=can_copy_message,
     )
 
@@ -652,6 +687,7 @@ def popup_memo(
     readonly: bool = False,  # Read-only mode
     header: str = "",  # Label displayed above the text box
     resizable: bool = True,  # resizable
+    window_icon: Optional[str] = None,  # window icon, specify filename
     ok_label: Union[str, None] = None,
     cancel_label: Union[str, None] = None,
     cancel_value: Union[str, None] = None,
@@ -669,6 +705,7 @@ def popup_memo(
         cancel_label=cancel_label,
         cancel_value=cancel_value,
         font=font,
+        window_icon=window_icon,
     )
 
 
@@ -679,6 +716,7 @@ def popup_scrolled(
     readonly: bool = False,  # Read-only mode
     header: str = "",  # Label displayed above the text box
     resizable: bool = True,  # resizable
+    window_icon: Optional[str] = None,  # window icon, specify filename
     ok_label: Union[str, None] = None,
     cancel_label: Union[str, None] = None,
     cancel_value: Union[str, None] = None,
@@ -712,7 +750,7 @@ def popup_scrolled(
     ]
     if header != "":
         layout.insert(0, [eg.Text(header)])
-    win = eg.Window(title, layout=cast(eg.LayoutType, layout), modal=True, resizable=resizable)
+    win = eg.Window(title, layout=cast(eg.LayoutType, layout), modal=True, resizable=resizable, icon=window_icon)
     result = None
     while win.is_alive():
         event, _ = win.read()
@@ -735,6 +773,7 @@ def popup_get_date(
     date_format: Union[str, None] = None,
     close_when_date_chosen: bool = False,
     sunday_first: bool = False,  # Sunday is the first day of the week
+    window_icon: Optional[str] = None,  # window icon, specify filename
 ) -> Union[datetime, None]:
     """Display a calendar in a popup window. Return the datetime entered or None."""
     if current_date is None:
@@ -885,7 +924,7 @@ def popup_get_date(
 
     result = None
     # calendar window
-    with eg.Window(title, layout, font=font, modal=True, row_padding=0) as window:
+    with eg.Window(title, layout, font=font, modal=True, row_padding=0, icon=window_icon) as window:
         for event, _ in window.event_iter():
             if event == ok_label:
                 result = current_date
@@ -941,6 +980,7 @@ def popup_get_form(
     ],  # list of form items(label[,selection or default][,type])
     title: str = "Form",  # window title
     size: Union[tuple[int, int], None] = None,
+    window_icon: Optional[str] = None,  # window icon, specify filename
 ) -> Union[dict[str, Any], None]:
     """
     Displays a form that allows multiple items to be entered.
@@ -1069,7 +1109,7 @@ def popup_get_form(
             eg.Push(),
         ]
     )
-    with eg.Window(title, layout=layout, size=size) as win:
+    with eg.Window(title, layout=layout, size=size, icon=window_icon) as win:
         result: Union[dict[str, Any], None] = None
         for event, values in win.event_iter():
             if event == "Cancel":
@@ -1228,6 +1268,7 @@ def popup_listbox(
     default_value: Union[str, None] = None,  # default value
     multiple: bool = False,  # multiple selection
     resizable: bool = True,  # resizable
+    window_icon: Optional[str] = None,  # window icon, specify filename
 ) -> Union[str, None]:
     """Display Listbox in a popup window"""
     select_mode: eg.ListboxSelectMode = (
@@ -1256,7 +1297,7 @@ def popup_listbox(
     layout.append(
         [eg.Push(), eg.Button("OK", width=9), eg.Button("Cancel", width=5), eg.Push()]
     )
-    with eg.Window(title, layout=layout, modal=True, resizable=resizable) as win:
+    with eg.Window(title, layout=layout, modal=True, resizable=resizable, icon=window_icon) as win:
         # event loop
         result = None
         for event, values in win.event_iter():
@@ -1285,6 +1326,7 @@ def popup_image(
     cancel_label: Union[str, None] = None,
     cancel_value: Union[str, None] = None,
     font: Union[FontType, None] = None,
+    window_icon: Optional[str] = None,  # window icon, specify filename
 ) -> Union[str, None]:
     """Display an image in a popup window. Return the pushed Button("OK" or None)."""
     if title is None:
@@ -1298,7 +1340,7 @@ def popup_image(
         [eg.Image(image_path, image_data, size=size)],
         [eg.Button(ok_label, width=9), eg.Button(cancel_label, width=5)],
     ]
-    win = eg.Window(title, layout=layout, modal=True, font=font)
+    win = eg.Window(title, layout=layout, modal=True, font=font, icon=window_icon)
     result = cancel_value
     while win.is_alive():
         event, _ = win.read()
@@ -1355,9 +1397,10 @@ def input(
     title: Union[str, None] = None,
     default: str = "",
     only_number: bool = False,
+    window_icon: Optional[str] = None,  # window icon, specify filename
 ) -> Union[str, float, None]:
     """Display a message in a popup window with a text entry. Return the text entered."""
-    return popup_input(message, title, default, only_number=only_number)
+    return popup_input(message, title, default, only_number=only_number, window_icon=window_icon)
 
 
 def print(*args, **kw) -> None:
@@ -1370,10 +1413,13 @@ def print(*args, **kw) -> None:
 
 
 def input_number(
-    message: str, title: Union[str, None] = None, default: str = ""
+    message: str,
+    title: Union[str, None] = None,
+    default: str = "",
+    window_icon: Optional[str] = None,  # window icon, specify filename
 ) -> Union[float, None]:
     """Display a message in a popup window with a number entry. Return the text entered."""
-    result = popup_input(message, title, default, only_number=True)
+    result = popup_input(message, title, default, only_number=True, window_icon=window_icon)
     if isinstance(result, float):
         return result
     return None
