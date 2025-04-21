@@ -55,6 +55,7 @@ layout = [
     ],
     [eg.HSeparator(pad=5)],
     [
+        eg.Push(),
         eg.Button(eg.get_text("Run"), key="-run-", size=(10, 1)),
         eg.Button(eg.get_text("Close"), key="-close-"),
     ],

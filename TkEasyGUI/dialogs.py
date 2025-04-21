@@ -651,6 +651,7 @@ def popup_memo(
     size: tuple[int, int] = (60, 8),  # Size of the text box
     readonly: bool = False,  # Read-only mode
     header: str = "",  # Label displayed above the text box
+    resizable: bool = True,  # resizable
     ok_label: Union[str, None] = None,
     cancel_label: Union[str, None] = None,
     cancel_value: Union[str, None] = None,
@@ -663,6 +664,7 @@ def popup_memo(
         size=size,
         readonly=readonly,
         header=header,
+        resizable=resizable,
         ok_label=ok_label,
         cancel_label=cancel_label,
         cancel_value=cancel_value,
@@ -676,6 +678,7 @@ def popup_scrolled(
     size: tuple[int, int] = (40, 5),  # Size of the text box
     readonly: bool = False,  # Read-only mode
     header: str = "",  # Label displayed above the text box
+    resizable: bool = True,  # resizable
     ok_label: Union[str, None] = None,
     cancel_label: Union[str, None] = None,
     cancel_value: Union[str, None] = None,
@@ -699,7 +702,7 @@ def popup_scrolled(
     if title is None:
         title = le.get_text("Information")
     layout = [
-        [eg.Multiline(message, key="-text-", size=size, readonly=readonly, font=font)],
+        [eg.Multiline(message, key="-text-", size=size, readonly=readonly, font=font, expand_x=True, expand_y=True)],
         [
             eg.Push(),
             eg.Button(ok_label, width=9),
@@ -709,7 +712,7 @@ def popup_scrolled(
     ]
     if header != "":
         layout.insert(0, [eg.Text(header)])
-    win = eg.Window(title, layout=cast(eg.LayoutType, layout), modal=True)
+    win = eg.Window(title, layout=cast(eg.LayoutType, layout), modal=True, resizable=resizable)
     result = None
     while win.is_alive():
         event, _ = win.read()
