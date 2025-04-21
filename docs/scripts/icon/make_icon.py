@@ -3,7 +3,9 @@ from PIL import Image
 import base64
 
 icon_dir = os.path.dirname(__file__)
-root_dir = os.path.dirname(icon_dir)
+script_dir = os.path.dirname(icon_dir)
+docs_dir = os.path.dirname(script_dir)
+root_dir = os.path.dirname(docs_dir)
 
 # Path to the generated PNG icon from the previous step
 src_path = os.path.join(icon_dir, "tkeasygui-org.png")
