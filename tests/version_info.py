@@ -45,7 +45,7 @@ layout = [
     ],
     [
         eg.Column(
-            layout=[[eg.Button("OK"), eg.Button(S_CLOSE)]],
+            layout=[[eg.Button("OK", width=10), eg.Button(S_CLOSE)]],
             text_align="right",
             expand_x=True,
         ),
