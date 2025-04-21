@@ -2119,14 +2119,13 @@ class Button(Element):
         size: Union[tuple[int, int], None] = None,
         tooltip: Union[str, None] = None,  # (TODO) tooltip
         button_color: Union[str, tuple[str, str], None] = None,
+        width: Optional[int] = None,  # set characters width
         # text props
         text_align: Union[TextAlign, None] = "left",  # text align
         font: Union[FontType, None] = None,  # font
         color: Union[str, None] = None,  # text color
         text_color: Union[str, None] = None,  # same as color
-        background_color: Union[
-            str, None
-        ] = None,  # background color (not supported on macOS)
+        background_color: Optional[str] = None,  # background color (not supported on macOS)
         # pack props
         expand_x: bool = False,
         expand_y: bool = False,
@@ -2145,6 +2144,8 @@ class Button(Element):
             self.props["disabled"] = self.disabled = disabled
         if size is not None:
             self.props["size"] = size
+        if width is not None:
+            self.props["width"] = width
         self.props["text"] = button_text
         self.tooltip: Union[str, None] = tooltip
         if button_color is not None:
