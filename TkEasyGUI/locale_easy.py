@@ -32,6 +32,7 @@ _locale_messages: dict[str, dict[str, str]] = {
         "Quit": "終了",
         "Thank you.": "ありがとうございます。",
         "Please enter a number.": "数値を入力してください。",
+        "Copy Message": "メッセージをコピー",
     },
     "zh": {
         "__date_format__": "%Y年%m月%d日",
@@ -57,6 +58,7 @@ _locale_messages: dict[str, dict[str, str]] = {
         "Quit": "退出",
         "Thank you.": "谢谢。",
         "Please enter a number.": "请输入一个数字。",
+        "Copy Message": "复制消息",
     },
 }
 

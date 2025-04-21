@@ -98,7 +98,7 @@ def popup_buttons(
         eg_messages.append(msg)
         # popup menu
         popup_menu = tkinter.Menu(get_root_window(), tearoff=0)
-        popup_menu.add_command(label="Copy", command=lambda: copy_to_clipboard(message))
+        popup_menu.add_command(label=le.get_text("Copy Message"), command=lambda: copy_to_clipboard(message))
     layout: eg.LayoutType = [
         eg_messages,
         eg_buttons_pad,
