@@ -626,7 +626,7 @@ def popup_get_file(
         title = message
     if initial_folder is None:
         initial_folder = os.getcwd()
-    file_type_list: Iterable[tuple[str, str | list[str] | tuple[str, ...]]] | None = []
+    file_type_list: Optional[Iterable[tuple[str, Union[str, list[str], tuple[str, ...]]]]] = []
     if file_types is not None:
         # check file types
         new_types = []

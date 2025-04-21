@@ -447,7 +447,7 @@ class Window:
             tmp_layout = cast(list[list[Element]], layout)
         layout_ej = tmp_layout
         # create widgets
-        self.need_focus_widget: tk.Widget | None = None
+        self.need_focus_widget: Union[tk.Widget, None] = None
         for row_no, widgets in enumerate(layout_ej):
             bgcolor = None
             if parent is not None:
@@ -1158,7 +1158,7 @@ class Element:
         # define properties
         # check key
         self.has_value: bool = has_value
-        self.key: str | int = ""
+        self.key: Union[str, int] = ""
         if key is not None:
             self.key = key
         if self.key != "":
@@ -3331,7 +3331,7 @@ class Graph(Element):
         # </size>
         if background_color:
             self.props["background"] = background_color
-        self.parent_window: Window | None = None
+        self.parent_window: Optional[Window] = None
 
     def create(self, win: Window, parent: tk.Widget) -> tk.Widget:
         """Create Graph widget."""
@@ -3864,7 +3864,7 @@ class Combo(Element):
         """Create a Combo element"""
         super().__init__("Combo", "TCombobox", key, True, metadata, **kw)
         self.values = values
-        self.value: tk.StringVar | None = None
+        self.value: Optional[tk.StringVar] = None
         self.default_value = default_value
         self.readonly: bool = readonly
         # event
