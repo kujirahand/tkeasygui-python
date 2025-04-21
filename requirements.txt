@@ -2,3 +2,4 @@ Pillow
 pyperclip
 ruff
 mypy
+toml

@@ -2149,8 +2149,6 @@ class Button(Element):
             self.props["disabled"] = self.disabled = disabled
         if size is not None:
             self.props["size"] = size
-        else:
-            self.use_ttk = True
         self.props["text"] = button_text
         self.tooltip: Union[str, None] = tooltip
         if button_color is not None:

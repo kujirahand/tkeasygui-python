@@ -95,7 +95,7 @@ Cast a value to a type.
 def cast(typ, val):
 ```
 
-- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/Library/Frameworks/Python.framework/Versions/3.12/lib/python3.12/typing.py#L2183)
+- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/Users/kujirahand/.pyenv/versions/3.9.22/lib/python3.9/typing.py#L1375)
 
 ## confirm
 
