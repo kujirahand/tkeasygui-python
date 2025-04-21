@@ -1439,7 +1439,7 @@ class Element:
                 height = self.props.pop("height")
                 self.pady = (height - 1) // 2
 
-    def _generate_style_name(self, style_key: Union[str | int, None]) -> str:
+    def _generate_style_name(self, style_key: Union[str, int, None]) -> str:
         """Generate style name"""
         if style_key is None or style_key == "":
             style_key = generate_element_style_key(self.element_type)
