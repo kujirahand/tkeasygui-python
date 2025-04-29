@@ -98,7 +98,6 @@ def is_win() -> bool:
     """Platform : is Windows?"""
     return get_platform() == "Windows"
 
-
 def screenshot() -> PIL.Image.Image:
     """Take a screenshot."""
     import PIL.ImageGrab
@@ -106,6 +105,24 @@ def screenshot() -> PIL.Image.Image:
     screen_image = PIL.ImageGrab.grab()
     return screen_image
 
+def get_screen_size() -> tuple[int, int]:
+    """Get screen size."""
+    root = get_root_window()
+    width = root.winfo_screenwidth()
+    height = root.winfo_screenheight()
+    return width, height
+
+def get_screen_dpi() -> int:
+    """Get screen DPI."""
+    root = get_root_window()
+    dpi = root.winfo_fpixels("1i")
+    return int(dpi)
+
+def get_scaling() -> float:
+    """Get scaling factor."""
+    root = get_root_window()
+    scaling = root.tk.call("tk", "scaling")
+    return float(scaling)
 
 # ------------------------------------------------------------------------------
 # text file utility

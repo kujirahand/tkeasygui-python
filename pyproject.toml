@@ -6,7 +6,7 @@ build-backend = "setuptools.build_meta"
 name = "TkEasyGUI"
 version = "1.0.36"
 dependencies = [
-  "Pillow",
+  "Pillow>=11.2.1",
   "pyperclip",
 ]
 requires-python = ">=3.9"

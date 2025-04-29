@@ -15,7 +15,7 @@ from tkinter import scrolledtext, ttk
 from typing import Any, cast, Callable, Optional, Union, Sequence
 
 from PIL import Image as PILImage
-from PIL import ImageColor, ImageTk
+from PIL import ImageColor, ImageTk, ImageGrab
 
 from . import dialogs, utils, version, icon
 from .utils import (
@@ -73,6 +73,8 @@ EG_SWAP_EVENT_NAME: str = "--swap_event_name--"
 # --- window icon ---
 DEFAULT_WINDOW_ICON = icon.ICON
 
+# Window.screenshot method
+SCREENSHOT_MACOS_ADJUST = {"x1": 0, "y1": 0, "x2": 0, "y2": 22 + 6} # for macOS titlebar
 
 # ------------------------------------------------------------------------------
 # Widget wrapper
@@ -580,8 +582,7 @@ class Window:
 
     def get_screen_size(self) -> tuple[int, int]:
         """Get the screen size."""
-        root = get_root_window()
-        return (root.winfo_screenwidth(), root.winfo_screenheight())
+        return utils.get_screen_size()
 
     def update_idle_tasks(self) -> None:
         """Update idle tasks."""
@@ -1084,6 +1085,59 @@ class Window:
             except Exception as _:
                 pass
 
+    def screenshot(self) -> PILImage.Image:
+        """Take a screenshot of the window."""
+        if self.window is None:
+            raise TkEasyError("Window is not created")
+        try:
+            # get window location
+            x, y = self.get_location()
+            w, h = self.get_size()
+            x1, y1 = x, y
+            x2, y2 = x + w, y + h
+            if utils.is_mac():
+                x1 += SCREENSHOT_MACOS_ADJUST["x1"]
+                y1 += SCREENSHOT_MACOS_ADJUST["y1"]
+                x2 += SCREENSHOT_MACOS_ADJUST["x2"]
+                y2 += SCREENSHOT_MACOS_ADJUST["y2"]
+            if utils.is_win():
+                try:
+                    # get window frame size using Windows API
+                    import ctypes                
+                    user32 = ctypes.windll.user32 # type: ignore
+                    # get window frame size
+                    caption_height = user32.GetSystemMetrics(4)  # SM_CYCAPTION
+                    frame_width = user32.GetSystemMetrics(32)  # SM_CXSIZEFRAME または SM_CXFRAME
+                    frame_height = user32.GetSystemMetrics(33)  # SM_CYSIZEFRAME
+                    padded_border = user32.GetSystemMetrics(92)  # SM_CXPADDEDBORDER
+                    total_height = caption_height + frame_height + padded_border * 4
+                    # check scaling
+                    grab_image = ImageGrab.grab()
+                    grab_w, grab_h = grab_image.size
+                    screen_w, screen_h = utils.get_screen_size()
+                    scaling_x = grab_w / screen_w
+                    scaling_y = grab_h / screen_h
+                    # adjust x1, y1, x2, y2
+                    x2 += frame_width * 2 + padded_border * 2
+                    y1 -= frame_height
+                    y2 = y2 + total_height
+                    # adjust for scaling
+                    x1 = int(x1 * scaling_x)
+                    y1 = int(y1 * scaling_y)
+                    x2 = int(x2 * scaling_x)
+                    y2 = int(y2 * scaling_y)
+                    return grab_image.crop((x1, y1, x2, y2))
+                except Exception as _:
+                    # skip scaling
+                    pass
+            # take screenshot
+            # print(f"Window.screenshot: {x1}, {y1}, {x2}, {y2}")
+            img = ImageGrab.grab(bbox=(x1, y1, x2, y2))
+            return img
+        except Exception as e:
+            print("[Error] Window.screenshot failed", file=sys.stderr)
+            print(e, file=sys.stderr)
+            raise TkEasyError("Window.screenshot failed") from e
 
 def _bind_event_handler(
     win: Window,

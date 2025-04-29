@@ -32,17 +32,34 @@ CANCEL = "Cancel"
 _print = print
 
 # ------------------------------------------------------------------------------
+# auto screenshot
+# ------------------------------------------------------------------------------
+POPUP_AUTO_SCREENSHOT = False
+POPUP_AUTO_SCREENSHOT_DURATION = 500  # auto close duration (msec)
+POPUP_AUTO_SCREENSHOT_FILENAME = "screenshot.png"
+# set auto screenshot values
+def popup_set_options(
+    auto_screenshot: bool = False,
+    auto_screenshot_duration: int = 800,  # auto close duration (msec)
+    auto_screenshot_filename: str = "screenshot.png",
+) -> None:
+    """Set auto screenshot values."""
+    global POPUP_AUTO_SCREENSHOT
+    global POPUP_AUTO_SCREENSHOT_DURATION
+    global POPUP_AUTO_SCREENSHOT_FILENAME
+    POPUP_AUTO_SCREENSHOT = auto_screenshot
+    POPUP_AUTO_SCREENSHOT_DURATION = auto_screenshot_duration
+    POPUP_AUTO_SCREENSHOT_FILENAME = auto_screenshot_filename
+
+# ------------------------------------------------------------------------------
 # Dialogs
 # ------------------------------------------------------------------------------
-# like PySimpleGUI
-
-
 def popup_buttons(
     message: str,
     title: Union[str, None] = None,
     buttons: list[str] = ["OK", "Cancel"],
-    auto_close_duration: int = -1,  # auto close duration (msec)
-    timeout_key: str = "-TIMEOUT-",  # timeout key
+    auto_close_duration: int = -1,  # auto close duration (sec)
+    timeout_key: str = "-TIMEOUT-",  # if auto_close_duration > 0, return this key
     non_blocking: bool = False,
     default: str = "",
     size: Union[tuple[int, int], None] = None,
@@ -106,7 +123,7 @@ def popup_buttons(
 
     # event loop
     timer_id = eg.time_checker_start()
-    autoclose_sec: int = auto_close_duration * 1000
+    auto_screenshot = False
     if non_blocking:
         # TODO: popup non blocking window
         pass
@@ -116,12 +133,16 @@ def popup_buttons(
                 result = event
                 break
             if event == eg.WINDOW_TIMEOUT:
-                if (
-                    auto_close_duration > 0
-                    and eg.time_checker_end(timer_id) > autoclose_sec
-                ):
-                    result = timeout_key  # timeout_key only use result
-                    break
+                passing_time = eg.time_checker_end(timer_id)
+                if POPUP_AUTO_SCREENSHOT and (auto_screenshot is False):
+                    if passing_time > POPUP_AUTO_SCREENSHOT_DURATION:
+                        auto_screenshot = True
+                        screen_image = win.screenshot()
+                        screen_image.save(POPUP_AUTO_SCREENSHOT_FILENAME)
+                if auto_close_duration > 0:
+                    if passing_time > auto_close_duration * 1000:
+                        result = timeout_key  # timeout_key only use result
+                        break
             if event == "-msg-" and "event" in values:  # click message
                 e = values["event"]
                 popup_menu.post(e.x_root, e.y_root)
@@ -208,7 +229,7 @@ def popup_no_buttons(
 def popup_auto_close(
     message: str,
     title: str = "",
-    auto_close_duration: int = 3,
+    auto_close_duration: int = 3, # auto close duration (sec)
     buttons: list[str] = ["OK", "Cancel"],
     timeout_key="-TIMEOUT-",
     size: Union[tuple[int, int], None] = None,
@@ -245,7 +266,7 @@ def popup_no_wait(
     return popup_auto_close(
         message,
         title,
-        auto_close_duration=0,
+        auto_close_duration=-1,
         size=size,
         icon=icon,
         icon_size=icon_size,
@@ -1327,6 +1348,8 @@ def popup_image(
     cancel_value: Union[str, None] = None,
     font: Union[FontType, None] = None,
     window_icon: Optional[str] = None,  # window icon, specify filename
+    auto_close_duration: int = -1,  # auto close duration in seconds
+    timeout_key: str = "-TIMEOUT-",  # timeout key if auto_close_duration > 0
 ) -> Union[str, None]:
     """Display an image in a popup window. Return the pushed Button("OK" or None)."""
     if title is None:
@@ -1342,13 +1365,28 @@ def popup_image(
     ]
     win = eg.Window(title, layout=layout, modal=True, font=font, icon=window_icon)
     result = cancel_value
+    timer_id = eg.time_checker_start()
+    auto_screenshot = False
     while win.is_alive():
-        event, _ = win.read()
+        event, _ = win.read(timeout=100)
         if event == ok_label:
             result = ok_value
             break
         if event == cancel_label:
             break
+        if event == eg.WINDOW_TIMEOUT:
+            passing_time = eg.time_checker_end(timer_id)
+            # screenshot?
+            if POPUP_AUTO_SCREENSHOT and auto_screenshot is False:
+                if passing_time > POPUP_AUTO_SCREENSHOT_DURATION:
+                    auto_screenshot = True
+                    screen_image = win.screenshot()
+                    screen_image.save(POPUP_AUTO_SCREENSHOT_FILENAME)
+            # auto close?
+            if auto_close_duration > 0:
+                if eg.time_checker_end(timer_id) >= auto_close_duration * 1000:
+                    result = timeout_key
+                    break
     win.close()
     return result
 
