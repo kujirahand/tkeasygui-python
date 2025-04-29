@@ -32,24 +32,36 @@ CANCEL = "Cancel"
 _print = print
 
 # ------------------------------------------------------------------------------
-# auto screenshot
+# popup options
 # ------------------------------------------------------------------------------
 POPUP_AUTO_SCREENSHOT = False
 POPUP_AUTO_SCREENSHOT_DURATION = 500  # auto close duration (msec)
 POPUP_AUTO_SCREENSHOT_FILENAME = "screenshot.png"
-# set auto screenshot values
+POPUP_OK_BUTTON_WIDTH = 12
+POPUP_CANCEL_BUTTON_WIDTH = 9
+POPUP_TTK_BUTTONS = True # use ttk buttons
+
 def popup_set_options(
-    auto_screenshot: bool = False,
-    auto_screenshot_duration: int = 800,  # auto close duration (msec)
-    auto_screenshot_filename: str = "screenshot.png",
+    auto_screenshot: bool = POPUP_AUTO_SCREENSHOT,
+    auto_screenshot_duration: int = POPUP_AUTO_SCREENSHOT_DURATION,  # auto close duration (msec)
+    auto_screenshot_filename: str = POPUP_AUTO_SCREENSHOT_FILENAME,
+    ok_button_width: int = POPUP_OK_BUTTON_WIDTH,
+    cancel_button_width: int = POPUP_CANCEL_BUTTON_WIDTH,
+    ttk_buttons: bool = POPUP_TTK_BUTTONS,  # use ttk buttons
 ) -> None:
     """Set auto screenshot values."""
     global POPUP_AUTO_SCREENSHOT
     global POPUP_AUTO_SCREENSHOT_DURATION
     global POPUP_AUTO_SCREENSHOT_FILENAME
+    global POPUP_OK_BUTTON_WIDTH
+    global POPUP_CANCEL_BUTTON_WIDTH
+    global POPUP_TTK_BUTTONS
     POPUP_AUTO_SCREENSHOT = auto_screenshot
     POPUP_AUTO_SCREENSHOT_DURATION = auto_screenshot_duration
     POPUP_AUTO_SCREENSHOT_FILENAME = auto_screenshot_filename
+    POPUP_OK_BUTTON_WIDTH = ok_button_width
+    POPUP_CANCEL_BUTTON_WIDTH = cancel_button_width
+    POPUP_TTK_BUTTONS = ttk_buttons
 
 # ------------------------------------------------------------------------------
 # Dialogs
@@ -67,6 +79,8 @@ def popup_buttons(
     icon_size: tuple[int, int] = (48, 48),
     window_icon: Optional[str] = None,  # window icon, specify filename
     can_copy_message: bool = True, # show copy message in popup menu
+    use_ttk_buttons: bool = POPUP_TTK_BUTTONS,  # use ttk buttons
+    auto_locale: bool = True,  # auto locale
 ) -> str:
     """
     Popup window with user defined buttons. Return button's label.
@@ -84,8 +98,18 @@ def popup_buttons(
         title = le.get_text("Question")
     result = buttons[-1] if len(buttons) > 0 else default
 
-    # create window
-    eg_buttons: list[eg.Element] = [eg.Button(s, width=9) for s in buttons]
+    # create buttons
+    eg_buttons: list[eg.Element] = []
+    for label in buttons:
+        width = 9
+        if label == "OK":
+            width = POPUP_OK_BUTTON_WIDTH
+        elif label == "Cancel":
+            width = POPUP_CANCEL_BUTTON_WIDTH
+        if auto_locale:
+            label = le.get_text(label)
+        button_obj = eg.Button(label, width=width, use_ttk_buttons=use_ttk_buttons)
+        eg_buttons.append(button_obj)    
     eg_buttons_pad: list[eg.Element] = [eg.Push()] + eg_buttons + [eg.Push()]
     eg_messages: list[eg.Element] = []
     if icon != "":
@@ -127,6 +151,7 @@ def popup_buttons(
     if non_blocking:
         # TODO: popup non blocking window
         pass
+    # create window
     with eg.Window(title, layout=layout, size=size, icon=window_icon, modal=True) as win:
         for event, values in win.event_iter(timeout=100, timeout_key=eg.WINDOW_TIMEOUT):
             if event in buttons:
@@ -515,8 +540,8 @@ def popup_input(
             [eg.Input(default, key="-user-", width=40, enable_events=True)],
             [
                 eg.Push(),
-                eg.Button(ok_label, width=11),
-                eg.Button(cancel_label, width=9),
+                eg.Button(ok_label, width=POPUP_OK_BUTTON_WIDTH, use_ttk_buttons=POPUP_TTK_BUTTONS),
+                eg.Button(cancel_label, width=POPUP_CANCEL_BUTTON_WIDTH, use_ttk_buttons=POPUP_TTK_BUTTONS),
                 eg.Push(),
             ],
         ],
@@ -764,8 +789,8 @@ def popup_scrolled(
         [eg.Multiline(message, key="-text-", size=size, readonly=readonly, font=font, expand_x=True, expand_y=True)],
         [
             eg.Push(),
-            eg.Button(ok_label, width=9),
-            eg.Button(cancel_label, width=5),
+            eg.Button(ok_label, width=POPUP_OK_BUTTON_WIDTH, use_ttk_buttons=POPUP_TTK_BUTTONS),
+            eg.Button(cancel_label, width=POPUP_CANCEL_BUTTON_WIDTH, use_ttk_buttons=POPUP_TTK_BUTTONS),
             eg.Push(),
         ],
     ]
@@ -906,8 +931,8 @@ def popup_get_date(
     layout.append(
         [
             eg.Push(),
-            eg.Button(ok_label, size=(10, 1)),
-            eg.Button(cancel_label, size=(8, 1)),
+            eg.Button(ok_label, width=POPUP_OK_BUTTON_WIDTH, use_ttk_buttons=POPUP_TTK_BUTTONS),
+            eg.Button(cancel_label, width=POPUP_CANCEL_BUTTON_WIDTH, use_ttk_buttons=POPUP_TTK_BUTTONS),
             eg.Push(),
         ]
     )
@@ -1125,8 +1150,8 @@ def popup_get_form(
     layout.append(
         [
             eg.Push(),
-            eg.Button("OK", width=9),
-            eg.Button(cancel_label, key="Cancel"),
+            eg.Button("OK", width=POPUP_OK_BUTTON_WIDTH, use_ttk_buttons=POPUP_TTK_BUTTONS),
+            eg.Button(cancel_label, key="Cancel", width=POPUP_CANCEL_BUTTON_WIDTH, use_ttk_buttons=POPUP_TTK_BUTTONS),
             eg.Push(),
         ]
     )
@@ -1316,7 +1341,12 @@ def popup_listbox(
         ]
     )
     layout.append(
-        [eg.Push(), eg.Button("OK", width=9), eg.Button("Cancel", width=5), eg.Push()]
+        [
+            eg.Push(),
+            eg.Button("OK", width=POPUP_OK_BUTTON_WIDTH, use_ttk_buttons=POPUP_TTK_BUTTONS),
+            eg.Button("Cancel", width=POPUP_CANCEL_BUTTON_WIDTH, use_ttk_buttons=POPUP_TTK_BUTTONS),
+            eg.Push()
+        ]
     )
     with eg.Window(title, layout=layout, modal=True, resizable=resizable, icon=window_icon) as win:
         # event loop
@@ -1361,7 +1391,12 @@ def popup_image(
     layout: list[list[eg.Element]] = [
         [eg.Text(message)],
         [eg.Image(image_path, image_data, size=size)],
-        [eg.Button(ok_label, width=9), eg.Button(cancel_label, width=5)],
+        [
+            eg.Push(),
+            eg.Button(ok_label, width=POPUP_OK_BUTTON_WIDTH, use_ttk_buttons=POPUP_TTK_BUTTONS),
+            eg.Button(cancel_label, width=POPUP_CANCEL_BUTTON_WIDTH, use_ttk_buttons=POPUP_TTK_BUTTONS),
+            eg.Push(),
+        ],
     ]
     win = eg.Window(title, layout=layout, modal=True, font=font, icon=window_icon)
     result = cancel_value

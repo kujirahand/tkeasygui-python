@@ -70,6 +70,8 @@ TABLE_SELECT_MODE_BROWSE: str = tk.BROWSE
 TABLE_SELECT_MODE_EXTENDED: str = tk.EXTENDED
 EG_SWAP_EVENT_NAME: str = "--swap_event_name--"
 
+DEFAULT_PADX = 1 if utils.is_win() else 3
+
 # --- window icon ---
 DEFAULT_WINDOW_ICON = icon.ICON
 
@@ -1241,7 +1243,7 @@ class Element:
         )
         self.vertical_alignment: TextVAlign = "center"
         self.text_align: TextAlign = "left"
-        self.padx: Union[int, tuple[int, int], None] = 1
+        self.padx: Union[int, tuple[int, int], None] = DEFAULT_PADX
         self.pady: Union[int, tuple[int, int], None] = None
         self.font: Union[FontType, None] = None
         self.has_font_prop: bool = True
