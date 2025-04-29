@@ -8,7 +8,7 @@ eg.popup_set_options(
 )
 
 # popup 
-eg.popup_buttons("POPUP TEST", auto_close_duration=2)
+eg.popup_buttons("POPUP TEST (Please wait a moments...)", auto_close_duration=2, buttons=[])
 
 # preview screenshot
 eg.popup_image("screenshot.png", image_path=eg.POPUP_AUTO_SCREENSHOT_FILENAME, auto_close_duration=3)
