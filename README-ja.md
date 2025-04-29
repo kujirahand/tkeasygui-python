@@ -168,3 +168,17 @@ window.close()
 - [GitHub > TkEasyGUI](https://github.com/kujirahand/tkeasygui-python/)
 - [Discord > TkEasyGUI](https://discord.gg/NX8WEQd42S)
 
+## 追加情報
+
+### Raspberry Piで動かすには？
+
+Raspberry Pi OSでも動作します。下記の点に注意してインストールしてください。
+
+- Python3.9以上を利用してください。
+- PILではなくPillowが必要です。下記のコマンドを実行してください。
+  - `pip install --upgrade --force-reinstall pillow`
+  - 上記でうまくいかない場合、一度システムの古いPillowを削除してから再インストールします。
+    - `sudo apt remove python3-pil`
+    - `pip install pillow`
+- TkinterはRaspberry Piに標準でインストールされていますが、`python3-tk`パッケージが必要です。下記のコマンドを実行してください。
+  - `sudo apt-get install python3-tk`
