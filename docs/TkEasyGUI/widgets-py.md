@@ -9413,6 +9413,11 @@ class TkEasyError(self, message="TkEasyError"):
 
 
 
+### TkEasyError.add_note
+
+Exception.add_note(note) --
+    add a note to the exception
+
 ### TkEasyError.args
 
 ### TkEasyError.with_traceback
@@ -10452,7 +10457,7 @@ Cast a value to a type.
 def cast(typ, val):
 ```
 
-- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/Users/kujirahand/.pyenv/versions/3.9.22/Library/Frameworks/Python.framework/Versions/3.9/lib/python3.9/typing.py#L1375)
+- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/Users/kujirahand/.pyenv/versions/3.11.12/lib/python3.11/typing.py#L2287)
 
 ## generate_element_id
 

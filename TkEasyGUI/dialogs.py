@@ -1201,20 +1201,22 @@ def send_notification_mac(message: str, title: str = "") -> bool:
     """Send Notification on mac"""
     # check osascript
     oascript_path = "/usr/bin/osascript"
-    if not os.path.exists(oascript_path):
-        return False
     if title == "":
         title = "Notification"
-    # Base64 encode（UTF-8文字列 → バイト → base64）
-    encoded_message = base64.b64encode(message.encode("utf-8")).decode("ascii")
-    encoded_title = base64.b64encode(title.encode("utf-8")).decode("ascii")
-    # AppleScript側でbase64を復号し、通知を表示
-    script = f"""
-    set decodedMessage to do shell script "echo {encoded_message} | base64 -D"
-    set decodedTitle to do shell script "echo {encoded_title} | base64 -D"
-    display notification decodedMessage with title decodedTitle
-    """
-    subprocess.run([oascript_path, "-e", script], check=False)
+    if not os.path.exists(oascript_path):
+        popup_auto_close(message, title)
+        return False
+    script = r'''
+on run argv
+    set msg to item 1 of argv
+    set ttl to item 2 of argv
+    display notification msg with title ttl
+end run
+'''.strip()
+    subprocess.run(
+        [oascript_path, "-e", script, "--", message, title],
+        check=False
+    )
     return True
 
 
