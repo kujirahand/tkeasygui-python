@@ -121,7 +121,10 @@ def popup_buttons(
             if icon == "information" or icon == "info":
                 eg_messages.append(eg.Label("📖", font=font_info))
             elif icon == "warning":
-                eg_messages.append(eg.Label("⚠️", font=font_info))
+                # Windows環境で VS16(Variation Selector-16) 付きの警告絵文字
+                # (U+26A0 + U+FE0F) が表示されないケースに対応
+                # VS16 なしの U+26A0("⚠") を使用して互換性を確保 (#128)
+                eg_messages.append(eg.Label("⚠", font=font_info))
             elif icon == "error":
                 eg_messages.append(eg.Label("❌", font=font_info))
             elif icon == "question" or icon == "?":
@@ -642,7 +645,8 @@ def popup_info(
     if title is None:
         title = le.get_text("Information")
     if use_tk_dialog:
-        messagebox.showwarning(title, message)
+        # use native info dialog when requested
+        messagebox.showinfo(title, message)
         return
     popup_buttons(
         message,
