@@ -18,7 +18,6 @@ With a variety of built-in dialogs and customizable forms, you can develop appli
 
 - Windows / macOS / Linux (Tkinter required)
 
-
 ## Install
 
 Install package from [PyPI](https://pypi.org/project/TkEasyGUI/).
@@ -53,7 +52,6 @@ eg.print("A joyful heart is good medicine.")
 ```
 
 <img src="https://github.com/kujirahand/tkeasygui-python/raw/main/docs/image/sample1.png" width="300" alt="TkEasyGUI">
-
 
 Ask the user for their name and display that name in the window.
 
@@ -106,7 +104,6 @@ with eg.Window("Hello App", layout) as window:
             eg.print("Thank you.")
             break
 ```
-
 
 You can describe it using an event model similar to the famous GUI library, PySimpleGUI.
 
@@ -170,7 +167,7 @@ There are other helpful articles as well.
 - TkEasyGUI has been completely reimplemented from scratch and is licensed under the MIT License.
 - However, full compatibility with PySimpleGUI is not intended.
 
-## TkEasyGUI features:
+## TkEasyGUI features
 
 - Using a `for` loop and `window.event_iter()` enables straightforward event processing.
 - Custom popup dialogs, such as a color selection dialog(`eg.popup_color`), a list dialog(`eg.popup_listbox`), form dialog(`eg.popup_get_form`) are available.

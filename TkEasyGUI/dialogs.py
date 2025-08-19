@@ -1,4 +1,5 @@
 """TkEasyGUI dialogs."""
+# pylint: disable=line-too-long, too-many-lines
 
 import base64
 from datetime import datetime, timedelta
@@ -9,13 +10,12 @@ from re import Pattern
 import tempfile
 
 import tkinter
-import tkinter.filedialog as filedialog
-import tkinter.messagebox as messagebox
+from tkinter import filedialog
+from tkinter import messagebox
 from tkinter import colorchooser
 from typing import Any, cast, Callable, Iterable, Optional, Union
 
 from . import locale_easy as le
-from . import widgets as eg
 from .utils import (
     ColorFormatType,
     FontType,
@@ -78,7 +78,7 @@ def popup_set_options(
 def popup_buttons(
     message: str,
     title: Union[str, None] = None,
-    buttons: list[str] = ["OK", "Cancel"],
+    buttons: Union[list[str], None] = None,  # button labels(default is ["OK", "Cancel"])
     auto_close_duration: int = -1,  # auto close duration (sec)
     timeout_key: str = "-TIMEOUT-",  # if auto_close_duration > 0, return this key
     non_blocking: bool = False,
@@ -103,6 +103,9 @@ def popup_buttons(
     print(color)
     ```
     """
+    from . import widgets as eg  # Late import to avoid circular dependency
+    if buttons is None:
+        buttons = ["OK", "Cancel"]
     if title is None:
         title = le.get_text("Question")
     result = buttons[-1] if len(buttons) > 0 else default
@@ -119,7 +122,7 @@ def popup_buttons(
         if auto_locale:
             label = le.get_text(label)
         button_obj = eg.Button(label, width=width, use_ttk_buttons=use_ttk_buttons)
-        eg_buttons.append(button_obj)    
+        eg_buttons.append(button_obj)
     eg_buttons_pad: list[eg.Element] = [eg.Push()] + eg_buttons + [eg.Push()]
     eg_messages: list[eg.Element] = []
     if icon != "":
@@ -162,7 +165,7 @@ def popup_buttons(
     timer_id = eg.time_checker_start()
     auto_screenshot = False
     if non_blocking:
-        # TODO: popup non blocking window
+        # popup non blocking window : to be implemented in the future
         pass
     # create window
     with eg.Window(title, layout=layout, size=size, icon=window_icon, modal=True) as win:
@@ -269,7 +272,7 @@ def popup_auto_close(
     message: str,
     title: str = "",
     auto_close_duration: int = 3, # auto close duration (sec)
-    buttons: list[str] = ["OK", "Cancel"],
+    buttons: Optional[list[str]] = None,  # default is ["OK", "Cancel"]
     timeout_key="-TIMEOUT-",
     size: Union[tuple[int, int], None] = None,
     icon: str = "information",
@@ -509,6 +512,7 @@ def popup_input(
     validation_message: Optional[str] = None
 ) -> Union[str, float, None]:
     """Display a message in a popup window with a text entry. Return the text entered. if canceled, return cancel_value."""
+    from . import widgets as eg  # Late import to avoid circular dependency
     result = cancel_value
     if title is None:
         title = (
@@ -681,7 +685,7 @@ def popup_get_file(
     multiple_files: bool = False,  # can select multiple files
     file_types: tuple[tuple[str, str]] = (("All Files", "*.*"),),
     default_extension: Union[str, None] = None,
-    no_window: Union[bool, None] = None,  # for compatibility
+    no_window: Optional[bool] = None,  # for compatibility # pylint: disable=unused-argument
     **kw,
 ) -> Union[str, tuple[str], None]:
     """Popup a file selection dialog. Return the file selected."""
@@ -732,7 +736,7 @@ def popup_get_folder(
     message: str = "",
     title: Union[str, None] = None,
     default_path: Union[str, None] = None,
-    no_window: Union[bool, None] = None,  # for compatibility
+    no_window: Union[bool, None] = None,  # for compatibility # pylint: disable=unused-argument
     **kw,
 ) -> Union[str, None]:
     """Popup a folder selection dialog. Return the folder selected."""
@@ -795,6 +799,7 @@ def popup_scrolled(
     eg.print(text)
     ```
     """
+    from . import widgets as eg  # Late import to avoid circular dependency
     result = cancel_value
     if cancel_label is None:
         cancel_label = le.get_text("Cancel")
@@ -839,6 +844,7 @@ def popup_get_date(
     window_icon: Optional[str] = None,  # window icon, specify filename
 ) -> Union[datetime, None]:
     """Display a calendar in a popup window. Return the datetime entered or None."""
+    from . import widgets as eg  # Late import to avoid circular dependency
     if current_date is None:
         current_date = datetime.now()
     if date_format is None:
@@ -1085,6 +1091,7 @@ def popup_get_form(
     ```
     """
     # make form layout
+    from . import widgets as eg  # Late import to avoid circular dependency
     item_labels = []
     item_converters: list[Union[Callable, None]] = []
     layout: list[list[eg.Element]] = []
@@ -1304,7 +1311,7 @@ $TemplateContent.SelectSingleNode('//text[@id="1"]').InnerText = $bodyText
 def popup_color(
     title: str = "",
     default_color: Union[str, None] = None,
-    format: ColorFormatType = "html",
+    format: ColorFormatType = "html",  # pylint: disable=redefined-builtin
 ) -> Union[str, tuple[int, int, int], None]:
     """
     Popup a color selection dialog. Return the color selected.
@@ -1336,6 +1343,7 @@ def popup_listbox(
     window_icon: Optional[str] = None,  # window icon, specify filename
 ) -> Union[str, None]:
     """Display Listbox in a popup window"""
+    from . import widgets as eg  # Late import to avoid circular dependency
     select_mode: eg.ListboxSelectMode = (
         eg.LISTBOX_SELECT_MODE_BROWSE
         if multiple is False
@@ -1401,6 +1409,7 @@ def popup_image(
     timeout_key: str = "-TIMEOUT-",  # timeout key if auto_close_duration > 0
 ) -> Union[str, None]:
     """Display an image in a popup window. Return the pushed Button("OK" or None)."""
+    from . import widgets as eg  # Late import to avoid circular dependency
     if title is None:
         title = message
     if ok_label is None:
@@ -1484,6 +1493,7 @@ def msgbox(message: str, title: Union[str, None] = None) -> None:  # message
 # ------------------------------------------------------------------------------
 # TkEasyGUI original dialogs
 # ------------------------------------------------------------------------------
+# pylint: disable=redefined-builtin
 def input(
     message: str,
     title: Union[str, None] = None,
@@ -1492,7 +1502,7 @@ def input(
     window_icon: Optional[str] = None,  # window icon, specify filename
     validation: Optional[Union[str, Pattern[str]]] = None, # validation regular expression
     validation_message: Optional[str] = None
-) -> Union[str, float, None]:  # pylint: disable=redefined-builtin
+) -> Union[str, float, None]:
     """Display a message in a popup window with a text entry. Return the text entered."""
     return popup_input(
         message,

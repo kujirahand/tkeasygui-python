@@ -1,4 +1,5 @@
 """TkEasyGUI Widgets."""
+# pylint: disable=line-too-long,too-many-lines,too-many-arguments
 
 import io
 import re
@@ -17,7 +18,7 @@ from typing import Any, cast, Callable, Optional, Union, Sequence, Pattern
 from PIL import Image as PILImage
 from PIL import ImageColor, ImageTk, ImageGrab
 
-from . import dialogs, utils, version, icon
+from . import utils, version, icon_default
 from .utils import (
     # type alias
     CursorType,
@@ -45,8 +46,8 @@ from . import locale_easy as le
 # ------------------------------------------------------------------------------
 # WindowType: TypeAlias = "Window"
 # ElementType: TypeAlias = "Element"
-WindowType = "Window"
-ElementType = "Element"
+WindowType = "Window"  # pylint: disable=invalid-name
+ElementType = "Element"  # pylint: disable=invalid-name
 LayoutType = Sequence[Sequence["Element"]]
 KeyType = Union[str, int]
 
@@ -74,7 +75,7 @@ EG_SWAP_EVENT_NAME: str = "--swap_event_name--"
 DEFAULT_PADX = 1 if utils.is_win() else 3
 
 # --- window icon ---
-DEFAULT_WINDOW_ICON = icon.ICON
+DEFAULT_WINDOW_ICON = icon_default.ICON
 
 # Window.screenshot method
 SCREENSHOT_MACOS_ADJUST = {"x1": 0, "y1": 0, "x2": 0, "y2": 22 + 6} # for macOS titlebar
@@ -203,7 +204,7 @@ class Window:
         # self.frame.configure(style="TFrame")
         # set window properties
         self.set_title(title)
-        self.window.protocol("WM_DELETE_WINDOW", lambda: self._close_handler())
+        self.window.protocol("WM_DELETE_WINDOW", self._close_handler)
         self.size: Union[tuple[int, int], None] = size
         if size is not None:
             self.set_size(size)
@@ -268,6 +269,7 @@ class Window:
         # set idle event
         self.update_idle_tasks()
         self.window.after_idle(self._on_show_event)
+        self._options = kw
 
     def _on_mouse_move(self, event):
         """Mouse move event."""
@@ -458,7 +460,7 @@ class Window:
             if parent is not None:
                 try:
                     bgcolor = parent.cget("background")
-                except Exception:
+                except tk.TclError:
                     pass
             frame_prop = {"name": f"tkeasygui_frame_row_{row_no}"}
             if bgcolor is not None:
@@ -491,10 +493,10 @@ class Window:
                 # create widget
                 try:
                     elem_parent: Any = frame_row
-                    if type(parent) is ttk.Notebook:
+                    if isinstance(parent, ttk.Notebook):
                         elem_parent = parent
                     widget: Any = elem.create(self, elem_parent)
-                    widget.__tkeasygui = elem
+                    widget.tkeasygui_elem = elem
                 except Exception as e:
                     print(e.__traceback__, file=sys.stderr)
                     raise TkEasyError(
@@ -539,7 +541,7 @@ class Window:
                     # print("@@@@ TabGroup", type(parent), type(elem.widget), elem.get())
                     parent.add(elem.widget, text=elem.get())  # type: ignore
                     if isinstance(elem, Tab):
-                        group: TabGroup = parent.__tkeasygui  # type: ignore
+                        group: TabGroup = parent.tkeasygui_elem  # type: ignore
                         tab: Tab = elem
                         if group.max_rows > tab.rows:
                             tab.rows = group.max_rows
@@ -1107,8 +1109,8 @@ class Window:
                 y2 += SCREENSHOT_MACOS_ADJUST["y2"]
             if utils.is_win():
                 try:
+                    import ctypes
                     # get window frame size using Windows API
-                    import ctypes                
                     user32 = ctypes.windll.user32 # type: ignore
                     # get window frame size
                     caption_height = user32.GetSystemMetrics(4)  # SM_CYCAPTION
@@ -1175,9 +1177,7 @@ def _bind_event_handler(
         )
     # propagate
     if propagate:
-        # todo
         pass
-
 
 def _exit_mainloop() -> None:
     """Exit mainloop"""
@@ -1350,7 +1350,9 @@ class Element:
             self.props["bg"] = background_color
 
     def _get_pack_props(
-        self, align: str = "left", valign: str = "top"
+        self,
+        align: str = "left",
+        valign: str = "top",  # pylint:disable=unused-argument
     ) -> dict[str, Any]:
         """Get the fill property in `pack` method."""
         props: dict[str, Any] = {"expand": False, "fill": "none", "side": "left"}
@@ -1914,6 +1916,9 @@ class Text(Element):
         expand_x: bool = False,
         expand_y: bool = False,
         pad: Union[PadType, None] = None,
+        # validation
+        validation: Union[str, Pattern[str], None] = None,  # regex pattern for validation (fullmatch)
+        validation_message: Union[str, None] = None,  # message shown when validation fails
         # other
         metadata: Union[dict[str, Any], None] = None,  # user metadata
         **kw,
@@ -1933,6 +1938,8 @@ class Text(Element):
         self.enable_events = enable_events
         if wrap_length is not None:
             self.props["wraplength"] = wrap_length
+        self._validation = validation
+        self._validation_message = validation_message
 
     def create(self, win: Window, parent: tk.Widget) -> tk.Widget:
         """Create a Text widget."""
@@ -1973,6 +1980,10 @@ class Text(Element):
         """Update the widget."""
         if text is not None:
             self.set_text(text)
+        if "validation" in kw:
+            self._validation = kw["validation"]
+        if "validation_message" in kw:
+            self._validation_message = kw["validation_message"]
         self._widget_update(**kw)
 
 
@@ -2671,6 +2682,7 @@ class Input(Element):
             if pat is not None and pat.fullmatch(cur) is None:
                 self._validation_in_progress = True
                 try:
+                    from . import dialogs  # Late import to avoid circular dependency
                     dialogs.popup_warning(self._validation_message)
                     # ダイアログ表示後、フォーカスを戻す
                     if self.widget is not None:
@@ -3854,7 +3866,7 @@ class Listbox(Element):
 
     def create(self, win: Window, parent: tk.Widget) -> tk.Widget:
         """[Listbox.create] create Listbox widget"""
-        self.window: Window = win
+        self.window = win
         # create frame
         self.widget_frame: tk.Frame = tk.Frame(parent)
         # create listbox and scrollbar
@@ -4115,7 +4127,7 @@ class Table(Element):
 
     def create(self, win: Window, parent: tk.Widget) -> tk.Widget:
         """Create a Table widget."""
-        self.window: Window = win
+        self.window = win
         # create treeview
         # - FRAME
         self.frame = ttk.Frame(parent, padding=1, relief="ridge", borderwidth=1)
@@ -4132,6 +4144,7 @@ class Table(Element):
         # - SCROLLBAR
         scrollbar = tk.Scrollbar(self.frame, orient=tk.VERTICAL, command=tree.yview)
         tree.configure(yscroll=scrollbar.set)  # type: ignore
+        hscrollbar: Optional[ttk.Scrollbar] = None
         if not self.vertical_scroll_only:
             hscrollbar = ttk.Scrollbar(
                 self.frame, orient="horizontal", command=tree.xview
@@ -4141,7 +4154,8 @@ class Table(Element):
         tree.grid(row=0, column=0, sticky="nsew")
         scrollbar.grid(row=0, column=1, sticky="ns")
         if not self.vertical_scroll_only:
-            hscrollbar.grid(row=1, column=0, sticky="ew")
+            if hscrollbar is not None:
+                hscrollbar.grid(row=1, column=0, sticky="ew")
         self.frame.grid_rowconfigure(0, weight=1)
         self.frame.grid_columnconfigure(0, weight=1)
         # add data
@@ -4372,6 +4386,7 @@ class FileBrowse(Element):
 
     def show_dialog(self, *args) -> Union[Any, None]:
         """Show file dialog"""
+        from . import dialogs  # Late import to avoid circular dependency
         target: Union[Element, None] = self.get_prev_element(self.target_key)
         # get initial directory
         init_dir = self._get_initial_directory()
@@ -4491,6 +4506,7 @@ class FolderBrowse(FileBrowse):
 
     def show_dialog(self, *args) -> Union[str, None]:
         """Show file dialog"""
+        from . import dialogs  # Late import to avoid circular dependency
         target: Union[Element, None] = self.get_prev_element(self.target_key)
         # popup
         result = dialogs.popup_get_folder(
@@ -4532,6 +4548,7 @@ class ColorBrowse(FileBrowse):
 
     def show_dialog(self, *args) -> Union[str, None]:
         """Show file dialog"""
+        from . import dialogs  # Late import to avoid circular dependency
         target: Union[Element, None] = self.get_prev_element(self.target_key)
         # popup
         result = dialogs.popup_color(
@@ -4579,6 +4596,7 @@ class ListBrowse(FileBrowse):
 
     def show_dialog(self, *args) -> Union[str, None]:
         """Show Listbox dialog"""
+        from . import dialogs  # Late import to avoid circular dependency
         target: Union[Element, None] = self.get_prev_element(self.target_key)
         if target is not None:
             val = target.get()  # type: ignore[attr-defined]
@@ -4629,6 +4647,7 @@ class MultilineBrowse(FileBrowse):
 
     def show_dialog(self, *args) -> Union[str, None]:
         """Show Listbox dialog"""
+        from . import dialogs  # Late import to avoid circular dependency
         target: Union[Element, None] = self.get_prev_element(self.target_key)
         if target is not None:
             val = target.get()  # type: ignore[attr-defined]
@@ -4688,6 +4707,7 @@ class CalendarBrowse(FileBrowse):
 
     def show_dialog(self, *args) -> Union[datetime, None]:
         """Show file dialog"""
+        from . import dialogs  # Late import to avoid circular dependency
         target: Union[Element, None] = self.get_prev_element(self.target_key)
         # popup
         result = dialogs.popup_get_date(
@@ -4699,16 +4719,14 @@ class CalendarBrowse(FileBrowse):
             if self.enable_events:
                 if (self.window is not None) and (self.key is not None):
                     self.window._event_handler(
-                        self.key, {"event": result, "event_type": "change"}
+                        self.key,
+                        {"event": result, "event_type": "change"}
                     )
         return result
 
 
 class CalendarButton(CalendarBrowse):
     """CalendarButton element. (alias of CalendarBrowse)"""
-
-    pass
-
 
 # -------------------------------------------------------------------
 # layout helper
@@ -4852,10 +4870,10 @@ def get_image_tk(
                 background_color=background_color,
             )
             return ImageTk.PhotoImage(image=img)
-        except Exception as e:
+        except (OSError, ValueError) as e:
             raise TkEasyError(
                 f"TkEasyGUI.Image.set_image.Error: filename='{filename}', {e}"
-            )
+            ) from e
     # load from data
     if data is not None:
         try:
