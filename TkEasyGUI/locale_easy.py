@@ -33,6 +33,7 @@ _locale_messages: dict[str, dict[str, str]] = {
         "Thank you.": "ありがとうございます。",
         "Please enter a number.": "数値を入力してください。",
         "Copy Message": "メッセージをコピー",
+        "Validation error": "入力エラーです。正しい形式で入力してください。",
     },
     "zh": {
         "__date_format__": "%Y年%m月%d日",
@@ -59,6 +60,34 @@ _locale_messages: dict[str, dict[str, str]] = {
         "Thank you.": "谢谢。",
         "Please enter a number.": "请输入一个数字。",
         "Copy Message": "复制消息",
+        "Validation error": "输入错误。请以正确的格式输入。",
+    },
+    "ko": {
+        "__date_format__": "%Y-%m-%d",
+        "OK": "확인",
+        "Cancel": "취소",
+        "Yes": "예",
+        "No": "아니요",
+        "Close": "닫기",
+        "Information": "정보",
+        "Warning": "경고",
+        "Error": "오류",
+        "Question": "질문",
+        "Text input": "텍스트 입력",
+        "Number input": "숫자 입력",
+        "Select date": "날짜 선택",
+        "Copy": "복사",
+        "Paste": "붙여넣기",
+        "Cut": "잘라내기",
+        "File": "파일",
+        "Open": "열기",
+        "Save": "저장",
+        "Run": "실행",
+        "Quit": "종료",
+        "Thank you.": "감사합니다.",
+        "Please enter a number.": "숫자를 입력하세요.",
+        "Copy Message": "메시지 복사",
+        "Validation error": "입력 오류입니다. 올바른 형식으로 입력하세요.",
     },
 }
 
@@ -75,27 +104,27 @@ def get_locale() -> str:
     return _locale
 
 
-def set_locale(locale: str) -> None:
+def set_locale(locale_name: str) -> None:
     """Set locale"""
     global _locale
-    _locale = locale
+    _locale = locale_name
 
 
 def get_text(key: str, default_text: Union[str, None] = None) -> str:
     """Get locale text"""
-    locale = get_locale()
-    if locale in _locale_messages:
-        if key in _locale_messages[locale]:
-            return _locale_messages[locale][key]
+    current_locale = get_locale()
+    if current_locale in _locale_messages:
+        if key in _locale_messages[current_locale]:
+            return _locale_messages[current_locale][key]
     if default_text is not None:
         return default_text
     return key
 
 
-def set_text(key: str, message: str, locale: str = "") -> None:
+def set_text(key: str, message: str, locale_name: str = "") -> None:
     """Set locale text"""
-    if locale == "":
-        locale = get_locale()
-        if locale not in _locale_messages:
-            _locale_messages[locale] = {}
-    _locale_messages[locale][key] = message
+    if locale_name == "":
+        locale_name = get_locale()
+        if locale_name not in _locale_messages:
+            _locale_messages[locale_name] = {}
+    _locale_messages[locale_name][key] = message

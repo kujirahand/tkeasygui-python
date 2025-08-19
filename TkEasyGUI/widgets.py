@@ -1,6 +1,7 @@
 """TkEasyGUI Widgets."""
 
 import io
+import re
 import os
 import platform
 import sys
@@ -12,7 +13,7 @@ from enum import Enum
 from queue import Queue
 from tkinter import font as tkinter_font
 from tkinter import scrolledtext, ttk
-from typing import Any, cast, Callable, Optional, Union, Sequence
+from typing import Any, cast, Callable, Optional, Union, Sequence, Pattern
 
 from PIL import Image as PILImage
 from PIL import ImageColor, ImageTk, ImageGrab
@@ -38,6 +39,7 @@ from .utils import (
     get_ttk_style,
     register_element_key,
 )
+from . import locale_easy as le
 
 # ------------------------------------------------------------------------------
 # TypeAlias
@@ -2530,13 +2532,9 @@ class Input(Element):
         enable_key_events: bool = False,  # enabled key events
         enable_focus_events: bool = False,  # enabled focus events
         readonly_background_color: Union[str, None] = "silver",
-        password_char: Union[
-            str, None
-        ] = None,  # if you want to use it as a password input box, set "*"
+        password_char: Union[str, None] = None,  # if you want to use it as a password input box, set "*"
         readonly: bool = False,  # read only box
-        size: Union[
-            tuple[int, int], None
-        ] = None,  # set (width, height) character size (only width is supported)
+        size: Union[tuple[int, int], None] = None,  # set (width, _) character size (only width is supported)
         width: Union[int, None] = None,  # set width character size
         # text props
         text_align: Union[TextAlign, None] = "left",  # text align
@@ -2544,6 +2542,9 @@ class Input(Element):
         color: Union[str, None] = None,  # text color
         text_color: Union[str, None] = None,  # same as color
         background_color: Union[str, None] = None,  # background color
+        # validation
+        validation: Union[str, Pattern[str], None] = None,  # regex pattern for validation (fullmatch)
+        validation_message: Union[str, None] = None,  # message shown when validation fails
         # pack props
         expand_x: bool = False,
         expand_y: bool = False,
@@ -2557,6 +2558,18 @@ class Input(Element):
         self.use_ttk = False
         self.readonly: bool = readonly
         self.enable_events: bool = enable_events
+        # validation
+        self._validation_pattern = None  # type: ignore[assignment]
+        self._validation_message = validation_message if validation_message is not None else le.get_text("Validation error")
+        self._validation_in_progress = False  # flag to prevent infinite loop
+        if isinstance(validation, str):
+            try:
+                self._validation_pattern = re.compile(validation)  # type: ignore[assignment]
+            except re.error:
+                self._validation_pattern = None  # type: ignore[assignment]
+        elif validation is not None:
+            # assume compiled pattern
+            self._validation_pattern = validation  # type: ignore[assignment]
         if default_text is not None:  # compatibility with PySimpleGUI
             text = default_text
         self.default_text = text  # default text @see Input.create
@@ -2638,6 +2651,35 @@ class Input(Element):
             )
         return self.widget
 
+    def post_create(self, win: Window, parent: tk.Widget) -> None:
+        """Post create: attach validation binds after Window.bind registrations."""
+        if (self.widget is None) or (self._validation_pattern is None):
+            return
+        def _validate_and_warn(event: Optional[tk.Event] = None) -> None:
+            # prevent infinite loop
+            if self._validation_in_progress:
+                return
+            cur = ""
+            try:
+                cur = self.text_var.get()
+                if cur == "": # 空っぽならバリデーション対象外とする
+                    return
+            except Exception:
+                pass
+            pat = self._validation_pattern
+            if pat is not None and pat.fullmatch(cur) is None:
+                self._validation_in_progress = True
+                try:
+                    dialogs.popup_warning(self._validation_message)
+                    # ダイアログ表示後、フォーカスを戻す
+                    if self.widget is not None:
+                        self.widget.after(10, lambda: self.widget.focus_set())  # type: ignore[union-attr]
+                        self.widget.after(20, self.select_all)
+                finally:
+                    self._validation_in_progress = False
+        self.widget.bind("<FocusOut>", _validate_and_warn, add="+")
+        return None
+
     def get(self) -> Any:
         """Get the value of the widget."""
         return self.get_text()
@@ -2678,7 +2720,10 @@ class Input(Element):
         self._widget_update(state=state)
 
     def update(
-        self, text: Union[str, None] = None, readonly: Union[bool, None] = None, **kw
+        self,
+        text: Union[str, None] = None,
+        readonly: Union[bool, None] = None,
+        **kw,
     ) -> None:
         """Update the widget."""
         if self.widget is None:
@@ -2694,6 +2739,16 @@ class Input(Element):
                 self.set_readonly(True)
             else:
                 self.set_text(text)
+        # validation pattern/message
+        if "validation" in kw:
+            validation = kw["validation"]
+            if isinstance(validation, str):
+                try:
+                    self._validation_pattern = re.compile(validation)  # type: ignore[assignment]
+                except re.error:
+                    self._validation_pattern = None  # type: ignore[assignment]
+        if "validation_message" in kw:
+            self._validation_message = kw["validation_message"]
         # update others
         self._widget_update(**kw)
 
