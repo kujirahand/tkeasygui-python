@@ -1,14 +1,16 @@
 """TkEasyGUI dialogs."""
 
 import base64
+from datetime import datetime, timedelta
 import os
 import subprocess
 import sys
+from re import Pattern
 import tempfile
+
 import tkinter
 import tkinter.filedialog as filedialog
 import tkinter.messagebox as messagebox
-from datetime import datetime, timedelta
 from tkinter import colorchooser
 from typing import Any, cast, Callable, Iterable, Optional, Union
 
@@ -29,11 +31,12 @@ OK = "OK"
 CANCEL = "Cancel"
 
 # save original print
-_print = print
+_print = print  # pylint: disable=used-before-assignment
 
 # ------------------------------------------------------------------------------
 # popup options
 # ------------------------------------------------------------------------------
+# Global popup options (must be defined before any function uses them as default arguments)
 POPUP_AUTO_SCREENSHOT = False
 POPUP_AUTO_SCREENSHOT_DURATION = 500  # auto close duration (msec)
 POPUP_AUTO_SCREENSHOT_FILENAME = "screenshot.png"
@@ -42,26 +45,32 @@ POPUP_CANCEL_BUTTON_WIDTH = 9
 POPUP_TTK_BUTTONS = True # use ttk buttons
 
 def popup_set_options(
-    auto_screenshot: bool = POPUP_AUTO_SCREENSHOT,
-    auto_screenshot_duration: int = POPUP_AUTO_SCREENSHOT_DURATION,  # auto close duration (msec)
-    auto_screenshot_filename: str = POPUP_AUTO_SCREENSHOT_FILENAME,
-    ok_button_width: int = POPUP_OK_BUTTON_WIDTH,
-    cancel_button_width: int = POPUP_CANCEL_BUTTON_WIDTH,
-    ttk_buttons: bool = POPUP_TTK_BUTTONS,  # use ttk buttons
+    auto_screenshot: Optional[bool] = None,
+    auto_screenshot_duration: Optional[int] = None,  # auto close duration (msec)
+    auto_screenshot_filename: Optional[str] = None,
+    ok_button_width: Optional[int] = None,
+    cancel_button_width: Optional[int] = None,
+    ttk_buttons: Optional[bool] = None,  # use ttk buttons
 ) -> None:
     """Set auto screenshot values."""
-    global POPUP_AUTO_SCREENSHOT
-    global POPUP_AUTO_SCREENSHOT_DURATION
-    global POPUP_AUTO_SCREENSHOT_FILENAME
-    global POPUP_OK_BUTTON_WIDTH
-    global POPUP_CANCEL_BUTTON_WIDTH
-    global POPUP_TTK_BUTTONS
-    POPUP_AUTO_SCREENSHOT = auto_screenshot
-    POPUP_AUTO_SCREENSHOT_DURATION = auto_screenshot_duration
-    POPUP_AUTO_SCREENSHOT_FILENAME = auto_screenshot_filename
-    POPUP_OK_BUTTON_WIDTH = ok_button_width
-    POPUP_CANCEL_BUTTON_WIDTH = cancel_button_width
-    POPUP_TTK_BUTTONS = ttk_buttons
+    global POPUP_AUTO_SCREENSHOT  # pylint: disable=global-statement
+    global POPUP_AUTO_SCREENSHOT_DURATION  # pylint: disable=global-statement
+    global POPUP_AUTO_SCREENSHOT_FILENAME  # pylint: disable=global-statement
+    global POPUP_OK_BUTTON_WIDTH  # pylint: disable=global-statement
+    global POPUP_CANCEL_BUTTON_WIDTH  # pylint: disable=global-statement
+    global POPUP_TTK_BUTTONS  # pylint: disable=global-statement
+    if auto_screenshot is not None:
+        POPUP_AUTO_SCREENSHOT = auto_screenshot
+    if auto_screenshot_duration is not None:
+        POPUP_AUTO_SCREENSHOT_DURATION = auto_screenshot_duration
+    if auto_screenshot_filename is not None:
+        POPUP_AUTO_SCREENSHOT_FILENAME = auto_screenshot_filename
+    if ok_button_width is not None:
+        POPUP_OK_BUTTON_WIDTH = ok_button_width
+    if cancel_button_width is not None:
+        POPUP_CANCEL_BUTTON_WIDTH = cancel_button_width
+    if ttk_buttons is not None:
+        POPUP_TTK_BUTTONS = ttk_buttons
 
 # ------------------------------------------------------------------------------
 # Dialogs
@@ -97,6 +106,7 @@ def popup_buttons(
     if title is None:
         title = le.get_text("Question")
     result = buttons[-1] if len(buttons) > 0 else default
+    popup_menu: Optional[tkinter.Menu] = None
 
     # create buttons
     eg_buttons: list[eg.Element] = []
@@ -173,7 +183,8 @@ def popup_buttons(
                         break
             if event == "-msg-" and "event" in values:  # click message
                 e = values["event"]
-                popup_menu.post(e.x_root, e.y_root)
+                if popup_menu is not None:
+                    popup_menu.post(e.x_root, e.y_root)
     return result
 
 
@@ -483,35 +494,6 @@ def popup_cancel(
     return cancel_label if result == cancel_label else result
 
 
-def popup_get_text(
-    message: str,
-    title: Union[str, None] = None,
-    default: Union[str, None] = None,
-    default_text: Union[str, None] = None,  # same as default for compatibility
-    font: Optional[FontType] = None,
-    size: Union[tuple[int, int], None] = None,
-    window_icon: Optional[str] = None,  # window icon, specify filename
-) -> Union[str, None]:
-    """Display a message in a popup window with a text entry. Return the text entered."""
-    # return simpledialog.askstring(title, message, initialvalue=default)
-    if default_text is not None:
-        default = default_text
-    default_str = ""
-    if default is not None:
-        default_str = default
-    result: Union[str, float, None] = popup_input(
-        message,
-        title,
-        default_str,
-        font=font,
-        size=size,
-        window_icon=window_icon,
-    )
-    if result is None:
-        return None
-    return str(result)
-
-
 def popup_input(
     message: str,
     title: Optional[str] = None,
@@ -523,6 +505,8 @@ def popup_input(
     font: Optional[FontType] = None,
     size: Union[tuple[int, int], None] = None,
     window_icon: Optional[str] = None,  # window icon, specify filename
+    validation: Optional[Union[str, Pattern[str]]] = None, # validation regular expression
+    validation_message: Optional[str] = None
 ) -> Union[str, float, None]:
     """Display a message in a popup window with a text entry. Return the text entered. if canceled, return cancel_value."""
     result = cancel_value
@@ -539,7 +523,7 @@ def popup_input(
     win = eg.Window(
         title,
         layout=[
-            [eg.Text(message)],
+            [eg.Text(message, validation=validation, validation_message=validation_message)],
             [eg.Input(default, key="-user-", width=40, enable_events=True)],
             [
                 eg.Push(),
@@ -571,6 +555,35 @@ def popup_input(
             break
     win.close()
     return result
+
+
+def popup_get_text(
+    message: str,
+    title: Union[str, None] = None,
+    default: Union[str, None] = None,
+    default_text: Union[str, None] = None,  # same as default for compatibility
+    font: Optional[FontType] = None,
+    size: Union[tuple[int, int], None] = None,
+    window_icon: Optional[str] = None,  # window icon, specify filename
+) -> Union[str, None]:
+    """Display a message in a popup window with a text entry. Return the text entered."""
+    # return simpledialog.askstring(title, message, initialvalue=default)
+    if default_text is not None:
+        default = default_text
+    default_str = ""
+    if default is not None:
+        default_str = default
+    result: Union[str, float, None] = popup_input(
+        message,
+        title,
+        default_str,
+        font=font,
+        size=size,
+        window_icon=window_icon,
+    )
+    if result is None:
+        return None
+    return str(result)
 
 
 def popup_error(
@@ -1477,9 +1490,19 @@ def input(
     default: str = "",
     only_number: bool = False,
     window_icon: Optional[str] = None,  # window icon, specify filename
-) -> Union[str, float, None]:
+    validation: Optional[Union[str, Pattern[str]]] = None, # validation regular expression
+    validation_message: Optional[str] = None
+) -> Union[str, float, None]:  # pylint: disable=redefined-builtin
     """Display a message in a popup window with a text entry. Return the text entered."""
-    return popup_input(message, title, default, only_number=only_number, window_icon=window_icon)
+    return popup_input(
+        message,
+        title,
+        default,
+        only_number=only_number,
+        window_icon=window_icon,
+        validation=validation,
+        validation_message=validation_message,
+    )
 
 
 def print(*args, **kw) -> None:

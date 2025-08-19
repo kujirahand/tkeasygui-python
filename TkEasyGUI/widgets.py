@@ -7,7 +7,6 @@ import platform
 import sys
 import threading
 import tkinter as tk
-import tkinter.font as tkfont
 from datetime import datetime
 from enum import Enum
 from queue import Queue
@@ -1071,13 +1070,15 @@ class Window:
             ),
         )
 
-    def _set_icon(self, icon: Union[bytes, str]) -> None:
+    def _set_icon(self, icon_value: Union[bytes, str]) -> None:
         """Set the icon for the window."""
         icon_image: tk.PhotoImage
-        if isinstance(icon, str):  # filename str
-            icon_image = get_image_tk(filename=icon)  # type: ignore
-        elif isinstance(icon, bytes):
-            icon_image = tk.PhotoImage(data=icon)
+        if isinstance(icon_value, str):  # filename str
+            icon_image = get_image_tk(filename=icon_value)  # type: ignore
+        elif isinstance(icon_value, bytes):
+            icon_image = tk.PhotoImage(data=icon_value)
+        else:
+            icon_image = tk.PhotoImage(data=DEFAULT_WINDOW_ICON)
         self._icon = icon_image
         try:
             self.window.iconphoto(False, self._icon)
@@ -3994,7 +3995,7 @@ class Combo(Element):
             self.set_readonly(self.readonly)
         if "font" in self.props:
             parent.option_add(
-                "*TCombobox*Listbox*Font", tkfont.Font(font=self.props["font"])
+                "*TCombobox*Listbox*Font", tkinter_font.Font(font=self.props["font"])
             )
         return self.widget
 
@@ -4923,7 +4924,7 @@ def get_font_list() -> list[str]:
     """Get font list"""
     root = get_root_window()
     root.withdraw()
-    return list(tkfont.families())
+    return list(tkinter_font.families())
 
 
 def get_system_info():
