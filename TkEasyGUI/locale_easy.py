@@ -1,10 +1,11 @@
 """TkEasyGUI locale module"""
 
 import locale
+import os
 from typing import Union
 
 # locale
-_locale: str = ""  # locale cache
+_locale: str = ""
 
 # locale messages
 _locale_messages: dict[str, dict[str, str]] = {
@@ -94,9 +95,9 @@ _locale_messages: dict[str, dict[str, str]] = {
 
 def get_locale() -> str:
     """Get locale"""
-    global _locale
+    global _locale  # pylint: disable=global-statement
     if _locale == "":
-        def_locale = locale.getdefaultlocale()
+        def_locale = locale.getlocale() or (os.environ.get("LANG", "C"), "UTF-8")
         if len(def_locale) >= 1:
             _locale = def_locale[0] if def_locale[0] is not None else "en"
             if "_" in _locale:
@@ -106,7 +107,7 @@ def get_locale() -> str:
 
 def set_locale(locale_name: str) -> None:
     """Set locale"""
-    global _locale
+    global _locale  # pylint: disable=global-statement
     _locale = locale_name
 
 

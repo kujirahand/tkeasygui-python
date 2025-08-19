@@ -9,32 +9,25 @@
 
 ## Task runner
 
-- Using [Task runner task](https://taskfile.dev/)
-  - [Taskfile.yaml](/Taskfile.yml)
-
-```sh
-# check all task
-task -a
-# run viewer
-task run
-```
+- Using `make`
+  - [Makefile](/Makefile) is used to run tasks.
 
 ## Lint
 
 ```sh
-task check
-task lint
+meke install-dev
+make lint
 ```
 
 ## Build documents
 
 ```sh
-task build-docs
+make build-docs
 ```
 
 ## Deploy to pypi
 
 ```sh
-task deploy-test
-task deploy-main
+make deploy-test
+make deploy-main
 ```

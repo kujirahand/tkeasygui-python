@@ -1,13 +1,13 @@
 """TkEasyGUI utilities functions."""
 
+import json
 import os
 import platform
-import sys
 import tkinter as tk
 from tkinter import ttk
-from typing import Any, Literal, Union
+from typing import Any, Literal, Union, Optional
 
-import PIL.Image
+from PIL import Image, ImageGrab
 import pyperclip  # type: ignore
 
 # define TypeAlias
@@ -98,11 +98,9 @@ def is_win() -> bool:
     """Platform : is Windows?"""
     return get_platform() == "Windows"
 
-def screenshot() -> PIL.Image.Image:
+def screenshot() -> Image.Image:
     """Take a screenshot."""
-    import PIL.ImageGrab
-
-    screen_image = PIL.ImageGrab.grab()
+    screen_image = ImageGrab.grab()
     return screen_image
 
 def get_screen_size() -> tuple[int, int]:
@@ -152,8 +150,6 @@ def append_text_file(filename: str, text: str, encoding: str = "utf-8") -> None:
 
 def load_json_file(filename: str, default_value: Any = None) -> Any:
     """Load JSON file."""
-    import json
-
     if os.path.exists(filename) is False:
         with open(filename, "r", encoding="utf-8") as f:
             data = json.load(f)
@@ -163,8 +159,6 @@ def load_json_file(filename: str, default_value: Any = None) -> Any:
 
 def save_json_file(filename: str, data: Any) -> None:
     """Save JSON file."""
-    import json
-
     with open(filename, "w", encoding="utf-8") as f:
         json.dump(data, f, ensure_ascii=False, indent=4)
 
@@ -183,52 +177,139 @@ def str_to_float(value: str, default_value: float = 0) -> float:
 # -------------------------------------------------------------------
 # tkinter window management
 # -------------------------------------------------------------------
+# pylint: disable=too-many-instance-attributes,too-few-public-methods
+class TkWindowManager:
+    """Manage tkinter root window."""
+
+    def __init__(self):
+        """Initialize TkWindowManager."""
+        self._root: Optional[tk.Tk] = None
+        self._style: Optional[ttk.Style] = None
+        self._tk_version: str = "0.0.0"
+        self._sg_compat_mode: bool = False
+        self._theme_name: str = ""
+        self._element_id_last: int = 0
+        self._element_style_key_ids: dict[KeyType, int] = {}
+        self._element_key_names: dict[KeyType, bool] = {}
+        # initialize root window
+        self._create_root()
+
+    def _create_root(self) -> tk.Tk:
+        """Create root window if not exists."""
+        if self._root is None or not self._root.winfo_exists():
+            self._root = tk.Tk()
+            self._root.attributes("-alpha", 0)
+            self._root.eval("tk::PlaceWindow . center")
+            self._root.withdraw()
+        if self._theme_name == "":
+            if is_mac():
+                self.set_theme("aqua")
+            elif is_win():
+                self.set_theme("vista")
+            else:
+                self.set_theme("clam")
+        return self._root
+
+    def get_root(self) -> tk.Tk:
+        """Get root window."""
+        if self._root is None:
+            return self._create_root()
+        return self._root
+
+    def get_tk_version(self) -> str:
+        """Get tkinter version."""
+        if self._tk_version == "0.0.0":
+            self._tk_version = self.get_root().tk.call("info", "patchlevel")
+        return self._tk_version
+
+    def destroy_root(self) -> None:
+        """Destroy root window."""
+        if self._root is not None:
+            self._root.destroy()
+            self._root = None
+
+    def set_sg_compatibility(self, flag: bool = True) -> None:
+        """Set compatibility with PySimpleGUI (Default=True)"""
+        self._sg_compat_mode = flag
+
+    def get_sg_compatibility(self) -> bool:
+        """Get compatibility with PySimpleGUI"""
+        return self._sg_compat_mode
+
+    def get_tkk_style(self) -> ttk.Style:
+        """Get ttk style"""
+        if self._style is None:
+            self._style = ttk.Style(self.get_root())
+        return self._style
+
+    def set_tkk_style(self, style: ttk.Style) -> None:
+        """Set ttk style"""
+        self._style = style
+        if self._root is not None:
+            self._style.master = self._root
+
+    def set_theme(self, name: str) -> None:
+        """Set theme for ttk style"""
+        root = self.get_root()
+        root.withdraw()
+        style = self.get_tkk_style()
+        style.theme_use(name)
+        self._theme_name = name
+
+    def get_theme(self) -> str:
+        """Get current theme name"""
+        return self._theme_name
+
+    def generate_element_id(self) -> int:
+        """Generate a unique id for an element."""
+        self._element_id_last += 1
+        return self._element_id_last
+
+    def generate_element_style_key(self, element_type: str) -> str:
+        """Get a unique id for an element."""
+        element_type = element_type.lower()
+        if element_type not in self._element_style_key_ids:
+            self._element_style_key_ids[element_type] = 0
+        key: KeyType = ""
+        while True:
+            self._element_style_key_ids[element_type] += 1
+            element_id = self._element_style_key_ids[element_type]
+            key = f"-{element_type}{element_id}-"
+            if key not in self._element_key_names:
+                self._element_key_names[key] = True
+                break
+        return key
+
+    def register_element_key(self, key: KeyType) -> bool:
+        """Register element key."""
+        if key in self._element_key_names:
+            return False
+        self._element_key_names[key] = True
+        return True
+
+    def remove_element_key(self, key: KeyType) -> bool:
+        """Remove element key."""
+        if key in self._element_key_names:
+            self._element_key_names.pop(key)
+            return True
+        return False
+
+# ------------------------------------------------------------------------------
 # only one root element
-_root_window: Union[tk.Tk, None] = None
-_ttk_style: Union[ttk.Style, None] = None
-tkversion: str = "0.0.0"
+EG_WINDOW_MANAGER: TkWindowManager = TkWindowManager()  # pylint: disable=global-statement
 
 
 def get_root_window() -> tk.Tk:
     """Get root window."""
-    global _root_window
-    global tkversion
-    if _root_window is None:
-        _root_window = tk.Tk()
-        _root_window.attributes("-alpha", 0)
-        _root_window.eval("tk::PlaceWindow . center")
-        _root_window.withdraw()
-        # set theme
-        try:
-            if "theme" in _tkeasygui_info:
-                name = _tkeasygui_info["theme"]
-                _ttk_style = get_ttk_style()
-                _ttk_style.theme_use(name)
-            else:
-                set_default_theme()
-        except Exception as e:
-            print(f"TkEasyGUI.theme: failed to set theme {name} {e}", file=sys.stderr)
-            pass
-    return _root_window
+    return EG_WINDOW_MANAGER.get_root()
 
-
-# Prioritize compatibility with PySimpleGUI
-_compatibility: bool = True
-
-
-def set_PySimpleGUI_compatibility(flag: bool = True) -> None:
+def set_pysimplegui_compatibility(flag: bool = True) -> None:
     """Set compatibility with PySimpleGUI (Default=True)"""
-    global _compatibility
-    _compatibility = flag
-
+    EG_WINDOW_MANAGER.set_sg_compatibility(flag)
 
 def get_ttk_style() -> ttk.Style:
     """Get ttk style"""
-    global _ttk_style
-    if _ttk_style is None:
-        _ttk_style = ttk.Style()
-    return _ttk_style
-
+    return EG_WINDOW_MANAGER.get_tkk_style()
 
 # ------------------------------------------------------------------------------
 # theme
@@ -243,13 +324,7 @@ def set_theme(name: str) -> None:
     - Windows --- ('winnative', 'clam', 'alt', 'default', 'classic', 'vista', 'xpnative')
     - Linux --- ('clam', 'alt', 'default', 'classic')
     """
-    # [TODO] Currently, the implementation is incomplete.
-    win = get_root_window()
-    win.withdraw()
-    style = get_ttk_style()
-    style.theme_use(name)
-    _tkeasygui_info["theme"] = name
-
+    EG_WINDOW_MANAGER.set_theme(name)
 
 def get_tnemes() -> tuple[str, ...]:
     """
@@ -309,50 +384,20 @@ def convert_color_html(color_name: str) -> str:
 # ------------------------------------------------------------------------------
 # Utility functions
 # ------------------------------------------------------------------------------
-# global variables
-# auto generate element key id
-_element_style_key_ids: dict[KeyType, int] = {}
-_element_key_names: dict[KeyType, bool] = {}
-
-
 def generate_element_style_key(element_type: str) -> str:
     """Get a unique id for an element."""
-    element_type = element_type.lower()
-    if element_type not in _element_style_key_ids:
-        _element_style_key_ids[element_type] = 0
-    key: KeyType = ""
-    while True:
-        _element_style_key_ids[element_type] += 1
-        element_id = _element_style_key_ids[element_type]
-        key = f"-{element_type}{element_id}-"
-        if key not in _element_key_names:
-            _element_key_names[key] = True
-            break
-    return key
+    return EG_WINDOW_MANAGER.generate_element_style_key(element_type)
 
 
 def register_element_key(key: KeyType) -> bool:
     """Register element key."""
-    if key in _element_key_names:
-        return False
-    _element_key_names[key] = True
-    return True
+    return EG_WINDOW_MANAGER.register_element_key(key)
 
 
 def remove_element_key(key: KeyType) -> bool:
     """Remove element key."""
-    if key in _element_key_names:
-        _element_key_names.pop(key)
-        return True
-    return False
-
-
-_elements_with_value: int = 0
-
+    return EG_WINDOW_MANAGER.remove_element_key(key)
 
 def generate_element_id() -> int:
     """Generate a unique id for a value element."""
-    global _elements_with_value
-    element_id = _elements_with_value
-    _elements_with_value += 1
-    return element_id
+    return EG_WINDOW_MANAGER.generate_element_id()

@@ -1,5 +1,5 @@
 """TkEasyGUI dialogs."""
-# pylint: disable=line-too-long, too-many-lines
+# pylint: disable=line-too-long,too-many-lines,too-many-arguments,too-many-positional-arguments
 
 import base64
 from datetime import datetime, timedelta
@@ -24,6 +24,7 @@ from .utils import (
     is_win,
     copy_to_clipboard,
 )
+from . import widgets as eg
 
 YES = "Yes"
 NO = "No"
@@ -75,6 +76,7 @@ def popup_set_options(
 # ------------------------------------------------------------------------------
 # Dialogs
 # ------------------------------------------------------------------------------
+# pylint: disable=too-many-locals, too-many-branches, too-many-statements, too-many-return-statements
 def popup_buttons(
     message: str,
     title: Union[str, None] = None,
@@ -103,7 +105,6 @@ def popup_buttons(
     print(color)
     ```
     """
-    from . import widgets as eg  # Late import to avoid circular dependency
     if buttons is None:
         buttons = ["OK", "Cancel"]
     if title is None:
@@ -512,7 +513,6 @@ def popup_input(
     validation_message: Optional[str] = None
 ) -> Union[str, float, None]:
     """Display a message in a popup window with a text entry. Return the text entered. if canceled, return cancel_value."""
-    from . import widgets as eg  # Late import to avoid circular dependency
     result = cancel_value
     if title is None:
         title = (
@@ -799,7 +799,6 @@ def popup_scrolled(
     eg.print(text)
     ```
     """
-    from . import widgets as eg  # Late import to avoid circular dependency
     result = cancel_value
     if cancel_label is None:
         cancel_label = le.get_text("Cancel")
@@ -844,7 +843,6 @@ def popup_get_date(
     window_icon: Optional[str] = None,  # window icon, specify filename
 ) -> Union[datetime, None]:
     """Display a calendar in a popup window. Return the datetime entered or None."""
-    from . import widgets as eg  # Late import to avoid circular dependency
     if current_date is None:
         current_date = datetime.now()
     if date_format is None:
@@ -1091,7 +1089,6 @@ def popup_get_form(
     ```
     """
     # make form layout
-    from . import widgets as eg  # Late import to avoid circular dependency
     item_labels = []
     item_converters: list[Union[Callable, None]] = []
     layout: list[list[eg.Element]] = []
@@ -1343,7 +1340,6 @@ def popup_listbox(
     window_icon: Optional[str] = None,  # window icon, specify filename
 ) -> Union[str, None]:
     """Display Listbox in a popup window"""
-    from . import widgets as eg  # Late import to avoid circular dependency
     select_mode: eg.ListboxSelectMode = (
         eg.LISTBOX_SELECT_MODE_BROWSE
         if multiple is False
@@ -1409,7 +1405,6 @@ def popup_image(
     timeout_key: str = "-TIMEOUT-",  # timeout key if auto_close_duration > 0
 ) -> Union[str, None]:
     """Display an image in a popup window. Return the pushed Button("OK" or None)."""
-    from . import widgets as eg  # Late import to avoid circular dependency
     if title is None:
         title = message
     if ok_label is None:
