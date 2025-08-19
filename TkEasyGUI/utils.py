@@ -7,7 +7,7 @@ import tkinter as tk
 from tkinter import ttk
 from typing import Any, Literal, Union, Optional
 
-from PIL import Image, ImageGrab
+from PIL import Image as PILImage, ImageGrab
 import pyperclip  # type: ignore
 
 # define TypeAlias
@@ -98,7 +98,7 @@ def is_win() -> bool:
     """Platform : is Windows?"""
     return get_platform() == "Windows"
 
-def screenshot() -> Image.Image:
+def screenshot() -> PILImage.Image:
     """Take a screenshot."""
     screen_image = ImageGrab.grab()
     return screen_image

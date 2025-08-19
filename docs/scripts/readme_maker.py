@@ -1,4 +1,4 @@
-# foramt documents script
+"""foramt documents script"""
 import json
 import os
 

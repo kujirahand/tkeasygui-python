@@ -3,7 +3,7 @@
 SRC=TkEasyGUI
 SCRIPT_DIR := $(dir $(abspath $(lastword $(MAKEFILE_LIST))))
 
-.PHONY: install lint format clean
+.PHONY: install install-dev lint format clean check
 
 install:
 	pip install -e .
@@ -31,16 +31,20 @@ build-docs:
 	@echo "ok"
 
 clean:
-	rm -rf TkEasyGUI.egg-info TkEasyGUI/__pycache__ TkEasyGUI/TkEasyGUI.egg-info
+	@echo "=== clean ==="
+	cd $(SCRIPT_DIR)
+	rm -f -r dist
+	rm -f -r TkEasyGUI.egg-info
+	rm -f -r TkEasyGUI/__pycache__ 
+	rm -f -r TkEasyGUI/TkEasyGUI.egg-info
 
 print-script-dir:
 	@echo $(SCRIPT_DIR)
 
 deploy-build-only:
+	make clean
 	make build-docs
 	python -m build
-	rm -f -r dist
-	rm -f -r tkeasygui.egg-info
 
 deploy-test:
 	make deploy-build-only
@@ -50,3 +54,35 @@ deploy-test:
 deploy-main:
 	make deploy-build-only
 	python -m twine upload dist/* --verbose
+
+package:
+	@echo "=== PACKAGE ==="
+	# ------------------
+	make clean
+	@echo "* uninstall TkEasyGUI"
+	python -m pip uninstall -y TkEasyGUI
+	# ------------------
+	@echo "* build-docs"
+	make build-docs
+	# ------------------
+	@echo "* update_version"
+	python update_version.py
+	# ------------------
+	@echo "* build"
+	python -m build
+	python -m twine upload --repository testpypi dist/* --verbose
+	# ------------------
+	@echo "* install test pypi"
+	@echo "[TRY]: python -m pip install -U --index-url https://test.pypi.org/simple/ --no-deps TkEasyGUI"
+	@echo "* install to pypi"
+	@echo "[TRY]: python -m twine upload dist/* --verbose"
+
+run:
+	cd $(SCRIPT_DIR)
+	python tests/file_viewer.py
+
+
+check:
+	cd $(SCRIPT_DIR)
+	ruff check TkEasyGUI/*.py
+	mypy TkEasyGUI/*.py
