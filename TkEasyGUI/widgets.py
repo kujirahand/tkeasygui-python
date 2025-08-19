@@ -14,7 +14,7 @@ from enum import Enum
 from queue import Queue
 from tkinter import font as tkinter_font
 from tkinter import scrolledtext, ttk
-from typing import Any, cast, Callable, Optional, Union, Sequence, Pattern
+from typing import Any, cast, Callable, Optional, Union, Sequence, Pattern, Literal
 
 from PIL import Image as PILImage
 from PIL import ImageColor, ImageTk, ImageGrab
@@ -2563,6 +2563,7 @@ class Input(Element):
         readonly_background_color: Union[str, None] = "silver",
         password_char: Union[str, None] = None,  # if you want to use it as a password input box, set "*"
         readonly: bool = False,  # read only box
+        disabled: Optional[bool] = None,  # disabled box
         size: Union[tuple[int, int], None] = None,  # set (width, _) character size (only width is supported)
         width: Union[int, None] = None,  # set width character size
         # text props
@@ -2618,6 +2619,8 @@ class Input(Element):
             self.props["size"] = size
         if width is not None:
             self.props["size"] = (width, 1)
+        if disabled is not None:
+            self.props["disabled"] = disabled
         # set props
         self._set_text_props(
             font=font,
@@ -3250,10 +3253,11 @@ class Slider(Element):
 
     def __init__(
         self,
-        range: tuple[float, float] = (1, 10),  # value range (from, to) # pylint: disable=redefined-builtin
+        range: Optional[tuple[float, float]] = None,  # value range (from, to) # pylint: disable=redefined-builtin
         default_value: Union[float, None] = None,  # default value
         resolution: float = 1,  # value resolution
         orientation: OrientationType = "horizontal",  # orientation (h|v|horizontal|vertical)
+        value_range: Optional[tuple[float, float]] = None,  # value range (from, to) (deprecated, use `range`)
         tick_interval: Union[float, None] = None,  # tick marks interval on the scale
         enable_events: bool = False,  # enable changing events
         enable_changed_events: bool = False,  # enable changed event
@@ -3276,12 +3280,17 @@ class Slider(Element):
         self.has_value = True
         self.has_font_prop = False
         # range and resolution
-        self.range = range
+        if value_range is None:
+            if range is not None:
+                value_range = range
+        if value_range is None:
+            value_range = (1, 10) # set default range
+        self.value_range = value_range
         self.resolution = resolution  # dummy @see Slider.create
         if tick_interval is not None:
             self.props["tickinterval"] = tick_interval
         # set default_value or default
-        self.default_value = default_value if default_value is not None else range[0]
+        self.default_value = default_value if default_value is not None else value_range[0]
         if default is not None:
             self.default_value = default
         self.scale_var:tk.DoubleVar = tk.DoubleVar()
@@ -3329,8 +3338,8 @@ class Slider(Element):
         # widget
         self.widget = tk.Scale(
             parent,
-            from_=self.range[0],
-            to=self.range[1],
+            from_=self.value_range[0],
+            to=self.value_range[1],
             resolution=self.resolution,
             command=command,
             variable=self.scale_var,
@@ -3366,6 +3375,86 @@ class Slider(Element):
             self.set_range(range[0], range[1])
         if disable_number_display is not None:
             self.props["showvalue"] = 0 if disable_number_display else 1
+        if value is not None:
+            self.set(value)
+        else:
+            self._widget_update(**kw)
+
+
+class Progressbar(Element):
+    """Slider element."""
+
+    def __init__(
+        self,
+        value_range: tuple[float, float] = (1, 10),  # value range (from, to)
+        default_value: Union[float, None] = None,  # default value
+        orientation: OrientationType = "horizontal",  # orientation (h|v|horizontal|vertical)
+        length: Optional[int] = None,  # length of the progress
+        key: Union[str, None] = None,
+        metadata: Union[dict[str, Any], None] = None,
+        **kw,
+    ) -> None:
+        """Create ProgressBar element."""
+        style_name = (
+            "Horizontal.ProgressBar"
+            if (orientation == "h" or orientation == "horizontal")
+            else "Vertical.ProgressBar"
+        )
+        super().__init__("ProgressBar", style_name, key, True, metadata, **kw)
+        # common parameters
+        self.has_value = True
+        self.has_font_prop = False
+        # range and resolution
+        self.value_range = value_range
+        # set default_value or default
+        self.default_value = default_value if default_value is not None else value_range[0]
+        # check orientation
+        if orientation == "v":
+            orientation = "vertical"
+        elif orientation == "h":
+            orientation = "horizontal"
+        self.orientation: OrientationType = orientation
+        self.props["orient"] = orientation
+        # size
+        self.length = length
+
+    def create(self, win: Window, parent: tk.Widget) -> tk.Widget:
+        """Create the widget."""
+        orientation: Literal["horizontal", "vertical"] = "horizontal" if self.orientation in ["horizontal", "h"] else "vertical"
+        # widget
+        self.widget = ttk.Progressbar(
+            parent,
+            orient=orientation,
+            maximum=(self.value_range[1] - self.value_range[0]),
+            value=(self.default_value - self.value_range[0]),
+        )
+        return self.widget
+
+    def get(self) -> Any:
+        """Return bar value."""
+        return self.default_value - self.value_range[0]
+
+    def set(self, value: float) -> None:
+        """Set value of bar"""
+        self.default_value = value + self.value_range[0]
+
+    def set_range(self, from_: float, to: float) -> None:
+        """Set the range of the bar."""
+        self.value_range = (from_, to)
+
+    def get_range(self) -> tuple[float, float]:
+        """Get the range of the bar."""
+        return self.value_range
+
+    def update(
+        self,
+        value: Union[float, None] = None,
+        value_range: Union[tuple[float, float], None] = None,
+        **kw,
+    ) -> None:
+        """Update the widget."""
+        if value_range is not None:
+            self.set_range(value_range[0], value_range[1])
         if value is not None:
             self.set(value)
         else:
