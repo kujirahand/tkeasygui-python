@@ -16,4 +16,3 @@ files = eg.popup_get_file(
     multiple_files=True,
 )
 print(files)
-

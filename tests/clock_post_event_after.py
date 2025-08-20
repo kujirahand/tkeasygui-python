@@ -3,6 +3,7 @@
 
 This sample demonstrates how to create a digital clock using the `post_event_after` method.
 """
+
 import datetime
 
 import TkEasyGUI as eg

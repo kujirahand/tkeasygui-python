@@ -5,6 +5,7 @@ This is a test for the ListBrowse and MultilineBrowse widgets.
 ListBrowse is a button that opens a window with a list of items.
 MultilineBrowse is a button that opens a window with a multiline text.
 """
+
 import json
 
 import TkEasyGUI as eg
@@ -34,4 +35,3 @@ for event, values in window.event_iter():
         break
     elif event == "Cancel":
         break
-

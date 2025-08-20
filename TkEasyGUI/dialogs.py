@@ -10,12 +10,14 @@ import tkinter
 from datetime import datetime, timedelta
 from re import Pattern
 from tkinter import colorchooser, filedialog, messagebox
-from typing import Any, Callable, Iterable, Optional, Union, cast
+from typing import Any, Callable, Optional, Union, cast
 
 from . import locale_easy as le
 from .utils import (
     ColorFormatType,
     FontType,
+    PopupGetFormItemType,
+    FileTypeList,
     copy_to_clipboard,
     get_root_window,
     is_mac,
@@ -708,7 +710,7 @@ def popup_get_file(
     initial_folder: Union[str, None] = None,
     save_as: bool = False,  # show `save as` dialog
     multiple_files: bool = False,  # can select multiple files
-    file_types: tuple[tuple[str, str]] = (("All Files", "*.*"),),
+    file_types: Optional[FileTypeList] = None,
     default_extension: Union[str, None] = None,
     # pylint: disable=unused-argument
     no_window: Optional[bool] = None,  # for compatibility
@@ -719,26 +721,24 @@ def popup_get_file(
         title = message
     if initial_folder is None:
         initial_folder = os.getcwd()
-    file_type_list: Optional[
-        Iterable[tuple[str, Union[str, list[str], tuple[str, ...]]]]
-    ] = []
-    if file_types is not None:
-        # check file types
-        new_types = []
-        for ft in file_types:
-            if len(ft) != 2:
-                ft = (ft, ft)
-            # fix file types for mac (#52)
-            # like ("Image Files", *.jpg;*.jpeg;*.jpe;*.heic")
-            if is_mac():
-                if ";" in ft[1]:
-                    desc = ft[0]
-                    exts = ft[1].split(";")
-                    for ext in exts:
-                        new_types.append((desc, ext))
-                    continue
-            new_types.append(ft)
-        file_type_list = tuple(new_types)
+    if file_types is None:
+        file_types = [("All Files", "*.*")]
+    # check file types
+    new_types = []
+    for ft in file_types:
+        if len(ft) != 2:
+            ft = (ft, ft)
+        # fix file types for mac (#52)
+        # like ("Image Files", *.jpg;*.jpeg;*.jpe;*.heic")
+        if is_mac():
+            if ";" in ft[1]:
+                desc = ft[0]
+                exts = ft[1].split(";")
+                for ext in exts:
+                    new_types.append((desc, ext))
+                continue
+        new_types.append(ft)
+    file_type_list = tuple(new_types)
     if save_as:
         result = filedialog.asksaveasfilename(
             title=title,
@@ -1111,9 +1111,7 @@ def popup_get_date(
 
 
 def popup_get_form(
-    form_items: list[
-        Union[str, tuple[str, Any], tuple[str, Any, str]]
-    ],  # list of form items(label[,selection or default][,type])
+    form_items: list[PopupGetFormItemType],  # list of form items(label[,selection or default][,type])
     title: str = "Form",  # window title
     size: Union[tuple[int, int], None] = None,
     window_icon: Optional[str] = None,  # window icon, specify filename

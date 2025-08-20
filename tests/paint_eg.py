@@ -3,6 +3,7 @@
 
 Using original event model
 """
+
 import TkEasyGUI as eg
 
 # canvas
@@ -10,7 +11,7 @@ canvas = eg.Canvas(
     size=(400, 400),
     key="-canvas-",
     background_color="red",
-    enable_events=True # enable mouse events
+    enable_events=True,  # enable mouse events
 )
 """
 # same as below
@@ -26,9 +27,9 @@ canvas = sg.Canvas(
 """
 
 # window create
-window = eg.Window("Paint tool", layout=[
-    [eg.Button("Exit"), eg.Button("Clear")],
-    [canvas]])
+window = eg.Window(
+    "Paint tool", layout=[[eg.Button("Exit"), eg.Button("Clear")], [canvas]]
+)
 flag_on = False
 
 # event loop
@@ -53,4 +54,4 @@ for event, values in window.event_iter():
             # get mouse cursor position
             x, y = event.x, event.y
             # draw white circle
-            canvas.create_oval(x, y, x+10, y+10, fill="white", outline="white")
+            canvas.create_oval(x, y, x + 10, y + 10, fill="white", outline="white")

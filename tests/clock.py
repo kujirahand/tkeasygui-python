@@ -14,12 +14,12 @@ def show_cur_time(window):
     now = datetime.datetime.now()
     window["-time-"].update(now.strftime("%H:%M:%S"))
 
+
 # create window
 window = eg.Window(
     "Digital Clock",
-    layout=[
-        [eg.Text("00:00:00", key="-time-", font=("Helvetica", 80))]
-    ])
+    layout=[[eg.Text("00:00:00", key="-time-", font=("Helvetica", 80))]],
+)
 
 show_cur_time(window)
 

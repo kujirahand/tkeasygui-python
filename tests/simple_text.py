@@ -7,10 +7,14 @@ This is a test for the Text widget.
 import TkEasyGUI as eg
 
 # Create window
-layout = [[eg.Text(
-    "For wisdom is better than corals;\n" + 
-    "All other desirable things cannot compare to it."
-)]]
+layout = [
+    [
+        eg.Text(
+            "For wisdom is better than corals;\n"
+            + "All other desirable things cannot compare to it."
+        )
+    ]
+]
 window = eg.Window("Proverb", layout)
 
 # Event loop

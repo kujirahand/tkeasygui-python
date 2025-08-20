@@ -3,6 +3,7 @@
 ### Image size sample
 
 """
+
 import TkEasyGUI as eg
 
 
@@ -10,6 +11,7 @@ def load_image(window, filename):
     # load image and resize
     im: eg.Image = window["-image-"]
     im.update(filename=filename, resize_type=eg.ImageResizeType.FIT_BOTH)
+
 
 def main():
     # create window
@@ -32,6 +34,7 @@ def main():
             load_image(window, filename)
         if event in [eg.WIN_CLOSED, "Close"]:
             break
+
 
 if __name__ == "__main__":
     main()

@@ -8,15 +8,21 @@ import TkEasyGUI as eg
 
 # window create
 font = ("", 12)
-window = eg.Window("UI test", layout=[
-    [eg.Input("abcdefg", key="-input-")],
-    [eg.Button("select_all"), eg.Button("get_selection_pos")],
-    [eg.Button("get_selection_start"), eg.Button("get_selection_length")],
-    [eg.Button("set_selection_start(0,5)"), eg.Button("set_selection_start(5,2)")],
-    [eg.Button("set_cursor_pos(0)"), eg.Button("set_cursor_pos(3)")],
-    [eg.Button("copy"), eg.Button("paste"), eg.Button("cut")],
-    [eg.Button("Exit")],
-], font=("Arial", 12), finalize=True, resizable=True)
+window = eg.Window(
+    "UI test",
+    layout=[
+        [eg.Input("abcdefg", key="-input-")],
+        [eg.Button("select_all"), eg.Button("get_selection_pos")],
+        [eg.Button("get_selection_start"), eg.Button("get_selection_length")],
+        [eg.Button("set_selection_start(0,5)"), eg.Button("set_selection_start(5,2)")],
+        [eg.Button("set_cursor_pos(0)"), eg.Button("set_cursor_pos(3)")],
+        [eg.Button("copy"), eg.Button("paste"), eg.Button("cut")],
+        [eg.Button("Exit")],
+    ],
+    font=("Arial", 12),
+    finalize=True,
+    resizable=True,
+)
 input: eg.Input = window["-input-"]
 # event loop
 while True:

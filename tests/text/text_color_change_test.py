@@ -1,14 +1,18 @@
+"""Text Color Change Test"""
+
 import TkEasyGUI as eg
 
 # generate widgets with color
 text1 = eg.Text(
     "Better to enjoy what the eyes see than to wander after one's desires.",
     background_color="yellow",
-    color="black")
+    color="black",
+)
 text2 = eg.Text(
     "This too is futility, a chasing after the wind.",
     background_color="yellow",
-    color="black")
+    color="black",
+)
 
 # create window
 window = eg.Window(

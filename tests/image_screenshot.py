@@ -1,6 +1,7 @@
 """
 # screenshot sample
 """
+
 import TkEasyGUI as eg
 
 
@@ -9,7 +10,14 @@ def main():
     window = eg.Window(
         "Screenshot App",
         layout=[
-            [eg.Image(key="-image-", filename="a.jpg", size=(400, 400), background_color="white")],
+            [
+                eg.Image(
+                    key="-image-",
+                    filename="a.jpg",
+                    size=(400, 400),
+                    background_color="white",
+                )
+            ],
             [eg.Button("Screenshot"), eg.Button("Close")],
         ],
     )
@@ -30,6 +38,7 @@ def main():
             if fname:
                 screen_img.save(fname)
             print("Screenshot done")
+
 
 if __name__ == "__main__":
     main()

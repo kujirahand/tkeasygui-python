@@ -13,7 +13,14 @@ def main():
         "Image Test",
         layout=[
             [eg.Text("Image:")],
-            [eg.Image(filename=image_files[0], key="-image-", size=(300, 300), enable_events=True)],
+            [
+                eg.Image(
+                    filename=image_files[0],
+                    key="-image-",
+                    size=(300, 300),
+                    enable_events=True,
+                )
+            ],
             [eg.Button("Change")],
         ],
     )
@@ -26,6 +33,7 @@ def main():
             window["-image-"].update(filename=image_files[image_index])
         if event == "-image-" and values["event_type"] == "mouseup":
             window.post_event("Change", values)
+
 
 if __name__ == "__main__":
     main()

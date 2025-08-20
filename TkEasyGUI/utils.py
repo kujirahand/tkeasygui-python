@@ -58,7 +58,12 @@ CursorType = Literal[
     "size_ns",
 ]
 ElementJustifcation = Literal["left", "center", "right", "c", "r"]
-
+PopupGetFormItemType = Union[
+    str,
+    tuple[str, Any],
+    tuple[str, Any, str],
+]
+FileTypeList = list[tuple[str, str]]
 
 # -------------------------------------------------------------------
 # clipboard

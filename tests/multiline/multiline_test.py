@@ -5,7 +5,9 @@ Keep on asking, and it will be given you;
 keep on seeking, and you will find;
 keep on knocking, and it will be opened to you;
 """.strip()
-text_text2 = """A joyful heart is good medicine,But a crushed spirit saps one’s strength."""
+text_text2 = (
+    """A joyful heart is good medicine,But a crushed spirit saps one’s strength."""
+)
 
 # create window
 layout = [
@@ -18,7 +20,7 @@ multiline: eg.Multiline = window["-multiline-"]
 # event loop
 while True:
     event, values = window.read()
-    if event == eg.WINDOW_CLOSED: # close button
+    if event == eg.WINDOW_CLOSED:  # close button
         break
     if event == "Change text":
         # multiline.update(text=text_text2)

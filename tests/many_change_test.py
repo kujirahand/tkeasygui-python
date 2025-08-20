@@ -9,10 +9,10 @@ import TkEasyGUI as eg
 
 # define menu
 menu_def = [
-    ['File',['!New', '---', 'Open', 'Save', ['Save As', 'Save Temp'], '---', 'Exit']],
-    ['Edit',['Paste','Redo','Undo']],
-    ['test1',['Hello', 'World::-world1-']],
-    ['test2',['Hello', 'World::-world2-']],
+    ["File", ["!New", "---", "Open", "Save", ["Save As", "Save Temp"], "---", "Exit"]],
+    ["Edit", ["Paste", "Redo", "Undo"]],
+    ["test1", ["Hello", "World::-world1-"]],
+    ["test2", ["Hello", "World::-world2-"]],
 ]
 
 menu_def2 = [
@@ -22,11 +22,11 @@ menu_def2 = [
 # create window
 layout = [
     [eg.Menu(menu_def, key="-menu-")],
-    [eg.Text('This is a test window for Menu element.')],
-    [eg.Multiline('', size=(60, 8), key="-log-")],
+    [eg.Text("This is a test window for Menu element.")],
+    [eg.Multiline("", size=(60, 8), key="-log-")],
     [eg.Button("Change"), eg.Button("Exit")],
 ]
-window = eg.Window('Menu test',layout)
+window = eg.Window("Menu test", layout)
 # event loop
 while True:
     event, values = window.read()

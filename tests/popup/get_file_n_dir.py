@@ -1,3 +1,4 @@
+"""file dialogs Example"""
 import TkEasyGUI as eg
 
 selected_file = eg.popup_get_file(

@@ -8,10 +8,14 @@ import TkEasyGUI as eg
 # canvas
 canvas = eg.Canvas(size=(400, 400), key="-canvas-", background_color="red")
 # window create
-window = eg.Window("Hello World", layout=[
-    [eg.Button("Exit")],
-    [canvas],
-], finalize=True)
+window = eg.Window(
+    "Hello World",
+    layout=[
+        [eg.Button("Exit")],
+        [canvas],
+    ],
+    finalize=True,
+)
 # bind user event
 canvas.bind("<Motion>", "motion", True)
 canvas.bind("<ButtonPress>", "on", True)
@@ -34,4 +38,4 @@ while True:
         e = canvas.user_bind_event
         w = canvas.tk_canvas
         x, y = e.x, e.y
-        w.create_oval(x, y, x+10, y+10, fill="white", outline="white")
+        w.create_oval(x, y, x + 10, y + 10, fill="white", outline="white")

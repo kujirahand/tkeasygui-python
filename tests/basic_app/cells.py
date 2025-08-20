@@ -7,9 +7,11 @@ Cells > TkEasyGUI for The 7 Tasks of GUI Programming
 Currently, TkEasyGUI does not have spreadsheet functionality.
 Instead, we use a read-only table to simulate cell editing.
 """
+
 # pylint: disable=line-too-long
 import random
 import TkEasyGUI as eg
+
 
 def main():
     """Main function"""
@@ -22,29 +24,37 @@ def main():
         data.append(row)
 
     # Create a window
-    window = eg.Window("Dummy Cells", layout=[
-        [
-            eg.Table( # Read-only table to simulate cells
-                key="-table",
-                values=data,
-                headings=head,
-                enable_events=True,
-                col_widths=[4] * len(head),
-                vertical_scroll_only=False,
-                select_mode="single",
-                expand_x=True,
-                expand_y=True),
+    window = eg.Window(
+        "Dummy Cells",
+        layout=[
+            [
+                eg.Table(  # Read-only table to simulate cells
+                    key="-table",
+                    values=data,
+                    headings=head,
+                    enable_events=True,
+                    col_widths=[4] * len(head),
+                    vertical_scroll_only=False,
+                    select_mode="single",
+                    expand_x=True,
+                    expand_y=True,
+                ),
+            ],
+            [
+                eg.Button("Edit", expand_x=True),
+                eg.Button("Sum Rows", expand_x=True),
+                eg.Button("Sum Columns", expand_x=True),
+            ],
         ],
-        [
-            eg.Button("Edit", expand_x=True),
-            eg.Button("Sum Rows", expand_x=True),
-            eg.Button("Sum Columns", expand_x=True),
-        ],
-    ], size=(640, 400))
+        size=(640, 400),
+    )
     # Bind events
-    window["-table"].bind_events({
-        "<Double-1>": "double_click",
-    }, "system")
+    window["-table"].bind_events(
+        {
+            "<Double-1>": "double_click",
+        },
+        "system",
+    )
     # event loop
     while window.is_alive():
         # read events from the window
@@ -60,11 +70,7 @@ def main():
                 total = sum(int(x) for x in row)
                 result.append(total)
             labels = [f"Row({i + 1:02}): {total:,}" for i, total in enumerate(result)]
-            eg.popup_listbox(
-                values = labels,
-                title="Row Sum Result",
-                default_index=index
-            )
+            eg.popup_listbox(values=labels, title="Row Sum Result", default_index=index)
         if event == "Sum Columns":
             print("Head:", head)
             result = []
@@ -86,6 +92,7 @@ def main():
                 edit_row(window["-table"], data, head)
     window.close()
 
+
 def edit_row(table: eg.Table, data: list[list[str]], head: list[str]) -> None:
     """Edit selected row in the table"""
     index = table.get_cursor_index()
@@ -106,6 +113,7 @@ def edit_row(table: eg.Table, data: list[list[str]], head: list[str]) -> None:
         if i >= 0:
             data[index][i] = val
     table.update(values=data)
+
 
 if __name__ == "__main__":
     main()
