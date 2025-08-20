@@ -3964,6 +3964,7 @@ class Listbox(Element):
         values: Optional[list[str]] = None,  # list of values
         default_values: Union[list[str], None] = None,  # selected values
         default_value: Union[str, None] = None,  # a default value
+        default_index: Optional[int] = None,  # a default index (deprecated, use default_value)
         key: Union[str, None] = None,
         enable_events: bool = False,
         select_mode: Optional[ListboxSelectMode] = None, # default is LISTBOX_SELECT_MODE_BROWSE
@@ -3986,6 +3987,7 @@ class Listbox(Element):
             self.values = items
         if default_value is not None:
             default_values = [default_value]
+        self.default_index = default_index
         self.default_values = default_values
         self.widget_frame: Optional[tk.Frame] = None
         self.widget_scrollbar: Optional[tk.Scrollbar] = None
@@ -4012,6 +4014,9 @@ class Listbox(Element):
         # insert values
         self.set_values(self.values)
         self.select_values(self.default_values)
+        # set default index
+        if self.default_index is not None:
+            self.set_cursor_index(self.default_index)
         return self.widget_frame
 
     def select_values(self, values: Union[list[str], None]) -> None:
@@ -4408,6 +4413,32 @@ class Table(Element):
         """Handle events."""
         if (self.window is not None) and (self.key is not None):
             self.window.dispatch_event(self.key, {})
+
+    def get_cursor_index(self) -> int:
+        """Get cursor index (return -1 if not selected)"""
+        if self.widget is None:
+            return -1
+        wg: ttk.Treeview = self.widget
+        selections = wg.selection()
+        if selections is None or len(selections) == 0:
+            return -1
+        # get first selected item
+        first_selection = selections[0]
+        try:
+            index = wg.index(first_selection)
+        except tk.TclError:
+            index = -1
+        return index
+
+    def set_cursor_index(self, index: int) -> None:
+        """Set cursor index"""
+        if self.widget is None:
+            return
+        try:
+            self.widget.selection_set(index)
+            self.widget.see(index)
+        except tk.TclError:
+            pass
 
     def update(self, *args, **kw) -> None:
         """Update the widget."""

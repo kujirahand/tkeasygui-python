@@ -1335,6 +1335,7 @@ def popup_listbox(
     size: tuple[int, int] = (20, 7),
     font: Union[FontType, None] = None,
     default_value: Union[str, None] = None,  # default value
+    default_index: Optional[int] = None,  # default index
     multiple: bool = False,  # multiple selection
     resizable: bool = True,  # resizable
     window_icon: Optional[str] = None,  # window icon, specify filename
@@ -1355,6 +1356,7 @@ def popup_listbox(
                 values=values,
                 key="-list-",
                 default_value=default_value,
+                default_index=default_index,
                 size=size,
                 font=font,
                 select_mode=select_mode,
