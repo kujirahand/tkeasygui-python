@@ -1,0 +1,99 @@
+"""
+Cells > TkEasyGUI for The 7 Tasks of GUI Programming
+
+@ref https://7guis.github.io/7guis/tasks/
+"""
+# pylint: disable=line-too-long
+import random
+import TkEasyGUI as eg
+
+def main():
+    """Main function"""
+    head = [chr(i) for i in range(ord("A"), ord("O") + 1)]
+    data = []
+    for _ in range(30):
+        data.append([f"{random.randint(0, 10)}" for _ in range(len(head))])
+     # Create a window
+    window = eg.Window("Cells", layout=[
+        [
+            eg.Table(
+                key="-table",
+                values=data,
+                headings=head,
+                enable_events=True,
+                col_widths=[4] * len(head),
+                vertical_scroll_only=False,
+                select_mode="single",
+                expand_x=True,
+                expand_y=True),
+        ],
+        [
+            eg.Button("Sum Rows", expand_x=True),
+            eg.Button("Sum Columns", expand_x=True),
+            eg.Button("Edit", expand_x=True),
+        ],
+    ], size=(640, 400))
+    # Bind events
+    window["-table"].bind_events({
+        "<Double-1>": "double_click",
+    }, "system")
+    # event loop
+    while window.is_alive():
+        # read events from the window
+        event, values = window.read()
+        print("@Event:", event, "Values:", values)
+        # check events
+        if event == "Sum Rows":
+            index = window["-table"].get_cursor_index()
+            if index < 0:
+                index = None
+            result = []
+            for row in data:
+                total = sum(int(x) for x in row)
+                result.append(total)
+            labels = [f"Row({i + 1:02}): {total:,}" for i, total in enumerate(result)]
+            eg.popup_listbox(
+                values = labels,
+                title="Row Sum Result",
+                default_index=index
+            )
+        if event == "Sum Columns":
+            result = []
+            for col in range(len(head)):
+                total = sum(int(data[row][col]) for row in range(len(data)))
+                result.append(total)
+            labels = [f"Column({head[col]}): {total:,}" for col, total in enumerate(result)]
+            eg.popup_listbox(
+                values=labels,
+                title="Column Sum Result",
+            )
+        if event == "Edit":
+            edit_row(window["-table"], data, head)
+        if event == "-table":
+            event_type = values.get("event_type", "")
+            if event_type == "double_click":
+                edit_row(window["-table"], data, head)
+    window.close()
+
+def edit_row(table: eg.Table, data: list[list[str]], head: list[str]) -> None:
+    """Edit selected row in the table"""
+    index = table.get_cursor_index()
+    if index < 0 or index >= len(data):
+        return
+    # Prepare form items
+    cols = data[index]
+    items = []
+    for i, col in enumerate(cols):
+        items.append((head[i], col))
+    # popup form
+    res = eg.popup_get_form(form_items=items, title="Edit Row")
+    if res is None:
+        return
+    # Update data
+    for key, val in res.items():
+        i = head.index(key)
+        data[index][i] = val
+    table.update(values=data)
+
+if __name__ == "__main__":
+    main()
