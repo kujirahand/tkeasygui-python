@@ -3253,20 +3253,20 @@ class Slider(Element):
 
     def __init__(
         self,
-        range: Optional[tuple[float, float]] = None,  # value range (from, to) # pylint: disable=redefined-builtin
-        default_value: Union[float, None] = None,  # default value
+        value_range: Optional[tuple[float, float]] = None,  # value range (from, to) (deprecated, use `range`)
+        default_value: Optional[float] = None,  # default value
         resolution: float = 1,  # value resolution
         orientation: OrientationType = "horizontal",  # orientation (h|v|horizontal|vertical)
-        value_range: Optional[tuple[float, float]] = None,  # value range (from, to) (deprecated, use `range`)
-        tick_interval: Union[float, None] = None,  # tick marks interval on the scale
+        tick_interval: Optional[float] = None,  # tick marks interval on the scale
         enable_events: bool = False,  # enable changing events
         enable_changed_events: bool = False,  # enable changed event
         disable_number_display: bool = False,  # hide number display
-        size: Union[tuple[int, int], None] = None,  # size (unit: character) / horizontal: (bar_length, thumb_size), vertical: (thumb_size, bar_length)
-        key: Union[str, None] = None,
+        size: Optional[tuple[int, int]] = None,  # size (unit: character) / horizontal: (bar_length, thumb_size), vertical: (thumb_size, bar_length)
+        key: Optional[str] = None,
         # other
-        default: Union[float, None] = None,  # same as default_value
-        metadata: Union[dict[str, Any], None] = None,
+        range: Optional[tuple[float, float]] = None,  # value range (from, to) # pylint: disable=redefined-builtin
+        default: Optional[float] = None,  # same as default_value
+        metadata: Optional[dict[str, Any]] = None,
         **kw,
     ) -> None:
         """Create Slider element."""
@@ -3386,57 +3386,72 @@ class Progressbar(Element):
 
     def __init__(
         self,
-        value_range: tuple[float, float] = (1, 10),  # value range (from, to)
-        default_value: Union[float, None] = None,  # default value
+        value_range: tuple[int, int] = (1, 10),  # value range (from, to)
+        default_value: Optional[int] = None,  # default value
         orientation: OrientationType = "horizontal",  # orientation (h|v|horizontal|vertical)
-        length: Optional[int] = None,  # length of the progress
-        key: Union[str, None] = None,
-        metadata: Union[dict[str, Any], None] = None,
+        thickness: Optional[int] = None,  # thickness of the bar
+        length: Optional[int] = None,  # length of the bar (unit: pixel)
+        key: Optional[str] = None,
+        metadata: Optional[dict[str, Any]] = None,
+        # other
+        default: Optional[int] = None,  # same as default_value
         **kw,
     ) -> None:
         """Create ProgressBar element."""
-        style_name = (
-            "Horizontal.ProgressBar"
-            if (orientation == "h" or orientation == "horizontal")
-            else "Vertical.ProgressBar"
-        )
-        super().__init__("ProgressBar", style_name, key, True, metadata, **kw)
+        # Style name should be like "Custom.Horizontal.TProgressbar"
+        style_name = \
+            (key if key is not None else "default") + "." + \
+            ("Horizontal." if orientation in ["h", "horizontal"] else "Vertical.") + \
+            "TProgressbar"
+        super().__init__("Progressbar", style_name, key, True, metadata, **kw)
         # common parameters
         self.has_value = True
         self.has_font_prop = False
+        self.use_ttk = True  # use ttk Progressbar
         # range and resolution
         self.value_range = value_range
         # set default_value or default
         self.default_value = default_value if default_value is not None else value_range[0]
+        if default is not None:
+            self.default_value = default
         # check orientation
         if orientation == "v":
             orientation = "vertical"
         elif orientation == "h":
             orientation = "horizontal"
         self.orientation: OrientationType = orientation
-        self.props["orient"] = orientation
         # size
-        self.length = length
+        self.length = length if length is not None else 200
+        self.thickness = thickness
+        # value
+        val = self.default_value - self.value_range[0]
+        self.int_value = tk.IntVar(value=int(val))
 
     def create(self, win: Window, parent: tk.Widget) -> tk.Widget:
         """Create the widget."""
         orientation: Literal["horizontal", "vertical"] = "horizontal" if self.orientation in ["horizontal", "h"] else "vertical"
+        # style
+        style = get_ttk_style()
+        style.configure(self.style_name, thickness=self.thickness)
         # widget
         self.widget = ttk.Progressbar(
             parent,
-            orient=orientation,
+            style=self.style_name,
+            #orient=orientation,
             maximum=(self.value_range[1] - self.value_range[0]),
-            value=(self.default_value - self.value_range[0]),
+            variable=self.int_value,
+            length=self.length,
+            **self.props,
         )
         return self.widget
 
     def get(self) -> Any:
         """Return bar value."""
-        return self.default_value - self.value_range[0]
+        return self.int_value.get() + self.value_range[0]
 
     def set(self, value: float) -> None:
         """Set value of bar"""
-        self.default_value = value + self.value_range[0]
+        self.int_value.set(int(value - self.value_range[0]))
 
     def set_range(self, from_: float, to: float) -> None:
         """Set the range of the bar."""
@@ -3448,8 +3463,8 @@ class Progressbar(Element):
 
     def update(
         self,
-        value: Union[float, None] = None,
-        value_range: Union[tuple[float, float], None] = None,
+        value: Optional[int] = None,
+        value_range: Optional[tuple[float, float]] = None,
         **kw,
     ) -> None:
         """Update the widget."""
