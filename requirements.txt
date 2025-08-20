@@ -3,3 +3,6 @@ pyperclip
 ruff
 mypy
 toml
+
+# Lint
+pylint

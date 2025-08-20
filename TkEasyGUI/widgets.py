@@ -1,11 +1,11 @@
+# pylint: disable=import-outside-toplevel,line-too-long,too-many-lines,too-many-arguments,too-many-positional-arguments,too-many-instance-attributes,too-many-locals
 """TkEasyGUI Widgets."""
-# pylint: disable=line-too-long,too-many-lines,too-many-arguments,too-many-positional-arguments,too-many-instance-attributes
 
 import csv
 import io
-import re
 import os
 import platform
+import re
 import sys
 import threading
 import tkinter as tk
@@ -14,36 +14,22 @@ from enum import Enum
 from queue import Queue
 from tkinter import font as tkinter_font
 from tkinter import scrolledtext, ttk
-from typing import Any, cast, Callable, Optional, Union, Sequence, Pattern, Literal
+from typing import (Any, Callable, Literal, Optional, Pattern, Sequence, Union,
+                    cast)
 
 from PIL import Image as PILImage
-from PIL import ImageColor, ImageTk, ImageGrab
+from PIL import ImageColor, ImageGrab, ImageTk
 
-from . import utils
-from . import version
 from . import icon_default
 from . import locale_easy as le
-from .utils import (
-    # type alias
-    CursorType,
-    ElementJustifcation,
-    EventMode,
-    FontType,
-    ListboxSelectMode,
-    OrientationType,
-    ProgressbarMode,
-    PadType,
-    PointType,
-    ReliefType,
-    TextAlign,
-    TextVAlign,
-    generate_element_id,
-    generate_element_style_key,
-    get_current_theme,
-    get_root_window,
-    get_ttk_style,
-    register_element_key,
-)
+from . import utils, version
+from .utils import EventMode  # type alias
+from .utils import (CursorType, ElementJustifcation, FontType,
+                    ListboxSelectMode, OrientationType, PadType, PointType,
+                    ProgressbarMode, ReliefType, TextAlign, TextVAlign,
+                    generate_element_id, generate_element_style_key,
+                    get_current_theme, get_root_window, get_ttk_style,
+                    register_element_key)
 
 # ------------------------------------------------------------------------------
 # TypeAlias
@@ -82,7 +68,13 @@ DEFAULT_PADX = 1 if utils.is_win() else 3
 DEFAULT_WINDOW_ICON = icon_default.ICON
 
 # Window.screenshot method
-SCREENSHOT_MACOS_ADJUST = {"x1": 0, "y1": 0, "x2": 0, "y2": 22 + 6} # for macOS titlebar
+SCREENSHOT_MACOS_ADJUST = {
+    "x1": 0,
+    "y1": 0,
+    "x2": 0,
+    "y2": 22 + 6,
+}  # for macOS titlebar
+
 
 # ------------------------------------------------------------------------------
 # Widget wrapper
@@ -742,6 +734,7 @@ class Window:
                     eg.print("Thread end", result)
         ```
         """
+
         # target should be callable
         def _thread_target():
             try:
@@ -869,7 +862,7 @@ class Window:
     def dispatch_event(
         self,
         key: Union[str, int],
-        values: Union[dict[Union[str, int], Any], None] = None
+        values: Union[dict[Union[str, int], Any], None] = None,
     ) -> None:
         """
         Dispatch an event to the window.
@@ -892,9 +885,7 @@ class Window:
         _exit_mainloop()
 
     def _event_handler(
-        self,
-        key: Union[str, int],
-        values: Union[dict[Union[str, int], Any], None]
+        self, key: Union[str, int], values: Union[dict[Union[str, int], Any], None]
     ) -> None:
         """Handle an event."""
         self.dispatch_event(key, values)
@@ -1128,11 +1119,14 @@ class Window:
             if utils.is_win():
                 try:
                     import ctypes  # pylint: disable=import-outside-toplevel
+
                     # get window frame size using Windows API
-                    user32 = ctypes.windll.user32 # type: ignore
+                    user32 = ctypes.windll.user32  # type: ignore
                     # get window frame size
                     caption_height = user32.GetSystemMetrics(4)  # SM_CYCAPTION
-                    frame_width = user32.GetSystemMetrics(32)  # SM_CXSIZEFRAME または SM_CXFRAME
+                    frame_width = user32.GetSystemMetrics(
+                        32
+                    )  # SM_CXSIZEFRAME または SM_CXFRAME
                     frame_height = user32.GetSystemMetrics(33)  # SM_CYSIZEFRAME
                     padded_border = user32.GetSystemMetrics(92)  # SM_CXPADDEDBORDER
                     total_height = caption_height + frame_height + padded_border * 4
@@ -1163,6 +1157,7 @@ class Window:
             print("[Error] Window.screenshot failed", file=sys.stderr)
             print(e, file=sys.stderr)
             raise TkEasyError("Window.screenshot failed") from e
+
 
 def _bind_event_handler(
     win: Window,
@@ -1197,6 +1192,7 @@ def _bind_event_handler(
     if propagate:
         pass
 
+
 def _exit_mainloop() -> None:
     """Exit mainloop"""
     root = get_root_window()
@@ -1204,6 +1200,7 @@ def _exit_mainloop() -> None:
         root.quit()  # exit from mainloop
     except tk.TclError:
         print("_exit_mainloop: failed to exit mainloop", file=sys.stderr)
+
 
 # ------------------------------------------------------------------------------
 # Element
@@ -1314,8 +1311,7 @@ class Element:
             )
 
     def disptach_event(
-        self,
-        values: Union[dict[Union[str, int], Any], None] = None
+        self, values: Union[dict[Union[str, int], Any], None] = None
     ) -> None:
         """Dispatch event"""
         if values is None:
@@ -1476,11 +1472,14 @@ class Element:
             self.bind(event_name, handle_name, event_mode=event_mode)
         return self
 
-    def create(self, win: Window, parent: tk.Widget) -> Any:  # pylint: disable=unused-argument
+    # pylint: disable=unused-argument
+    def create(self, win: Window, parent: tk.Widget) -> Any:
         """Create a widget."""
         return None
 
-    def _prepare_create_style_set_color(self, style: ttk.Style, style_name: str) -> None:
+    def _prepare_create_style_set_color(
+        self, style: ttk.Style, style_name: str
+    ) -> None:
         """Prepare to set color properties."""
         if "fg" in self.props:
             fg = self.props.pop("fg")
@@ -1523,7 +1522,7 @@ class Element:
             style.configure(style_name, font=font)
         # check element type
         # Button ?
-        if self.ttk_style_name in ('TButton', 'TLabel'):
+        if self.ttk_style_name in ("TButton", "TLabel"):
             if "justify" in self.props:
                 anchor = self._justify_to_anchor(self.props.pop("justify"))
                 style.configure(style_name, anchor=anchor)
@@ -1951,8 +1950,12 @@ class Text(Element):
         expand_y: bool = False,
         pad: Union[PadType, None] = None,
         # validation
-        validation: Union[str, Pattern[str], None] = None,  # regex pattern for validation (fullmatch)
-        validation_message: Union[str, None] = None,  # message shown when validation fails
+        validation: Union[
+            str, Pattern[str], None
+        ] = None,  # regex pattern for validation (fullmatch)
+        validation_message: Union[
+            str, None
+        ] = None,  # message shown when validation fails
         # other
         metadata: Union[dict[str, Any], None] = None,  # user metadata
         **kw,
@@ -2121,7 +2124,7 @@ class Menu(Element):
 
     def _add_command(self, parent: tk.Menu, label: str) -> None:
         # is separator?
-        if label == "-" or label == "---":
+        if label in ["-", "---"]:
             parent.add_separator()
             return
         # command
@@ -2142,7 +2145,7 @@ class Menu(Element):
         i = 0
         while i < len(items):
             item = items[i]
-            if isinstance(item, int) or isinstance(item, float):
+            if isinstance(item, (int, float)):
                 item = str(item)
             if isinstance(item, str):
                 # check next item
@@ -2151,7 +2154,7 @@ class Menu(Element):
                     self._add_command(parent, item)
                     i += 1
                     continue
-                elif isinstance(next_item, list):
+                if isinstance(next_item, list):
                     # submenu
                     submenu = tk.Menu(parent, tearoff=False)
                     parent.add_cascade(label=item, menu=submenu)
@@ -2227,7 +2230,9 @@ class Button(Element):
         font: Optional[FontType] = None,  # font
         color: Optional[str] = None,  # text color
         text_color: Optional[str] = None,  # same as color
-        background_color: Optional[str] = None,  # background color (not supported on macOS)
+        background_color: Optional[
+            str
+        ] = None,  # background color (not supported on macOS)
         # pack props
         expand_x: bool = False,
         expand_y: bool = False,
@@ -2337,7 +2342,7 @@ class Button(Element):
         # Get the text of the button. (compatibility with PySimpleGUI)
         if name == "GetText":
             return self.get_text
-        elif name == "ButtonText":
+        if name == "ButtonText":
             return self.get_text()
         return super().__getattr__(name)
 
@@ -2562,10 +2567,14 @@ class Input(Element):
         enable_key_events: bool = False,  # enabled key events
         enable_focus_events: bool = False,  # enabled focus events
         readonly_background_color: Union[str, None] = "silver",
-        password_char: Union[str, None] = None,  # if you want to use it as a password input box, set "*"
+        password_char: Union[
+            str, None
+        ] = None,  # if you want to use it as a password input box, set "*"
         readonly: bool = False,  # read only box
         disabled: Optional[bool] = None,  # disabled box
-        size: Union[tuple[int, int], None] = None,  # set (width, _) character size (only width is supported)
+        size: Union[
+            tuple[int, int], None
+        ] = None,  # set (width, _) character size (only width is supported)
         width: Union[int, None] = None,  # set width character size
         # text props
         text_align: Union[TextAlign, None] = "left",  # text align
@@ -2574,8 +2583,12 @@ class Input(Element):
         text_color: Union[str, None] = None,  # same as color
         background_color: Union[str, None] = None,  # background color
         # validation
-        validation: Union[str, Pattern[str], None] = None,  # regex pattern for validation (fullmatch)
-        validation_message: Union[str, None] = None,  # message shown when validation fails
+        validation: Union[
+            str, Pattern[str], None
+        ] = None,  # regex pattern for validation (fullmatch)
+        validation_message: Union[
+            str, None
+        ] = None,  # message shown when validation fails
         # pack props
         expand_x: bool = False,
         expand_y: bool = False,
@@ -2591,7 +2604,11 @@ class Input(Element):
         self.enable_events: bool = enable_events
         # validation
         self._validation_pattern = None  # type: ignore[assignment]
-        self._validation_message = validation_message if validation_message is not None else le.get_text("Validation error")
+        self._validation_message = (
+            validation_message
+            if validation_message is not None
+            else le.get_text("Validation error")
+        )
         self._validation_in_progress = False  # flag to prevent infinite loop
         if isinstance(validation, str):
             try:
@@ -2688,6 +2705,7 @@ class Input(Element):
         """Post create: attach validation binds after Window.bind registrations."""
         if (self.widget is None) or (self._validation_pattern is None):
             return
+
         def _validate_and_warn(_event: Optional[tk.Event] = None) -> None:
             # prevent infinite loop
             if self._validation_in_progress:
@@ -2697,22 +2715,23 @@ class Input(Element):
                 cur = self.text_var.get()
             except tk.TclError:
                 pass
-            if cur == "": # 空っぽならバリデーション対象外とする
+            if cur == "":  # 空っぽならバリデーション対象外とする
                 return
             pat = self._validation_pattern
             if pat is not None and pat.fullmatch(cur) is None:
                 self._validation_in_progress = True
                 try:
-                    from . import dialogs  # pylint: disable=import-outside-toplevel
-                    dialogs.popup_warning(self._validation_message)
+                    from .dialogs import popup_warning
+
+                    popup_warning(self._validation_message)
                     # ダイアログ表示後、フォーカスを戻す
                     if self.widget is not None:
                         self.widget.after(10, self.widget.focus_set)  # type: ignore[union-attr]
                         self.widget.after(20, self.select_all)
                 finally:
                     self._validation_in_progress = False
+
         self.widget.bind("<FocusOut>", _validate_and_warn, add="+")
-        return None
 
     def get(self) -> Any:
         """Get the value of the widget."""
@@ -2896,6 +2915,7 @@ class Input(Element):
 class InputText(Input):
     """InputText element. (alias of Input)"""
 
+
 class Multiline(Element):
     """Multiline text input element."""
 
@@ -3064,7 +3084,9 @@ class Multiline(Element):
         self,
         text: Union[str, None] = None,
         readonly: Union[bool, None] = None,
-        autoscroll: Union[bool, None] = None,  # When autoscroll is set to True, it scrolls to the end with text changes.
+        autoscroll: Union[
+            bool, None
+        ] = None,  # When autoscroll is set to True, it scrolls to the end with text changes.
         **kw,
     ) -> None:
         """Update the widget."""
@@ -3254,7 +3276,9 @@ class Slider(Element):
 
     def __init__(
         self,
-        value_range: Optional[tuple[float, float]] = None,  # value range (from, to) (deprecated, use `range`)
+        value_range: Optional[
+            tuple[float, float]
+        ] = None,  # value range (from, to) (deprecated, use `range`)
         default_value: Optional[float] = None,  # default value
         resolution: float = 1,  # value resolution
         orientation: OrientationType = "horizontal",  # orientation (h|v|horizontal|vertical)
@@ -3262,10 +3286,13 @@ class Slider(Element):
         enable_events: bool = False,  # enable changing events
         enable_changed_events: bool = False,  # enable changed event
         disable_number_display: bool = False,  # hide number display
-        size: Optional[tuple[int, int]] = None,  # size (unit: character) / horizontal: (bar_length, thumb_size), vertical: (thumb_size, bar_length)
+        size: Optional[
+            tuple[int, int]
+        ] = None,  # size (unit: character) / horizontal: (bar_length, thumb_size), vertical: (thumb_size, bar_length)
         key: Optional[str] = None,
         # other
-        range: Optional[tuple[float, float]] = None,  # value range (from, to) # pylint: disable=redefined-builtin
+        # pylint: disable=redefined-builtin
+        range: Optional[tuple[float, float]] = None,  # value range (from, to)
         default: Optional[float] = None,  # same as default_value
         metadata: Optional[dict[str, Any]] = None,
         **kw,
@@ -3273,7 +3300,7 @@ class Slider(Element):
         """Create Slider element."""
         style_name = (
             "Horizontal.TScale"
-            if (orientation == "h" or orientation == "horizontal")
+            if orientation in ["h", "horizontal"]
             else "Vertical.TScale"
         )
         super().__init__("Slider", style_name, key, True, metadata, **kw)
@@ -3285,16 +3312,18 @@ class Slider(Element):
             if range is not None:
                 value_range = range
         if value_range is None:
-            value_range = (1, 10) # set default range
+            value_range = (1, 10)  # set default range
         self.value_range = value_range
         self.resolution = resolution  # dummy @see Slider.create
         if tick_interval is not None:
             self.props["tickinterval"] = tick_interval
         # set default_value or default
-        self.default_value = default_value if default_value is not None else value_range[0]
+        self.default_value = (
+            default_value if default_value is not None else value_range[0]
+        )
         if default is not None:
             self.default_value = default
-        self.scale_var:tk.DoubleVar = tk.DoubleVar()
+        self.scale_var: tk.DoubleVar = tk.DoubleVar()
         # check orientation
         if orientation == "v":
             orientation = "vertical"
@@ -3367,7 +3396,8 @@ class Slider(Element):
     def update(
         self,
         value: Union[float, None] = None,
-        range: Union[tuple[float, float], None] = None,  # pylint: disable=redefined-builtin
+        # pylint: disable=redefined-builtin
+        range: Union[tuple[float, float], None] = None,
         disable_number_display: Union[bool, None] = None,
         **kw,
     ) -> None:
@@ -3401,10 +3431,12 @@ class Progressbar(Element):
     ) -> None:
         """Create ProgressBar element."""
         # Style name should be like "Custom.Horizontal.TProgressbar"
-        style_name = \
-            (key if key is not None else "default") + "." + \
-            ("Horizontal." if orientation in ["h", "horizontal"] else "Vertical.") + \
-            "TProgressbar"
+        style_name = (
+            (key if key is not None else "default")
+            + "."
+            + ("Horizontal." if orientation in ["h", "horizontal"] else "Vertical.")
+            + "TProgressbar"
+        )
         super().__init__("Progressbar", style_name, key, True, metadata, **kw)
         # common parameters
         self.has_value = True
@@ -3414,7 +3446,9 @@ class Progressbar(Element):
         self.value_range = value_range
         self.mode: ProgressbarMode = mode  # determinate or indeterminate
         # set default_value or default
-        self.default_value = default_value if default_value is not None else value_range[0]
+        self.default_value = (
+            default_value if default_value is not None else value_range[0]
+        )
         if default is not None:
             self.default_value = default
         # check orientation
@@ -3432,7 +3466,9 @@ class Progressbar(Element):
 
     def create(self, win: Window, parent: tk.Widget) -> tk.Widget:
         """Create the widget."""
-        orientation: Literal["horizontal", "vertical"] = "horizontal" if self.orientation in ["horizontal", "h"] else "vertical"
+        orientation: Literal["horizontal", "vertical"] = (
+            "horizontal" if self.orientation in ["horizontal", "h"] else "vertical"
+        )
         # style
         style = get_ttk_style()
         style.configure(self.style_name, thickness=self.thickness)
@@ -3964,10 +4000,14 @@ class Listbox(Element):
         values: Optional[list[str]] = None,  # list of values
         default_values: Union[list[str], None] = None,  # selected values
         default_value: Union[str, None] = None,  # a default value
-        default_index: Optional[int] = None,  # a default index (deprecated, use default_value)
+        default_index: Optional[
+            int
+        ] = None,  # a default index (deprecated, use default_value)
         key: Union[str, None] = None,
         enable_events: bool = False,
-        select_mode: Optional[ListboxSelectMode] = None, # default is LISTBOX_SELECT_MODE_BROWSE
+        select_mode: Optional[
+            ListboxSelectMode
+        ] = None,  # default is LISTBOX_SELECT_MODE_BROWSE
         # other
         metadata: Union[dict[str, Any], None] = None,
         items: Union[list[str], None] = None,  # same as values (alias values)
@@ -3982,7 +4022,9 @@ class Listbox(Element):
         """
         super().__init__("Listbox", "", key, True, metadata, **kw)
         self.values = values if values is not None else []
-        self.select_mode = select_mode if select_mode is not None else LISTBOX_SELECT_MODE_BROWSE
+        self.select_mode = (
+            select_mode if select_mode is not None else LISTBOX_SELECT_MODE_BROWSE
+        )
         if items is not None:  # alias
             self.values = items
         if default_value is not None:
@@ -4167,7 +4209,7 @@ class Combo(Element):
     def set_value(self, v: str) -> None:
         """Set the value of the widget."""
         if self.value is None:
-            return None
+            return
         self.value.set(v)
 
     def get(self) -> Any:
@@ -4204,7 +4246,9 @@ class Table(Element):
 
     def __init__(
         self,
-        values: Optional[list[list[str]]] = None,  # Specify the table values as 2D list.
+        values: Optional[
+            list[list[str]]
+        ] = None,  # Specify the table values as 2D list.
         headings: Optional[list[str]] = None,  # Specify the table header as a list.
         key: Union[str, None] = None,
         justification: TextAlign = "center",
@@ -4255,7 +4299,9 @@ class Table(Element):
         if len(self.headings) > max_columns:
             self.max_columns = len(self.headings)
         # event_returns_values ?
-        self.event_returns_values: bool = not utils.EG_WINDOW_MANAGER.get_sg_compatibility()
+        self.event_returns_values: bool = (
+            not utils.EG_WINDOW_MANAGER.get_sg_compatibility()
+        )
         if event_returns_values is not None:
             self.event_returns_values = event_returns_values
         # justification
@@ -4559,7 +4605,8 @@ class FileBrowse(Element):
     # pylint: disable=unused-argument
     def show_dialog(self, *args) -> Union[Any, None]:
         """Show file dialog"""
-        from . import dialogs  # pylint: disable=import-outside-toplevel
+        from . import dialogs
+
         target: Union[Element, None] = self.get_prev_element(self.target_key)
         # get initial directory
         init_dir = self._get_initial_directory()
@@ -4571,7 +4618,7 @@ class FileBrowse(Element):
             file_types=self.file_types,
             multiple_files=self.multiple_files,
         )
-        if isinstance(result, list) or isinstance(result, tuple):
+        if isinstance(result, (list, tuple)):
             result = ";".join(result)
         if (target is not None) and (result is not None) and (result != ""):
             target.update(result)  # type: ignore [call-arg]
@@ -4677,7 +4724,8 @@ class FolderBrowse(FileBrowse):
 
     def show_dialog(self, *args) -> Union[str, None]:
         """Show file dialog"""
-        from . import dialogs  # pylint: disable=import-outside-toplevel
+        from . import dialogs
+
         target: Union[Element, None] = self.get_prev_element(self.target_key)
         # popup
         result = dialogs.popup_get_folder(
@@ -4719,7 +4767,8 @@ class ColorBrowse(FileBrowse):
 
     def show_dialog(self, *args) -> Union[str, None]:
         """Show file dialog"""
-        from . import dialogs  # pylint: disable=import-outside-toplevel
+        from . import dialogs
+
         target: Union[Element, None] = self.get_prev_element(self.target_key)
         # popup
         result = dialogs.popup_color(
@@ -4767,7 +4816,8 @@ class ListBrowse(FileBrowse):
 
     def show_dialog(self, *args) -> Union[str, None]:
         """Show Listbox dialog"""
-        from . import dialogs  # pylint: disable=import-outside-toplevel
+        from . import dialogs
+
         target: Union[Element, None] = self.get_prev_element(self.target_key)
         if target is not None:
             val = target.get()  # type: ignore[attr-defined]
@@ -4818,7 +4868,8 @@ class MultilineBrowse(FileBrowse):
 
     def show_dialog(self, *args) -> Union[str, None]:
         """Show Listbox dialog"""
-        from . import dialogs  # pylint: disable=import-outside-toplevel
+        from . import dialogs
+
         target: Union[Element, None] = self.get_prev_element(self.target_key)
         if target is not None:
             val = target.get()  # type: ignore[attr-defined]
@@ -4878,7 +4929,8 @@ class CalendarBrowse(FileBrowse):
 
     def show_dialog(self, *args) -> Union[datetime, None]:
         """Show file dialog"""
-        from . import dialogs  # pylint: disable=import-outside-toplevel
+        from . import dialogs
+
         target: Union[Element, None] = self.get_prev_element(self.target_key)
         # popup
         result = dialogs.popup_get_date(
@@ -4890,14 +4942,14 @@ class CalendarBrowse(FileBrowse):
             if self.enable_events:
                 if (self.window is not None) and (self.key is not None):
                     self.window.dispatch_event(
-                        self.key,
-                        {"event": result, "event_type": "change"}
+                        self.key, {"event": result, "event_type": "change"}
                     )
         return result
 
 
 class CalendarButton(CalendarBrowse):
     """CalendarButton element. (alias of CalendarBrowse)"""
+
 
 # -------------------------------------------------------------------
 # layout helper
@@ -5130,6 +5182,7 @@ os_release={platform.release()}
 architecture={platform.architecture()}
 processor={platform.processor()}
     """.strip()
+
 
 # TkEasyGUI's active window
 EG_WINDOW_LIST: list[Window] = []
