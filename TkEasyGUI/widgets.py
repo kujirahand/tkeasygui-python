@@ -4237,7 +4237,7 @@ class Table(Element):
         super().__init__("Table", "", key, True, metadata, **kw)
         self.ttk = True
         self.values = values if values is not None else []
-        self.headings = headings if headings is not None else []
+        self.headings = headings.copy() if headings is not None else []
         self.enable_events = enable_events
         self.select_mode = select_mode
         self.auto_size_columns = auto_size_columns

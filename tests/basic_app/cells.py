@@ -15,9 +15,11 @@ def main():
     """Main function"""
     # Prepare dummy data
     head = [chr(i) for i in range(ord("A"), ord("O") + 1)]
+    print("Head:", head)
     data = []
-    for _ in range(30):
-        data.append([f"{random.randint(0, 10)}" for _ in range(len(head))])
+    for _ in range(40):
+        row = [f"{random.randint(0, 5)}" for _ in range(len(head))]
+        data.append(row)
 
     # Create a window
     window = eg.Window("Dummy Cells", layout=[
@@ -64,13 +66,16 @@ def main():
                 default_index=index
             )
         if event == "Sum Columns":
+            print("Head:", head)
             result = []
-            for col in range(len(head)):
-                total = sum(int(data[row][col]) for row in range(len(data)))
-                result.append(total)
-            labels = [f"Column({head[col]}): {total:,}" for col, total in enumerate(result)]
+            for i, col_name in enumerate(head):
+                print(col_name)
+                total = 0
+                for row in data:
+                    total += int(row[i] if len(row) > i else 0)
+                result.append(f"Column({col_name}): {total:,}")
             eg.popup_listbox(
-                values=labels,
+                values=result,
                 title="Column Sum Result",
             )
         if event == "Edit":
@@ -98,7 +103,8 @@ def edit_row(table: eg.Table, data: list[list[str]], head: list[str]) -> None:
     # Update data
     for key, val in res.items():
         i = head.index(key)
-        data[index][i] = val
+        if i >= 0:
+            data[index][i] = val
     table.update(values=data)
 
 if __name__ == "__main__":
