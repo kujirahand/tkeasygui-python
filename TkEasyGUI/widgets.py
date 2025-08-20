@@ -4565,7 +4565,7 @@ class FileBrowse(Element):
         key: Union[str, int, None] = None,
         title: str = "",
         target_key: Union[str, None] = None,
-        file_types: tuple[tuple[str, str]] = (("All Files", "*.*"),),
+        file_types: Optional[list[tuple[str, str]]] = None,
         multiple_files: bool = False,
         initial_folder: Union[str, None] = None,
         save_as: bool = False,
@@ -4578,6 +4578,10 @@ class FileBrowse(Element):
         if key is None or key == "":
             key = generate_element_style_key("Browse")
         super().__init__("FileBrowse", "", key, False, metadata, **kw)
+        # check
+        if file_types is None:
+            file_types = [("All Files", "*.*")]
+        # set properties       
         self.target_key = target_key
         self.title = title
         self.file_types = file_types

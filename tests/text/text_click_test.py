@@ -1,11 +1,21 @@
-# Text widget can be created with background color,
-#   and text color and can be clicked. 
+"""
+Test for Text widget with color and click events.
+
+Text widget can be created with background color, and text color and can be clicked.
+"""
+
 import TkEasyGUI as eg
 
 # create window
 layout = [
     [
-        eg.Text("click me", font=("Arial", 30), enable_events=True, background_color="red", text_color="white"),
+        eg.Text(
+            "click me",
+            font=("Arial", 30),
+            enable_events=True,
+            background_color="red",
+            text_color="white",
+        ),
         eg.Text("---", key="-info-", background_color="red", text_color="white"),
     ],
     [
@@ -13,14 +23,20 @@ layout = [
         eg.Text("World!", text_color="white", background_color="#FF0000"),
     ],
     [
-        eg.Text("Thank you.",
-                enable_events=True,
-                text_color="black", background_color="#FF99FF",
-                font=("Arial", 20, "underline")),
-        eg.Text("Close",
-                enable_events=True,
-                text_color="black", background_color="#99FFFF",
-                font=("Arial", 20, "underline")),
+        eg.Text(
+            "Thank you.",
+            enable_events=True,
+            text_color="black",
+            background_color="#FF99FF",
+            font=("Arial", 20, "underline"),
+        ),
+        eg.Text(
+            "Close",
+            enable_events=True,
+            text_color="black",
+            background_color="#99FFFF",
+            font=("Arial", 20, "underline"),
+        ),
     ],
 ]
 window = eg.Window("text/color", layout, font=("Arial", 12))

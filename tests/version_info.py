@@ -52,7 +52,9 @@ layout = [
     ],
 ]
 # window create
-window = eg.Window("Version info", layout=layout, font=("", 14 if eg.is_mac() else 9), row_padding=5)
+window = eg.Window(
+    "Version info", layout=layout, font=("", 14 if eg.is_mac() else 9), row_padding=5
+)
 # event loop
 for event, values in window.event_iter():
     print("#", event, values)

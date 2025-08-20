@@ -1,29 +1,58 @@
 """
 ### Slider Test
 """
+
 import TkEasyGUI as eg
 
 # define layout
 layout = [
     [eg.Text("-slider1-")],
-    [eg.Slider(key="-slider1-", range=[0, 100], size=[30, 2], orientation="h", default_value=50, resolution=0.1, tick_interval=10)],
+    [
+        eg.Slider(
+            key="-slider1-",
+            range=[0, 100],
+            size=[30, 2],
+            orientation="h",
+            default_value=50,
+            resolution=0.1,
+            tick_interval=10,
+        )
+    ],
     [eg.HSeparator()],
     [eg.Text("-slider2- (disable_number_display=True)")],
     [
-        eg.Slider(key="-slider2-", range=[0, 100], size=[30, 2], orientation="h", default_value=0, resolution=1, enable_events=True, disable_number_display=True),
+        eg.Slider(
+            key="-slider2-",
+            range=[0, 100],
+            size=[30, 2],
+            orientation="h",
+            default_value=0,
+            resolution=1,
+            enable_events=True,
+            disable_number_display=True,
+        ),
         eg.Text("0.0", key="-text2-"),
     ],
     [eg.Button("Change to 20"), eg.Button("Check Value")],
     [eg.HSeparator()],
     [eg.Text("-slider3-")],
     [
-        eg.Slider(key="-slider3-", range=[0, 100], size=[2, 30], orientation="v", default_value=50, resolution=0.1, disable_number_display=False, enable_changed_events=True),
+        eg.Slider(
+            key="-slider3-",
+            range=[0, 100],
+            size=[2, 30],
+            orientation="v",
+            default_value=50,
+            resolution=0.1,
+            disable_number_display=False,
+            enable_changed_events=True,
+        ),
         eg.VSeparator(),
         eg.Multiline("", key="-output-", size=[50, 20]),
     ],
     [eg.Button("Change range(0,10)"), eg.Button("Change range(0,100)")],
     [eg.HSeparator()],
-    [eg.Button("Exit")]
+    [eg.Button("Exit")],
 ]
 # create a window
 window = eg.Window("Slider Test", layout)

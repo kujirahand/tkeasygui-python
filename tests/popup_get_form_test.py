@@ -1,3 +1,5 @@
+"""popup_get_form Example"""
+
 import TkEasyGUI as eg
 
 # Ask simplely
@@ -10,16 +12,16 @@ if result:
 # Ask with default values
 result = eg.popup_get_form(
     [
-        # [label, default_or_selections, type]
-        ["Name", "Suzu", "text"],
-        ["Age", 20, "number"],
-        ["Hobbies", ["Reading", "Writing"], "list"],
-        ["OS", ["Windows", "macOS", "Ubuntu"], "combo"],
-        ["Password", "", "password"],
-        ["Date", "", "date"],
-        ["File", "", "file"],
-        ["Folder", "", "folder"],
-        ["Theme Color", "", "color"],
+        # Each item is a tuple: (label, default_or_selections, type)
+        ("Name", "Suzu", "text"),
+        ("Age", 20, "number"),
+        ("Hobbies", ["Reading", "Writing"], "list"),
+        ("OS", ["Windows", "macOS", "Ubuntu"], "combo"),
+        ("Password", "", "password"),
+        ("Date", "", "date"),
+        ("File", "", "file"),
+        ("Folder", "", "folder"),
+        ("Theme Color", "", "color"),
     ],
     title="Form Test",
 )

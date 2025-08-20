@@ -1,6 +1,7 @@
 """
 Font List Sample
 """
+
 import TkEasyGUI as eg
 
 # list fonts
@@ -44,5 +45,3 @@ with eg.Window("Font List", layout, font=("Arial", 18)) as window:
         if event == "Copy":
             eg.set_clipboard(values["-font-"])
             eg.print("Copied to clipboard:\n" + values["-font-"])
-
-

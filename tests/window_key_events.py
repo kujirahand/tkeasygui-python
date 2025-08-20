@@ -1,6 +1,7 @@
 """
 # Window key events
 """
+
 import TkEasyGUI as eg
 
 layout = [
@@ -26,10 +27,11 @@ layout = [
     ],
 ]
 window = eg.Window(
-    'Window key test', layout,
+    "Window key test",
+    layout,
     enable_key_events=True,
     # return_keyboard_events=True,
-    )
+)
 
 # event loop
 while True:
@@ -38,14 +40,14 @@ while True:
     if event == eg.WIN_CLOSED:
         break
     # PySimpleGUI key events --> return_keyboard_events=True
-    if event in ['Escape:27', "Escape:889192475"]: # [(for win), (for mac)]
+    if event in ["Escape:27", "Escape:889192475"]:  # [(for win), (for mac)]
         eg.popup("Escape key pressed")
         break
-    if event in ['space:20', "space:822083616"]:
+    if event in ["space:20", "space:822083616"]:
         eg.popup("space key pressed")
-    elif event == 's':
+    elif event == "s":
         eg.popup("[S] Hello, World!")
-    elif event == 'a':
+    elif event == "a":
         eg.popup("[A] Hello, World!")
     # TkEasyGUI key events --> enable_key_events=True
     if event == eg.WINDOW_KEY_EVENT:

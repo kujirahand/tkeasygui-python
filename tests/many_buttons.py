@@ -11,9 +11,8 @@ layout = []
 for row in range(3):
     layout.append([])
     for col in range(4):
-        no = row*4+col+1
-        btn = eg.Button(str(no), key=f"-button{no}",
-                        size=(3, 1), metadata={"no": no})
+        no = row * 4 + col + 1
+        btn = eg.Button(str(no), key=f"-button{no}", size=(3, 1), metadata={"no": no})
         layout[row].append(btn)
 # add close button
 layout.append([eg.HSeparator()])

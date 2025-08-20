@@ -4,18 +4,22 @@
 Canvas is a widget that can draw various shapes and images.
 This sample demonstrates how to use draw shapes.
 """
+
 import random
 
 import TkEasyGUI as eg
 
 # create window
-layout = [[
-    eg.Canvas(
-        size=(400, 400),
-        key="-canvas-",
-        background_color="white",
-        enable_events=True
-    )]]
+layout = [
+    [
+        eg.Canvas(
+            size=(400, 400),
+            key="-canvas-",
+            background_color="white",
+            enable_events=True,
+        )
+    ]
+]
 window = eg.Window("Canvas Test", layout)
 canvas = window["-canvas-"]
 
@@ -32,7 +36,7 @@ while window.is_running():
     # check mouse event
     if event == "-canvas-" and values["event_type"] == "mousemove":
         flag_update = True
-        if 'event' in values:
+        if "event" in values:
             e = values["event"]
             ox = e.x
             oy = e.y
@@ -46,7 +50,7 @@ while window.is_running():
             p = [random.randint(0, 400) for _ in range(4)]
             canvas.create_line(p[0], p[1], p[2], p[3], fill="green", width=1)
         # draw oval at mouse position
-        canvas.create_oval(ox-ow, oy-ow, ox+ow, oy+ow, fill="blue")
+        canvas.create_oval(ox - ow, oy - ow, ox + ow, oy + ow, fill="blue")
         flag_update = False
 # close
 window.close()

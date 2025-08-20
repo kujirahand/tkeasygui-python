@@ -24,7 +24,7 @@ layout = [
 window = eg.Window("Camera Test", layout)
 while True:
     event, values = window.read(timeout=100)
-    print('#', event, values)
+    print("#", event, values)
     if event in (eg.WIN_CLOSED, "Exit"):
         break
     # capture

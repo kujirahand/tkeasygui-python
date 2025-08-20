@@ -3,11 +3,11 @@
 
 This sample demonstrates how to use the `event_iter` method.
 """
+
 import TkEasyGUI as eg
 
 # define layout
-layout = [[eg.Text("Hello, World!")],
-          [eg.Button("Exit")]]
+layout = [[eg.Text("Hello, World!")], [eg.Button("Exit")]]
 
 # create a window
 window = eg.Window("test", layout)

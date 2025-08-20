@@ -12,7 +12,7 @@ layout = [
     [eg.Text("date:")],
     [
         eg.Input(key="-input-"),
-        eg.CalendarBrowse() # Calendar button
+        eg.CalendarBrowse(),  # Calendar button
     ],
     [eg.CloseButton()],
 ]

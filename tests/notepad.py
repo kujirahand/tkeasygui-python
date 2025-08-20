@@ -3,6 +3,7 @@
 
 This is a simple notepad application. You can save and open text.
 """
+
 import os
 
 import TkEasyGUI as eg
@@ -21,7 +22,7 @@ window = eg.Window("Notepad", layout=layout)
 # event loop
 while True:
     event, values = window.read()
-    if event in ["Exit", eg.WINDOW_CLOSED]: # exit button
+    if event in ["Exit", eg.WINDOW_CLOSED]:  # exit button
         break
     # save button
     if event == "Save":

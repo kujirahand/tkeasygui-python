@@ -6,13 +6,19 @@ Counter > TkEasyGUI for The 7 Tasks of GUI Programming
 
 import TkEasyGUI as eg
 
+
 def main():
     """Main function to run the Counter GUI application."""
     # Create a window
-    window = eg.Window("Counter", layout=[[
-        eg.Input("0", key="-counter-", size=(8, 1)),
-        eg.Button("Count"),
-    ]])
+    window = eg.Window(
+        "Counter",
+        layout=[
+            [
+                eg.Input("0", key="-counter-", size=(8, 1)),
+                eg.Button("Count"),
+            ]
+        ],
+    )
     # event loop
     while window.is_alive():
         # read events from the window
@@ -27,6 +33,7 @@ def main():
                 # If the input is not a valid integer, reset to 0
                 window["-counter-"].update("0")
     window.close()
+
 
 if __name__ == "__main__":
     main()

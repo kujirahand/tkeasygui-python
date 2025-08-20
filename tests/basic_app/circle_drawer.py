@@ -3,8 +3,10 @@ Circle Drawer > TkEasyGUI for The 7 Tasks of GUI Programming
 
 @ref https://7guis.github.io/7guis/tasks/
 """
+
 # pylint: disable=line-too-long
 import TkEasyGUI as eg
+
 
 # -------------------------------------------------------------
 # Circle Items
@@ -20,7 +22,10 @@ class CircleItem:
 
     def draw(self, canvas: eg.Graph) -> None:
         """Draw the circle on the given canvas"""
-        canvas.draw_circle((self.x, self.y), self.radius, fill_color="#F0F0FF", line_color="black")
+        canvas.draw_circle(
+            (self.x, self.y), self.radius, fill_color="#F0F0FF", line_color="black"
+        )
+
 
 class CircleItemList:
     """List of CircleItems"""
@@ -64,32 +69,47 @@ class CircleItemList:
         """Return True if redo is possible."""
         return len(self._redo_stack) > 0
 
+
 # -------------------------------------------------------------
 # Circle Drawer Application
 # -------------------------------------------------------------
 def main():
     """Main function"""
     circle_items = CircleItemList()
-     # Create a window
-    window = eg.Window("Circle Drawer", layout=[
-        [
-            eg.Button("Undo", key="-undo", expand_x=True),
-            eg.Button("Redo", key="-redo", expand_x=True),
+    # Create a window
+    window = eg.Window(
+        "Circle Drawer",
+        layout=[
+            [
+                eg.Button("Undo", key="-undo", expand_x=True),
+                eg.Button("Redo", key="-redo", expand_x=True),
+            ],
+            [eg.HSeparator()],
+            [eg.Label("Click to draw circles:")],
+            [eg.Graph(key="-canvas", size=(400, 400), expand_x=True)],
+            [eg.HSeparator()],
+            [eg.Label("Radius:")],
+            [
+                eg.Slider(
+                    value_range=(10, 50),
+                    default=30,
+                    key="-radius",
+                    size=(15, 1),
+                    expand_x=True,
+                )
+            ],
+            [eg.HSeparator()],
+            [eg.Button("Clear", expand_x=True)],
         ],
-        [eg.HSeparator()],
-        [eg.Label("Click to draw circles:")],
-        [eg.Graph(key="-canvas", size=(400, 400), expand_x=True)],
-        [eg.HSeparator()],
-        [eg.Label("Radius:")],
-        [eg.Slider(value_range=(10, 50), default=30, key="-radius", size=(15, 1), expand_x=True)],
-        [eg.HSeparator()],
-        [eg.Button("Clear", expand_x=True)],
-    ])
+    )
     # Bind events
     canvas = window["-canvas"]
-    canvas.bind_events({
-        "<ButtonPress>": "mousedown",
-    }, "system")
+    canvas.bind_events(
+        {
+            "<ButtonPress>": "mousedown",
+        },
+        "system",
+    )
     draw_items(canvas, circle_items.items)
     # initialize undo/redo buttons state
     update_undo_redo_buttons(window, circle_items)
@@ -127,6 +147,7 @@ def main():
 
     window.close()
 
+
 # -------------------------------------------------------------
 # Utility functions
 # -------------------------------------------------------------
@@ -135,6 +156,7 @@ def draw_items(canvas: eg.Graph, items: list[CircleItem]) -> None:
     canvas.clear_all()
     for item in items:
         item.draw(canvas)
+
 
 def update_undo_redo_buttons(window: eg.Window, items: CircleItemList) -> None:
     """Enable/Disable Undo/Redo buttons according to current state."""

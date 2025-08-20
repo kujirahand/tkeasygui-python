@@ -1,3 +1,4 @@
+"""popup_memo_text Example"""
 import TkEasyGUI as eg
 
 text = eg.popup_memo(

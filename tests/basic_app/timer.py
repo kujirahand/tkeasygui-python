@@ -3,26 +3,40 @@ Timer > TkEasyGUI for The 7 Tasks of GUI Programming
 
 @ref https://7guis.github.io/7guis/tasks/
 """
+
 # pylint: disable=line-too-long
 import time
 import TkEasyGUI as eg
 
+
 def main():
     """Main function"""
     duration = 10  # default duration in seconds
-     # Create a window
-    window = eg.Window("Timer", layout=[
-        [
-            eg.Label("Elapsed Time:", size=(10, 1)),
-            eg.Progressbar(value_range=(0, 100), default_value=50, key="-bar", expand_x=True)
+    # Create a window
+    window = eg.Window(
+        "Timer",
+        layout=[
+            [
+                eg.Label("Elapsed Time:", size=(10, 1)),
+                eg.Progressbar(
+                    value_range=(0, 100), default_value=50, key="-bar", expand_x=True
+                ),
+            ],
+            [eg.Label("11.8s", key="-label")],
+            [
+                eg.Label("Duration:", size=(10, 1)),
+                eg.Slider(
+                    value_range=(1, 60),
+                    default=duration,
+                    key="-duration",
+                    size=(15, 1),
+                    enable_changed_events=True,
+                    expand_x=True,
+                ),
+            ],
+            [eg.Button("Reset", expand_x=True)],
         ],
-        [eg.Label("11.8s", key="-label")],
-        [
-            eg.Label("Duration:", size=(10, 1)),
-            eg.Slider(value_range=(1, 60), default=duration, key="-duration", size=(15, 1), enable_changed_events=True, expand_x=True)
-        ],
-        [eg.Button("Reset", expand_x=True)],
-    ])
+    )
     start_time = time.time()
     # event loop
     while window.is_alive():
@@ -48,6 +62,7 @@ def main():
         if event == "Reset":
             start_time = time.time()
     window.close()
+
 
 if __name__ == "__main__":
     main()

@@ -1,10 +1,16 @@
+"""Simple Dialog Example"""
+
 import TkEasyGUI as eg
 
 # Create window
 layout = [
-    [eg.Text("For wisdom is better than corals;\n" + 
-             "All other desirable things cannot compare to it.")],
-    [eg.Button("OK")]
+    [
+        eg.Text(
+            "For wisdom is better than corals;\n"
+            + "All other desirable things cannot compare to it."
+        )
+    ],
+    [eg.Button("OK")],
 ]
 window = eg.Window("Proverb", layout=layout)
 # Event loop

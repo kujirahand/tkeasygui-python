@@ -1,4 +1,5 @@
-# clock
+"""Digital Clock Example"""
+
 import datetime
 
 import TkEasyGUI as eg
@@ -13,7 +14,5 @@ while True:
         break
     # show current time
     now = datetime.datetime.now()
-    window["-output-"].update(
-        now.strftime("%H:%M:%S")
-    )
+    window["-output-"].update(now.strftime("%H:%M:%S"))
 window.close()

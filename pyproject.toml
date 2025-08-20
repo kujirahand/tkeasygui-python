@@ -42,4 +42,4 @@ Changelog = "https://github.com/kujirahand/tkeasygui-python/releases"
 
 [tool.ruff.lint]
 select = ["E", "F", "D"]
-ignore = ["E501", "D415", "D203", "D212", "D400", "D401"]
+ignore = ["E501", "D415", "D203", "D212", "D400", "D401", "D200"]

@@ -3,6 +3,7 @@ CRUD > TkEasyGUI for The 7 Tasks of GUI Programming
 
 @ref https://7guis.github.io/7guis/tasks/
 """
+
 # pylint: disable=line-too-long,too-many-locals,too-many-statements,too-many-branches
 from typing import Union, Optional
 import TkEasyGUI as eg
@@ -11,6 +12,7 @@ import TkEasyGUI as eg
 # DataManager for CRUD operations
 # -------------------------------------------------------------
 DataItems = list[dict[str, Union[str, int]]]
+
 
 class DataManager:
     """DataManager for CRUD operations"""
@@ -54,13 +56,15 @@ class DataManager:
         return False
 
     def filter(self, prefix: str) -> DataItems:
-        """Filter items based on prefix"""        
+        """Filter items based on prefix"""
         if prefix == "":
             self.filtered_data = self.data
             return self.filtered_data
         self.filtered_data = [
-            item for item in self.data
-            if str(item['name']).startswith(prefix) or str(item['surname']).startswith(prefix)
+            item
+            for item in self.data
+            if str(item["name"]).startswith(prefix)
+            or str(item["surname"]).startswith(prefix)
         ]
         return self.filtered_data
 
@@ -75,19 +79,32 @@ class DataManager:
 def main():
     """Main function"""
     # Initialize DataManager with some sample data
-    data_manager = DataManager([
-        {"id": 1, "name": "John", "surname": "Doe"},
-        {"id": 2, "name": "Jane", "surname": "Smith"}
-    ])
+    data_manager = DataManager(
+        [
+            {"id": 1, "name": "John", "surname": "Doe"},
+            {"id": 2, "name": "Jane", "surname": "Smith"},
+        ]
+    )
 
     # GUI Layout
     layout_left = [
-        [eg.Push(), eg.Label("Filter prefix:"), eg.Input("", key="-filter", width=5, enable_events=True)],
-        [eg.Listbox(items=data_manager.get_display_list(), key="-list", size=(20, 5), enable_events=True)]
+        [
+            eg.Push(),
+            eg.Label("Filter prefix:"),
+            eg.Input("", key="-filter", width=5, enable_events=True),
+        ],
+        [
+            eg.Listbox(
+                items=data_manager.get_display_list(),
+                key="-list",
+                size=(20, 5),
+                enable_events=True,
+            )
+        ],
     ]
     layout_right = [
-        [eg.Label("Name:", size=(7,1)), eg.Input("", key="-name", width=6)],
-        [eg.Label("Surname:",size=(7,1)), eg.Input("", key="-surname", width=6)],
+        [eg.Label("Name:", size=(7, 1)), eg.Input("", key="-name", width=6)],
+        [eg.Label("Surname:", size=(7, 1)), eg.Input("", key="-surname", width=6)],
     ]
     layout_main = [
         [
@@ -101,7 +118,7 @@ def main():
             eg.Button("Delete"),
             eg.Push(),
             eg.Button("Quit"),
-        ]
+        ],
     ]
 
     # Create the main window
@@ -140,7 +157,9 @@ def main():
             index = window["-list"].get_cursor_index()
             if index >= 0:
                 item = data_manager.filtered_data[index]
-                if data_manager.update_item(item["id"], values["-name"], values["-surname"]):
+                if data_manager.update_item(
+                    item["id"], values["-name"], values["-surname"]
+                ):
                     clear_inputs(window)
                     show_list(window, data_manager)
                 else:
@@ -161,6 +180,7 @@ def main():
             continue
     window.close()
 
+
 # -------------------------------------------------------------
 # GUI Utility Functions
 # -------------------------------------------------------------
@@ -172,11 +192,13 @@ def show_list(window: eg.Window, data_manager: DataManager) -> None:
     data_manager.filter(filter_str)
     window["-list"].update(values=data_manager.get_display_list())
 
+
 def clear_inputs(window: eg.Window) -> None:
     """Clear input fields."""
     window["-name"].update("")
     window["-surname"].update("")
     window["-filter"].update("")
+
 
 if __name__ == "__main__":
     main()

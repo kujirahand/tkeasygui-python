@@ -7,7 +7,7 @@ This snippet demonstrates a simple login dialog with a password input field.
 import TkEasyGUI as eg
 
 # define layout
-layout=[
+layout = [
     [eg.Text("User Id:")],
     [eg.Input("test@example.com", key="-userid-", enable_events=True)],
     [eg.Text("Password:")],

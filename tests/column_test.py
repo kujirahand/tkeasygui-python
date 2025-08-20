@@ -3,6 +3,7 @@
 
 Using the `Column` widget allows you to divide the window horizontally and place two-dimensional widgets in each Column.
 """
+
 import TkEasyGUI as eg
 
 # sample text
@@ -17,13 +18,13 @@ layout1 = [
 layout2 = [
     [eg.Label("col2")],
     [eg.Multiline(a_text, key="-col2-", expand_x=True, expand_y=True)],
-    [eg.Button("Test")]
+    [eg.Button("Test")],
 ]
 layout3 = [
     [eg.Label("col3")],
     [eg.Multiline(a_text, key="-col3-", expand_x=True, expand_y=True)],
     [eg.InputText("TEST(col3)", key="-input-"), eg.Button("Add")],
-] 
+]
 # define main layout
 col1 = eg.Column(layout1, key="col1", width=300, expand_y=True)
 col2 = eg.Column(layout2, key="col2", width=300, expand_y=True)
@@ -41,7 +42,9 @@ window = eg.Window(
 while window.is_running():
     event, values = window.read()
     if event == "Get Size":
-        text = f"col1={col1.get_width()}\ncol2={col2.get_width()}\ncol3={col3.get_width()}"
+        text = (
+            f"col1={col1.get_width()}\ncol2={col2.get_width()}\ncol3={col3.get_width()}"
+        )
         window["-col1-"].update(text)
     elif event == "Test":
         window["-col2-"].update("Test button clicked")
