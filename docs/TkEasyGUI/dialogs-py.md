@@ -61,7 +61,7 @@ Display a message in a popup window with OK and Cancel buttons. Return True or F
 def ask_ok_cancel(message: str, title: str = "Question") -> bool:
 ```
 
-- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/dialogs.py#L1536)
+- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/dialogs.py#L1555)
 
 ## ask_retry_cancel
 
@@ -71,7 +71,7 @@ Display a message in a popup window with Retry and Cancel buttons. Return True o
 def ask_retry_cancel(message: str, title: str = "Question") -> bool:
 ```
 
-- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/dialogs.py#L1541)
+- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/dialogs.py#L1560)
 
 ## ask_yes_no
 
@@ -81,7 +81,7 @@ Display a message in a popup window with Yes and No buttons. Return True or Fals
 def ask_yes_no(message: str, title: str = "Question") -> bool:
 ```
 
-- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/dialogs.py#L1531)
+- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/dialogs.py#L1550)
 
 ## cast
 
@@ -106,7 +106,7 @@ Display a message in a popup window with Yes and No buttons. Return True or Fals
 def confirm(question: str, title: Union[str, None] = None) -> bool:
 ```
 
-- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/dialogs.py#L1615)
+- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/dialogs.py#L1634)
 
 ## copy_to_clipboard
 
@@ -146,7 +146,7 @@ def input(
 ) -> Union[str, float, None]:
 ```
 
-- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/dialogs.py#L1568)
+- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/dialogs.py#L1587)
 
 ## input_number
 
@@ -161,7 +161,7 @@ def input_number(
 ) -> Union[float, None]:
 ```
 
-- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/dialogs.py#L1600)
+- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/dialogs.py#L1619)
 
 ## is_mac
 
@@ -194,7 +194,7 @@ def msgbox(message: str, title: Union[str, None] = None) -> None:  # message
     messagebox.showinfo(title, message)
 ```
 
-- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/dialogs.py#L1558)
+- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/dialogs.py#L1577)
 
 ## popup
 
@@ -217,7 +217,7 @@ def popup(
 ) -> str:
 ```
 
-- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/dialogs.py#L195)
+- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/dialogs.py#L202)
 
 ## popup_auto_close
 
@@ -238,7 +238,7 @@ def popup_auto_close(
 ) -> str:
 ```
 
-- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/dialogs.py#L272)
+- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/dialogs.py#L279)
 
 ## popup_buttons
 
@@ -274,7 +274,7 @@ def popup_buttons(
 ) -> str:
 ```
 
-- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/dialogs.py#L73)
+- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/dialogs.py#L78)
 
 ## popup_cancel
 
@@ -292,7 +292,7 @@ def popup_cancel(
 ) -> str:
 ```
 
-- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/dialogs.py#L477)
+- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/dialogs.py#L484)
 
 ## popup_color
 
@@ -308,7 +308,7 @@ def popup_color(
 ) -> Union[str, tuple[int, int, int], None]:
 ```
 
-- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/dialogs.py#L1368)
+- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/dialogs.py#L1383)
 
 ## popup_error
 
@@ -327,7 +327,7 @@ def popup_error(
 ) -> None:
 ```
 
-- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/dialogs.py#L609)
+- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/dialogs.py#L618)
 
 ## popup_get_date
 
@@ -348,7 +348,7 @@ def popup_get_date(
 ) -> Union[datetime, None]:
 ```
 
-- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/dialogs.py#L875)
+- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/dialogs.py#L886)
 
 ## popup_get_file
 
@@ -369,7 +369,7 @@ def popup_get_file(
 ) -> Union[str, tuple[str], None]:
 ```
 
-- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/dialogs.py#L696)
+- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/dialogs.py#L705)
 
 ## popup_get_folder
 
@@ -386,7 +386,7 @@ def popup_get_folder(
 ) -> Union[str, None]:
 ```
 
-- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/dialogs.py#L754)
+- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/dialogs.py#L763)
 
 ## popup_get_form
 
@@ -439,7 +439,7 @@ def popup_get_form(
 ) -> Union[dict[str, Any], None]:
 ```
 
-- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/dialogs.py#L1100)
+- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/dialogs.py#L1113)
 
 ## popup_get_text
 
@@ -457,7 +457,7 @@ def popup_get_text(
 ) -> Union[str, None]:
 ```
 
-- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/dialogs.py#L580)
+- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/dialogs.py#L589)
 
 ## popup_image
 
@@ -481,7 +481,7 @@ def popup_image(
 ) -> Union[str, None]:
 ```
 
-- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/dialogs.py#L1462)
+- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/dialogs.py#L1479)
 
 ## popup_info
 
@@ -500,7 +500,7 @@ def popup_info(
 ) -> None:
 ```
 
-- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/dialogs.py#L667)
+- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/dialogs.py#L676)
 
 ## popup_input
 
@@ -525,7 +525,7 @@ def popup_input(
 ) -> Union[str, float, None]:
 ```
 
-- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/dialogs.py#L501)
+- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/dialogs.py#L508)
 
 ## popup_listbox
 
@@ -546,7 +546,7 @@ def popup_listbox(
 ) -> Union[str, None]:
 ```
 
-- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/dialogs.py#L1391)
+- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/dialogs.py#L1406)
 
 ## popup_memo
 
@@ -568,7 +568,7 @@ def popup_memo(
 ) -> Union[str, None]:
 ```
 
-- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/dialogs.py#L770)
+- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/dialogs.py#L779)
 
 ## popup_no_buttons
 
@@ -586,7 +586,7 @@ def popup_no_buttons(
 ) -> None:
 ```
 
-- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/dialogs.py#L250)
+- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/dialogs.py#L257)
 
 ## popup_no_wait
 
@@ -604,7 +604,7 @@ def popup_no_wait(
 ) -> str:
 ```
 
-- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/dialogs.py#L299)
+- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/dialogs.py#L306)
 
 ## popup_non_blocking
 
@@ -623,7 +623,7 @@ def popup_non_blocking(
 ) -> str:
 ```
 
-- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/dialogs.py#L225)
+- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/dialogs.py#L232)
 
 ## popup_notify
 
@@ -633,7 +633,7 @@ Popup a information
 def popup_notify(message: str, title: str = "") -> None:
 ```
 
-- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/dialogs.py#L1273)
+- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/dialogs.py#L1288)
 
 ## popup_ok
 
@@ -651,7 +651,7 @@ def popup_ok(
 ) -> str:
 ```
 
-- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/dialogs.py#L321)
+- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/dialogs.py#L328)
 
 ## popup_ok_cancel
 
@@ -673,7 +673,7 @@ def popup_ok_cancel(
 ) -> str:
 ```
 
-- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/dialogs.py#L343)
+- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/dialogs.py#L350)
 
 ## popup_scrolled
 
@@ -702,7 +702,7 @@ def popup_scrolled(
 ) -> Union[str, None]:
 ```
 
-- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/dialogs.py#L799)
+- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/dialogs.py#L808)
 
 ## popup_set_options
 
@@ -719,7 +719,7 @@ def popup_set_options(
 ) -> None:
 ```
 
-- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/dialogs.py#L40)
+- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/dialogs.py#L45)
 
 ## popup_warning
 
@@ -738,7 +738,7 @@ def popup_warning(
 ) -> None:
 ```
 
-- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/dialogs.py#L639)
+- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/dialogs.py#L648)
 
 ## popup_yes_no
 
@@ -777,7 +777,7 @@ def popup_yes_no(
 ) -> str:
 ```
 
-- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/dialogs.py#L378)
+- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/dialogs.py#L385)
 
 ## popup_yes_no_cancel
 
@@ -801,7 +801,7 @@ def popup_yes_no_cancel(
 ) -> str:
 ```
 
-- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/dialogs.py#L434)
+- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/dialogs.py#L441)
 
 ## print
 
@@ -811,7 +811,7 @@ Print message to popup window.(call default print function if no_window is True)
 def print(*args, **kw) -> None:
 ```
 
-- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/dialogs.py#L1591)
+- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/dialogs.py#L1610)
 
 ## send_notification_mac
 
@@ -821,7 +821,7 @@ Send Notification on mac
 def send_notification_mac(message: str, title: str = "") -> bool:
 ```
 
-- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/dialogs.py#L1284)
+- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/dialogs.py#L1299)
 
 ## send_notification_win
 
@@ -831,7 +831,7 @@ Send Notification on Windows using PowerShell
 def send_notification_win(message: str, title: str = "") -> bool:
 ```
 
-- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/dialogs.py#L1304)
+- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/dialogs.py#L1319)
 
 ## show_info
 
@@ -841,7 +841,7 @@ Show message in a popup window
 def show_info(message: str, title: Union[str, None] = None) -> None:
 ```
 
-- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/dialogs.py#L1552)
+- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/dialogs.py#L1571)
 
 ## show_message
 
@@ -851,5 +851,5 @@ Show message in a popup window
 def show_message(message: str, title: Union[str, None] = None) -> None:
 ```
 
-- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/dialogs.py#L1546)
+- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/dialogs.py#L1565)
 

@@ -13,8 +13,14 @@ from tkinter import colorchooser, filedialog, messagebox
 from typing import Any, Callable, Iterable, Optional, Union, cast
 
 from . import locale_easy as le
-from .utils import (ColorFormatType, FontType, copy_to_clipboard,
-                    get_root_window, is_mac, is_win)
+from .utils import (
+    ColorFormatType,
+    FontType,
+    copy_to_clipboard,
+    get_root_window,
+    is_mac,
+    is_win,
+)
 
 YES = "Yes"
 NO = "No"
@@ -99,8 +105,7 @@ def popup_buttons(
     print(color)
     ```
     """
-    from . import \
-        widgets as eg  # Import at function level to avoid circular import
+    from . import widgets as eg
 
     if buttons is None:
         buttons = ["OK", "Cancel"]
@@ -517,8 +522,7 @@ def popup_input(
     validation_message: Optional[str] = None,
 ) -> Union[str, float, None]:
     """Display a message in a popup window with a text entry. Return the text entered. if canceled, return cancel_value."""
-    from . import \
-        widgets as eg  # Import at function level to avoid circular import
+    from . import widgets as eg
 
     result = cancel_value
     if title is None:
@@ -824,8 +828,7 @@ def popup_scrolled(
     eg.print(text)
     ```
     """
-    from . import \
-        widgets as eg  # Import at function level to avoid circular import
+    from . import widgets as eg
 
     result = cancel_value
     if cancel_label is None:
@@ -893,8 +896,7 @@ def popup_get_date(
     window_icon: Optional[str] = None,  # window icon, specify filename
 ) -> Union[datetime, None]:
     """Display a calendar in a popup window. Return the datetime entered or None."""
-    from . import \
-        widgets as eg  # Import at function level to avoid circular import
+    from . import widgets as eg
 
     if current_date is None:
         current_date = datetime.now()
@@ -1155,8 +1157,7 @@ def popup_get_form(
         eg.print(f"name={name}, hobbies={hobbies}")
     ```
     """
-    from . import \
-        widgets as eg  # Import at function level to avoid circular import
+    from . import widgets as eg
 
     # make form layout
     item_labels = []
@@ -1415,8 +1416,7 @@ def popup_listbox(
     window_icon: Optional[str] = None,  # window icon, specify filename
 ) -> Union[str, None]:
     """Display Listbox in a popup window"""
-    from . import \
-        widgets as eg  # Import at function level to avoid circular import
+    from . import widgets as eg
 
     select_mode: eg.ListboxSelectMode = (
         eg.LISTBOX_SELECT_MODE_BROWSE
@@ -1492,8 +1492,7 @@ def popup_image(
     timeout_key: str = "-TIMEOUT-",  # timeout key if auto_close_duration > 0
 ) -> Union[str, None]:
     """Display an image in a popup window. Return the pushed Button("OK" or None)."""
-    from . import \
-        widgets as eg  # Import at function level to avoid circular import
+    from . import widgets as eg
 
     if title is None:
         title = message

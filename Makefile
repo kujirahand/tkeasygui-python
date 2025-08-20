@@ -16,12 +16,10 @@ install-dev:
 lint:
 	cd $(SCRIPT_DIR)
 	pylint $(SRC)
-	# black --check $(SRC)
-	# isort --check-only $(SRC)
+	black --check $(SRC)
 
 format:
 	black $(SRC)
-	isort $(SRC)
 
 doc:
 	python update_version.py

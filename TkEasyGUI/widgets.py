@@ -14,8 +14,7 @@ from enum import Enum
 from queue import Queue
 from tkinter import font as tkinter_font
 from tkinter import scrolledtext, ttk
-from typing import (Any, Callable, Literal, Optional, Pattern, Sequence, Union,
-                    cast)
+from typing import Any, Callable, Literal, Optional, Pattern, Sequence, Union, cast
 
 from PIL import Image as PILImage
 from PIL import ImageColor, ImageGrab, ImageTk
@@ -24,12 +23,25 @@ from . import icon_default
 from . import locale_easy as le
 from . import utils, version
 from .utils import EventMode  # type alias
-from .utils import (CursorType, ElementJustifcation, FontType,
-                    ListboxSelectMode, OrientationType, PadType, PointType,
-                    ProgressbarMode, ReliefType, TextAlign, TextVAlign,
-                    generate_element_id, generate_element_style_key,
-                    get_current_theme, get_root_window, get_ttk_style,
-                    register_element_key)
+from .utils import (
+    CursorType,
+    ElementJustifcation,
+    FontType,
+    ListboxSelectMode,
+    OrientationType,
+    PadType,
+    PointType,
+    ProgressbarMode,
+    ReliefType,
+    TextAlign,
+    TextVAlign,
+    generate_element_id,
+    generate_element_style_key,
+    get_current_theme,
+    get_root_window,
+    get_ttk_style,
+    register_element_key,
+)
 
 # ------------------------------------------------------------------------------
 # TypeAlias
