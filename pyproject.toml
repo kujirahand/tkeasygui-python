@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "TkEasyGUI"
-version = "1.0.37"
+version = "1.0.38"
 dependencies = [
   "Pillow>=11.2.1",
   "pyperclip",

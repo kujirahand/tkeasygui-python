@@ -9,7 +9,7 @@ install:
 	pip install -e .
 
 install-dev:
-	pip install -U pip setuptools wheel
+	pip install -U pip setuptools wheel twine
 	pip install -r requirements.txt
 	pip install pylint black isort mypy
 
@@ -56,7 +56,7 @@ deploy-main:
 	python -m twine upload dist/* --verbose
 
 package:
-	@echo "=== PACKAGE ==="
+	@echo "=== MAKE PACKAGE ==="
 	# ------------------
 	make clean
 	@echo "* uninstall TkEasyGUI"
@@ -70,12 +70,23 @@ package:
 	# ------------------
 	@echo "* build"
 	python -m build
+
+package-test:
+	# ------------------
+	make package
 	python -m twine upload --repository testpypi dist/* --verbose
 	# ------------------
 	@echo "* install test pypi"
 	@echo "[TRY]: python -m pip install -U --index-url https://test.pypi.org/simple/ --no-deps TkEasyGUI"
-	@echo "* install to pypi"
-	@echo "[TRY]: python -m twine upload dist/* --verbose"
+
+package-publish:
+	# ------------------
+	make package
+	@echo "* publish"
+	python -m twine upload dist/* --verbose
+	# ------------------
+	@echo "* install pypi"
+	@echo "[TRY]: python -m pip install -U TkEasyGUI"
 
 run:
 	cd $(SCRIPT_DIR)
