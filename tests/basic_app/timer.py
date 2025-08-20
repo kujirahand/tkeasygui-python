@@ -2,8 +2,6 @@
 Timer > TkEasyGUI for The 7 Tasks of GUI Programming
 
 @ref https://7guis.github.io/7guis/tasks/
-
-[TODO] 作りかけです。
 """
 # pylint: disable=line-too-long
 import time
@@ -33,15 +31,18 @@ def main():
         print("@Event:", event, "Values:", values)
         # check events
         if event == eg.TIMEOUT_KEY:
+            # Calculate elapsed time and percentage
             elapsed = time.time() - start_time
             if elapsed > duration:
                 elapsed = duration
                 continue
             per = min(elapsed / duration, 1.0)
+            # update the progress bar and label
             window["-bar"].update(per * 100)
             window["-label"].update(f"{elapsed:.1f}s")
             continue
         if event == "-duration":
+            # Update duration and reset start time
             duration = values["-duration"]
             start_time = time.time()
         if event == "Reset":

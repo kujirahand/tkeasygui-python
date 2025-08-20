@@ -31,6 +31,7 @@ from .utils import (
     FontType,
     ListboxSelectMode,
     OrientationType,
+    ProgressbarMode,
     PadType,
     PointType,
     ReliefType,
@@ -3392,6 +3393,7 @@ class Progressbar(Element):
         thickness: Optional[int] = None,  # thickness of the bar
         length: Optional[int] = None,  # length of the bar (unit: pixel)
         key: Optional[str] = None,
+        mode: ProgressbarMode = "determinate",  # mode of the progressbar (determinate|indeterminate)
         metadata: Optional[dict[str, Any]] = None,
         # other
         default: Optional[int] = None,  # same as default_value
@@ -3410,6 +3412,7 @@ class Progressbar(Element):
         self.use_ttk = True  # use ttk Progressbar
         # range and resolution
         self.value_range = value_range
+        self.mode: ProgressbarMode = mode  # determinate or indeterminate
         # set default_value or default
         self.default_value = default_value if default_value is not None else value_range[0]
         if default is not None:
@@ -3437,10 +3440,11 @@ class Progressbar(Element):
         self.widget = ttk.Progressbar(
             parent,
             style=self.style_name,
-            #orient=orientation,
+            orient=orientation,
             maximum=(self.value_range[1] - self.value_range[0]),
             variable=self.int_value,
             length=self.length,
+            mode=self.mode,
             **self.props,
         )
         return self.widget
@@ -3474,6 +3478,14 @@ class Progressbar(Element):
             self.set(value)
         else:
             self._widget_update(**kw)
+
+    def start(self, interval: int = 100) -> None:
+        """Start the indeterminate progressbar."""
+        if self.widget is None:
+            return
+        if self.mode != "indeterminate":
+            raise ValueError("Progressbar is not in indeterminate mode.")
+        self.widget.start(interval=interval)
 
 
 class Canvas(Element):
