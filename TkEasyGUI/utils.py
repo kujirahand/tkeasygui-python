@@ -5,10 +5,11 @@ import os
 import platform
 import tkinter as tk
 from tkinter import ttk
-from typing import Any, Literal, Union, Optional
+from typing import Any, Literal, Optional, Union
 
-from PIL import Image as PILImage, ImageGrab
 import pyperclip  # type: ignore
+from PIL import Image as PILImage
+from PIL import ImageGrab
 
 # define TypeAlias
 TextAlign = Literal["left", "right", "center"]
@@ -99,10 +100,12 @@ def is_win() -> bool:
     """Platform : is Windows?"""
     return get_platform() == "Windows"
 
+
 def screenshot() -> PILImage.Image:
     """Take a screenshot."""
     screen_image = ImageGrab.grab()
     return screen_image
+
 
 def get_screen_size() -> tuple[int, int]:
     """Get screen size."""
@@ -111,17 +114,20 @@ def get_screen_size() -> tuple[int, int]:
     height = root.winfo_screenheight()
     return width, height
 
+
 def get_screen_dpi() -> int:
     """Get screen DPI."""
     root = get_root_window()
     dpi = root.winfo_fpixels("1i")
     return int(dpi)
 
+
 def get_scaling() -> float:
     """Get scaling factor."""
     root = get_root_window()
     scaling = root.tk.call("tk", "scaling")
     return float(scaling)
+
 
 # ------------------------------------------------------------------------------
 # text file utility
@@ -295,22 +301,28 @@ class TkWindowManager:
             return True
         return False
 
+
 # ------------------------------------------------------------------------------
 # only one root element
-EG_WINDOW_MANAGER: TkWindowManager = TkWindowManager()  # pylint: disable=global-statement
+# ------------------------------------------------------------------------------
+# pylint: disable=global-statement
+EG_WINDOW_MANAGER: TkWindowManager = TkWindowManager()
 
 
 def get_root_window() -> tk.Tk:
     """Get root window."""
     return EG_WINDOW_MANAGER.get_root()
 
+
 def set_pysimplegui_compatibility(flag: bool = True) -> None:
     """Set compatibility with PySimpleGUI (Default=True)"""
     EG_WINDOW_MANAGER.set_sg_compatibility(flag)
 
+
 def get_ttk_style() -> ttk.Style:
     """Get ttk style"""
     return EG_WINDOW_MANAGER.get_tkk_style()
+
 
 # ------------------------------------------------------------------------------
 # theme
@@ -326,6 +338,7 @@ def set_theme(name: str) -> None:
     - Linux --- ('clam', 'alt', 'default', 'classic')
     """
     EG_WINDOW_MANAGER.set_theme(name)
+
 
 def get_tnemes() -> tuple[str, ...]:
     """
@@ -398,6 +411,7 @@ def register_element_key(key: KeyType) -> bool:
 def remove_element_key(key: KeyType) -> bool:
     """Remove element key."""
     return EG_WINDOW_MANAGER.remove_element_key(key)
+
 
 def generate_element_id() -> int:
     """Generate a unique id for a value element."""

@@ -42,7 +42,7 @@ class CircleItemList:
         self.items.clear()
         # Clearing also drops redo history for simplicity
         self._redo_stack.clear()
-    
+
     def undo(self) -> None:
         """Undo the last CircleItem"""
         if self.items:

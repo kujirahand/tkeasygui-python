@@ -1,30 +1,21 @@
-"""TkEasyGUI dialogs."""
 # pylint: disable=line-too-long,too-many-lines,too-many-arguments,too-many-positional-arguments
+"""TkEasyGUI dialogs."""
 
 import base64
-from datetime import datetime, timedelta
 import os
 import subprocess
 import sys
-from re import Pattern
 import tempfile
-
 import tkinter
-from tkinter import filedialog
-from tkinter import messagebox
-from tkinter import colorchooser
-from typing import Any, cast, Callable, Iterable, Optional, Union
+from datetime import datetime, timedelta
+from re import Pattern
+from tkinter import colorchooser, filedialog, messagebox
+from typing import Any, Callable, Iterable, Optional, Union, cast
 
 from . import locale_easy as le
-from .utils import (
-    ColorFormatType,
-    FontType,
-    get_root_window,
-    is_mac,
-    is_win,
-    copy_to_clipboard,
-)
 from . import widgets as eg
+from .utils import (ColorFormatType, FontType, copy_to_clipboard,
+                    get_root_window, is_mac, is_win)
 
 YES = "Yes"
 NO = "No"
@@ -43,7 +34,8 @@ POPUP_AUTO_SCREENSHOT_DURATION = 500  # auto close duration (msec)
 POPUP_AUTO_SCREENSHOT_FILENAME = "screenshot.png"
 POPUP_OK_BUTTON_WIDTH = 12
 POPUP_CANCEL_BUTTON_WIDTH = 9
-POPUP_TTK_BUTTONS = True # use ttk buttons
+POPUP_TTK_BUTTONS = True  # use ttk buttons
+
 
 def popup_set_options(
     auto_screenshot: Optional[bool] = None,
@@ -73,6 +65,7 @@ def popup_set_options(
     if ttk_buttons is not None:
         POPUP_TTK_BUTTONS = ttk_buttons
 
+
 # ------------------------------------------------------------------------------
 # Dialogs
 # ------------------------------------------------------------------------------
@@ -80,7 +73,9 @@ def popup_set_options(
 def popup_buttons(
     message: str,
     title: Union[str, None] = None,
-    buttons: Union[list[str], None] = None,  # button labels(default is ["OK", "Cancel"])
+    buttons: Union[
+        list[str], None
+    ] = None,  # button labels(default is ["OK", "Cancel"])
     auto_close_duration: int = -1,  # auto close duration (sec)
     timeout_key: str = "-TIMEOUT-",  # if auto_close_duration > 0, return this key
     non_blocking: bool = False,
@@ -89,7 +84,7 @@ def popup_buttons(
     icon: str = "",  # filename or icon name(information/info, warning, error, question/?)
     icon_size: tuple[int, int] = (48, 48),
     window_icon: Optional[str] = None,  # window icon, specify filename
-    can_copy_message: bool = True, # show copy message in popup menu
+    can_copy_message: bool = True,  # show copy message in popup menu
     use_ttk_buttons: bool = POPUP_TTK_BUTTONS,  # use ttk buttons
     auto_locale: bool = True,  # auto locale
 ) -> str:
@@ -132,7 +127,7 @@ def popup_buttons(
         else:
             font_info = ("", icon_size[0])
             icon = icon.lower()
-            if icon == "information" or icon == "info":
+            if icon in ["information", "info"]:
                 eg_messages.append(eg.Label("📖", font=font_info))
             elif icon == "warning":
                 # Windows環境で VS16(Variation Selector-16) 付きの警告絵文字
@@ -141,7 +136,7 @@ def popup_buttons(
                 eg_messages.append(eg.Label("⚠", font=font_info))
             elif icon == "error":
                 eg_messages.append(eg.Label("❌", font=font_info))
-            elif icon == "question" or icon == "?":
+            elif icon in ["question", "?"]:
                 eg_messages.append(eg.Label("❓", font=font_info))
             else:
                 eg_messages.append(eg.Label("🌱", font=font_info))  # error
@@ -156,7 +151,10 @@ def popup_buttons(
         eg_messages.append(msg)
         # popup menu
         popup_menu = tkinter.Menu(get_root_window(), tearoff=0)
-        popup_menu.add_command(label=le.get_text("Copy Message"), command=lambda: copy_to_clipboard(message))
+        popup_menu.add_command(
+            label=le.get_text("Copy Message"),
+            command=lambda: copy_to_clipboard(message),
+        )
     layout: eg.LayoutType = [
         eg_messages,
         eg_buttons_pad,
@@ -169,7 +167,9 @@ def popup_buttons(
         # popup non blocking window : to be implemented in the future
         pass
     # create window
-    with eg.Window(title, layout=layout, size=size, icon=window_icon, modal=True) as win:
+    with eg.Window(
+        title, layout=layout, size=size, icon=window_icon, modal=True
+    ) as win:
         for event, values in win.event_iter(timeout=100, timeout_key=eg.WINDOW_TIMEOUT):
             if event in buttons:
                 result = event
@@ -272,7 +272,7 @@ def popup_no_buttons(
 def popup_auto_close(
     message: str,
     title: str = "",
-    auto_close_duration: int = 3, # auto close duration (sec)
+    auto_close_duration: int = 3,  # auto close duration (sec)
     buttons: Optional[list[str]] = None,  # default is ["OK", "Cancel"]
     timeout_key="-TIMEOUT-",
     size: Union[tuple[int, int], None] = None,
@@ -509,8 +509,10 @@ def popup_input(
     font: Optional[FontType] = None,
     size: Union[tuple[int, int], None] = None,
     window_icon: Optional[str] = None,  # window icon, specify filename
-    validation: Optional[Union[str, Pattern[str]]] = None, # validation regular expression
-    validation_message: Optional[str] = None
+    validation: Optional[
+        Union[str, Pattern[str]]
+    ] = None,  # validation regular expression
+    validation_message: Optional[str] = None,
 ) -> Union[str, float, None]:
     """Display a message in a popup window with a text entry. Return the text entered. if canceled, return cancel_value."""
     result = cancel_value
@@ -527,12 +529,26 @@ def popup_input(
     win = eg.Window(
         title,
         layout=[
-            [eg.Text(message, validation=validation, validation_message=validation_message)],
+            [
+                eg.Text(
+                    message,
+                    validation=validation,
+                    validation_message=validation_message,
+                )
+            ],
             [eg.Input(default, key="-user-", width=40, enable_events=True)],
             [
                 eg.Push(),
-                eg.Button(ok_label, width=POPUP_OK_BUTTON_WIDTH, use_ttk_buttons=POPUP_TTK_BUTTONS),
-                eg.Button(cancel_label, width=POPUP_CANCEL_BUTTON_WIDTH, use_ttk_buttons=POPUP_TTK_BUTTONS),
+                eg.Button(
+                    ok_label,
+                    width=POPUP_OK_BUTTON_WIDTH,
+                    use_ttk_buttons=POPUP_TTK_BUTTONS,
+                ),
+                eg.Button(
+                    cancel_label,
+                    width=POPUP_CANCEL_BUTTON_WIDTH,
+                    use_ttk_buttons=POPUP_TTK_BUTTONS,
+                ),
                 eg.Push(),
             ],
         ],
@@ -685,7 +701,8 @@ def popup_get_file(
     multiple_files: bool = False,  # can select multiple files
     file_types: tuple[tuple[str, str]] = (("All Files", "*.*"),),
     default_extension: Union[str, None] = None,
-    no_window: Optional[bool] = None,  # for compatibility # pylint: disable=unused-argument
+    # pylint: disable=unused-argument
+    no_window: Optional[bool] = None,  # for compatibility
     **kw,
 ) -> Union[str, tuple[str], None]:
     """Popup a file selection dialog. Return the file selected."""
@@ -693,7 +710,9 @@ def popup_get_file(
         title = message
     if initial_folder is None:
         initial_folder = os.getcwd()
-    file_type_list: Optional[Iterable[tuple[str, Union[str, list[str], tuple[str, ...]]]]] = []
+    file_type_list: Optional[
+        Iterable[tuple[str, Union[str, list[str], tuple[str, ...]]]]
+    ] = []
     if file_types is not None:
         # check file types
         new_types = []
@@ -736,7 +755,8 @@ def popup_get_folder(
     message: str = "",
     title: Union[str, None] = None,
     default_path: Union[str, None] = None,
-    no_window: Union[bool, None] = None,  # for compatibility # pylint: disable=unused-argument
+    # pylint: disable=unused-argument
+    no_window: Optional[bool] = None,  # for compatibility
     **kw,
 ) -> Union[str, None]:
     """Popup a folder selection dialog. Return the folder selected."""
@@ -807,17 +827,39 @@ def popup_scrolled(
     if title is None:
         title = le.get_text("Information")
     layout = [
-        [eg.Multiline(message, key="-text-", size=size, readonly=readonly, font=font, expand_x=True, expand_y=True)],
+        [
+            eg.Multiline(
+                message,
+                key="-text-",
+                size=size,
+                readonly=readonly,
+                font=font,
+                expand_x=True,
+                expand_y=True,
+            )
+        ],
         [
             eg.Push(),
-            eg.Button(ok_label, width=POPUP_OK_BUTTON_WIDTH, use_ttk_buttons=POPUP_TTK_BUTTONS),
-            eg.Button(cancel_label, width=POPUP_CANCEL_BUTTON_WIDTH, use_ttk_buttons=POPUP_TTK_BUTTONS),
+            eg.Button(
+                ok_label, width=POPUP_OK_BUTTON_WIDTH, use_ttk_buttons=POPUP_TTK_BUTTONS
+            ),
+            eg.Button(
+                cancel_label,
+                width=POPUP_CANCEL_BUTTON_WIDTH,
+                use_ttk_buttons=POPUP_TTK_BUTTONS,
+            ),
             eg.Push(),
         ],
     ]
     if header != "":
         layout.insert(0, [eg.Text(header)])
-    win = eg.Window(title, layout=cast(eg.LayoutType, layout), modal=True, resizable=resizable, icon=window_icon)
+    win = eg.Window(
+        title,
+        layout=cast(eg.LayoutType, layout),
+        modal=True,
+        resizable=resizable,
+        icon=window_icon,
+    )
     result = None
     while win.is_alive():
         event, _ = win.read()
@@ -952,8 +994,14 @@ def popup_get_date(
     layout.append(
         [
             eg.Push(),
-            eg.Button(ok_label, width=POPUP_OK_BUTTON_WIDTH, use_ttk_buttons=POPUP_TTK_BUTTONS),
-            eg.Button(cancel_label, width=POPUP_CANCEL_BUTTON_WIDTH, use_ttk_buttons=POPUP_TTK_BUTTONS),
+            eg.Button(
+                ok_label, width=POPUP_OK_BUTTON_WIDTH, use_ttk_buttons=POPUP_TTK_BUTTONS
+            ),
+            eg.Button(
+                cancel_label,
+                width=POPUP_CANCEL_BUTTON_WIDTH,
+                use_ttk_buttons=POPUP_TTK_BUTTONS,
+            ),
             eg.Push(),
         ]
     )
@@ -991,40 +1039,47 @@ def popup_get_date(
 
     result = None
     # calendar window
-    with eg.Window(title, layout, font=font, modal=True, row_padding=0, icon=window_icon) as window:
+    with eg.Window(
+        title, layout, font=font, modal=True, row_padding=0, icon=window_icon
+    ) as window:
         for event, _ in window.event_iter():
             if event == ok_label:
                 result = current_date
                 break
-            elif event == cancel_label:
+            if event == cancel_label:
                 result = None
                 break
-            elif event == "-today-" or event == "-ymd-":
+            if event in ["-today-", "-ymd-"]:
                 current_date = datetime.now()
                 update_date(get_top_date(current_date), current_date)
-            elif event == "-prev-":
+                continue
+            if event == "-prev-":
                 y, m = current_date.year, current_date.month - 1
                 if m == 0:
                     y -= 1
                     m = 12
                 current_date = datetime(year=y, month=m, day=1)
                 update_date(get_top_date(current_date), current_date)
-            elif event == "-next-":
+                continue
+            if event == "-next-":
                 y, m = current_date.year, current_date.month + 1
                 if m == 13:
                     y += 1
                     m = 1
                 current_date = datetime(year=y, month=m, day=1)
                 update_date(get_top_date(current_date), current_date)
-            elif event == "-prev2-":
+                continue
+            if event == "-prev2-":
                 y, m = current_date.year - 1, current_date.month
                 current_date = datetime(year=y, month=m, day=1)
                 update_date(get_top_date(current_date), current_date)
-            elif event == "-next2-":
+                continue
+            if event == "-next2-":
                 y, m = current_date.year + 1, current_date.month
                 current_date = datetime(year=y, month=m, day=1)
                 update_date(get_top_date(current_date), current_date)
-            elif event.startswith("-b"):
+                continue
+            if event.startswith("-b"):
                 elm: eg.Text = window[event]
                 if elm is None or elm.metadata is None:
                     continue
@@ -1038,6 +1093,7 @@ def popup_get_date(
                 else:
                     current_date = sel_date
                     update_date(get_top_date(current_date), current_date)
+                continue
     return result
 
 
@@ -1095,11 +1151,11 @@ def popup_get_form(
     for i, it in enumerate(form_items):
         it_key = f"-formitem{i}"
         default_value: Union[str, tuple[str, Any], tuple[str, Any, str]] = ""
-        if isinstance(it, tuple) or isinstance(it, list):
+        if isinstance(it, (list, tuple)):
             label = it[0]
             default_value = it[1] if len(it) >= 2 else ""
             itype = it[2] if len(it) >= 3 else "text"
-            if isinstance(default_value, tuple) or isinstance(default_value, list):
+            if isinstance(default_value, (list, tuple)):
                 itype = "list"
         else:
             label = it
@@ -1116,9 +1172,9 @@ def popup_get_form(
         # check type
         itype = itype.lower()
         sels: list = []
-        if itype == "text" or itype == "number" or itype == "password":
+        if itype in ["text", "number", "password"]:
             text = ""
-            if isinstance(default_value, tuple) or isinstance(default_value, list):
+            if isinstance(default_value, (tuple, list)):
                 default_value = ",".join(default_value)
             else:
                 text = str(default_value)
@@ -1134,7 +1190,7 @@ def popup_get_form(
                 item_converters[i] = float
         elif itype == "combo":
             sels = []
-            if isinstance(default_value, tuple) or isinstance(default_value, list):
+            if isinstance(default_value, (tuple, list)):
                 sels = list(default_value)
             else:
                 sels = default_value.split(",")
@@ -1142,7 +1198,7 @@ def popup_get_form(
             line.append(eg.Combo(sels, default_value=val, key=it_key, size=(19, 1)))
         elif itype == "list":
             sels = []
-            if isinstance(default_value, tuple) or isinstance(default_value, list):
+            if isinstance(default_value, (tuple, list)):
                 sels = list(default_value)
             else:
                 sels = default_value.split(",")
@@ -1171,8 +1227,15 @@ def popup_get_form(
     layout.append(
         [
             eg.Push(),
-            eg.Button("OK", width=POPUP_OK_BUTTON_WIDTH, use_ttk_buttons=POPUP_TTK_BUTTONS),
-            eg.Button(cancel_label, key="Cancel", width=POPUP_CANCEL_BUTTON_WIDTH, use_ttk_buttons=POPUP_TTK_BUTTONS),
+            eg.Button(
+                "OK", width=POPUP_OK_BUTTON_WIDTH, use_ttk_buttons=POPUP_TTK_BUTTONS
+            ),
+            eg.Button(
+                cancel_label,
+                key="Cancel",
+                width=POPUP_CANCEL_BUTTON_WIDTH,
+                use_ttk_buttons=POPUP_TTK_BUTTONS,
+            ),
             eg.Push(),
         ]
     )
@@ -1227,17 +1290,14 @@ def send_notification_mac(message: str, title: str = "") -> bool:
     if not os.path.exists(oascript_path):
         popup_auto_close(message, title)
         return False
-    script = r'''
+    script = r"""
 on run argv
     set msg to item 1 of argv
     set ttl to item 2 of argv
     display notification msg with title ttl
 end run
-'''.strip()
-    subprocess.run(
-        [oascript_path, "-e", script, "--", message, title],
-        check=False
-    )
+""".strip()
+    subprocess.run([oascript_path, "-e", script, "--", message, title], check=False)
     return True
 
 
@@ -1321,9 +1381,9 @@ def popup_color(
     html = col[1].upper()
     if format == "html":
         return html
-    elif format == "rgb":
+    if format == "rgb":
         return html[1:]
-    elif format == "tuple":
+    if format == "tuple":
         return col[0]
     return html
 
@@ -1368,15 +1428,23 @@ def popup_listbox(
     layout.append(
         [
             eg.Push(),
-            eg.Button("OK", width=POPUP_OK_BUTTON_WIDTH, use_ttk_buttons=POPUP_TTK_BUTTONS),
-            eg.Button("Cancel", width=POPUP_CANCEL_BUTTON_WIDTH, use_ttk_buttons=POPUP_TTK_BUTTONS),
-            eg.Push()
+            eg.Button(
+                "OK", width=POPUP_OK_BUTTON_WIDTH, use_ttk_buttons=POPUP_TTK_BUTTONS
+            ),
+            eg.Button(
+                "Cancel",
+                width=POPUP_CANCEL_BUTTON_WIDTH,
+                use_ttk_buttons=POPUP_TTK_BUTTONS,
+            ),
+            eg.Push(),
         ]
     )
-    with eg.Window(title, layout=layout, modal=True, resizable=resizable, icon=window_icon) as win:
+    with eg.Window(
+        title, layout=layout, modal=True, resizable=resizable, icon=window_icon
+    ) as win:
         # event loop
         result = None
-        for event, values in win.event_iter():
+        for event, _values in win.event_iter():
             if event == "Cancel":
                 result = None
                 break
@@ -1418,8 +1486,14 @@ def popup_image(
         [eg.Image(image_path, image_data, size=size)],
         [
             eg.Push(),
-            eg.Button(ok_label, width=POPUP_OK_BUTTON_WIDTH, use_ttk_buttons=POPUP_TTK_BUTTONS),
-            eg.Button(cancel_label, width=POPUP_CANCEL_BUTTON_WIDTH, use_ttk_buttons=POPUP_TTK_BUTTONS),
+            eg.Button(
+                ok_label, width=POPUP_OK_BUTTON_WIDTH, use_ttk_buttons=POPUP_TTK_BUTTONS
+            ),
+            eg.Button(
+                cancel_label,
+                width=POPUP_CANCEL_BUTTON_WIDTH,
+                use_ttk_buttons=POPUP_TTK_BUTTONS,
+            ),
             eg.Push(),
         ],
     ]
@@ -1497,8 +1571,10 @@ def input(
     default: str = "",
     only_number: bool = False,
     window_icon: Optional[str] = None,  # window icon, specify filename
-    validation: Optional[Union[str, Pattern[str]]] = None, # validation regular expression
-    validation_message: Optional[str] = None
+    validation: Optional[
+        Union[str, Pattern[str]]
+    ] = None,  # validation regular expression
+    validation_message: Optional[str] = None,
 ) -> Union[str, float, None]:
     """Display a message in a popup window with a text entry. Return the text entered."""
     return popup_input(
@@ -1528,7 +1604,9 @@ def input_number(
     window_icon: Optional[str] = None,  # window icon, specify filename
 ) -> Union[float, None]:
     """Display a message in a popup window with a number entry. Return the text entered."""
-    result = popup_input(message, title, default, only_number=True, window_icon=window_icon)
+    result = popup_input(
+        message, title, default, only_number=True, window_icon=window_icon
+    )
     if isinstance(result, float):
         return result
     return None

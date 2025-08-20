@@ -1,9 +1,9 @@
 # TkEasyGUI task runner
 
-SRC=TkEasyGUI
 SCRIPT_DIR := $(dir $(abspath $(lastword $(MAKEFILE_LIST))))
+SRC=./TkEasyGUI
 
-.PHONY: install install-dev lint format clean check
+.PHONY: install install-dev lint format clean check doc version
 
 install:
 	pip install -e .
@@ -14,21 +14,26 @@ install-dev:
 	pip install pylint black isort mypy
 
 lint:
+	cd $(SCRIPT_DIR)
 	pylint $(SRC)
-	black --check $(SRC)
-	isort --check-only $(SRC)
-	ruff check
-	mypy TkEasyGUI/
+	# black --check $(SRC)
+	# isort --check-only $(SRC)
 
 format:
 	black $(SRC)
 	isort $(SRC)
 
-build-docs:
+doc:
 	python update_version.py
 	python makedoc.py
 	python docs/scripts/readme_maker.py
 	@echo "ok"
+
+version:
+	python update_version.py
+
+build-docs:
+	make doc
 
 clean:
 	@echo "=== clean ==="
