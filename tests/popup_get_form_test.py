@@ -12,7 +12,7 @@ if result:
 # Ask with default values
 result = eg.popup_get_form(
     [
-        # (label, default_or_selections, type)
+        # Each item is a tuple: (label, default_or_selections, type)
         ("Name", "Suzu", "text"),
         ("Age", 20, "number"),
         ("Hobbies", ["Reading", "Writing"], "list"),
