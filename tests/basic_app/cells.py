@@ -2,6 +2,10 @@
 Cells > TkEasyGUI for The 7 Tasks of GUI Programming
 
 @ref https://7guis.github.io/7guis/tasks/
+
+### comment:
+Currently, TkEasyGUI does not have spreadsheet functionality.
+Instead, we use a read-only table to simulate cell editing.
 """
 # pylint: disable=line-too-long
 import random
@@ -9,14 +13,16 @@ import TkEasyGUI as eg
 
 def main():
     """Main function"""
+    # Prepare dummy data
     head = [chr(i) for i in range(ord("A"), ord("O") + 1)]
     data = []
     for _ in range(30):
         data.append([f"{random.randint(0, 10)}" for _ in range(len(head))])
-     # Create a window
-    window = eg.Window("Cells", layout=[
+
+    # Create a window
+    window = eg.Window("Dummy Cells", layout=[
         [
-            eg.Table(
+            eg.Table( # Read-only table to simulate cells
                 key="-table",
                 values=data,
                 headings=head,
@@ -28,9 +34,9 @@ def main():
                 expand_y=True),
         ],
         [
+            eg.Button("Edit", expand_x=True),
             eg.Button("Sum Rows", expand_x=True),
             eg.Button("Sum Columns", expand_x=True),
-            eg.Button("Edit", expand_x=True),
         ],
     ], size=(640, 400))
     # Bind events
