@@ -3671,6 +3671,10 @@ class Graph(Element):
         """Delete all"""
         self.widget.delete("all")  # type: ignore
 
+    def clear_all(self) -> None:
+        """Delete all"""
+        self.widget.delete("all")  # type: ignore
+
     def draw_rectangle(
         self,
         top_left: PointType,
@@ -4083,6 +4087,19 @@ class Listbox(Element):
             for i in selections:
                 index: int = int(i)
                 selected.append(self.values[index])
+        return selected
+
+    def get_selected_indices(self) -> list[int]:
+        """Get selected indices"""
+        if self.widget is None:
+            return []
+        wg: tk.Listbox = self.widget
+        selected: list[int] = []
+        selections: Any = wg.curselection()
+        if selections is not None:
+            for i in selections:
+                index: int = int(i)
+                selected.append(index)
         return selected
 
     def update(self, *args, **kw) -> None:
