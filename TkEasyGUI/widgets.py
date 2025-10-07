@@ -4676,7 +4676,9 @@ class FilesBrowse(FileBrowse):
         super().__init__(button_text=button_text, key=key, metadata=metadata, **kw)
         self.target_key = target_key
         self.title = title
-        self.file_types = file_types
+        self.file_types = (
+            file_types if file_types is not None else [("All Files", "*.*")]
+        )
         self.props["text"] = button_text
         self.enable_events = enable_events
         # force set params
@@ -4693,7 +4695,7 @@ class FileSaveAsBrowse(FileBrowse):
         key: Union[str, None] = None,
         target_key: Union[str, None] = None,
         title: str = "",
-        file_types: tuple[tuple[str, str]] = (("All Files", "*.*"),),
+        file_types: Optional[FileTypeList] = None,
         enable_events: bool = False,  # enable changing events
         # other
         metadata: Union[dict[str, Any], None] = None,

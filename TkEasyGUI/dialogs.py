@@ -15,9 +15,9 @@ from typing import Any, Callable, Optional, Union, cast
 from . import locale_easy as le
 from .utils import (
     ColorFormatType,
+    FileTypeList,
     FontType,
     PopupGetFormItemType,
-    FileTypeList,
     copy_to_clipboard,
     get_root_window,
     is_mac,
@@ -723,6 +723,28 @@ def popup_get_file(
         initial_folder = os.getcwd()
     if file_types is None:
         file_types = [("All Files", "*.*")]
+    # check no_window
+    if no_window is None:
+        no_window = True
+    if no_window is False:
+        # --- no_window is False ---
+        from . import widgets as eg
+
+        # show base dialog
+        layout = [
+            [eg.Text(message)],
+            [eg.Input(key="-file-", expand_x=True), eg.FileBrowse()],
+            [eg.HSeparator()],
+            [eg.Push(), eg.Button("OK"), eg.Button("Cancel"), eg.Push()],
+        ]
+        with eg.Window(title, layout=layout, modal=True) as win:
+            while win.is_alive():
+                event, values = win.read()
+                if event in [eg.WINDOW_CLOSED, "Cancel"]:
+                    return None
+                if event == "OK":
+                    return values["-file-"]
+        # --- end no_window is False ---
     # check file types
     new_types = []
     for ft in file_types:
