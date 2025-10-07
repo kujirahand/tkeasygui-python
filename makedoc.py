@@ -37,6 +37,9 @@ def main():
         basename = os.path.basename(file).replace(".py", "-py.md")
         if "__init__" in basename:
             continue
+        txt = eg.load_text_file(file)
+        if TAG_MAKEDOC_IGNORE in txt:
+            continue
         mod_name = basename.replace("-py.md", "")
         files.append(f"- [TkEasyGUI.{mod_name}](./{basename})")
 
