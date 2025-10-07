@@ -4565,7 +4565,7 @@ class FileBrowse(Element):
         key: Union[str, int, None] = None,
         title: str = "",
         target_key: Union[str, None] = None,
-        file_types: Optional[list[tuple[str, str]]] = None,
+        file_types: Optional[FileTypeList] = None,
         multiple_files: bool = False,
         initial_folder: Union[str, None] = None,
         save_as: bool = False,
@@ -4705,7 +4705,9 @@ class FileSaveAsBrowse(FileBrowse):
         super().__init__(button_text=button_text, key=key, metadata=metadata, **kw)
         self.target_key = target_key
         self.title = title
-        self.file_types = file_types
+        self.file_types = (
+            file_types if file_types is not None else [("All Files", "*.*")]
+        )
         self.props["text"] = button_text
         self.enable_events = enable_events
         # force set params
