@@ -109,7 +109,7 @@ class Window:
         self,
         title: str,
         layout: LayoutType,  # set elements layout
-        size: Union[tuple[int, int], None] = None,  # window size
+        size: Optional[tuple[int, int]] = None,  # window size
         resizable: bool = False,
         font: Optional[FontType] = None,
         modal: bool = False,  # modal window
@@ -122,7 +122,7 @@ class Window:
         enable_mouse_events: bool = False,  # enable mouse events (post WINDOW_MOUSE_EVENT)
         enable_resize_events: bool = False,  # enable resize events (post WINDOW_RESIZE_EVENT)
         return_keyboard_events: bool = False,  # enable keyboard events (for compatibility)
-        location: Union[tuple[int, int], None] = None,  # window location
+        location: Optional[tuple[int, int]] = None,  # window location
         center_window: bool = True,  # move window to center
         row_padding: int = 2,  # row padding
         padding_x: int = 8,  # x padding around the window
@@ -145,7 +145,7 @@ class Window:
         if self.key is None:
             self.key = self.title
         self.window: tk.Toplevel = tk.Toplevel(master=active_win)
-        self.timeout: Union[int, None] = None
+        self.timeout: Optional[int] = None
         self.timeout_key: str = WINDOW_TIMEOUT
         self.timeout_id: Union[str, None] = None
         self.events: Queue = Queue()  # Queue[key, values]
@@ -156,7 +156,7 @@ class Window:
         )
         self.layout: LayoutType = layout
         self._event_hooks: dict[KeyType, list[Callable]] = {}
-        self.font: Union[FontType, None] = font
+        self.font: Optional[FontType] = font
         self.radio_group_dict: dict[str, tk.IntVar] = {}  # [variable]
         self.radio_group_dict_keys: dict[str, list[str]] = {}
         self.checkbox_dict: dict[str, list[str]] = {}
@@ -167,10 +167,10 @@ class Window:
         self._no_titlebar: bool = no_titlebar
         self._grab_anywhere: bool = grab_anywhere
         self._grab_flag: bool = False
-        self._start_x: Union[int, None] = None
-        self._start_y: Union[int, None] = None
-        self._mouse_x: Union[int, None] = None
-        self._mouse_y: Union[int, None] = None
+        self._start_x: Optional[int] = None
+        self._start_y: Optional[int] = None
+        self._mouse_x: Optional[int] = None
+        self._mouse_y: Optional[int] = None
         self.alpha_channel: float = alpha_channel
         self.enable_key_events: bool = enable_key_events
         self.return_keyboard_events: bool = return_keyboard_events
@@ -184,7 +184,7 @@ class Window:
         self._idle_time: int = 10
         self._has_last_event = True
         self.element_justification = element_justification
-        self.need_focus_widget: Union[tk.Widget, None] = None
+        self.need_focus_widget: Optional[tk.Widget] = None
         # withdraw window
         self.window.withdraw()  # Set the window to hidden mode
         # Icon
@@ -193,7 +193,7 @@ class Window:
         else:
             self._set_icon(DEFAULT_WINDOW_ICON)
         # Canvas
-        self.canvas: Union[tk.Canvas, None] = None
+        self.canvas: Optional[tk.Canvas] = None
         if show_scrollbar:
             self.canvas = tk.Canvas(self.window)
             self.canvas.pack(

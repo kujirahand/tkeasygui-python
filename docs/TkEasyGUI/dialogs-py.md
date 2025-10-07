@@ -103,7 +103,7 @@ def cast(typ, val):
 Display a message in a popup window with Yes and No buttons. Return True or False.
 
 ```py
-def confirm(question: str, title: Union[str, None] = None) -> bool:
+def confirm(question: str, title: Optional[str] = None) -> bool:
 ```
 
 - [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/dialogs.py#L1656)
@@ -135,7 +135,7 @@ Display a message in a popup window with a text entry. Return the text entered.
 ```py
 def input(
     message: str,
-    title: Union[str, None] = None,
+    title: Optional[str] = None,
     default: str = "",
     only_number: bool = False,
     window_icon: Optional[str] = None,  # window icon, specify filename
@@ -155,7 +155,7 @@ Display a message in a popup window with a number entry. Return the text entered
 ```py
 def input_number(
     message: str,
-    title: Union[str, None] = None,
+    title: Optional[str] = None,
     default: str = "",
     window_icon: Optional[str] = None,  # window icon, specify filename
 ) -> Union[float, None]:
@@ -188,7 +188,7 @@ def is_win() -> bool:
 Show message in a popup window like VB
 
 ```py
-def msgbox(message: str, title: Union[str, None] = None) -> None:  # message
+def msgbox(message: str, title: Optional[str] = None) -> None:  # message
     """Show message in a popup window like VB"""
     title = title if title is not None else le.get_text("Information")
     messagebox.showinfo(title, message)
@@ -256,7 +256,7 @@ print(color)
 ```py
 def popup_buttons(
     message: str,
-    title: Union[str, None] = None,
+    title: Optional[str] = None,
     buttons: Union[
     list[str], None
     ] = None,  # button labels(default is ["OK", "Cancel"])
@@ -303,7 +303,7 @@ format: "html", "rgb", "tuple"
 ```py
 def popup_color(
     title: str = "",
-    default_color: Union[str, None] = None,
+    default_color: Optional[str] = None,
     format: ColorFormatType = "html",  # pylint: disable=redefined-builtin
 ) -> Union[str, tuple[int, int, int], None]:
 ```
@@ -317,7 +317,7 @@ Display a message in a popup window with an error icon.
 ```py
 def popup_error(
     message: str,
-    title: Union[str, None] = None,
+    title: Optional[str] = None,
     size: Union[tuple[int, int], None] = None,
     icon: str = "error",
     icon_size: tuple[int, int] = (48, 48),
@@ -336,12 +336,12 @@ Display a calendar in a popup window. Return the datetime entered or None.
 ```py
 def popup_get_date(
     message: str = "",
-    title: Union[str, None] = None,
+    title: Optional[str] = None,
     current_date: Union[datetime, None] = None,
     font: Union[tuple[str, int], None] = None,
-    ok_label: Union[str, None] = None,
-    cancel_label: Union[str, None] = None,
-    date_format: Union[str, None] = None,
+    ok_label: Optional[str] = None,
+    cancel_label: Optional[str] = None,
+    date_format: Optional[str] = None,
     close_when_date_chosen: bool = False,
     sunday_first: bool = False,  # Sunday is the first day of the week
     window_icon: Optional[str] = None,  # window icon, specify filename
@@ -357,12 +357,12 @@ Popup a file selection dialog. Return the file selected.
 ```py
 def popup_get_file(
     message: str = "",
-    title: Union[str, None] = None,
-    initial_folder: Union[str, None] = None,
+    title: Optional[str] = None,
+    initial_folder: Optional[str] = None,
     save_as: bool = False,  # show `save as` dialog
     multiple_files: bool = False,  # can select multiple files
     file_types: Optional[FileTypeList] = None,
-    default_extension: Union[str, None] = None,
+    default_extension: Optional[str] = None,
     # pylint: disable=unused-argument
     no_window: Optional[bool] = None,  # for compatibility
     **kw,
@@ -378,8 +378,8 @@ Popup a folder selection dialog. Return the folder selected.
 ```py
 def popup_get_folder(
     message: str = "",
-    title: Union[str, None] = None,
-    default_path: Union[str, None] = None,
+    title: Optional[str] = None,
+    default_path: Optional[str] = None,
     # pylint: disable=unused-argument
     no_window: Optional[bool] = None,  # for compatibility
     **kw,
@@ -448,9 +448,9 @@ Display a message in a popup window with a text entry. Return the text entered.
 ```py
 def popup_get_text(
     message: str,
-    title: Union[str, None] = None,
-    default: Union[str, None] = None,
-    default_text: Union[str, None] = None,  # same as default for compatibility
+    title: Optional[str] = None,
+    default: Optional[str] = None,
+    default_text: Optional[str] = None,  # same as default for compatibility
     font: Optional[FontType] = None,
     size: Union[tuple[int, int], None] = None,
     window_icon: Optional[str] = None,  # window icon, specify filename
@@ -466,14 +466,14 @@ Display an image in a popup window. Return the pushed Button("OK" or None).
 ```py
 def popup_image(
     message: str,
-    title: Union[str, None] = None,
-    image_path: Union[str, None] = None,
+    title: Optional[str] = None,
+    image_path: Optional[str] = None,
     image_data: Union[bytes, None] = None,
     size: tuple[int, int] = (400, 300),
-    ok_label: Union[str, None] = None,
+    ok_label: Optional[str] = None,
     ok_value: str = "OK",
-    cancel_label: Union[str, None] = None,
-    cancel_value: Union[str, None] = None,
+    cancel_label: Optional[str] = None,
+    cancel_value: Optional[str] = None,
     font: Union[FontType, None] = None,
     window_icon: Optional[str] = None,  # window icon, specify filename
     auto_close_duration: int = -1,  # auto close duration in seconds
@@ -490,7 +490,7 @@ Display a message in a popup window with an warning icon.
 ```py
 def popup_info(
     message: str,
-    title: Union[str, None] = None,
+    title: Optional[str] = None,
     size: Union[tuple[int, int], None] = None,
     icon: str = "information",
     icon_size: tuple[int, int] = (48, 48),
@@ -538,7 +538,7 @@ def popup_listbox(
     title: str = "",
     size: tuple[int, int] = (20, 7),
     font: Union[FontType, None] = None,
-    default_value: Union[str, None] = None,  # default value
+    default_value: Optional[str] = None,  # default value
     default_index: Optional[int] = None,  # default index
     multiple: bool = False,  # multiple selection
     resizable: bool = True,  # resizable
@@ -555,15 +555,15 @@ Display a multiline message in a popup window. Return the text entered. if cance
 ```py
 def popup_memo(
     message: str,  # Text to enter in a multi-line text box
-    title: Union[str, None] = None,  # Window title
+    title: Optional[str] = None,  # Window title
     size: tuple[int, int] = (60, 8),  # Size of the text box
     readonly: bool = False,  # Read-only mode
     header: str = "",  # Label displayed above the text box
     resizable: bool = True,  # resizable
     window_icon: Optional[str] = None,  # window icon, specify filename
-    ok_label: Union[str, None] = None,
-    cancel_label: Union[str, None] = None,
-    cancel_value: Union[str, None] = None,
+    ok_label: Optional[str] = None,
+    cancel_label: Optional[str] = None,
+    cancel_value: Optional[str] = None,
     font: Union[FontType, None] = None,
 ) -> Union[str, None]:
 ```
@@ -660,9 +660,9 @@ Display a message in a popup window with OK and Cancel buttons. Return "OK" or "
 ```py
 def popup_ok_cancel(
     message: str,
-    title: Union[str, None] = None,
-    ok_label: Union[str, None] = None,
-    cancel_label: Union[str, None] = None,
+    title: Optional[str] = None,
+    ok_label: Optional[str] = None,
+    cancel_label: Optional[str] = None,
     ok_value: str = "OK",
     cancel_value: str = "Cancel",
     size: Union[tuple[int, int], None] = None,
@@ -689,15 +689,15 @@ eg.print(text)
 ```py
 def popup_scrolled(
     message: str,  # Text to enter in a multi-line text box
-    title: Union[str, None] = None,  # Window title
+    title: Optional[str] = None,  # Window title
     size: tuple[int, int] = (40, 5),  # Size of the text box
     readonly: bool = False,  # Read-only mode
     header: str = "",  # Label displayed above the text box
     resizable: bool = True,  # resizable
     window_icon: Optional[str] = None,  # window icon, specify filename
-    ok_label: Union[str, None] = None,
-    cancel_label: Union[str, None] = None,
-    cancel_value: Union[str, None] = None,
+    ok_label: Optional[str] = None,
+    cancel_label: Optional[str] = None,
+    cancel_value: Optional[str] = None,
     font: Union[FontType, None] = None,
 ) -> Union[str, None]:
 ```
@@ -728,7 +728,7 @@ Display a message in a popup window with an warning icon.
 ```py
 def popup_warning(
     message: str,
-    title: Union[str, None] = None,
+    title: Optional[str] = None,
     size: Union[tuple[int, int], None] = None,
     icon: str = "warning",
     icon_size: tuple[int, int] = (48, 48),
@@ -764,9 +764,9 @@ print(ans) # "can" or "no"
 ```py
 def popup_yes_no(
     message: str,  # question message
-    title: Union[str, None] = None,  # window title
-    yes_label: Union[str, None] = None,  # label for yes button
-    no_label: Union[str, None] = None,  # label for no button
+    title: Optional[str] = None,  # window title
+    yes_label: Optional[str] = None,  # label for yes button
+    no_label: Optional[str] = None,  # label for no button
     yes_value: str = "Yes",  # return value for yes
     no_value: str = "No",  # return value for no
     size: Union[tuple[int, int], None] = None,
@@ -786,10 +786,10 @@ Display a message in a popup window with Yes and No buttons. Return "Yes" or "No
 ```py
 def popup_yes_no_cancel(
     message: str,
-    title: Union[str, None] = None,
-    yes_label: Union[str, None] = None,
-    no_label: Union[str, None] = None,
-    cancel_label: Union[str, None] = None,
+    title: Optional[str] = None,
+    yes_label: Optional[str] = None,
+    no_label: Optional[str] = None,
+    cancel_label: Optional[str] = None,
     yes_value: str = "Yes",
     no_value: str = "No",
     cancel_value: str = "Cancel",
@@ -838,7 +838,7 @@ def send_notification_win(message: str, title: str = "") -> bool:
 Show message in a popup window
 
 ```py
-def show_info(message: str, title: Union[str, None] = None) -> None:
+def show_info(message: str, title: Optional[str] = None) -> None:
 ```
 
 - [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/dialogs.py#L1593)
@@ -848,7 +848,7 @@ def show_info(message: str, title: Union[str, None] = None) -> None:
 Show message in a popup window
 
 ```py
-def show_message(message: str, title: Union[str, None] = None) -> None:
+def show_message(message: str, title: Optional[str] = None) -> None:
 ```
 
 - [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/dialogs.py#L1587)
