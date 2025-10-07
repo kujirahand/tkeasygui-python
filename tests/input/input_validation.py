@@ -44,12 +44,12 @@ with eg.Window("Input Validation", layout, resizable=True) as window:
         if event == "Print Values":
             # check inputs
             if not window["-num3-"].is_valid():
-                window["-num3-"].forcus()
+                window["-num3-"].focus()
                 continue
             if not window["-mail-"].is_valid():
-                window["-mail-"].forcus()
+                window["-mail-"].focus()
                 continue
             if not window["-alnum-"].is_valid():
-                window["-alnum-"].forcus()
+                window["-alnum-"].focus()
                 continue
             eg.print(values)

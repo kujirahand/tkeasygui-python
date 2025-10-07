@@ -1303,7 +1303,7 @@ class Element:
             return 0
         return self.widget.winfo_height()
 
-    def forcus(self) -> None:
+    def focus(self) -> None:
         """Set focus to the element."""
         if self.widget is not None:
             try:
@@ -1311,9 +1311,9 @@ class Element:
             except tk.TclError:
                 pass
 
-    def forcus_set(self) -> None:
+    def focus_set(self) -> None:
         """Set focus to the element."""
-        self.forcus()
+        self.focus()
 
     def bind(
         self,

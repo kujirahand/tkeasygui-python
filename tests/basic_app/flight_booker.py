@@ -65,10 +65,10 @@ def main():
         elif event == "Book":
             # check inputs
             if not window["-t1"].is_valid():
-                window["-t1"].forcus()
+                window["-t1"].focus()
                 continue
             if (values["-mode-"] == "return flight") and (not window["-t2"].is_valid()):
-                window["-t2"].forcus()
+                window["-t2"].focus()
                 continue
             data = (
                 [values["-t1"]]
