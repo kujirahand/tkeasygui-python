@@ -1,7 +1,7 @@
 """A scrollable frame with both vertical and horizontal scrollbars."""
 
 import tkinter as tk
-import tkinter.ttk as ttk
+from tkinter import ttk
 
 
 class ScrollableLabelFrame(tk.LabelFrame):
