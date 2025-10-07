@@ -11,6 +11,7 @@ pip install opencv-contrib-python
 
 try:
     import cv2 as cv
+
     HAS_OPENCV = True
 except ImportError:
     cv = None

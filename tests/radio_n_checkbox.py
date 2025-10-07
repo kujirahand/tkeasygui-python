@@ -21,11 +21,7 @@ def main():
         [eg.Radio("Others", group_id="OS", key="others", enable_events=True)],
     ]
     layout_frame_animals = [
-        [
-            eg.Checkbox(
-                "Dog", group_id="animals", enable_events=True, default=True
-            )
-        ],
+        [eg.Checkbox("Dog", group_id="animals", enable_events=True, default=True)],
         [eg.Checkbox("Cat", group_id="animals", enable_events=True)],
         [eg.Checkbox("Rabit", group_id="animals", enable_events=True)],
         [eg.VPush()],

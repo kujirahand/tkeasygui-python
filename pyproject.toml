@@ -40,6 +40,28 @@ Repository = "https://github.com/kujirahand/tkeasygui-python/"
 Issues = "https://github.com/kujirahand/tkeasygui-python/issues"
 Changelog = "https://github.com/kujirahand/tkeasygui-python/releases"
 
+[tool.black]
+line-length = 88
+target-version = ['py39']
+include = '\.pyi?$'
+extend-exclude = '''
+/(
+  # directories
+  \.eggs
+  | \.git
+  | \.hg
+  | \.mypy_cache
+  | \.tox
+  | \.venv
+  | venv
+  | \.svn
+  | _build
+  | buck-out
+  | build
+  | dist
+)/
+'''
+
 [tool.ruff.lint]
 select = ["E", "F", "D"]
 ignore = ["E501", "D415", "D203", "D212", "D400", "D401", "D200"]

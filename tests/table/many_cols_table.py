@@ -2,6 +2,7 @@
 
 import TkEasyGUI as eg
 
+
 def main():
     """Main function to run the table test with many columns."""
     # make dummy data
@@ -47,6 +48,7 @@ def main():
                 tbl.set_values(data[1:], data[0])
             is_fruits = not is_fruits
     win.close()
+
 
 if __name__ == "__main__":
     main()

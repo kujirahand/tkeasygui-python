@@ -1,7 +1,7 @@
 # TkEasyGUI task runner
 
 SCRIPT_DIR := $(dir $(abspath $(lastword $(MAKEFILE_LIST))))
-SRC=./TkEasyGUI
+SRC=$(SCRIPT_DIR)TkEasyGUI
 
 .PHONY: install install-dev lint format clean check doc version
 
@@ -17,9 +17,19 @@ lint:
 	cd $(SCRIPT_DIR)
 	pylint $(SRC)
 	black --check $(SRC)
+	mypy $(SRC)
 
 format:
-	black $(SRC)
+	black $(SRC) tests/
+
+format-check:
+	black --check $(SRC) tests/
+
+lint-and-format:
+	cd $(SCRIPT_DIR)
+	black $(SRC) tests/
+	pylint $(SRC)
+	mypy $(SRC)
 
 doc:
 	python update_version.py

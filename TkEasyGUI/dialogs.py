@@ -1111,7 +1111,9 @@ def popup_get_date(
 
 
 def popup_get_form(
-    form_items: list[PopupGetFormItemType],  # list of form items(label[,selection or default][,type])
+    form_items: list[
+        PopupGetFormItemType
+    ],  # list of form items(label[,selection or default][,type])
     title: str = "Form",  # window title
     size: Union[tuple[int, int], None] = None,
     window_icon: Optional[str] = None,  # window icon, specify filename

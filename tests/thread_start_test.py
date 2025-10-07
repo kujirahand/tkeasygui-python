@@ -17,6 +17,7 @@ def long_running_process(wait: int):
     print("sleep end")
     return f"done {wait}"
 
+
 def main():
     """Main function to run the example."""
     # define layout
@@ -71,6 +72,7 @@ def main():
             eg.print(res)
     # close window
     window.close()
+
 
 if __name__ == "__main__":
     main()
