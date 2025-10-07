@@ -2935,8 +2935,8 @@ class Input(Element):
         except tk.TclError:
             pass
 
-    def check_validation(self) -> bool:
-        """Check validation"""
+    def is_valid(self) -> bool:
+        """Verifies whether the validation is correct and returns the result."""
         if self._validation_pattern is None:
             return True
         cur = self.get_text()

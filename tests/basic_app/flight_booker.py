@@ -20,7 +20,6 @@ def main():
                 eg.Combo(
                     mode_list,
                     key="-mode-",
-                    size=(15, 1),
                     enable_events=True,
                     readonly=True,
                     default_value=mode_list[0],
@@ -65,12 +64,10 @@ def main():
                 window["-t2"].update(disabled=False)
         elif event == "Book":
             # check inputs
-            if not window["-t1"].check_validation():
+            if not window["-t1"].is_valid():
                 window["-t1"].forcus()
                 continue
-            if (values["-mode-"] == "return flight") and (
-                not window["-t2"].check_validation()
-            ):
+            if (values["-mode-"] == "return flight") and (not window["-t2"].is_valid()):
                 window["-t2"].forcus()
                 continue
             data = (

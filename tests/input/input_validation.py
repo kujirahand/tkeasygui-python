@@ -42,4 +42,14 @@ with eg.Window("Input Validation", layout, resizable=True) as window:
         if event in ("Exit", eg.WIN_CLOSED):
             break
         if event == "Print Values":
+            # check inputs
+            if not window["-num3-"].is_valid():
+                window["-num3-"].forcus()
+                continue
+            if not window["-mail-"].is_valid():
+                window["-mail-"].forcus()
+                continue
+            if not window["-alnum-"].is_valid():
+                window["-alnum-"].forcus()
+                continue
             eg.print(values)
