@@ -731,13 +731,13 @@ def popup_get_file(
         from . import widgets as eg
 
         # show base dialog
-        layout = [
+        layout_no_window: list[list[eg.Element]] = [
             [eg.Text(message)],
             [eg.Input(key="-file-", expand_x=True), eg.FileBrowse()],
             [eg.HSeparator()],
             [eg.Push(), eg.Button("OK"), eg.Button("Cancel"), eg.Push()],
         ]
-        with eg.Window(title, layout=layout, modal=True) as win:
+        with eg.Window(title=title, layout=layout_no_window, modal=True) as win:
             while win.is_alive():
                 event, values = win.read()
                 if event in [eg.WINDOW_CLOSED, "Cancel"]:
