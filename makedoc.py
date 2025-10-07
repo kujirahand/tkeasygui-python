@@ -39,6 +39,7 @@ def read_module(file: str, root_name: str) -> None:
     module_name = os.path.basename(file).replace(".py", "")
     if module_name == "__init__":
         return
+    print(f"Module: {module_name}")
     mod = getattr(eg, module_name)
     doc = trim_docstring(str(mod.__doc__))
     print("---------------------------")
@@ -211,7 +212,10 @@ def trim_docstring(doc):
 def get_function_definition(func):
     """関数の定義部分を取得する"""
     # 関数のソースコードを取得
-    src = str(inspect.getsource(func))
+    try:
+        src = str(inspect.getsource(func))
+    except TypeError:
+        return ""
     src = src.strip()
     res = []
     flag = False

@@ -16,7 +16,7 @@ src_path = os.path.join(icon_dir, "tkeasygui-org.png")
 dest_path = os.path.join(icon_dir, "icon.ico")
 png_path = os.path.join(image_dir, "icon64.png")
 png256_path = os.path.join(image_dir, "icon256.png")
-py_path = os.path.join(root_dir, "TkEasyGUI", "icon.py")
+py_path = os.path.join(root_dir, "TkEasyGUI", "icon_default.py")
 
 # Open the source image
 img = Image.open(src_path)
