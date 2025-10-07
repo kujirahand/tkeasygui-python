@@ -111,3 +111,7 @@ check:
 	cd $(SCRIPT_DIR)
 	ruff check TkEasyGUI/*.py
 	mypy TkEasyGUI/*.py
+
+test_elements:
+	python element2json.py
+	python elements_test.py
