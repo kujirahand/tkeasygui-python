@@ -19,13 +19,13 @@ from typing import Any, Callable, Literal, Optional, Pattern, Sequence, Union, c
 from PIL import Image as PILImage
 from PIL import ImageColor, ImageGrab, ImageTk
 
-from . import icon_default
+from . import icon_default, utils, version
 from . import locale_easy as le
-from . import utils, version
-from .utils import EventMode  # type alias
 from .utils import (
     CursorType,
     ElementJustifcation,
+    EventMode,  # type alias
+    FileTypeList,
     FontType,
     ListboxSelectMode,
     OrientationType,
@@ -4666,7 +4666,7 @@ class FilesBrowse(FileBrowse):
         key: Union[str, None] = None,
         target_key: Union[str, None] = None,
         title: str = "",
-        file_types: tuple[tuple[str, str]] = (("All Files", "*.*"),),
+        file_types: Optional[FileTypeList] = None,
         enable_events: bool = False,  # enable changing events
         # other
         metadata: Union[dict[str, Any], None] = None,
