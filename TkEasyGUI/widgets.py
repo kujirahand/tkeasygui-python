@@ -34,22 +34,29 @@ from .utils import (
     TextAlign,
     TextVAlign,
     TkEasyError,
-    generate_element_id,
-    generate_element_style_key,
     get_current_theme,
     get_root_window,
-    get_ttk_style,
-    register_element_key,
 )
 from .widgets_image import get_image_tk
+from .widgets_window import (
+    EG_WINDOW_MANAGER,
+    generate_element_id,
+    generate_element_style_key,
+    get_active_eg_window,
+    get_eg_window_count,
+    get_last_eg_window,
+    get_ttk_style,
+    pop_easy_window,
+    push_easy_window,
+    register_element_key,
+    remove_element_key,
+)
 
 # ------------------------------------------------------------------------------
 # TypeAlias
 # ------------------------------------------------------------------------------
-# WindowType: TypeAlias = "Window"
-# ElementType: TypeAlias = "Element"
-WindowType = "Window"  # pylint: disable=invalid-name
-ElementType = "Element"  # pylint: disable=invalid-name
+WINDOW_TYPE = "Window"
+ELEMENT_TYPE = "Element"
 LayoutType = Sequence[Sequence["Element"]]
 KeyType = Union[str, int]
 
@@ -130,7 +137,7 @@ class Window:
         """Create a window with a layout of widgets."""
         self.modal: bool = modal
         # check active window
-        active_win: Union[tk.Toplevel, tk.Tk, None] = _get_active_window()
+        active_win: Union[tk.Toplevel, tk.Tk, None] = get_active_eg_window()
         if active_win is None:
             active_win = get_root_window()
         self.key = key
@@ -250,8 +257,8 @@ class Window:
                 ),
             )
         # push window
-        self.parent_window: Union[Window, None] = _window_parent()
-        _window_push(self)
+        self.parent_window: Union[Window, None] = get_last_eg_window()
+        push_easy_window(self)
         # set show event
         if enable_show_events:
             self.window.bind("<Map>", self._on_window_show)
@@ -951,7 +958,7 @@ class Window:
         root = get_root_window()
         # remove from key registry
         for key in self.key_elements:
-            utils.remove_element_key(key)
+            remove_element_key(key)
         # close window
         try:
             self.flag_alive = False
@@ -972,7 +979,7 @@ class Window:
                 pass
             # remove from TkEasyGUI window stack
             try:
-                _window_pop(self)
+                pop_easy_window(self)
             except tk.TclError:  # ignore
                 pass
             # activate parent window
@@ -982,7 +989,7 @@ class Window:
             except tk.TclError:  # ignore
                 pass
             # check window count
-            win_count = _window_count()
+            win_count = get_eg_window_count()
             if win_count == 0:
                 self.window.quit()  # quit app
             ### print("TkEasyGUI.Window.close: window closed")
@@ -4412,9 +4419,7 @@ class Table(Element):
         if len(self.headings) > max_columns:
             self.max_columns = len(self.headings)
         # event_returns_values ?
-        self.event_returns_values: bool = (
-            not utils.EG_WINDOW_MANAGER.get_sg_compatibility()
-        )
+        self.event_returns_values: bool = not EG_WINDOW_MANAGER.get_sg_compatibility()
         if event_returns_values is not None:
             self.event_returns_values = event_returns_values
         # justification
@@ -5135,38 +5140,3 @@ def time_checker_end(start_time: datetime) -> int:
     elapsed_time = (datetime.now() - start_time).total_seconds()
     msec = int(elapsed_time * 1000)
     return msec
-
-
-# TkEasyGUI's active window
-EG_WINDOW_LIST: list[Window] = []
-
-
-def _get_active_window() -> Union[tk.Toplevel, None]:
-    """Get the active window."""
-    if len(EG_WINDOW_LIST) == 0:
-        return None
-    return EG_WINDOW_LIST[-1].window
-
-
-def _window_parent() -> Union[Window, None]:
-    """Get the parent window."""
-    if len(EG_WINDOW_LIST) == 0:
-        return None
-    return EG_WINDOW_LIST[-1]
-
-
-def _window_count() -> int:
-    """Get the number of windows."""
-    return len(EG_WINDOW_LIST)
-
-
-def _window_push(win: Window) -> None:
-    """Push a window to the list."""
-    EG_WINDOW_LIST.append(win)
-
-
-def _window_pop(win: Window) -> None:
-    """Pop a window from the list."""
-    i = EG_WINDOW_LIST.index(win)
-    if i >= 0:
-        EG_WINDOW_LIST.pop()
