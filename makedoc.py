@@ -37,7 +37,8 @@ def main():
         basename = os.path.basename(file).replace(".py", "-py.md")
         if "__init__" in basename:
             continue
-        files.append(f"- [{basename}](./{basename})")
+        mod_name = basename.replace("-py.md", "")
+        files.append(f"- [TkEasyGUI.{mod_name}](./{basename})")
 
     # README.md
     str_files = "\n".join(sorted(files))
