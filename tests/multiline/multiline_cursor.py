@@ -1,3 +1,5 @@
+"""Test Multiline Cursor Position"""
+
 import TkEasyGUI as eg
 
 window = eg.Window(
@@ -62,9 +64,9 @@ while window.is_alive():
     elif event == "set_cursor_pos('1.0')":
         multiline.set_cursor_pos("1.0")
     elif event == "get_selection_start":
-        eg.popup(multiline.get_selection_start())
+        eg.popup(str(multiline.get_selection_start()))
     elif event == "get_selection_length":
-        eg.popup(multiline.get_selection_length())
+        eg.popup(str(multiline.get_selection_length()))
     elif event == "set_selection_start(0,5)":
         multiline.set_selection_start(0, 5)
     elif event == "set_selection_start(10,5)":

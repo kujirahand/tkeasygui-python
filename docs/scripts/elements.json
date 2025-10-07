@@ -17,6 +17,7 @@
   "Graph",
   "HSeparator",
   "Image",
+  "ImageResizeType",
   "Input",
   "InputText",
   "Label",

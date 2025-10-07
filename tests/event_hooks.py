@@ -27,11 +27,11 @@ window = eg.Window(
 )
 
 
-def print_log(text, event, values):
-    # print log to "-log-"
+def print_log(text, event_name, _values):
+    """Print log to -log-"""
     log: eg.Multiline = window["-log-"]
     log.print("📍", text_color="blue", end="")
-    log.print(event + " ", text_color="red", end="")
+    log.print(event_name + " ", text_color="red", end="")
     log.print(text, text_color="blue")
     return False
 

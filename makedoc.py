@@ -1,3 +1,5 @@
+"""Generate documentation files from the TkEasyGUI package."""
+
 import glob
 import inspect
 import json
@@ -12,11 +14,14 @@ OUTPUT_DIR = os.path.join(SCRIPT_DIR, "docs", "TkEasyGUI")
 DOCS_SCRIPTS_DIR = os.path.join(SCRIPT_DIR, "docs", "scripts")
 REPO = "https://github.com/kujirahand/tkeasygui-python/blob/main"
 
+
 def main():
+    """Generate documentation files from the TkEasyGUI package."""
     package_path = eg.__path__[0]
     print(package_path)
     # print(eg.__doc__)
-    root_name = eg.__package__
+    root_name = eg.__package__ or eg.__name__
+    print("Package:", root_name)
 
     # get modules
     outputs = []
@@ -28,7 +33,9 @@ def main():
     for file in outputs:
         print("-", file)
 
+
 def read_module(file: str, root_name: str) -> None:
+    """モジュールを読み込み、ドキュメントを生成する"""
     module_name = os.path.basename(file).replace(".py", "")
     if module_name == "__init__":
         return
@@ -49,7 +56,7 @@ def read_module(file: str, root_name: str) -> None:
         if prop.startswith("__"):
             continue
         p = getattr(mod, prop)
-        if type(p) is type:
+        if isinstance(p, type):
             mod2 = inspect.getmodule(p)
             if mod2 != mod:
                 continue
@@ -62,7 +69,7 @@ def read_module(file: str, root_name: str) -> None:
             # get init code
             if p.__init__ is not None:
                 print(f"- class {prop}")
-                code_def = get_function_definition(p.__init__, skip_self=True)
+                code_def = get_function_definition(p.__init__)
                 code_def = re.sub("^def __init__", f"class {class_name}", code_def)
                 code_def = re.sub(r"->\s*None\s*:", "", code_def)
                 if prop == "Button":
@@ -82,21 +89,34 @@ def read_module(file: str, root_name: str) -> None:
             method_link = []
             methods = inspect.getmembers(pclass)
             for name, method in methods:
-                if name.startswith("_"):
+                if name is None or name.startswith("_"):
+                    continue
+                # Skip if name is not a string (e.g., enum.property objects)
+                if not isinstance(name, str):
+                    continue
+                # Skip enum properties specifically
+                if hasattr(method, "__class__") and "enum" in str(type(method)):
                     continue
                 print(f"  - (method) {module_name}.{class_name}.{name}")
                 method_doc += f"### {class_name}.{name}\n\n"
                 doc = trim_docstring(method.__doc__)
                 if doc.strip() != "":
                     method_doc += doc.strip() + "\n\n"
-                ff = getattr(p, name)
+                try:
+                    ff = getattr(p, name)
+                except AttributeError:
+                    print("*** AttributeError skip *** ", class_name, name)
+                    continue
                 if not isinstance(ff, types.FunctionType):
                     print("*** skip *** ", type(ff), class_name, name)
                     continue
-                def_code = get_function_definition(method, skip_self=True)
+                def_code = get_function_definition(method)
                 method_doc += "```py\n"
                 method_doc += def_code
                 method_doc += "```\n\n"
+                # Get method source info
+                code = method.__code__
+                fname = code.co_filename.replace(SCRIPT_DIR, "")
                 method_doc += f"- [source]({REPO}{fname}#L{code.co_firstlineno})\n"
                 method_doc += "\n"
                 method_link.append(f"- [{name}](#{class_name.lower()}{name.lower()})")
@@ -112,7 +132,9 @@ def read_module(file: str, root_name: str) -> None:
                 class_link.append(f"- [{class_name}](#{class_name.lower()})")
             result += "\n".join(class_link) + "\n\n"
         result += classes
-        head_link.append(f"- [Classes](#classes-of-{root_name.lower()}{module_name.lower()})")
+        head_link.append(
+            f"- [Classes](#classes-of-{root_name.lower()}{module_name.lower()})"
+        )
     # elements
     if len(elements) > 0 and module_name == "widgets":
         print("* elements:\n", elements)
@@ -153,7 +175,9 @@ def read_module(file: str, root_name: str) -> None:
         result += f"# Functions of {root_name}.{module_name}\n\n"
         result += "\n".join(function_link) + "\n\n"
         result += functions
-        head_link.append(f"- [Functions](#functions-of-{root_name.lower()}{module_name.lower()})")
+        head_link.append(
+            f"- [Functions](#functions-of-{root_name.lower()}{module_name.lower()})"
+        )
 
     print("---------------------------")
     result = head + "\n".join(head_link) + "\n\n" + result
@@ -161,6 +185,7 @@ def read_module(file: str, root_name: str) -> None:
     with open(output_file, "w", encoding="utf-8") as fp:
         fp.write(result)
     print("- output=", output_file)
+
 
 def trim_docstring(doc):
     """docstringのインデントを整形する"""
@@ -176,13 +201,14 @@ def trim_docstring(doc):
         if stripped:
             indent = line.find(stripped)
             break
-    trimmed = [lines[0].strip()] 
+    trimmed = [lines[0].strip()]
     for line in lines[1:]:
         trimmed.append(line[indent:].rstrip())
     res = "\n".join(trimmed).strip()
     return res
 
-def get_function_definition(func, skip_self=False):
+
+def get_function_definition(func):
     """関数の定義部分を取得する"""
     # 関数のソースコードを取得
     src = str(inspect.getsource(func))
@@ -205,6 +231,7 @@ def get_function_definition(func, skip_self=False):
         if line.endswith(":"):
             break
     return "\n".join(res).strip() + "\n"
+
 
 if __name__ == "__main__":
     main()

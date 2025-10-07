@@ -15,8 +15,8 @@ ROWS = 30
 COLS = 40
 
 
-# ライフゲームのルールに基づいて次の世代の盤面を計算する関数
 def calculate_next_generation(board):
+    """ライフゲームのルールに基づいて次の世代の盤面を計算する関数"""
     new_board = [[DEAD for _ in range(COLS)] for _ in range(ROWS)]
     for i in range(ROWS):
         for j in range(COLS):
@@ -32,8 +32,8 @@ def calculate_next_generation(board):
     return new_board
 
 
-# 指定されたセルの周囲の生存セルの数を数える関数
 def count_neighbors(board, x, y):
+    """指定されたセルの周囲の生存セルの数を数える関数"""
     count = 0
     for i in range(-1, 2):
         for j in range(-1, 2):
@@ -44,8 +44,8 @@ def count_neighbors(board, x, y):
     return count
 
 
-# GUIを作成する関数
 def create_gui(_board):
+    """GUIを作成する関数"""
     layout = []
     for i in range(ROWS):
         row = []
@@ -61,8 +61,8 @@ def create_gui(_board):
     return window
 
 
-# GUI上の盤面を更新する関数
 def update_gui(window, board):
+    """GUI上の盤面を更新する関数"""
     for i in range(ROWS):
         for j in range(COLS):
             bg = "red" if board[i][j] == ALIVE else "black"
@@ -71,7 +71,7 @@ def update_gui(window, board):
 
 # メイン関数
 def main():
-    # ゲーム盤の初期化
+    """ゲーム盤の初期化"""
     board = [[random.choice([ALIVE, DEAD]) for _ in range(COLS)] for _ in range(ROWS)]
     window = create_gui(board)
     paused = False

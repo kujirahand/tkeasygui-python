@@ -6,6 +6,7 @@ import TkEasyGUI as eg
 
 
 def main():
+    """Image Test"""
     image_files = ["a.jpg", "b.jpg"]
     image_index = 0
     # create window

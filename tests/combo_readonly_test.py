@@ -1,3 +1,5 @@
+"""Test readonly Combo box"""
+
 import TkEasyGUI as eg
 
 # Create a window

@@ -1,5 +1,4 @@
 """
-"
 ### Image size sample
 
 """
@@ -8,13 +7,13 @@ import TkEasyGUI as eg
 
 
 def load_image(window, filename):
-    # load image and resize
+    """Load image and resize"""
     im: eg.Image = window["-image-"]
     im.update(filename=filename, resize_type=eg.ImageResizeType.FIT_BOTH)
 
 
 def main():
-    # create window
+    """Create window"""
     window = eg.Window(
         "Hello World",
         layout=[

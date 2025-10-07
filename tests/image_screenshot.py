@@ -6,6 +6,7 @@ import TkEasyGUI as eg
 
 
 def main():
+    """Screenshot sample"""
     # create window
     window = eg.Window(
         "Screenshot App",

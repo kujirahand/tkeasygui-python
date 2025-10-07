@@ -15,6 +15,7 @@ install-dev:
 
 lint:
 	cd $(SCRIPT_DIR)
+	ruff check
 	pylint $(SRC)
 	black --check $(SRC)
 	mypy $(SRC)

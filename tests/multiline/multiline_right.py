@@ -1,3 +1,5 @@
+"""Multiline Right Aligned Text Example"""
+
 import TkEasyGUI as eg
 
 test_text = """

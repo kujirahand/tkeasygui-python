@@ -11,6 +11,7 @@ back_image = Image.open("b.jpg").resize((400, 400))
 
 
 def main():
+    """Graph sample"""
     layout = [
         [
             eg.Graph(

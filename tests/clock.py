@@ -11,6 +11,7 @@ import TkEasyGUI as eg
 
 # show time
 def show_cur_time(win):
+    """Show current time"""
     now = datetime.datetime.now()
     win["-time-"].update(now.strftime("%H:%M:%S"))
 

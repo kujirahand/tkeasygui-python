@@ -1,3 +1,5 @@
+"""Multiline element test program."""
+
 import TkEasyGUI as eg
 
 test_text = """
