@@ -1,5 +1,5 @@
 """
-CRUD > TkEasyGUI for The 7 Tasks of GUI Programming
+crud > TkEasyGUI for The 7 Tasks of GUI Programming
 
 @ref https://7guis.github.io/7guis/tasks/
 """

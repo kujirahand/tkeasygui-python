@@ -3425,7 +3425,7 @@ class Slider(Element):
 
 
 class Progressbar(Element):
-    """Slider element."""
+    """Progressbar element."""
 
     def __init__(
         self,
@@ -3501,22 +3501,22 @@ class Progressbar(Element):
         """Return bar value."""
         return self.int_value.get() + self.value_range[0]
 
-    def set(self, value: float) -> None:
+    def set(self, value: int) -> None:
         """Set value of bar"""
         self.int_value.set(int(value - self.value_range[0]))
 
-    def set_range(self, from_: float, to: float) -> None:
+    def set_range(self, from_: int, to: int) -> None:
         """Set the range of the bar."""
         self.value_range = (from_, to)
 
-    def get_range(self) -> tuple[float, float]:
+    def get_range(self) -> tuple[int, int]:
         """Get the range of the bar."""
         return self.value_range
 
     def update(
         self,
         value: Optional[int] = None,
-        value_range: Optional[tuple[float, float]] = None,
+        value_range: Optional[tuple[int, int]] = None,
         **kw,
     ) -> None:
         """Update the widget."""
