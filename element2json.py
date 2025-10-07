@@ -79,7 +79,7 @@ layout = [
 """
     src += "    [\n"
     for i, e in enumerate(elements):
-        if e == "ImageResizeType":
+        if e == "ImageResizeType" or e == "FrameScrollable":
             continue
         args = init_args.get(e, {})
         args_s = ",".join(args)
