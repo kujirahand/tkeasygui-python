@@ -39,11 +39,12 @@ doc:
 	python docs/scripts/readme_maker.py
 	@echo "ok"
 
+build-docs:
+	# alias doc
+	make doc
+
 version:
 	python update_version.py
-
-build-docs:
-	make doc
 
 clean:
 	@echo "=== clean ==="
