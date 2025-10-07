@@ -13,6 +13,7 @@ SCRIPT_DIR = os.path.dirname(__file__)
 OUTPUT_DIR = os.path.join(SCRIPT_DIR, "docs", "TkEasyGUI")
 DOCS_SCRIPTS_DIR = os.path.join(SCRIPT_DIR, "docs", "scripts")
 REPO = "https://github.com/kujirahand/tkeasygui-python/blob/main"
+TAG_MAKEDOC_IGNORE = "[#makedoc:ignore]"
 
 
 def main():
@@ -42,6 +43,9 @@ def read_module(file: str, root_name: str) -> None:
     print(f"Module: {module_name}")
     mod = getattr(eg, module_name)
     doc = trim_docstring(str(mod.__doc__))
+    if TAG_MAKEDOC_IGNORE in doc:
+        print("  - ignore")
+        return
     print("---------------------------")
     output_file = os.path.join(OUTPUT_DIR, f"{module_name}-py.md")
     result = ""

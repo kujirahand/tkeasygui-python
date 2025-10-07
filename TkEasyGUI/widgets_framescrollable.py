@@ -1,4 +1,8 @@
-"""A scrollable frame with both vertical and horizontal scrollbars."""
+"""
+A scrollable frame with both vertical and horizontal scrollbars.
+
+[#makedoc:ignore]
+"""
 
 import tkinter as tk
 from tkinter import ttk

@@ -16,7 +16,7 @@ from typing import Any, Callable, Literal, Optional, Pattern, Sequence, Union, c
 from PIL import Image as PILImage
 from PIL import ImageGrab, ImageTk
 
-from . import custom_frame_scrollable, icon_default, utils
+from . import icon_default, utils, widgets_framescrollable
 from . import locale_easy as le
 from .utils import (
     CursorType,
@@ -1780,7 +1780,7 @@ class FrameScrollable(Element):
         # Add horizontal_scroll parameter
         props["horizontal_scroll"] = self.horizontal_scroll
 
-        self.widget = custom_frame_scrollable.ScrollableLabelFrame(parent, **props)
+        self.widget = widgets_framescrollable.ScrollableLabelFrame(parent, **props)
         self.container_parent = self.widget.scrollable_frame
 
         # Set size constraints if size was specified
