@@ -523,8 +523,11 @@ class Window:
                 try:
                     # has children?
                     if elem.has_children:
+                        parent_widget = widget
+                        if elem.container_parent is not None:
+                            parent_widget = elem.container_parent
                         self._create_widget(
-                            widget,
+                            parent_widget,
                             elem.layout,
                             align=elem.text_align,
                             valign=elem.vertical_alignment,
@@ -1260,7 +1263,8 @@ class Element:
         self.expand_x: bool = False
         self.expand_y: bool = False
         self.anchor: Union[str, None] = None
-        self.has_children: bool = False
+        self.has_children: bool = False  # has children elements
+        self.container_parent: Union[tk.Widget, None] = None  # children's parent widget
         self.prev_element: Union["Element", None] = None
         self.next_element: Union["Element", None] = None
         self.window: Union[Window, None] = None
@@ -1693,6 +1697,188 @@ class Frame(Element):
         else:
             # dfault
             self.widget = tk.LabelFrame(parent, **self.props)
+        return self.widget
+
+    def get(self) -> Any:
+        """Return Widget"""
+        return self.widget
+
+    def update(self, **kw) -> None:
+        """Update the widget."""
+        self._widget_update(**kw)
+
+    def __getattr__(self, name):
+        """Get unknown attribute."""
+        if name in ["Widget"]:
+            return self.widget
+        return super().__getattr__(name)
+
+
+class ScrollableLabelFrame(tk.LabelFrame):
+    """A scrollable frame with both vertical and horizontal scrollbars."""
+
+    def __init__(self, master=None, horizontal_scroll=True, **kwargs):
+        """Create a scrollable frame with both scrollbars."""
+        # Extract width and height if present
+        self._width = kwargs.pop("width", None)
+        self._height = kwargs.pop("height", None)
+        self._horizontal_scroll = horizontal_scroll
+
+        super().__init__(master, **kwargs)
+
+        # キャンバスを作成
+        self.canvas = tk.Canvas(self, bg=self.cget("bg"), highlightthickness=0)
+        # 垂直スクロールバー（常に表示）
+        self.v_scrollbar = ttk.Scrollbar(
+            self, orient="vertical", command=self.canvas.yview
+        )
+        # 水平スクロールバー（horizontal_scrollの設定に応じて表示）
+        self.h_scrollbar = None
+        if self._horizontal_scroll:
+            self.h_scrollbar = ttk.Scrollbar(
+                self, orient="horizontal", command=self.canvas.xview
+            )
+
+        # スクロール領域を保持するフレーム
+        self.scrollable_frame = ttk.Frame(self.canvas)
+        self.canvas_window = self.canvas.create_window(
+            (0, 0), window=self.scrollable_frame, anchor="nw"
+        )
+
+        # スクロール連動設定
+        if self._horizontal_scroll and self.h_scrollbar:
+            # 双方向のスクロール連動設定
+            self.canvas.configure(
+                yscrollcommand=self.v_scrollbar.set, xscrollcommand=self.h_scrollbar.set
+            )
+        else:
+            # 垂直スクロールのみ
+            self.canvas.configure(yscrollcommand=self.v_scrollbar.set)
+
+        # 配置
+        self.canvas.grid(row=0, column=0, sticky="nsew", padx=8, pady=4)
+        self.v_scrollbar.grid(row=0, column=1, sticky="ns")
+        if self._horizontal_scroll and self.h_scrollbar:
+            self.h_scrollbar.grid(row=1, column=0, sticky="ew")
+
+        # フレームをリサイズ可能に
+        self.grid_rowconfigure(0, weight=1)
+        self.grid_columnconfigure(0, weight=1)
+
+        # Set canvas size if specified
+        scrollbar_width = 20 if self.v_scrollbar else 0
+        scrollbar_height = 20 if (self._horizontal_scroll and self.h_scrollbar) else 0
+
+        if self._width is not None:
+            self.canvas.config(width=self._width - scrollbar_width)
+        if self._height is not None:
+            self.canvas.config(height=self._height - scrollbar_height)
+
+        # スクロール領域の更新
+        self.scrollable_frame.bind(
+            "<Configure>",
+            lambda e: self.canvas.configure(scrollregion=self.canvas.bbox("all")),
+        )
+
+        # キャンバスのサイズ変更時に内部フレームをリサイズ
+        if self._horizontal_scroll:
+            # 水平スクロール有効の場合：幅を調整
+            self.canvas.bind(
+                "<Configure>",
+                lambda e: self.canvas.itemconfig(
+                    self.canvas_window,
+                    width=max(e.width, self.scrollable_frame.winfo_reqwidth()),
+                ),
+            )
+        else:
+            # 水平スクロール無効の場合：キャンバス幅に合わせる
+            self.canvas.bind(
+                "<Configure>",
+                lambda e: self.canvas.itemconfig(
+                    self.canvas_window,
+                    width=e.width,
+                ),
+            )
+
+    def get_canvas(self) -> tk.Canvas:
+        """Get the canvas widget."""
+        return self.canvas
+
+
+class FrameScrollable(Element):
+    """Scrollable　Frame element."""
+
+    # pylint: disable=too-many-locals
+    def __init__(
+        self,
+        title: str,
+        layout: LayoutType,
+        key: str = "",
+        size: Optional[tuple[int, int]] = None,
+        relief: ReliefType = "groove",
+        # text props
+        font: Optional[FontType] = None,  # font
+        color: Optional[str] = None,
+        text_color: Optional[str] = None,
+        background_color: Optional[str] = None,  # background_color
+        # pack props
+        label_outside: bool = False,
+        vertical_alignment: TextVAlign = "top",  # vertical alignment
+        text_align: Union[TextAlign, None] = "left",  # text align
+        # scroll props
+        horizontal_scroll: bool = True,  # enable horizontal scrollbar
+        # pack props
+        expand_x: bool = False,
+        expand_y: bool = False,
+        pad: Union[PadType, None] = None,
+        # other
+        metadata: Union[dict[str, Any], None] = None,
+        **kw,
+    ) -> None:
+        """Create a FrameScrollable element."""
+        super().__init__("FrameScrollable", "TLabelframe", key, False, metadata, **kw)
+        self.has_children = True
+        self.layout = layout
+        self.label_outside = label_outside
+        self.props["text"] = title
+        self.props["relief"] = relief
+        if text_align is not None:
+            self.text_align = text_align
+        self.vertical_alignment = vertical_alignment
+        self._set_text_props(
+            color=color,
+            text_color=text_color,
+            background_color=background_color,
+            font=font,
+        )
+        self._set_pack_props(expand_x=expand_x, expand_y=expand_y, pad=pad)
+        self.use_ttk: bool = False
+        self.horizontal_scroll = horizontal_scroll
+        if size is not None:
+            self.props["size"] = size
+
+    def create(self, win: Window, parent: tk.Widget) -> tk.Widget:
+        """Create a Frame widget."""
+        # Convert size to width/height before creating widget
+        props = self.props.copy()
+        size = None
+        if "size" in props:
+            size = props.pop("size")
+            if size is not None:
+                props["width"] = size[0]
+                props["height"] = size[1]
+
+        # Add horizontal_scroll parameter
+        props["horizontal_scroll"] = self.horizontal_scroll
+
+        self.widget = ScrollableLabelFrame(parent, **props)
+        self.container_parent = self.widget.scrollable_frame
+
+        # Set size constraints if size was specified
+        if size is not None:
+            self.widget.config(width=size[0], height=size[1])
+            self.widget.pack_propagate(False)
+
         return self.widget
 
     def get(self) -> Any:
