@@ -12370,7 +12370,7 @@ class Window(
     self,
     title: str,
     layout: LayoutType,  # set elements layout
-    size: Union[tuple[int, int], None] = None,  # window size
+    size: Optional[tuple[int, int]] = None,  # window size
     resizable: bool = False,
     font: Optional[FontType] = None,
     modal: bool = False,  # modal window
@@ -12383,7 +12383,7 @@ class Window(
     enable_mouse_events: bool = False,  # enable mouse events (post WINDOW_MOUSE_EVENT)
     enable_resize_events: bool = False,  # enable resize events (post WINDOW_RESIZE_EVENT)
     return_keyboard_events: bool = False,  # enable keyboard events (for compatibility)
-    location: Union[tuple[int, int], None] = None,  # window location
+    location: Optional[tuple[int, int]] = None,  # window location
     center_window: bool = True,  # move window to center
     row_padding: int = 2,  # row padding
     padding_x: int = 8,  # x padding around the window
