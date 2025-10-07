@@ -31,8 +31,28 @@ def main():
         read_module(file, root_name)
         outputs.append(file)
     print("[output files]")
+    files = []
     for file in outputs:
         print("-", file)
+        basename = os.path.basename(file).replace(".py", "-py.md")
+        if "__init__" in basename:
+            continue
+        files.append(f"- [{basename}](./{basename})")
+
+    # README.md
+    str_files = "\n".join(sorted(files))
+    with open(os.path.join(OUTPUT_DIR, "README.md"), "w", encoding="utf-8") as fp:
+        a_text = f"""\
+# Module TkEasyGUI
+
+TkEasyGUI - A simple GUI library for Python using tkinter.
+
+## Submodules
+
+{str_files}
+"""
+        fp.write(a_text)
+        print(a_text)
 
 
 def read_module(file: str, root_name: str) -> None:
