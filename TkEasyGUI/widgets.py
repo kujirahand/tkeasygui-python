@@ -1303,6 +1303,18 @@ class Element:
             return 0
         return self.widget.winfo_height()
 
+    def forcus(self) -> None:
+        """Set focus to the element."""
+        if self.widget is not None:
+            try:
+                self.widget.focus_set()
+            except tk.TclError:
+                pass
+
+    def forcus_set(self) -> None:
+        """Set focus to the element."""
+        self.forcus()
+
     def bind(
         self,
         event_name: str,
@@ -2922,6 +2934,18 @@ class Input(Element):
             entry.selection_range(sel_start, sel_end)
         except tk.TclError:
             pass
+
+    def check_validation(self) -> bool:
+        """Check validation"""
+        if self._validation_pattern is None:
+            return True
+        cur = self.get_text()
+        if cur == "":  # 空っぽならバリデーション対象外とする
+            return True
+        pat = self._validation_pattern
+        if pat is not None and pat.fullmatch(cur) is None:
+            return False
+        return True
 
 
 class InputText(Input):

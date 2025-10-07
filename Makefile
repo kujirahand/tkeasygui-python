@@ -6,6 +6,7 @@ SRC=$(SCRIPT_DIR)TkEasyGUI
 .PHONY: install install-dev lint format clean check doc version
 
 install:
+	pip uninstall -y TkEasyGUI
 	pip install -e .
 
 install-dev:

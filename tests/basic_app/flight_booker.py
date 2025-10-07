@@ -15,6 +15,7 @@ def main():
     window = eg.Window(
         "Flight Booker",
         layout=[
+            [eg.Text("Please select mode")],
             [
                 eg.Combo(
                     mode_list,
@@ -25,6 +26,8 @@ def main():
                     default_value=mode_list[0],
                 )
             ],
+            [eg.HSeparator()],
+            [eg.Text("Please input date (format: DD.MM.YYYY)")],
             [
                 eg.Input(
                     "25.03.2025",
@@ -44,7 +47,8 @@ def main():
                     disabled=True,
                 )
             ],
-            [eg.Button("Book", size=(15, 1))],
+            [eg.HSeparator()],
+            [eg.Push(), eg.Button("Book", size=(15, 1)), eg.Push()],
         ],
     )
     # event loop
@@ -60,6 +64,15 @@ def main():
             else:
                 window["-t2"].update(disabled=False)
         elif event == "Book":
+            # check inputs
+            if not window["-t1"].check_validation():
+                window["-t1"].forcus()
+                continue
+            if (values["-mode-"] == "return flight") and (
+                not window["-t2"].check_validation()
+            ):
+                window["-t2"].forcus()
+                continue
             data = (
                 [values["-t1"]]
                 if values["-mode-"] == mode_list[0]
