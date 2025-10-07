@@ -4,7 +4,7 @@
 
 - [👉English](https://github.com/kujirahand/tkeasygui-python/blob/main/README.md)
 
-## TkEasyGUIの特徴:
+## TkEasyGUIの特徴
 
 - `TkEasyGUI`は、GUIアプリケーションを簡単かつシンプルに作成することができるPythonライブラリです。
 - Pythonの標準UIライブラリ`Tkinter`は、学習障壁が高いと考えられていますが、このライブラリを使用すると、GUIアプリケーションを直感的に作成できます。
@@ -16,7 +16,7 @@
 
 - Windows / macOS / Linux (Tkinterが動く環境)
 
-## インストール:
+## インストール
 
 [PyPI](https://pypi.org/project/TkEasyGUI/)からインストールできます。
 
@@ -42,7 +42,6 @@ eg.print("A joyful heart is good medicine.")
 ```
 
 <img src="https://github.com/kujirahand/tkeasygui-python/raw/main/docs/image/sample1.png" width="300" alt="TkEasyGUI">
-
 
 入力ボックス付きのダイアログで尋ねることもできます。次のコードは、名前を尋ねて、続くダイアログに名前を表示します。
 
@@ -75,7 +74,6 @@ if form:
 たとえば、色選択ダイアログ、ファイル選択ダイアログ、カレンダーダイアログなどです。
 
 - [Docs > Dialogs](https://github.com/kujirahand/tkeasygui-python/blob/main/docs/TkEasyGUI/dialogs-py.md)
-
 
 ## 簡単な使い方 - カスタムウィンドウを定義して使う
 
@@ -152,7 +150,7 @@ window.close()
 - 基本機能を使う場合、PySimpleGUIと互換性があります。PySimpleGUIと同じイベントモデルでプログラムを記述できます。
 - 基本的なGUI部品の名前も同じにしてありますが、いくつかのプロパティ名は異なります。
 - TkEasyGUIは完全にゼロから実装しなおしており、MITライセンスを採用しています。
-- ただし、PySimpleGUIと完全な互換性は考えていません。
+- PySimpleGUIと完全な互換性は考えていません。
 
 ### TkEasyGUI独自の機能
 
@@ -161,12 +159,6 @@ window.close()
 - ImageはPNGだけでなくJPEGも読み込み可能
 - 便利なイベントフックや一括イベント登録機能 - [docs/custom_events](docs/custom_events.md)
 - テキストボックス(Muliline/Input)に便利なCopy/Paste/Cutなどのメソッドを追加
-
-## リンク
-
-- [pypi.org > TkEasyGUI](https://pypi.org/project/tkeasygui/)
-- [GitHub > TkEasyGUI](https://github.com/kujirahand/tkeasygui-python/)
-- [Discord > TkEasyGUI](https://discord.gg/NX8WEQd42S)
 
 ## 追加情報
 
@@ -182,3 +174,9 @@ Raspberry Pi OSでも動作します。下記の点に注意してインスト�
     - `pip install pillow`
 - TkinterはRaspberry Piに標準でインストールされていますが、`python3-tk`パッケージが必要です。下記のコマンドを実行してください。
   - `sudo apt-get install python3-tk`
+
+## リンク
+
+- [pypi.org > TkEasyGUI](https://pypi.org/project/tkeasygui/)
+- [GitHub > TkEasyGUI](https://github.com/kujirahand/tkeasygui-python/)
+- [Discord > TkEasyGUI](https://discord.gg/NX8WEQd42S)
