@@ -9,9 +9,19 @@ pip install opencv-contrib-python
 ```
 """
 
-import cv2 as cv
+try:
+    import cv2 as cv
+    HAS_OPENCV = True
+except ImportError:
+    cv = None
+    HAS_OPENCV = False
+    print("OpenCV is not installed. Please install opencv-python.")
 
 import TkEasyGUI as eg
+
+if not HAS_OPENCV:
+    eg.popup_error("OpenCV is not installed. Please install opencv-python.")
+    exit()
 
 # camera
 vc = cv.VideoCapture(0)

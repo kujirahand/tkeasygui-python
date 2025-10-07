@@ -18,7 +18,7 @@ window = eg.Window(
     ],
 )
 # event loop
-readonly = False
+IS_READONLY = False
 while True:
     event, values = window.read()
     if event == eg.WINDOW_CLOSED:
@@ -31,7 +31,7 @@ while True:
         window["-input-"].update("changed!!")
         window["-multiline-"].update("changed!!")
     if event == "Readonly(tkeasygui)":
-        readonly = not readonly
-        window["-input-"].update(readonly=readonly)
-        window["-multiline-"].update(readonly=readonly)
+        IS_READONLY = not IS_READONLY
+        window["-input-"].update(readonly=IS_READONLY)
+        window["-multiline-"].update(readonly=IS_READONLY)
 window.close()

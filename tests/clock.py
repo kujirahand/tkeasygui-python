@@ -10,9 +10,9 @@ import TkEasyGUI as eg
 
 
 # show time
-def show_cur_time(window):
+def show_cur_time(win):
     now = datetime.datetime.now()
-    window["-time-"].update(now.strftime("%H:%M:%S"))
+    win["-time-"].update(now.strftime("%H:%M:%S"))
 
 
 # create window

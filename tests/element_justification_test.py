@@ -15,6 +15,6 @@ win = eg.Window(
 )
 while win.is_running():
     event, values = win.read()
-    if event == "Center" or event == "Close":
+    if event in ("Center", "Close"):
         break
 win.close()

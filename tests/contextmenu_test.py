@@ -1,20 +1,21 @@
 """Context menu tests."""
 
-import TkEasyGUI as eg
 import tkinter as tk
 
-message = "Hello world! Click here."
+import TkEasyGUI as eg
+
+MESSAGE = "Hello world! Click here."
 
 
 def do_copy():
     """Copy to clipboard"""
-    eg.copy_to_clipboard(message)
-    eg.popup_info("Copied to clipboard:\n" + message)
+    eg.copy_to_clipboard(MESSAGE)
+    eg.popup_info("Copied to clipboard:\n" + MESSAGE)
 
 
 # Create a Text element with a context menu
 msg = eg.Text(
-    message,
+    MESSAGE,
     key="-msg-",
     expand_x=True,
     expand_y=True,

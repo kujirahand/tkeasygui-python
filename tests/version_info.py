@@ -73,9 +73,9 @@ for event, values in window.event_iter():
         eg.set_clipboard(text)
         eg.popup("Copied to clipboard.")
     if event == "Copy as Markdown":
-        text = window["-sys-info-"].get_text()
-        text = f"```\n{text}\n```\n"
-        eg.set_clipboard(text)
+        markdown_text = window["-sys-info-"].get_text()
+        markdown_text = f"```\n{markdown_text}\n```\n"
+        eg.set_clipboard(markdown_text)
         eg.popup("Copied markdown to clipboard.")
     if event == "Web":
         if eg.is_mac():

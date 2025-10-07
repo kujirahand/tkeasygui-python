@@ -4581,7 +4581,7 @@ class FileBrowse(Element):
         # check
         if file_types is None:
             file_types = [("All Files", "*.*")]
-        # set properties       
+        # set properties
         self.target_key = target_key
         self.title = title
         self.file_types = file_types

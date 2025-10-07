@@ -25,7 +25,7 @@ canvas = window["-canvas-"]
 
 # initial values
 ox, oy, ow = random.randint(50, 250), random.randint(50, 250), 30
-flag_update = True
+FLAG_UPDATE = True
 
 # Event Loop
 while window.is_running():
@@ -35,13 +35,13 @@ while window.is_running():
         break
     # check mouse event
     if event == "-canvas-" and values["event_type"] == "mousemove":
-        flag_update = True
+        FLAG_UPDATE = True
         if "event" in values:
             e = values["event"]
             ox = e.x
             oy = e.y
     # Update canvas
-    if flag_update:
+    if FLAG_UPDATE:
         canvas.clear()
         # draw rectangle
         canvas.create_rectangle(50, 50, 350, 350, fill="yellow")
@@ -51,6 +51,6 @@ while window.is_running():
             canvas.create_line(p[0], p[1], p[2], p[3], fill="green", width=1)
         # draw oval at mouse position
         canvas.create_oval(ox - ow, oy - ow, ox + ow, oy + ow, fill="blue")
-        flag_update = False
+        FLAG_UPDATE = False
 # close
 window.close()

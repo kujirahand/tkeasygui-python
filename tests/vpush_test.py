@@ -12,5 +12,5 @@ layout = [
 window = sg.Window(title="VPush Test", layout=layout, size=(400, 350))
 while window.is_alive():
     event, values = window.read(timeout=1000)
-    if event == sg.WIN_CLOSED or event == "OK":
+    if event in (sg.WIN_CLOSED, "OK"):
         break

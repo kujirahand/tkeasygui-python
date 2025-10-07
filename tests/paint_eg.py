@@ -30,7 +30,7 @@ canvas = sg.Canvas(
 window = eg.Window(
     "Paint tool", layout=[[eg.Button("Exit"), eg.Button("Clear")], [canvas]]
 )
-flag_on = False
+FLAG_ON = False
 
 # event loop
 for event, values in window.event_iter():
@@ -44,12 +44,12 @@ for event, values in window.event_iter():
         event = values["event"]
         event_type = values["event_type"]
         if event_type == "mousedown":
-            flag_on = True
+            FLAG_ON = True
         elif event_type == "mouseup":
-            flag_on = False
+            FLAG_ON = False
         elif event_type == "mousemove":
             canvas.set_cursor("hand2")
-            if not flag_on:
+            if not FLAG_ON:
                 continue
             # get mouse cursor position
             x, y = event.x, event.y

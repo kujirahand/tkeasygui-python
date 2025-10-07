@@ -45,7 +45,7 @@ def count_neighbors(board, x, y):
 
 
 # GUIを作成する関数
-def create_gui(board):
+def create_gui(_board):
     layout = []
     for i in range(ROWS):
         row = []
@@ -79,7 +79,7 @@ def main():
         event, _ = window.read(timeout=200 if not paused else None)
         if event == eg.WINDOW_CLOSED:
             break
-        elif event.startswith("b"):
+        if event and isinstance(event, str) and event.startswith("b"):
             a = event[1:].split("-")
             x, y = int(a[0]), int(a[1])
             if board[x][y] == ALIVE:
@@ -87,7 +87,7 @@ def main():
             else:
                 board[x][y] = ALIVE
             update_gui(window, board)
-        else:
+        elif not paused:
             board = calculate_next_generation(board)
             update_gui(window, board)
     window.close()

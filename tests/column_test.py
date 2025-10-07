@@ -7,22 +7,22 @@ Using the `Column` widget allows you to divide the window horizontally and place
 import TkEasyGUI as eg
 
 # sample text
-a_text = (("0123456789" * 5) + "\n") * 5
+SAMPLE_TEXT = (("0123456789" * 5) + "\n") * 5
 
 # define sub layout
 layout1 = [
     [eg.Label("col1")],
-    [eg.Multiline(a_text, key="-col1-", expand_x=True, expand_y=True)],
+    [eg.Multiline(SAMPLE_TEXT, key="-col1-", expand_x=True, expand_y=True)],
     [eg.Button("Get Size")],
 ]
 layout2 = [
     [eg.Label("col2")],
-    [eg.Multiline(a_text, key="-col2-", expand_x=True, expand_y=True)],
+    [eg.Multiline(SAMPLE_TEXT, key="-col2-", expand_x=True, expand_y=True)],
     [eg.Button("Test")],
 ]
 layout3 = [
     [eg.Label("col3")],
-    [eg.Multiline(a_text, key="-col3-", expand_x=True, expand_y=True)],
+    [eg.Multiline(SAMPLE_TEXT, key="-col3-", expand_x=True, expand_y=True)],
     [eg.InputText("TEST(col3)", key="-input-"), eg.Button("Add")],
 ]
 # define main layout
