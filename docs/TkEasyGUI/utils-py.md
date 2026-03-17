@@ -13,17 +13,11 @@ TkEasyGUI utilities functions.
 
 Image resize type.
 
-### Methods of ImageResizeType
+```py
+class ImageResizeType(self, *args, **kwds):
+```
 
-
-
-### ImageResizeType.name
-
-The name of the Enum member.
-
-### ImageResizeType.value
-
-The value of the Enum member.
+- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/Users/kujirahand/.pyenv/versions/3.13.9/lib/python3.13/enum.py#L1217)
 
 ## TkEasyError
 
@@ -38,6 +32,11 @@ class TkEasyError(self, message="TkEasyError"):
 ### Methods of TkEasyError
 
 
+
+### TkEasyError.add_note
+
+Exception.add_note(note) --
+    add a note to the exception
 
 ### TkEasyError.args
 

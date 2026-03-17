@@ -63,11 +63,13 @@ deploy-build-only:
 	python -m build
 
 deploy-test:
+	pip install build twine
 	make deploy-build-only
 	python -m twine upload --repository testpypi dist/* --verbose
 	@echo "[TRY] task install test"
 
 deploy-main:
+	pip install build twine
 	make deploy-build-only
 	python -m twine upload dist/* --verbose
 
