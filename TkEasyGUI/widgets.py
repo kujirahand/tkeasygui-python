@@ -1612,6 +1612,17 @@ class Element:
             return None
         return self.prev_element
 
+    def is_disabled(self) -> bool:
+        """Check if the widget is disabled."""
+        if self.widget is not None:
+            try:
+                state = self.widget.cget("state")
+                if state == "disabled":
+                    return True
+            except tk.TclError:
+                pass
+        return False
+
     def __getattr__(self, name: str) -> Any:
         """Get unknown attribute."""
         # Method called when the attribute is not found in the object's instance dictionary
@@ -4729,9 +4740,15 @@ class FileBrowse(Element):
         """Show file dialog"""
         from . import dialogs
 
+        # return if state is disabled (#146)
+        if self.is_disabled():
+            return None
+
         target: Union[Element, None] = self.get_prev_element(self.target_key)
+
         # get initial directory
         init_dir = self._get_initial_directory()
+
         # popup
         result = dialogs.popup_get_file(
             title=self.title,
@@ -4749,6 +4766,7 @@ class FileBrowse(Element):
                     self.window.dispatch_event(
                         self.key, {"event": result, "event_type": "change"}
                     )
+
         return result
 
     def set_text(self, text: str) -> None:
@@ -4852,6 +4870,10 @@ class FolderBrowse(FileBrowse):
         """Show file dialog"""
         from . import dialogs
 
+        # return if state is disabled (#146)
+        if self.is_disabled():
+            return None
+
         target: Union[Element, None] = self.get_prev_element(self.target_key)
         # popup
         result = dialogs.popup_get_folder(
@@ -4894,6 +4916,10 @@ class ColorBrowse(FileBrowse):
     def show_dialog(self, *args) -> Union[str, None]:
         """Show file dialog"""
         from . import dialogs
+
+        # return if state is disabled (#146)
+        if self.is_disabled():
+            return None
 
         target: Union[Element, None] = self.get_prev_element(self.target_key)
         # popup
@@ -4943,6 +4969,10 @@ class ListBrowse(FileBrowse):
     def show_dialog(self, *args) -> Union[str, None]:
         """Show Listbox dialog"""
         from . import dialogs
+
+        # return if state is disabled (#146)
+        if self.is_disabled():
+            return None
 
         target: Union[Element, None] = self.get_prev_element(self.target_key)
         if target is not None:
@@ -4995,6 +5025,9 @@ class MultilineBrowse(FileBrowse):
     def show_dialog(self, *args) -> Union[str, None]:
         """Show Listbox dialog"""
         from . import dialogs
+
+        if self.is_disabled():
+            return None
 
         target: Union[Element, None] = self.get_prev_element(self.target_key)
         if target is not None:
@@ -5056,6 +5089,9 @@ class CalendarBrowse(FileBrowse):
     def show_dialog(self, *args) -> Union[datetime, None]:
         """Show file dialog"""
         from . import dialogs
+
+        if self.is_disabled():
+            return None
 
         target: Union[Element, None] = self.get_prev_element(self.target_key)
         # popup
