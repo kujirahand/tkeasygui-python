@@ -363,11 +363,14 @@ def popup_get_file(
     multiple_files: bool = False,  # can select multiple files
     file_types: Optional[FileTypeList] = None,
     default_extension: Optional[str] = None,
+    files_delimiter: Optional[str] = "|",
     # pylint: disable=unused-argument
     no_window: Optional[bool] = None,  # for compatibility
     **kw,
 ) -> Union[str, tuple[str], None]:
 ```
+
+When selecting multiple files, the returned paths are joined using `files_delimiter` (default `"|"`). Set `files_delimiter=None` to receive the raw tuple from the file dialog.
 
 - [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/dialogs.py#L707)
 
@@ -852,4 +855,3 @@ def show_message(message: str, title: Optional[str] = None) -> None:
 ```
 
 - [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/dialogs.py#L1587)
-

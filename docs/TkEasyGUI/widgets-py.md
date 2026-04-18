@@ -2866,11 +2866,14 @@ class FileBrowse(
     initial_folder: Union[str, None] = None,
     save_as: bool = False,
     enable_events: bool = False,  # enable changing events
+    files_delimiter: Optional[str] = "|",
     # other
     metadata: Union[dict[str, Any], None] = None,
     **kw,
     ) 
 ```
+
+When `multiple_files` is enabled, selected paths are joined using `files_delimiter` (default `"|"`).
 
 - [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L4679)
 
@@ -3690,12 +3693,15 @@ class FilesBrowse(
     target_key: Union[str, None] = None,
     title: str = "",
     file_types: Optional[FileTypeList] = None,
+    files_delimiter: Optional[str] = "|",
     enable_events: bool = False,  # enable changing events
     # other
     metadata: Union[dict[str, Any], None] = None,
     **kw,
     ) 
 ```
+
+Multiple file selections are returned as a single string joined by `files_delimiter` (default `"|"`).
 
 - [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L4787)
 
@@ -13644,4 +13650,3 @@ def valign_top(grid: list[list[Element]]) -> list[list[Element]]:
 ```
 
 - [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L5138)
-
