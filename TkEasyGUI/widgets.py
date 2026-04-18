@@ -4766,6 +4766,8 @@ class FileBrowse(Element):
             if delimiter is not None:
                 target_value = delimiter.join(str(item) for item in target_value)
             else:
+                # Keep popup_get_file return value unchanged (tuple/list) while
+                # updating target widgets/events with a readable string.
                 fallback_delimiter = " "
                 target_value = fallback_delimiter.join(str(item) for item in target_value)
         if (target is not None) and (target_value is not None) and (target_value != ""):
