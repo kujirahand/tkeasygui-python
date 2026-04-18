@@ -1339,10 +1339,13 @@ end run
 
 
 def send_notification_win(message: str, title: str = "") -> bool:
-    """Send Notification on Windows using PowerShell"""
+    """Send Notification on Windows using PowerShell without temp files"""
     # get powershell path
+    system_root = os.environ.get("SystemRoot")
+    if not system_root:
+        return False
     powershell_path = os.path.join(
-        os.environ["SystemRoot"],
+        system_root,
         "System32",
         "WindowsPowerShell",
         "v1.0",
@@ -1359,10 +1362,14 @@ def send_notification_win(message: str, title: str = "") -> bool:
 
     encoded_title = to_base64(title)
     encoded_message = to_base64(message)
+    app_id = sys.executable.replace("\\", "\\\\")
 
-    # PowerShell Script using Base64
-    script_content = r"""
-param($encodedTitle, $encodedMessage, $appPath)
+    # PowerShell Script using Base64 (embedded and executed via -EncodedCommand)
+    script_content = rf"""
+$encodedTitle = "{encoded_title}"
+$encodedMessage = "{encoded_message}"
+$appPath = "{app_id}"
+
 $decodedTitle = [System.Text.Encoding]::UTF8.GetString([System.Convert]::FromBase64String($encodedTitle))
 $decodedMessage = [System.Text.Encoding]::UTF8.GetString([System.Convert]::FromBase64String($encodedMessage))
 $bodyText = "$decodedTitle`n$decodedMessage"
@@ -1371,32 +1378,27 @@ $ToastText01 = [Windows.UI.Notifications.ToastTemplateType, Windows.UI.Notificat
 $TemplateContent = [Windows.UI.Notifications.ToastNotificationManager, Windows.UI.Notifications, ContentType = WindowsRuntime]::GetTemplateContent($ToastText01)
 $TemplateContent.SelectSingleNode('//text[@id="1"]').InnerText = $bodyText
 [Windows.UI.Notifications.ToastNotificationManager]::CreateToastNotifier($appPath).Show($TemplateContent)
-"""
+""".strip()
 
-    # generate temp script file
-    with tempfile.NamedTemporaryFile(
-        "w", suffix=".ps1", delete=False, encoding="utf-8"
-    ) as script_file:
-        script_file.write(script_content)
-        script_path = script_file.name
+    encoded_script = base64.b64encode(script_content.encode("utf-16le")).decode("ascii")
+
     try:
         subprocess.run(
             [
                 powershell_path,
+                "-NoLogo",
+                "-NoProfile",
+                "-NonInteractive",
                 "-ExecutionPolicy",
                 "Bypass",
-                "-File",
-                script_path,
-                encoded_title,
-                encoded_message,
-                sys.executable,
+                "-EncodedCommand",
+                encoded_script,
             ],
             check=True,
         )
         return True
-    finally:
-        # 実行後に一時ファイルを削除
-        os.remove(script_path)
+    except (subprocess.SubprocessError, OSError):
+        return False
 
 
 # ------------------------------------------------------------------------------
