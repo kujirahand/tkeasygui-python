@@ -2866,7 +2866,7 @@ class FileBrowse(
     initial_folder: Union[str, None] = None,
     save_as: bool = False,
     enable_events: bool = False,  # enable changing events
-    files_delimiter: Optional[str] = ";",
+    files_delimiter: Optional[str] = "|",
     # other
     metadata: Union[dict[str, Any], None] = None,
     **kw,
