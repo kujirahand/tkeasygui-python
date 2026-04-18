@@ -42,6 +42,8 @@ POPUP_AUTO_SCREENSHOT_FILENAME = "screenshot.png"
 POPUP_OK_BUTTON_WIDTH = 12
 POPUP_CANCEL_BUTTON_WIDTH = 9
 POPUP_TTK_BUTTONS = True  # use ttk buttons
+# delimiter for multiple files, used in popup_get_file with multiple_files=True
+POPUP_FILES_DELIMITER = "|" if is_win() else ";"
 
 
 def popup_set_options(
@@ -712,7 +714,9 @@ def popup_get_file(
     multiple_files: bool = False,  # can select multiple files
     file_types: Optional[FileTypeList] = None,
     default_extension: Optional[str] = None,
-    files_delimiter: Optional[str] = "|",
+    files_delimiter: Optional[
+        str
+    ] = POPUP_FILES_DELIMITER,  # delimiter for multiple files, used when multiple_files=True
     # pylint: disable=unused-argument
     no_window: Optional[bool] = None,  # for compatibility
     **kw,
