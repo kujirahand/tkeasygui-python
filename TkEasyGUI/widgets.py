@@ -4688,6 +4688,7 @@ class FileBrowse(Element):
         save_as: bool = False,
         enable_events: bool = False,  # enable changing events
         # other
+        files_delimiter: Optional[str] = ";",
         metadata: Union[dict[str, Any], None] = None,
         **kw,
     ) -> None:
@@ -4705,6 +4706,7 @@ class FileBrowse(Element):
         self.save_as = save_as
         self.multiple_files = multiple_files
         self.initial_folder = initial_folder
+        self.files_delimiter = files_delimiter
         self.props["text"] = button_text
         self.enable_events = enable_events
 
@@ -4756,9 +4758,12 @@ class FileBrowse(Element):
             save_as=self.save_as,
             file_types=self.file_types,
             multiple_files=self.multiple_files,
+            files_delimiter=self.files_delimiter,
         )
         if isinstance(result, (list, tuple)):
-            result = ";".join(result)
+            delimiter = self.files_delimiter
+            if delimiter is not None:
+                result = delimiter.join(result)
         if (target is not None) and (result is not None) and (result != ""):
             target.update(result)  # type: ignore [call-arg]
             if self.enable_events:
@@ -4791,20 +4796,25 @@ class FilesBrowse(FileBrowse):
         target_key: Union[str, None] = None,
         title: str = "",
         file_types: Optional[FileTypeList] = None,
+        files_delimiter: Optional[str] = "|",
         enable_events: bool = False,  # enable changing events
         # other
         metadata: Union[dict[str, Any], None] = None,
         **kw,
     ) -> None:
         """Create a FilesBrowse element."""
-        super().__init__(button_text=button_text, key=key, metadata=metadata, **kw)
-        self.target_key = target_key
-        self.title = title
-        self.file_types = (
-            file_types if file_types is not None else [("All Files", "*.*")]
+        super().__init__(
+            button_text=button_text,
+            key=key,
+            target_key=target_key,
+            title=title,
+            file_types=file_types,
+            multiple_files=True,
+            files_delimiter=files_delimiter,
+            enable_events=enable_events,
+            metadata=metadata,
+            **kw,
         )
-        self.props["text"] = button_text
-        self.enable_events = enable_events
         # force set params
         self.multiple_files = True
         self.save_as = False
