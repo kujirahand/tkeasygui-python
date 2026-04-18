@@ -363,7 +363,7 @@ def popup_get_file(
     multiple_files: bool = False,  # can select multiple files
     file_types: Optional[FileTypeList] = None,
     default_extension: Optional[str] = None,
-    files_delimiter: Optional[str] = ";",
+    files_delimiter: Optional[str] ="|",
     # pylint: disable=unused-argument
     no_window: Optional[bool] = None,  # for compatibility
     **kw,
