@@ -4688,7 +4688,7 @@ class FileBrowse(Element):
         save_as: bool = False,
         enable_events: bool = False,  # enable changing events
         # other
-        files_delimiter: Optional[str] = ";",
+        files_delimiter: Optional[str] = "|",
         metadata: Union[dict[str, Any], None] = None,
         **kw,
     ) -> None:
