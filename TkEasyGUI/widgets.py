@@ -4764,9 +4764,10 @@ class FileBrowse(Element):
         if isinstance(target_value, (list, tuple)):
             delimiter = self.files_delimiter
             if delimiter is not None:
-                target_value = delimiter.join(target_value)
+                target_value = delimiter.join(str(item) for item in target_value)
             else:
-                target_value = " ".join(target_value)
+                fallback_delimiter = " "
+                target_value = fallback_delimiter.join(str(item) for item in target_value)
         if (target is not None) and (target_value is not None) and (target_value != ""):
             target.update(target_value)  # type: ignore [call-arg]
             if self.enable_events:
