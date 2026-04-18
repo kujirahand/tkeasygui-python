@@ -2873,7 +2873,7 @@ class FileBrowse(
     ) 
 ```
 
-When `multiple_files` is enabled, selected paths are joined using `files_delimiter` (default `";"`).
+When `multiple_files` is enabled, selected paths are joined using `files_delimiter` (default `"|"`).
 
 - [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets.py#L4679)
 
