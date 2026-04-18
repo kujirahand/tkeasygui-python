@@ -4766,7 +4766,7 @@ class FileBrowse(Element):
             if delimiter is not None:
                 target_value = delimiter.join(target_value)
             else:
-                target_value = str(target_value)
+                target_value = " ".join(target_value)
         if (target is not None) and (target_value is not None) and (target_value != ""):
             target.update(target_value)  # type: ignore [call-arg]
             if self.enable_events:
