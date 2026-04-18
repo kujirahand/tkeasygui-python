@@ -712,6 +712,7 @@ def popup_get_file(
     multiple_files: bool = False,  # can select multiple files
     file_types: Optional[FileTypeList] = None,
     default_extension: Optional[str] = None,
+    files_delimiter: Optional[str] = "|",
     # pylint: disable=unused-argument
     no_window: Optional[bool] = None,  # for compatibility
     **kw,
@@ -779,6 +780,9 @@ def popup_get_file(
             multiple=multiple_files,  # type: ignore
             **kw,
         )
+    if multiple_files and isinstance(result, (tuple, list)):
+        if files_delimiter is not None:
+            result = files_delimiter.join(result)
     return result
 
 
