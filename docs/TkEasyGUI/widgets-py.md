@@ -3693,6 +3693,7 @@ class FilesBrowse(
     target_key: Union[str, None] = None,
     title: str = "",
     file_types: Optional[FileTypeList] = None,
+    files_delimiter: Optional[str] = "|",
     enable_events: bool = False,  # enable changing events
     # other
     metadata: Union[dict[str, Any], None] = None,
