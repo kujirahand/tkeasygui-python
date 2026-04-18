@@ -4760,16 +4760,19 @@ class FileBrowse(Element):
             multiple_files=self.multiple_files,
             files_delimiter=self.files_delimiter,
         )
-        if isinstance(result, (list, tuple)):
+        target_value = result
+        if isinstance(target_value, (list, tuple)):
             delimiter = self.files_delimiter
             if delimiter is not None:
-                result = delimiter.join(result)
-        if (target is not None) and (result is not None) and (result != ""):
-            target.update(result)  # type: ignore [call-arg]
+                target_value = delimiter.join(target_value)
+            else:
+                target_value = str(target_value)
+        if (target is not None) and (target_value is not None) and (target_value != ""):
+            target.update(target_value)  # type: ignore [call-arg]
             if self.enable_events:
                 if (self.window is not None) and (self.key is not None):
                     self.window.dispatch_event(
-                        self.key, {"event": result, "event_type": "change"}
+                        self.key, {"event": target_value, "event_type": "change"}
                     )
 
         return result
