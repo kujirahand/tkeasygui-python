@@ -82,6 +82,10 @@ TABLE_SELECT_MODE_EXTENDED: str = tk.EXTENDED
 EG_SWAP_EVENT_NAME: str = "--swap_event_name--"
 
 DEFAULT_PADX = 1 if utils.is_win() else 3
+FILES_DELIMITER = (
+    "|" if utils.is_win() else ":"
+)  # delimiter for multiple files, used in popup_get_file with multiple_files=True
+
 
 # --- window icon ---
 DEFAULT_WINDOW_ICON = icon_default.ICON
@@ -93,10 +97,6 @@ SCREENSHOT_MACOS_ADJUST = {
     "x2": 0,
     "y2": 22 + 6,
 }  # for macOS titlebar
-
-# delimiter for multiple files, used in popup_get_file with multiple_files=True
-FILES_DELIMITER = "|" if utils.is_win() else ":"
-
 
 # ------------------------------------------------------------------------------
 # Widget wrapper
@@ -4755,7 +4755,7 @@ class FileBrowse(Element):
         init_dir = self._get_initial_directory()
 
         # popup
-        result = dialogs.popup_get_file(
+        popup_result = dialogs.popup_get_file(
             title=self.title,
             initial_folder=init_dir,
             save_as=self.save_as,
@@ -4763,18 +4763,7 @@ class FileBrowse(Element):
             multiple_files=self.multiple_files,
             files_delimiter=self.files_delimiter,
         )
-        target_value = result
-        if isinstance(target_value, (list, tuple)):
-            delimiter = self.files_delimiter
-            if delimiter is not None:
-                target_value = delimiter.join(str(item) for item in target_value)
-            else:
-                # Keep popup_get_file return value unchanged (tuple/list) while
-                # updating target widgets/events with a readable string.
-                fallback_delimiter = " "
-                target_value = fallback_delimiter.join(
-                    str(item) for item in target_value
-                )
+        target_value = popup_result if popup_result is not None else ""
         if (target is not None) and (target_value is not None) and (target_value != ""):
             target.update(target_value)  # type: ignore [call-arg]
             if self.enable_events:
@@ -4782,8 +4771,7 @@ class FileBrowse(Element):
                     self.window.dispatch_event(
                         self.key, {"event": target_value, "event_type": "change"}
                     )
-
-        return result
+        return popup_result
 
     def set_text(self, text: str) -> None:
         """Set the text of the button."""
@@ -4807,7 +4795,7 @@ class FilesBrowse(FileBrowse):
         target_key: Union[str, None] = None,
         title: str = "",
         file_types: Optional[FileTypeList] = None,
-        files_delimiter: Optional[str] = "|",
+        files_delimiter: Optional[str] = FILES_DELIMITER,
         enable_events: bool = False,  # enable changing events
         # other
         metadata: Union[dict[str, Any], None] = None,
