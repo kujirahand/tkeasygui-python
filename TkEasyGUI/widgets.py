@@ -94,6 +94,9 @@ SCREENSHOT_MACOS_ADJUST = {
     "y2": 22 + 6,
 }  # for macOS titlebar
 
+# delimiter for multiple files, used in popup_get_file with multiple_files=True
+FILES_DELIMITER = "|" if utils.is_win() else ":"
+
 
 # ------------------------------------------------------------------------------
 # Widget wrapper
@@ -4688,7 +4691,7 @@ class FileBrowse(Element):
         save_as: bool = False,
         enable_events: bool = False,  # enable changing events
         # other
-        files_delimiter: Optional[str] = "|",
+        files_delimiter: Optional[str] = FILES_DELIMITER,
         metadata: Union[dict[str, Any], None] = None,
         **kw,
     ) -> None:
@@ -4769,7 +4772,9 @@ class FileBrowse(Element):
                 # Keep popup_get_file return value unchanged (tuple/list) while
                 # updating target widgets/events with a readable string.
                 fallback_delimiter = " "
-                target_value = fallback_delimiter.join(str(item) for item in target_value)
+                target_value = fallback_delimiter.join(
+                    str(item) for item in target_value
+                )
         if (target is not None) and (target_value is not None) and (target_value != ""):
             target.update(target_value)  # type: ignore [call-arg]
             if self.enable_events:
