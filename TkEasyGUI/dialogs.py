@@ -712,25 +712,29 @@ def popup_get_file(
     multiple_files: bool = False,  # can select multiple files
     file_types: Optional[FileTypeList] = None,
     default_extension: Optional[str] = None,
-    files_delimiter: Optional[str] = "|",
+    files_delimiter: Optional[
+        str
+    ] = None,  # default is FILES_DELIMITER for multiple files, used when multiple_files=True
     # pylint: disable=unused-argument
     no_window: Optional[bool] = None,  # for compatibility
     **kw,
-) -> Union[str, tuple[str], None]:
+) -> Optional[str]:
     """Popup a file selection dialog. Return the file selected."""
+    from . import widgets as eg
+
     if title is None:
         title = message
     if initial_folder is None:
         initial_folder = os.getcwd()
     if file_types is None:
         file_types = [("All Files", "*.*")]
+    if files_delimiter is None:
+        files_delimiter = eg.FILES_DELIMITER
     # check no_window
     if no_window is None:
         no_window = True
     if no_window is False:
         # --- no_window is False ---
-        from . import widgets as eg
-
         # show base dialog
         layout_no_window: list[list[eg.Element]] = [
             [eg.Text(message)],
@@ -781,8 +785,7 @@ def popup_get_file(
             **kw,
         )
     if multiple_files and isinstance(result, (tuple, list)):
-        if files_delimiter is not None:
-            result = files_delimiter.join(result)
+        result = str(files_delimiter).join(result)
     return result
 
 
