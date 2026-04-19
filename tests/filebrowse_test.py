@@ -29,7 +29,7 @@ while window.is_alive():
         print(values)
         a = [
             f"path1={values['-filepath1-']}",
-            f"path2={values["-filepath2-"]}",
+            f"path2={values['-filepath2-']}",
             f"folder={values['-folderpath-']}",
         ]
         eg.popup("Selected:\n" + "\n".join(a))
