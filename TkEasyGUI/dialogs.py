@@ -5,7 +5,6 @@ import base64
 import os
 import subprocess
 import sys
-import tempfile
 import tkinter
 from datetime import datetime, timedelta
 from re import Pattern
@@ -1346,10 +1345,13 @@ end run
 
 
 def send_notification_win(message: str, title: str = "") -> bool:
-    """Send Notification on Windows using PowerShell"""
+    """Send Notification on Windows using PowerShell without temp files"""
     # get powershell path
+    system_root = os.environ.get("SystemRoot")
+    if not system_root:
+        return False
     powershell_path = os.path.join(
-        os.environ["SystemRoot"],
+        system_root,
         "System32",
         "WindowsPowerShell",
         "v1.0",
@@ -1366,44 +1368,55 @@ def send_notification_win(message: str, title: str = "") -> bool:
 
     encoded_title = to_base64(title)
     encoded_message = to_base64(message)
-
-    # PowerShell Script using Base64
     script_content = r"""
-param($encodedTitle, $encodedMessage, $appPath)
+$ErrorActionPreference = "Stop"
+
+$encodedTitle = [System.Environment]::GetEnvironmentVariable("TKEASYGUI_NOTIFY_TITLE_B64")
+$encodedMessage = [System.Environment]::GetEnvironmentVariable("TKEASYGUI_NOTIFY_MESSAGE_B64")
+$appId = [System.Environment]::GetEnvironmentVariable("TKEASYGUI_NOTIFY_APP_ID")
+
+if ([string]::IsNullOrEmpty($encodedTitle) -or [string]::IsNullOrEmpty($encodedMessage) -or [string]::IsNullOrEmpty($appId)) {
+    exit 1
+}
+
 $decodedTitle = [System.Text.Encoding]::UTF8.GetString([System.Convert]::FromBase64String($encodedTitle))
 $decodedMessage = [System.Text.Encoding]::UTF8.GetString([System.Convert]::FromBase64String($encodedMessage))
-$bodyText = "$decodedTitle`n$decodedMessage"
 
-$ToastText01 = [Windows.UI.Notifications.ToastTemplateType, Windows.UI.Notifications, ContentType = WindowsRuntime]::ToastText01
-$TemplateContent = [Windows.UI.Notifications.ToastNotificationManager, Windows.UI.Notifications, ContentType = WindowsRuntime]::GetTemplateContent($ToastText01)
-$TemplateContent.SelectSingleNode('//text[@id="1"]').InnerText = $bodyText
-[Windows.UI.Notifications.ToastNotificationManager]::CreateToastNotifier($appPath).Show($TemplateContent)
-"""
+$toastType = [Windows.UI.Notifications.ToastTemplateType, Windows.UI.Notifications, ContentType = WindowsRuntime]::ToastText02
+$templateContent = [Windows.UI.Notifications.ToastNotificationManager, Windows.UI.Notifications, ContentType = WindowsRuntime]::GetTemplateContent($toastType)
+$textNodes = $templateContent.GetElementsByTagName("text")
+$textNodes.Item(0).AppendChild($templateContent.CreateTextNode($decodedTitle)) | Out-Null
+$textNodes.Item(1).AppendChild($templateContent.CreateTextNode($decodedMessage)) | Out-Null
+$toast = [Windows.UI.Notifications.ToastNotification, Windows.UI.Notifications, ContentType = WindowsRuntime]::new($templateContent)
+[Windows.UI.Notifications.ToastNotificationManager]::CreateToastNotifier($appId).Show($toast)
+""".strip()
 
-    # generate temp script file
-    with tempfile.NamedTemporaryFile(
-        "w", suffix=".ps1", delete=False, encoding="utf-8"
-    ) as script_file:
-        script_file.write(script_content)
-        script_path = script_file.name
+    ps_env = os.environ.copy()
+    ps_env["TKEASYGUI_NOTIFY_TITLE_B64"] = encoded_title
+    ps_env["TKEASYGUI_NOTIFY_MESSAGE_B64"] = encoded_message
+    ps_env["TKEASYGUI_NOTIFY_APP_ID"] = sys.executable
+
     try:
         subprocess.run(
             [
                 powershell_path,
+                "-NoLogo",
+                "-NoProfile",
+                "-NonInteractive",
                 "-ExecutionPolicy",
                 "Bypass",
-                "-File",
-                script_path,
-                encoded_title,
-                encoded_message,
-                sys.executable,
+                "-Command",
+                "-",
             ],
+            input=script_content,
+            text=True,
+            encoding="utf-8",
+            env=ps_env,
             check=True,
         )
         return True
-    finally:
-        # 実行後に一時ファイルを削除
-        os.remove(script_path)
+    except (subprocess.SubprocessError, OSError):
+        return False
 
 
 # ------------------------------------------------------------------------------
