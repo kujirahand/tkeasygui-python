@@ -38,24 +38,24 @@ eg.theme("default")
 
 ## List available themes
 
-Use `get_tnemes()` to inspect themes available in your current Tk runtime.
+Use `get_themes()` to inspect themes available in your current Tk runtime.
 
 ```python
 import TkEasyGUI as eg
 
-print(eg.get_tnemes())
+print(eg.get_themes())
 ```
 
 Note:
-- Function name is `get_tnemes()` in current API.
+- `get_themes()` is the preferred API name.
+- `get_tnemes()` is still available as a backward-compatible alias.
 
 ## Change button style behavior
 
 `Button` can render with `ttk.Button` (modern) or `tk.Button` (classic).
 
-- `use_ttk_buttons=True`: use `ttk.Button`
+- `use_ttk_buttons=True` (default): use `ttk.Button`
 - `use_ttk_buttons=False`: use `tk.Button`
-- `use_ttk_buttons=None` (default): Windows uses `ttk`, other OS keep previous default behavior
 
 ```python
 import TkEasyGUI as eg
