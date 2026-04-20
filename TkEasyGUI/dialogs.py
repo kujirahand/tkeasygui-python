@@ -718,7 +718,30 @@ def popup_get_file(
     no_window: Optional[bool] = None,  # for compatibility
     **kw,
 ) -> Optional[str]:
-    """Popup a file selection dialog. Return the file selected."""
+    """
+    Popup a file selection dialog. Return the file selected.
+
+    - if `save_as` is False, show open file dialog.
+    - if `save_as` is True, show save as dialog.
+    - if `multiple_files` is True, can select multiple files and return a string joined by `files_delimiter`(default is FILES_DELIMITER).
+    - `file_types` is a list of tuples (description, file extension) or a list of file extensions. For example: [("Text Files", "*.txt"), ("All Files", "*.*")] or ["*.txt", "*.py"].
+
+    ```py
+    # select a file to open
+    file_path = eg.popup_get_file("Select a file to open:", "Open File")
+    print(file_path)
+    # select a file to save
+    save_path = eg.popup_get_file("Select a file to save:", "Save File", save_as=True)
+    print(save_path)
+    # select multiple files
+    files = eg.popup_get_file("Select files:", "Open Files", multiple_files=True)
+    files_list = files.split(eg.FILES_DELIMITER) if files else []
+    eg.popup_listbox(files_list, "Selected Files")
+    # select only text files
+    text_file = eg.popup_get_file("Select a text file:", "Open Text File", file_types=[("Text Files", "*.txt")])
+    print(text_file)
+    ```
+    """
     from . import widgets as eg
 
     if title is None:
