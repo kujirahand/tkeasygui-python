@@ -2337,6 +2337,7 @@ class Button(Element):
 
     **Example**
     The program below changes the button's label to "Pushed" when the button is pressed.
+
     ```python
     import TkEasyGUI as eg
     button:eg.Button = eg.Button("Push me")
@@ -2346,6 +2347,12 @@ class Button(Element):
                 button.set_text("Pushed")
                 break
     ```
+
+    `use_ttk_buttons` parameter is set to `True` by default, which makes buttons look more modern.
+    However, on macOS, the default `ttk.Button` has a gray background and does not support changing the background color.
+    If you want to change the button color on macOS, set `use_ttk_buttons=False` to use `tk.Button` instead.
+    Also, when `use_ttk_buttons=True`, explicit button height settings are ignored due to a `ttk` limitation.
+    If you need to control button height, set `use_ttk_buttons=False`.
     """
 
     # pylint: disable=too-many-arguments, too-many-locals
@@ -2371,14 +2378,17 @@ class Button(Element):
         expand_y: bool = False,
         pad: Optional[PadType] = None,
         # other
-        use_ttk_buttons: bool = False,
+        use_ttk_buttons: Optional[bool] = None,
         metadata: Optional[dict[str, Any]] = None,
         **kw,
     ) -> None:
         """Create a Button element."""
         key = button_text if (key is None) or (key == "") else key
         super().__init__("Button", "TButton", key, False, metadata, **kw)
-        self.use_ttk = use_ttk_buttons  # can select ttk or tk button
+        # ttk buttons look more modern by default.
+        if use_ttk_buttons is None:
+            use_ttk_buttons = True
+        self.use_ttk = use_ttk_buttons
         self.disabled = False
         if disabled is not None:
             self.props["disabled"] = self.disabled = disabled
@@ -2390,6 +2400,16 @@ class Button(Element):
         self.tooltip: Union[str, None] = tooltip
         if button_color is not None:
             self.set_button_color(button_color, update=False)
+        # check size
+        self.tk_button_height = 1
+        size = self.props.get("size", None)
+        if size is not None:
+            if isinstance(size, tuple) and len(size) == 2:
+                h = self.props["height"] = size[1]
+                if h >= 2:
+                    self.use_ttk = False
+                    self.tk_button_height = h
+
         self._set_text_props(
             font=font,
             text_align=text_align,
@@ -2416,6 +2436,7 @@ class Button(Element):
                 **self.props,
             )
         else:
+            self.props["height"] = self.tk_button_height
             self.widget = tk.Button(
                 parent,
                 command=lambda: self.disptach_event({"event_type": "command"}),
