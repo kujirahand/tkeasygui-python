@@ -360,6 +360,8 @@ Popup a file selection dialog. Return the file selected.
 - `file_types` is a list of tuples (description, file extension) or a list of file extensions. For example: [("Text Files", "*.txt"), ("All Files", "*.*")] or ["*.txt", "*.py"].
 
 ```py
+import TkEasyGUI as eg
+
 # select a file to open
 file_path = eg.popup_get_file("Select a file to open:", "Open File")
 print(file_path)
