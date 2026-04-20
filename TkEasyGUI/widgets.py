@@ -2371,14 +2371,15 @@ class Button(Element):
         expand_y: bool = False,
         pad: Optional[PadType] = None,
         # other
-        use_ttk_buttons: bool = False,
+        use_ttk_buttons: Optional[bool] = None,
         metadata: Optional[dict[str, Any]] = None,
         **kw,
     ) -> None:
         """Create a Button element."""
         key = button_text if (key is None) or (key == "") else key
         super().__init__("Button", "TButton", key, False, metadata, **kw)
-        self.use_ttk = use_ttk_buttons  # can select ttk or tk button
+        # On Windows, ttk buttons look more modern by default.
+        self.use_ttk = utils.is_win() if use_ttk_buttons is None else use_ttk_buttons
         self.disabled = False
         if disabled is not None:
             self.props["disabled"] = self.disabled = disabled

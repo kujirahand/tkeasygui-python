@@ -259,8 +259,6 @@ def set_default_theme() -> None:
         set_theme("aqua")
     elif is_win():
         # ('winnative', 'clam', 'alt', 'default', 'classic', 'vista', 'xpnative')
-        # set_theme("winnative")
-        # set_theme("default")
         set_theme("vista")
     else:
         set_theme("clam")

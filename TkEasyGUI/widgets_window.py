@@ -52,6 +52,8 @@ class TkWindowManager:
             self._root.eval("tk::PlaceWindow . center")
             self._root.withdraw()
         if self._theme_name == "":
+            # windows: winnative, clam, alt, default, classic, vista, xpnative
+            # macOS: aqua, clam, alt, default, classic
             if _is_mac():
                 self.set_theme("aqua")
             elif _is_win():
