@@ -6,6 +6,8 @@
 
 `TkEasyGUI` is the easiest library for creating GUIs in Python.
 
+<img src="https://github.com/kujirahand/tkeasygui-python/raw/main/docs/image/icon256.png" width="256" alt="TkEasyGUI is the easiest library for creating GUIs in Python.">
+
 This library allows you to easily create GUI applications with Python.
 Since it is based on Tkinter, it runs consistently on Windows, macOS, and Linux.
 With a variety of built-in dialogs and customizable forms, you can develop applications effortlessly.
@@ -23,6 +25,7 @@ With a variety of built-in dialogs and customizable forms, you can develop appli
 Install package from [PyPI](https://pypi.org/project/TkEasyGUI/).
 
 ```sh
+# Install package from PyPI
 pip install TkEasyGUI
 # or
 python -m pip install TkEasyGUI
@@ -31,7 +34,13 @@ python -m pip install TkEasyGUI
 Install package from [GitHub Repository](https://github.com/kujirahand/tkeasygui-python).
 
 ```sh
+# Install package from GitHub Repository
 python -m pip install git+https://github.com/kujirahand/tkeasygui-python
+# or
+# Clone the repository and install
+git clone https://github.com/kujirahand/tkeasygui-python
+cd tkeasygui-python
+python -m pip install .
 ```
 
 ## Features of This Library
@@ -78,6 +87,17 @@ if form:
 ```
 
 <img src="https://github.com/kujirahand/tkeasygui-python/raw/main/docs/image/sample3.png" width="300" alt="TkEasyGUI">
+
+A file selection dialog is also available.
+
+```py
+import TkEasyGUI as eg
+# Show File dialog
+file_path = eg.popup_get_file("Select a file")
+eg.print(f"You selected: {file_path}")
+```
+
+<img src="https://github.com/kujirahand/tkeasygui-python/raw/main/docs/image/sample-popup_get_file.png" width="300" alt="TkEasyGUI">
 
 ### More Dialogs
 
@@ -175,8 +195,6 @@ There are other helpful articles as well.
 - Convenient event hooks and features for bulk event registration are provided - [docs/custom_events](docs/custom_events.md).
 - Methods such as Copy, Paste, and Cut are added to text boxes (Multiline/Input).
 - The system's default color scheme is utilized.
-
-<img src="https://github.com/kujirahand/tkeasygui-python/raw/main/docs/image/icon256.png" width="256" alt="TkEasyGUI Logo">
 
 ## Additional Information
 
