@@ -5,7 +5,7 @@ import os
 from typing import Union
 
 # locale
-_locale: str = ""
+_LOCALE: str = ""
 
 # locale messages
 _locale_messages: dict[str, dict[str, str]] = {
@@ -95,20 +95,20 @@ _locale_messages: dict[str, dict[str, str]] = {
 
 def get_locale() -> str:
     """Get locale"""
-    global _locale  # pylint: disable=global-statement
-    if _locale == "":
+    global _LOCALE  # pylint: disable=global-statement
+    if _LOCALE == "":
         def_locale = locale.getlocale() or (os.environ.get("LANG", "C"), "UTF-8")
         if len(def_locale) >= 1:
-            _locale = def_locale[0] if def_locale[0] is not None else "en"
-            if "_" in _locale:
-                _locale = _locale.split("_")[0]
-    return _locale
+            _LOCALE = def_locale[0] if def_locale[0] is not None else "en"
+            if "_" in _LOCALE:
+                _LOCALE = _LOCALE.split("_")[0]
+    return _LOCALE
 
 
 def set_locale(locale_name: str) -> None:
     """Set locale"""
-    global _locale  # pylint: disable=global-statement
-    _locale = locale_name
+    global _LOCALE  # pylint: disable=global-statement
+    _LOCALE = locale_name
 
 
 def get_text(key: str, default_text: Union[str, None] = None) -> str:
