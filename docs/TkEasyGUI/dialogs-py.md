@@ -386,9 +386,7 @@ def popup_get_file(
     multiple_files: bool = False,  # can select multiple files
     file_types: Optional[FileTypeList] = None,
     default_extension: Optional[str] = None,
-    files_delimiter: Optional[
-    str
-    ] = None,  # default is FILES_DELIMITER for multiple files, used when multiple_files=True
+    files_delimiter: Optional[str] = None,  # default is FILES_DELIMITER for multiple files, used when multiple_files=True
     # pylint: disable=unused-argument
     no_window: Optional[bool] = None,  # for compatibility
     **kw,
