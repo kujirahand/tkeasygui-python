@@ -38,16 +38,17 @@ eg.theme("default")
 
 ## List available themes
 
-Use `get_tnemes()` to inspect themes available in your current Tk runtime.
+Use `get_themes()` to inspect themes available in your current Tk runtime.
 
 ```python
 import TkEasyGUI as eg
 
-print(eg.get_tnemes())
+print(eg.get_themes())
 ```
 
 Note:
-- Function name is `get_tnemes()` in current API.
+- `get_themes()` is the preferred API name.
+- `get_tnemes()` is still available as a backward-compatible alias.
 
 ## Change button style behavior
 

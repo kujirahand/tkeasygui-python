@@ -223,7 +223,7 @@ def str_to_float(value: str, default_value: float = 0) -> float:
 _tkeasygui_info: dict[str, Any] = {}
 
 
-def get_tnemes() -> tuple[str, ...]:
+def get_themes() -> tuple[str, ...]:
     """
     Get theme list
 
@@ -234,6 +234,11 @@ def get_tnemes() -> tuple[str, ...]:
     win = get_root_window()
     win.withdraw()
     return ttk.Style().theme_names()
+
+
+def get_tnemes() -> tuple[str, ...]:
+    """Alias of get_themes (kept for backward compatibility)."""
+    return get_themes()
 
 
 def theme(name: str) -> None:
