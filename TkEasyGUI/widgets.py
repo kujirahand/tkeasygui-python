@@ -2337,6 +2337,7 @@ class Button(Element):
 
     **Example**
     The program below changes the button's label to "Pushed" when the button is pressed.
+
     ```python
     import TkEasyGUI as eg
     button:eg.Button = eg.Button("Push me")
@@ -2346,6 +2347,12 @@ class Button(Element):
                 button.set_text("Pushed")
                 break
     ```
+
+    `use_ttk_buttons` parameter is set to `True` by default, which makes buttons look more modern.
+    However, on macOS, the default `ttk.Button` has a gray background and does not support changing the background color.
+    If you want to change the button color on macOS, set `use_ttk_buttons=False` to use `tk.Button` instead.
+    Also, when `use_ttk_buttons=True`, explicit button height settings are ignored due to a `ttk` limitation.
+    If you need to control button height, set `use_ttk_buttons=False`.
     """
 
     # pylint: disable=too-many-arguments, too-many-locals
@@ -2363,15 +2370,13 @@ class Button(Element):
         font: Optional[FontType] = None,  # font
         color: Optional[str] = None,  # text color
         text_color: Optional[str] = None,  # same as color
-        background_color: Optional[
-            str
-        ] = None,  # background color (not supported on macOS)
+        background_color: Optional[str] = None,  # background color (not supported on macOS)
         # pack props
         expand_x: bool = False,
         expand_y: bool = False,
         pad: Optional[PadType] = None,
         # other
-        use_ttk_buttons: Optional[bool] = None,
+        use_ttk_buttons: bool = True,
         metadata: Optional[dict[str, Any]] = None,
         **kw,
     ) -> None:
@@ -2379,7 +2384,7 @@ class Button(Element):
         key = button_text if (key is None) or (key == "") else key
         super().__init__("Button", "TButton", key, False, metadata, **kw)
         # On Windows, ttk buttons look more modern by default.
-        self.use_ttk = utils.is_win() if use_ttk_buttons is None else use_ttk_buttons
+        self.use_ttk = use_ttk_buttons
         self.disabled = False
         if disabled is not None:
             self.props["disabled"] = self.disabled = disabled

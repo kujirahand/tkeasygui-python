@@ -69,6 +69,14 @@ window.read()
 window.close()
 ```
 
+Note:
+- If you set `use_ttk_buttons=True`, explicit button height settings are ignored.
+- This is a limitation of `ttk`.
+- If you need to control button height, use `use_ttk_buttons=False`.
+
+
+
+
 ## How to customize defaults
 
 ### Global theme default
