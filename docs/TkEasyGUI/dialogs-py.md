@@ -356,7 +356,7 @@ Popup a file selection dialog. Return the file selected.
 
 - if `save_as` is False, show open file dialog.
 - if `save_as` is True, show save as dialog.
-- if `multiple_files` is True, can select multiple files and return a string joined by `files_delimiter`(default is FILES_DELIMITER).
+- if `multiple_files` is True, can select multiple files and return a string joined by `files_delimiter` (default is `FILES_DELIMITER`).
 - `file_types` is a list of tuples (description, file extension) or a list of file extensions. For example: [("Text Files", "*.txt"), ("All Files", "*.*")] or ["*.txt", "*.py"].
 
 ```py
