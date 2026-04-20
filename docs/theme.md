@@ -53,9 +53,8 @@ Note:
 
 `Button` can render with `ttk.Button` (modern) or `tk.Button` (classic).
 
-- `use_ttk_buttons=True`: use `ttk.Button`
+- `use_ttk_buttons=True` (default): use `ttk.Button`
 - `use_ttk_buttons=False`: use `tk.Button`
-- `use_ttk_buttons=None` (default): Windows uses `ttk`, other OS keep previous default behavior
 
 ```python
 import TkEasyGUI as eg
