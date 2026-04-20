@@ -2383,7 +2383,7 @@ class Button(Element):
         """Create a Button element."""
         key = button_text if (key is None) or (key == "") else key
         super().__init__("Button", "TButton", key, False, metadata, **kw)
-        # On Windows, ttk buttons look more modern by default.
+        # ttk buttons look more modern by default.
         self.use_ttk = use_ttk_buttons
         self.disabled = False
         if disabled is not None:
