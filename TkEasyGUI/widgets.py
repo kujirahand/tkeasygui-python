@@ -2370,13 +2370,15 @@ class Button(Element):
         font: Optional[FontType] = None,  # font
         color: Optional[str] = None,  # text color
         text_color: Optional[str] = None,  # same as color
-        background_color: Optional[str] = None,  # background color (not supported on macOS)
+        background_color: Optional[
+            str
+        ] = None,  # background color (not supported on macOS)
         # pack props
         expand_x: bool = False,
         expand_y: bool = False,
         pad: Optional[PadType] = None,
         # other
-        use_ttk_buttons: bool = True,
+        use_ttk_buttons: Optional[bool] = None,
         metadata: Optional[dict[str, Any]] = None,
         **kw,
     ) -> None:
@@ -2384,6 +2386,8 @@ class Button(Element):
         key = button_text if (key is None) or (key == "") else key
         super().__init__("Button", "TButton", key, False, metadata, **kw)
         # ttk buttons look more modern by default.
+        if use_ttk_buttons is None:
+            use_ttk_buttons = True
         self.use_ttk = use_ttk_buttons
         self.disabled = False
         if disabled is not None:
@@ -2396,6 +2400,16 @@ class Button(Element):
         self.tooltip: Union[str, None] = tooltip
         if button_color is not None:
             self.set_button_color(button_color, update=False)
+        # check size
+        self.tk_button_height = 1
+        size = self.props.get("size", None)
+        if size is not None:
+            if isinstance(size, tuple) and len(size) == 2:
+                h = self.props["height"] = size[1]
+                if h >= 2:
+                    self.use_ttk = False
+                    self.tk_button_height = h
+
         self._set_text_props(
             font=font,
             text_align=text_align,
@@ -2422,6 +2436,7 @@ class Button(Element):
                 **self.props,
             )
         else:
+            self.props["height"] = self.tk_button_height
             self.widget = tk.Button(
                 parent,
                 command=lambda: self.disptach_event({"event_type": "command"}),
