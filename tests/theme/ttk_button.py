@@ -13,6 +13,6 @@ window = eg.Window("Buttons", layout)
 for event, values in window.event_iter():
     if event == "Modern":
         eg.popup("You clicked the modern button!")
-    if event == "Classic":
+    elif event == "Classic":
         eg.popup("You clicked the classic button!")
 window.close()
