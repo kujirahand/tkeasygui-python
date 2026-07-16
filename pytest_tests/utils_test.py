@@ -1,9 +1,14 @@
 """Tests for TkEasyGUI/utils.py"""
 import os
 import platform
+import tkinter as tk
 
-from TkEasyGUI import utils
+import pytest
 
+try:
+    from TkEasyGUI import utils
+except tk.TclError:
+    pytest.skip("Tk is not available (no display).", allow_module_level=True)
 
 def test_save_and_load_json_file(tmp_path):
     """Data saved with save_json_file should load back unchanged."""
