@@ -43,7 +43,7 @@ Destroy root window.
 def destroy_root(self) -> None:
 ```
 
-- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets_window.py#L75)
+- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets_window.py#L77)
 
 ### TkWindowManager.generate_element_id
 
@@ -53,7 +53,7 @@ Generate a unique id for an element.
 def generate_element_id(self) -> int:
 ```
 
-- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets_window.py#L113)
+- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets_window.py#L115)
 
 ### TkWindowManager.generate_element_style_key
 
@@ -63,7 +63,7 @@ Get a unique id for an element.
 def generate_element_style_key(self, element_type: str) -> str:
 ```
 
-- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets_window.py#L118)
+- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets_window.py#L120)
 
 ### TkWindowManager.get_root
 
@@ -73,7 +73,7 @@ Get root window.
 def get_root(self) -> tk.Tk:
 ```
 
-- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets_window.py#L63)
+- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets_window.py#L65)
 
 ### TkWindowManager.get_sg_compatibility
 
@@ -83,7 +83,7 @@ Get compatibility with PySimpleGUI
 def get_sg_compatibility(self) -> bool:
 ```
 
-- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets_window.py#L85)
+- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets_window.py#L87)
 
 ### TkWindowManager.get_theme
 
@@ -93,7 +93,7 @@ Get current theme name
 def get_theme(self) -> str:
 ```
 
-- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets_window.py#L109)
+- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets_window.py#L111)
 
 ### TkWindowManager.get_tk_version
 
@@ -103,7 +103,7 @@ Get tkinter version.
 def get_tk_version(self) -> str:
 ```
 
-- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets_window.py#L69)
+- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets_window.py#L71)
 
 ### TkWindowManager.get_tkk_style
 
@@ -113,7 +113,7 @@ Get ttk style
 def get_tkk_style(self) -> ttk.Style:
 ```
 
-- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets_window.py#L89)
+- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets_window.py#L91)
 
 ### TkWindowManager.register_element_key
 
@@ -123,7 +123,7 @@ Register element key.
 def register_element_key(self, key: KeyType) -> bool:
 ```
 
-- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets_window.py#L133)
+- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets_window.py#L135)
 
 ### TkWindowManager.remove_element_key
 
@@ -133,7 +133,7 @@ Remove element key.
 def remove_element_key(self, key: KeyType) -> bool:
 ```
 
-- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets_window.py#L140)
+- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets_window.py#L142)
 
 ### TkWindowManager.set_sg_compatibility
 
@@ -143,7 +143,7 @@ Set compatibility with PySimpleGUI (Default=True)
 def set_sg_compatibility(self, flag: bool = True) -> None:
 ```
 
-- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets_window.py#L81)
+- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets_window.py#L83)
 
 ### TkWindowManager.set_theme
 
@@ -153,7 +153,7 @@ Set theme for ttk style
 def set_theme(self, name: str) -> None:
 ```
 
-- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets_window.py#L101)
+- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets_window.py#L103)
 
 ### TkWindowManager.set_tkk_style
 
@@ -163,7 +163,7 @@ Set ttk style
 def set_tkk_style(self, style: ttk.Style) -> None:
 ```
 
-- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets_window.py#L95)
+- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets_window.py#L97)
 
 # Functions of TkEasyGUI.widgets_window
 
@@ -189,7 +189,7 @@ Generate a unique id for a value element.
 def generate_element_id() -> int:
 ```
 
-- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets_window.py#L202)
+- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets_window.py#L204)
 
 ## generate_element_style_key
 
@@ -199,7 +199,7 @@ Get a unique id for an element.
 def generate_element_style_key(element_type: str) -> str:
 ```
 
-- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets_window.py#L187)
+- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets_window.py#L189)
 
 ## get_active_eg_window
 
@@ -209,7 +209,7 @@ Get the active window.
 def get_active_eg_window() -> Union[tk.Toplevel, None]:
 ```
 
-- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets_window.py#L207)
+- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets_window.py#L209)
 
 ## get_eg_window_count
 
@@ -219,7 +219,7 @@ Get the number of windows.
 def get_eg_window_count() -> int:
 ```
 
-- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets_window.py#L221)
+- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets_window.py#L223)
 
 ## get_last_eg_window
 
@@ -229,7 +229,7 @@ Get the parent window.
 def get_last_eg_window() -> Union["Window", None]:
 ```
 
-- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets_window.py#L214)
+- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets_window.py#L216)
 
 ## get_root_window
 
@@ -239,7 +239,7 @@ Get root window.
 def get_root_window() -> tk.Tk:
 ```
 
-- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets_window.py#L161)
+- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets_window.py#L163)
 
 ## get_ttk_style
 
@@ -249,7 +249,7 @@ Get ttk style
 def get_ttk_style() -> ttk.Style:
 ```
 
-- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets_window.py#L171)
+- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets_window.py#L173)
 
 ## pop_easy_window
 
@@ -259,7 +259,7 @@ Pop a window from the list.
 def pop_easy_window(win: "Window") -> None:
 ```
 
-- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets_window.py#L231)
+- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets_window.py#L233)
 
 ## push_easy_window
 
@@ -269,7 +269,7 @@ Push a window to the list.
 def push_easy_window(win: "Window") -> None:
 ```
 
-- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets_window.py#L226)
+- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets_window.py#L228)
 
 ## register_element_key
 
@@ -279,7 +279,7 @@ Register element key.
 def register_element_key(key: KeyType) -> bool:
 ```
 
-- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets_window.py#L192)
+- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets_window.py#L194)
 
 ## remove_element_key
 
@@ -289,7 +289,7 @@ Remove element key.
 def remove_element_key(key: KeyType) -> bool:
 ```
 
-- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets_window.py#L197)
+- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets_window.py#L199)
 
 ## set_pysimplegui_compatibility
 
@@ -299,7 +299,7 @@ Set compatibility with PySimpleGUI (Default=True)
 def set_pysimplegui_compatibility(flag: bool = True) -> None:
 ```
 
-- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets_window.py#L166)
+- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets_window.py#L168)
 
 ## set_theme
 
@@ -313,5 +313,5 @@ Change look and feel
 def set_theme(name: str) -> None:
 ```
 
-- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets_window.py#L176)
+- [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/widgets_window.py#L178)
 
