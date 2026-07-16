@@ -157,6 +157,13 @@ We have prepared a selection of samples to demonstrate simple usage. Please chec
 
 Running `tests/file_viewer.py` allows all samples to be easily launched.
 
+## Testing
+
+Automated tests using pytest are located in [pytest_tests](https://github.com/kujirahand/tkeasygui-python/tree/main/pytest_tests). Install pytest and run:
+
+    python -m pip install -U pytest
+    make test
+
 ## Documents
 
 Below is a detailed list of classes and methods.

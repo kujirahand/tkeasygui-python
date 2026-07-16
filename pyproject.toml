@@ -41,6 +41,9 @@ Repository = "https://github.com/kujirahand/tkeasygui-python/"
 Issues = "https://github.com/kujirahand/tkeasygui-python/issues"
 Changelog = "https://github.com/kujirahand/tkeasygui-python/releases"
 
+[tool.setuptools]
+packages = ["TkEasyGUI"]
+
 [tool.black]
 line-length = 88
 target-version = ['py39']
@@ -66,3 +69,7 @@ extend-exclude = '''
 [tool.ruff.lint]
 select = ["E", "F", "D"]
 ignore = ["E501", "D415", "D203", "D212", "D400", "D401", "D200"]
+
+[tool.pytest.ini_options]
+testpaths = ["pytest_tests"]
+
