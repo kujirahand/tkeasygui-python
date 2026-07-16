@@ -193,7 +193,7 @@ def append_text_file(filename: str, text: str, encoding: str = "utf-8") -> None:
 
 def load_json_file(filename: str, default_value: Any = None) -> Any:
     """Load JSON file."""
-    if os.path.exists(filename) is False:
+    if os.path.exists(filename):
         with open(filename, "r", encoding="utf-8") as f:
             data = json.load(f)
         return data

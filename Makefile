@@ -119,3 +119,7 @@ check:
 test_elements:
 	python element2json.py
 	python elements_test.py
+
+test:
+	python -m pytest
+
