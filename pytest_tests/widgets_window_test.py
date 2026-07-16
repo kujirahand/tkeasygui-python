@@ -1,6 +1,12 @@
 """Tests for TkEasyGUI/widgets_window.py"""
-from TkEasyGUI import widgets_window as ww
+import tkinter as tk
 
+import pytest
+
+try:
+    from TkEasyGUI import widgets_window as ww
+except tk.TclError:
+    pytest.skip("Tk is not available (no display).", allow_module_level=True)
 
 def test_generate_element_id_increments():
     """generate_element_id should return an increasing sequence of ids."""
