@@ -41,6 +41,9 @@ Repository = "https://github.com/kujirahand/tkeasygui-python/"
 Issues = "https://github.com/kujirahand/tkeasygui-python/issues"
 Changelog = "https://github.com/kujirahand/tkeasygui-python/releases"
 
+[tool.setuptools]
+packages = ["TkEasyGUI"]
+
 [tool.black]
 line-length = 88
 target-version = ['py39']
