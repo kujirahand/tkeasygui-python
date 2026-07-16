@@ -1,17 +1,24 @@
 """Tests for pure helper functions in TkEasyGUI/widgets.py"""
-from TkEasyGUI.widgets import (
-    Element,
-    Push,
-    Text,
-    VPush,
-    align_center,
-    align_left,
-    align_right,
-    rgb,
-    valign_bottom,
-    valign_middle,
-    valign_top,
-)
+import tkinter as tk
+
+import pytest
+
+try:
+    from TkEasyGUI.widgets import (
+        Element,
+        Push,
+        Text,
+        VPush,
+        align_center,
+        align_left,
+        align_right,
+        rgb,
+        valign_bottom,
+        valign_middle,
+        valign_top,
+    )
+except tk.TclError:
+    pytest.skip("Tk is not available (no display).", allow_module_level=True)
 
 
 def test_rgb():
