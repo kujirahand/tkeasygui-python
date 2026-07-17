@@ -110,11 +110,13 @@ def test_tabgroup_configures_japanese_tab_style_on_windows(monkeypatch):
     monkeypatch.setattr(widgets, "get_ttk_style", lambda: style)
     monkeypatch.setattr(widgets.ttk, "Notebook", lambda parent, **kw: notebook)
 
+    parent_window = Mock(font=("Noto Sans", 11))
     tab_group = TabGroup([])
-    assert tab_group.create(None, Mock()) is notebook
+    assert tab_group.create(parent_window, Mock()) is notebook
     style.configure.assert_called_once_with(
-        "TNotebook.Tab", font=("Yu Gothic UI", 10), padding=(8, 8)
+        "TkEasyGUI.TNotebook.Tab", font=("Noto Sans", 11), padding=(8, 8)
     )
+    assert tab_group.props["style"] == "TkEasyGUI.TNotebook"
 
 
 def test_tabgroup_keeps_non_windows_tab_style_unchanged(monkeypatch):
@@ -128,5 +130,36 @@ def test_tabgroup_keeps_non_windows_tab_style_unchanged(monkeypatch):
     monkeypatch.setattr(widgets.ttk, "Notebook", lambda parent, **kw: notebook)
 
     tab_group = TabGroup([])
-    assert tab_group.create(None, Mock()) is notebook
+    assert tab_group.create(Mock(font=None), Mock()) is notebook
     style.configure.assert_not_called()
+
+
+def test_tabgroup_respects_explicit_notebook_style_on_windows(monkeypatch):
+    """A caller-provided Notebook style should not be overridden on Windows."""
+    from TkEasyGUI import widgets
+
+    style = Mock()
+    notebook = Mock()
+    monkeypatch.setattr(widgets.utils, "is_win", lambda: True)
+    monkeypatch.setattr(widgets, "get_ttk_style", lambda: style)
+    monkeypatch.setattr(widgets.ttk, "Notebook", lambda parent, **kw: notebook)
+
+    tab_group = TabGroup([], style="Custom.TNotebook")
+    assert tab_group.create(Mock(font=("Noto Sans", 11)), Mock()) is notebook
+    style.configure.assert_not_called()
+    assert tab_group.props["style"] == "Custom.TNotebook"
+
+
+def test_tabgroup_keeps_ttk_default_font_without_window_font(monkeypatch):
+    """An unspecified Window font should keep the locale-specific ttk default."""
+    from TkEasyGUI import widgets
+
+    style = Mock()
+    notebook = Mock()
+    monkeypatch.setattr(widgets.utils, "is_win", lambda: True)
+    monkeypatch.setattr(widgets, "get_ttk_style", lambda: style)
+    monkeypatch.setattr(widgets.ttk, "Notebook", lambda parent, **kw: notebook)
+
+    tab_group = TabGroup([])
+    assert tab_group.create(Mock(font=None), Mock()) is notebook
+    style.configure.assert_called_once_with("TkEasyGUI.TNotebook.Tab", padding=(8, 8))
