@@ -2038,6 +2038,12 @@ class TabGroup(Element):
     def create(self, win: Window, parent: tk.Widget) -> tk.Widget:
         """Create a TabGroup element."""
         self.window = win
+        if utils.is_win():
+            # Keep the Windows ttk focus indicator from overlapping Japanese
+            # glyphs in notebook tab labels.
+            get_ttk_style().configure(
+                "TNotebook.Tab", font=("Yu Gothic UI", 10), padding=(8, 8)
+            )
         self.widget = ttk.Notebook(parent, **self.props)
         return self.widget
 
