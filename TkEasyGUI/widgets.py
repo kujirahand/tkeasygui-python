@@ -2719,7 +2719,9 @@ class Radio(Element):
 
 
 class Input(Element):
-    """Text input element."""
+    """
+    Text input element. (single-line text input field)
+    """
 
     def __init__(
         self,
@@ -2745,7 +2747,7 @@ class Input(Element):
         color: Union[str, None] = None,  # text color
         text_color: Union[str, None] = None,  # same as color
         background_color: Union[str, None] = None,  # background color
-        # validation
+        # validation (regex pattern)
         validation: Union[
             str, Pattern[str], None
         ] = None,  # regex pattern for validation (fullmatch)
@@ -2773,14 +2775,11 @@ class Input(Element):
             else le.get_text("Validation error")
         )
         self._validation_in_progress = False  # flag to prevent infinite loop
-        if isinstance(validation, str):
+        if validation is not None:
             try:
                 self._validation_pattern = re.compile(validation)  # type: ignore[assignment]
-            except re.error:
+            except (re.error, TypeError):
                 self._validation_pattern = None  # type: ignore[assignment]
-        elif validation is not None:
-            # assume compiled pattern
-            self._validation_pattern = validation  # type: ignore[assignment]
         if default_text is not None:  # compatibility with PySimpleGUI
             text = default_text
         self.default_text = text  # default text @see Input.create
