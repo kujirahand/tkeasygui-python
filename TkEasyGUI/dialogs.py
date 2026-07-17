@@ -1220,8 +1220,8 @@ def popup_get_form(
     layout: list[list[eg.Element]] = []
     for i, it in enumerate(form_items):
         it_key = f"-formitem{i}"
-        default_value: Union[str, tuple[str, Any], tuple[str, Any, str]] = ""
-        hint = ""
+        default_value: Any = ""
+        hint: str = ""
         if isinstance(it, (list, tuple)):
             label = it[0]
             default_value = it[1] if len(it) >= 2 else ""
