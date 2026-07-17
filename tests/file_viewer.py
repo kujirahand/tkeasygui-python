@@ -60,8 +60,8 @@ def main():
         [eg.HSeparator(pad=5)],
         [
             eg.Push(),
-            eg.Button(eg.get_text("Run"), key="-run-", width=10),
-            eg.Button(eg.get_text("Close"), key="-close-"),
+            eg.Button(eg.get_text("Run"), key="-run-", width=25, font=("Arial", 14)),
+            eg.Button(eg.get_text("Close"), key="-close-", width=8, font=("Arial", 14)),
         ],
     ]
     window = eg.Window("Python Viewer", layout, font=font)
