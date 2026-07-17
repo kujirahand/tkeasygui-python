@@ -1,6 +1,14 @@
 # TkEasyGUI task runner
 SRC := "TkEasyGUI"
 
+# ----- shell -----
+[unix]
+set shell := ["sh", "-cu"]
+
+[windows]
+set shell := ["powershell.exe", "-NoLogo", "-NoProfile", "-Command"]
+
+# ----- install -----
 # Install TkEasyGUI in editable mode
 install:
     python -m pip uninstall -y TkEasyGUI
@@ -12,6 +20,7 @@ install-dev:
     python -m pip install -r requirements.txt
     python -m pip install pylint black isort mypy
 
+# ----- lint -----
 # Run linters and formatters check
 lint:
     ruff check
