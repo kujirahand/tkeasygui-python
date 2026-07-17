@@ -163,3 +163,28 @@ def test_tabgroup_keeps_ttk_default_font_without_window_font(monkeypatch):
     tab_group = TabGroup([])
     assert tab_group.create(Mock(font=None), Mock()) is notebook
     style.configure.assert_called_once_with("TkEasyGUI.TNotebook.Tab", padding=(8, 8))
+
+
+def test_input_validation_patterns():
+    """Test that widgets.Input handles various validation arguments safely."""
+    import re
+    from TkEasyGUI.widgets import Input
+
+    # 1. Valid regex string
+    inp1 = Input(validation=r"^\d+$")
+    assert inp1._validation_pattern is not None
+    assert inp1._validation_pattern.pattern == r"^\d+$"
+
+    # 2. Pre-compiled regex object
+    pat = re.compile(r"^[a-z]+$")
+    inp2 = Input(validation=pat)
+    assert inp2._validation_pattern is pat
+
+    # 3. Invalid regex string
+    inp3 = Input(validation=r"[")
+    assert inp3._validation_pattern is None
+
+    # 4. Invalid type (e.g. dict or list)
+    inp4 = Input(validation={"key": "val"})
+    assert inp4._validation_pattern is None
+

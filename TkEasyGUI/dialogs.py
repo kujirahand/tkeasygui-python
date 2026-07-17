@@ -537,6 +537,14 @@ def popup_input(
         ok_label = le.get_text("OK")
     if cancel_label is None:
         cancel_label = le.get_text("Cancel")
+    # compile validation pattern once before loop
+    pattern = None
+    if validation is not None:
+        try:
+            pattern = re.compile(validation)
+        except (re.error, TypeError):
+            pattern = None
+
     # input field
     text_input = eg.Input(
         default,
@@ -574,36 +582,34 @@ def popup_input(
         if (event == ok_label) or (
             (event == "-user-") and (values["event_type"] == "return")
         ):
-            result = values["-user-"]
-            # check only number
-            if only_number:
-                try:
-                    result = float(result)
-                except ValueError as _:
-                    result = cancel_value
-                    popup(le.get_text("Please enter a number."))
-                    text_input.focus()
-                    continue
-            # check validation
-            if validation is not None:
-                if isinstance(validation, str):
-                    pattern = re.compile(validation)
-                else:
-                    pattern = validation
-                if not pattern.fullmatch(str(result)):
-                    result = cancel_value
+            val = values["-user-"]
+            # 1. check validation on raw input string (before only_number check and conversion)
+            if pattern is not None:
+                if not pattern.fullmatch(val):
                     if validation_message is not None:
                         popup(validation_message)
                     else:
                         popup(le.get_text("Validation error"))
                     text_input.focus()
+                    text_input.select_all()
                     continue
+            # 2. check only number
+            if only_number:
+                try:
+                    val = float(val)
+                except ValueError as _:
+                    popup(le.get_text("Please enter a number."))
+                    text_input.focus()
+                    text_input.select_all()
+                    continue
+            result = val
             break
         if event in [cancel_label, eg.WINDOW_CLOSED]:
             # let result = cancel_value
             break
     win.close()
     return result
+
 
 
 def popup_get_text(
