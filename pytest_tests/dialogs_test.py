@@ -16,8 +16,12 @@ def test_popup_get_form_displays_fourth_item_as_hint(monkeypatch):
     captured = {}
 
     class FakeWindow:
-        def __init__(self, title, layout, size, icon):
+        def __init__(self, title, layout, size=None, icon=None):
+            captured["title"] = title
             captured["layout"] = layout
+            captured["size"] = size
+            captured["icon"] = icon
+            captured["closed"] = False
 
         def __enter__(self):
             return self
@@ -64,12 +68,15 @@ def test_popup_input_validation(monkeypatch):
     monkeypatch.setattr(widgets, "Window", FakeWindow)
 
     popups = []
+
     def fake_popup(msg, *args, **kwargs):
         popups.append(msg)
 
     monkeypatch.setattr(dialogs, "popup", fake_popup)
 
-    res = dialogs.popup_input("Enter text", validation=r"^[a-z]+$", validation_message="Only small letters")
+    res = dialogs.popup_input(
+        "Enter text", validation=r"^[a-z]+$", validation_message="Only small letters"
+    )
 
     assert res == "abc"
     assert len(popups) == 1
@@ -102,6 +109,7 @@ def test_popup_input_only_number(monkeypatch):
     monkeypatch.setattr(widgets, "Window", FakeWindow)
 
     popups = []
+
     def fake_popup(msg, *args, **kwargs):
         popups.append(msg)
 
@@ -115,6 +123,7 @@ def test_popup_input_only_number(monkeypatch):
 
 def test_popup_input_invalid_validation_pattern(monkeypatch):
     """Test that invalid regex patterns or invalid types in validation do not crash popup_input."""
+
     class FakeWindow:
         def __init__(self, title, layout, **kwargs):
             self.closed = False
@@ -138,5 +147,3 @@ def test_popup_input_invalid_validation_pattern(monkeypatch):
     # 2. Test invalid type (e.g., integer)
     res2 = dialogs.popup_input("Enter text", validation=123)
     assert res2 == "any_value"
-
-
