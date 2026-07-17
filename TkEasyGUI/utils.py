@@ -72,6 +72,7 @@ PopupGetFormItemType = Union[
     str,
     tuple[str, Any],
     tuple[str, Any, str],
+    tuple[str, Any, str, str],
 ]
 FileTypeList = list[tuple[str, str]]
 

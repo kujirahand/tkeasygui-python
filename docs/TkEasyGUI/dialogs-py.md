@@ -436,6 +436,7 @@ When the user enters the items and clicks [OK], it returns `{label: value}`. If 
     - `"files"`: Multiple file selection.
     - `"folder"`: Folder selection.
     - `"color"`: Color picker.
+  - A tuple of `(label, default_value, type, hint)`. The hint is displayed beside the input field.
 
 - `title` (str): The title of the form window. Default is "Form".
 - `size` (tuple[int, int] | None): The size of the form window. Default is `None`.
@@ -878,4 +879,3 @@ def show_message(message: str, title: Optional[str] = None) -> None:
 ```
 
 - [source](https://github.com/kujirahand/tkeasygui-python/blob/main/TkEasyGUI/dialogs.py#L1632)
-

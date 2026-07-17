@@ -1166,7 +1166,7 @@ def popup_get_date(
 def popup_get_form(
     form_items: list[
         PopupGetFormItemType
-    ],  # list of form items(label[,selection or default][,type])
+    ],  # list of form items(label[,selection or default][,type][,hint])
     title: str = "Form",  # window title
     size: Union[tuple[int, int], None] = None,
     window_icon: Optional[str] = None,  # window icon, specify filename
@@ -1192,6 +1192,8 @@ def popup_get_form(
         - `"files"`: Multiple file selection.
         - `"folder"`: Folder selection.
         - `"color"`: Color picker.
+      - A tuple of `(label, default_value, type, hint)`. The hint is displayed
+        beside the input field.
 
     - `title` (str): The title of the form window. Default is "Form".
     - `size` (tuple[int, int] | None): The size of the form window. Default is `None`.
@@ -1219,10 +1221,12 @@ def popup_get_form(
     for i, it in enumerate(form_items):
         it_key = f"-formitem{i}"
         default_value: Union[str, tuple[str, Any], tuple[str, Any, str]] = ""
+        hint = ""
         if isinstance(it, (list, tuple)):
             label = it[0]
             default_value = it[1] if len(it) >= 2 else ""
             itype = it[2] if len(it) >= 3 else "text"
+            hint = it[3] if len(it) >= 4 else ""
             if isinstance(default_value, (list, tuple)):
                 itype = "list"
         else:
@@ -1288,6 +1292,8 @@ def popup_get_form(
         elif itype == "color":
             line.append(eg.Input(str(default_value), key=it_key, size=(15, 1)))
             line.append(eg.ColorBrowse())
+        if hint:
+            line.append(eg.Text(hint, text_color="gray"))
         # append line
         layout.append(line)
     layout.append([eg.HSeparator()])
