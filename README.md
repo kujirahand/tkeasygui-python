@@ -157,12 +157,20 @@ We have prepared a selection of samples to demonstrate simple usage. Please chec
 
 Running `tests/file_viewer.py` allows all samples to be easily launched.
 
-## Testing
+## Development and Testing
 
-Automated tests using pytest are located in [pytest_tests](https://github.com/kujirahand/tkeasygui-python/tree/main/pytest_tests). Install pytest and run:
+This project uses [Just](https://github.com/casey/just) as a task runner. You can run various development tasks (formatting, linting, testing, etc.) by installing `just` and running:
 
-    python -m pip install -U pytest
-    make test
+```sh
+just
+```
+
+To run the automated tests located in [pytest_tests](https://github.com/kujirahand/tkeasygui-python/tree/main/pytest_tests), install pytest and run:
+
+```sh
+python -m pip install -U pytest
+just test
+```
 
 ## Documents
 
