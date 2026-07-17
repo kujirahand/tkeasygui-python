@@ -3,14 +3,14 @@ SRC := "TkEasyGUI"
 
 # Install TkEasyGUI in editable mode
 install:
-    pip uninstall -y TkEasyGUI
-    pip install -e .
+    python -m pip uninstall -y TkEasyGUI
+    python -m pip install -e .
 
 # Install development dependencies
 install-dev:
-    pip install -U pip setuptools wheel twine
-    pip install -r requirements.txt
-    pip install pylint black isort mypy
+    python -m pip install -U pip setuptools wheel twine
+    python -m pip install -r requirements.txt
+    python -m pip install pylint black isort mypy
 
 # Run linters and formatters check
 lint:
@@ -65,14 +65,14 @@ deploy-build-only: clean build-docs
 
 # Deploy to TestPyPI
 deploy-test:
-    pip install build twine
+    python -m pip install build twine
     just deploy-build-only
     python -m twine upload --repository testpypi dist/* --verbose
     @echo "[TRY] task install test"
 
 # Deploy to PyPI
 deploy-main:
-    pip install build twine
+    python -m pip install build twine
     just deploy-build-only
     python -m twine upload dist/* --verbose
 
