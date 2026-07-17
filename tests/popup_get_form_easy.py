@@ -2,7 +2,7 @@
 
 import TkEasyGUI as eg
 
-# Ask simplely
+# Ask simply
 result = eg.popup_get_form(["Name", "Hobbies"])
 if result:
     name = result["Name"]
