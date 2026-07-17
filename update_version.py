@@ -24,7 +24,7 @@ with open("TkEasyGUI/version.py", "w", encoding="utf-8") as f:
 \"\"\"
 # TkEasyGUI version {version}
 
-audo generated from [pyproject.toml](https://github.com/kujirahand/tkeasygui-python/blob/main/pyproject.toml) by update_version.py
+Auto generated from [pyproject.toml](https://github.com/kujirahand/tkeasygui-python/blob/main/pyproject.toml) by update_version.py
 \"\"\"
 __version__ = \"{version}\"
 """)
