@@ -3,6 +3,7 @@
 
 import base64
 import os
+import re
 import subprocess
 import sys
 import tkinter
@@ -536,17 +537,18 @@ def popup_input(
         ok_label = le.get_text("OK")
     if cancel_label is None:
         cancel_label = le.get_text("Cancel")
+    # input field
+    text_input = eg.Input(
+        default,
+        key="-user-",
+        width=40,
+        enable_events=True,
+    )
     win = eg.Window(
         title,
         layout=[
-            [
-                eg.Text(
-                    message,
-                    validation=validation,
-                    validation_message=validation_message,
-                )
-            ],
-            [eg.Input(default, key="-user-", width=40, enable_events=True)],
+            [eg.Text(message)],
+            [text_input],
             [
                 eg.Push(),
                 eg.Button(
@@ -573,11 +575,28 @@ def popup_input(
             (event == "-user-") and (values["event_type"] == "return")
         ):
             result = values["-user-"]
+            # check only number
             if only_number:
                 try:
                     result = float(result)
                 except ValueError as _:
+                    result = cancel_value
                     popup(le.get_text("Please enter a number."))
+                    text_input.focus()
+                    continue
+            # check validation
+            if validation is not None:
+                if isinstance(validation, str):
+                    pattern = re.compile(validation)
+                else:
+                    pattern = validation
+                if not pattern.fullmatch(str(result)):
+                    result = cancel_value
+                    if validation_message is not None:
+                        popup(validation_message)
+                    else:
+                        popup(le.get_text("Validation error"))
+                    text_input.focus()
                     continue
             break
         if event in [cancel_label, eg.WINDOW_CLOSED]:

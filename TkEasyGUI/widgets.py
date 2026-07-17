@@ -2719,7 +2719,9 @@ class Radio(Element):
 
 
 class Input(Element):
-    """Text input element."""
+    """
+    Text input element. (single-line text input field)
+    """
 
     def __init__(
         self,
@@ -2745,7 +2747,7 @@ class Input(Element):
         color: Union[str, None] = None,  # text color
         text_color: Union[str, None] = None,  # same as color
         background_color: Union[str, None] = None,  # background color
-        # validation
+        # validation (regex pattern)
         validation: Union[
             str, Pattern[str], None
         ] = None,  # regex pattern for validation (fullmatch)
