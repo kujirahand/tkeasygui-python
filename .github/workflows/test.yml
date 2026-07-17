@@ -33,4 +33,5 @@ jobs:
 
       - name: Run tests
         run: |
-          xvfb-run --auto-servernum make test
+          xvfb-run --auto-servernum python -m pytest
+
